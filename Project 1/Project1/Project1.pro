@@ -4,7 +4,9 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    vec3.cpp
+    vec3.cpp \
+    wavefunction.cpp
 
 HEADERS += \
-    vec3.h
+    vec3.h \
+    wavefunction.h
