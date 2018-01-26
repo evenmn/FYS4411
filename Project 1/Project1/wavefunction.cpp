@@ -20,6 +20,12 @@ double WaveFunction::Psi_value(vec3 r_1, double alpha, double beta)
         return exp(-alpha*x*x);
     }
 
+    else{
+        //Here, implement E_L for N particles and 3 dimensions -> can work for any m_dim and N_dim
+        //Cannot use vec3... must implement Nx3 matrix, that contains the positions of all the N particles
+
+    }
+
 }
 
 double WaveFunction::Psi_value_sqrd(vec3 r_1, double alpha, double beta)
