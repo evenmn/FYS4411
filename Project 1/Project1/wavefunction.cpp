@@ -15,13 +15,7 @@ int WaveFunction::setTrialWF(int dim, int N, int n_or_a)
 
 double WaveFunction::Psi_value(double pos_mat[][3], double alpha, double beta)
 {
-
-    if(m_dim==1&&m_N==1){
-        double x = pos_mat[0][0];
-        return exp(-alpha*x*x);
-    }
-
-    else if(m_dim==1&&m_N!=1){
+    if(m_dim==1){
         //Returns the wavefunction
 
         double sumsqrt = 0;         // x1^2 + y1^2 + ... + B*yn^2
@@ -29,13 +23,14 @@ double WaveFunction::Psi_value(double pos_mat[][3], double alpha, double beta)
 
         for(int i=0; i<m_N; i++) {
             sumsqrt += pos_mat[i][0]*pos_mat[i][0];
-
+            /*
             for(int j=m_N; j>i; j--) {
                 double rij = sqrt((pos_mat[i][0]-pos_mat[j][0])*(pos_mat[i][0]-pos_mat[j][0]));
                 sumu += 1/rij;
             }
+            */
         }
-        return exp(-alpha*sumsqrt)*exp(sumu);
+        return exp(-alpha*sumsqrt); //*exp(sumu);
 
     }
 
@@ -85,12 +80,7 @@ double WaveFunction::Psi_value(double pos_mat[][3], double alpha, double beta)
 double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double beta)
 {
 
-    if(m_dim==1&&m_N==1){
-        double x = pos_mat[0][0];
-        return exp(-alpha*x*x*2);
-    }
-
-    else if(m_dim==1&&m_N!=1){
+    if(m_dim==1){
         //Returns the wavefunction
 
         double sumsqrt = 0;         // x1^2 + y1^2 + ... + B*yn^2
@@ -98,13 +88,14 @@ double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double be
 
         for(int i=0; i<m_N; i++) {
             sumsqrt += pos_mat[i][0]*pos_mat[i][0];
-
+            /*
             for(int j=m_N; j>i; j--) {
                 double rij = sqrt((pos_mat[i][0]-pos_mat[j][0])*(pos_mat[i][0]-pos_mat[j][0]));
                 sumu += 1/rij;
             }
+            */
         }
-        return exp(-alpha*sumsqrt*2)*exp(sumu*2);
+        return exp(-alpha*sumsqrt*2); //*exp(sumu*2);
     }
 
     else if(m_dim==2){
@@ -152,12 +143,7 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double omega_HO, dou
 {
     if(m_n_or_a==0){
 
-        if(m_dim==1&&m_N==1){
-        double x = pos_mat[0][0];
-        return -2*x*x*alpha*alpha + alpha + 0.5*omega_HO*omega_HO*x*x;
-    }
-
-        else if(m_dim==1&&m_N!=1){
+        if(m_dim==1){
             double sum_xixj = 0;
             double sum_x_sqrd = 0;
 
