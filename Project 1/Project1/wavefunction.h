@@ -10,7 +10,7 @@ private:
 public:
     WaveFunction() {}
     int setTrialWF              (int dim, int N);
-    double Psi_value(vec3 r_1, double alpha, double beta);
-    double Psi_value_sqrd(vec3 r_1, double alpha, double beta);
-    double E_L(vec3 r_1, double alpha, double omega_HO, double beta);
+    double Psi_value(double pos_mat[][3], double alpha, double beta);
+    double Psi_value_sqrd(double pos_mat[][3], double alpha, double beta);
+    double E_L(double pos_mat[][3], double alpha, double omega_HO, double beta);
 };

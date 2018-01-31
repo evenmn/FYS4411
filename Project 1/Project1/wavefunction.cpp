@@ -12,38 +12,55 @@ int WaveFunction::setTrialWF(int dim, int N)
     m_N = N;            //number of particles
 }
 
-double WaveFunction::Psi_value(vec3 r_1, double alpha, double beta)
+double WaveFunction::Psi_value(double pos_mat[][3],  double alpha, double beta)
 {
 
     if(m_dim==1&&m_N==1){
-        double x = r_1[0];
+        double x = pos_mat[0][0];
         return exp(-alpha*x*x);
     }
 
-    else{
-        //Here, implement E_L for N particles and 3 dimensions -> can work for any m_dim and N_dim
-        //Cannot use vec3... must implement Nx3 matrix, that contains the positions of all the N particles
+    else if(m_dim==3){
+        /* Returns the wavefunction based on an array of
+        positions preferably in three dimensions */
 
+        double sumsqrt = 0;         // x1^2 + y1^2 + B*z1^2 + ... + B*zn^2
+        double sumu = 0;            // sum(u(rij))
+
+        for(int i=0; i<m_N; i++) {
+            sumsqrt += pos_mat[i][0]*pos_mat[i][0] + \
+                       pos_mat[i][1]*pos_mat[i][1] + \
+                       beta*pos_mat[i][2]*pos_mat[i][2];
+
+            for(int j=m_N; j>i; j--) {
+                double rij = sqrt((pos_mat[i][0]-pos_mat[j][0])*(pos_mat[i][0]-pos_mat[j][0]) + \
+                                  (pos_mat[i][1]-pos_mat[j][1])*(pos_mat[i][1]-pos_mat[j][1]) + \
+                                  (pos_mat[i][2]-pos_mat[j][2])*(pos_mat[i][2]-pos_mat[j][2]));
+                sumu += 1/rij;
+            }
+        }
+        //cout << sumu << " " << sumsqrt << endl;
+        return exp(-alpha*sumsqrt)*exp(sumu);
     }
 
 }
 
-double WaveFunction::Psi_value_sqrd(vec3 r_1, double alpha, double beta)
+double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double beta)
 {
 
     if(m_dim==1&&m_N==1){
-        double x = r_1.length();
+        double x = pos_mat[0][0];
         return exp(-alpha*x*x*2);
     }
 
 }
 
 
-double WaveFunction::E_L(vec3 r_1, double alpha, double omega_HO, double beta)
+double WaveFunction::E_L(double pos_mat[][3], double alpha, double omega_HO, double beta)
 {
 
     if(m_dim==1&&m_N==1){
-        double x = r_1.length();
+        double x = pos_mat[0][0];
         return -2*x*x*alpha*alpha + alpha + 0.5*omega_HO*omega_HO*x*x;
     }
 
