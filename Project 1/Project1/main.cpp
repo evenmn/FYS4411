@@ -13,29 +13,31 @@ double random_position(double steplength){
 
 int main()
 {
+    //variables chosen by user
+    double beta = 1;            //weight parameter for z-axis
+    double omega_HO = 1;        //frequency
+    int M = 1000;                //number of MC cycles
+    double steplength = 1;      //steplength when changing position
+    int N = 1;                  //number of particles
+    int dim = 1;                //number of dimensions concidered
+    int n_or_a = 0;             //if calculation is to be based on numerical or analytical E_L
+
     //loop over several alphas
     double alpha = 1;           //variational parameter
 
 
-    double beta = 1;            //weight parameter for z-axis
-    double omega_HO = 1;        //frequency
-    int M = 10;                 //number of MC cycles
-    double steplength = 1;      //steplength when changing position
-    int N = 1;                  //number of particles
-    int dim = 3;                //number of dimensions concidered
-
     //averages and energies
-    double E_tot = 0;
-    double E_tot_sqrd= 0;
-    double E = 0;
-    double E_prev = 0;
-    double delta_EL;
+    double E_tot = 0;           //sum of energies of all states
+    double E_tot_sqrd= 0;       //sum of energies of all states squared
+    double E = 0;               //energy after change in position
+    double E_prev = 0;          //energy before change in position
+    double delta_EL;            //change in energy
 
     double psi_ratio;           //ratio of new and old wave function
     double r;                   //random number
     int N_rand;                 //randomly chosen N
     int dim_rand;               //randomly chosen dimension
-    double pos_mat_new[N][3]; //new position with random position
+    double pos_mat_new[N][3];   //new position with random position
 
     //Initialize position matrix for N particles in dim dimentions
     double pos_mat [N][3];
@@ -50,13 +52,11 @@ int main()
 
     //add initial energies to averages
     E = Psi.E_L(pos_mat, alpha, omega_HO, beta);
-
     E_tot += E;
     E_tot_sqrd += E*E;
 
 
     for(int i=0;i<M;i++){
-
         N_rand = rand()%N;
         dim_rand = 0;
 
@@ -89,7 +89,7 @@ int main()
     double E_L_avg_sqrd = E_tot_sqrd/M;
 
     cout << "E_L_avg: " << E_L_avg << endl;
-    cout << "E_L_ang_tot: " << E_L_avg_sqrd << endl;
+    cout << "E_L_avg_tot: " << E_L_avg_sqrd << endl;
 
 
     return 0;
