@@ -20,11 +20,12 @@ int main()
     double steplength = 1;      //steplength when changing position
     int N = 1;                  //number of particles
     int dim = 1;                //number of dimensions concidered
-    int n_or_a = 0;             //if calculation is to be based on numerical or analytical E_L
+    int n_or_a = 0;             //if calculation is to be based on analytical(0) or numerical(1) E_L
+
+    //Everything below here could be put in own script
 
     //loop over several alphas
     double alpha = 1;           //variational parameter
-
 
     //averages and energies
     double E_tot = 0;           //sum of energies of all states
@@ -48,7 +49,7 @@ int main()
     }
 
     WaveFunction Psi;
-    Psi.setTrialWF(dim, N);
+    Psi.setTrialWF(dim, N, n_or_a);
 
     //add initial energies to averages
     E = Psi.E_L(pos_mat, alpha, omega_HO, beta);
@@ -57,6 +58,8 @@ int main()
 
 
     for(int i=0;i<M;i++){
+
+        //Draw random position, for one particle and one dimention
         N_rand = rand()%N;
         dim_rand = 0;
 
@@ -76,6 +79,7 @@ int main()
             //accept
             memcpy(pos_mat, pos_mat_new, sizeof(pos_mat));
         }
+
 
         E = Psi.E_L(pos_mat, alpha, omega_HO, beta);
         delta_EL = E - E_prev;
