@@ -9,10 +9,11 @@ private:
     int                         m_N;
     double                      m_a;
     int                         m_n_or_a;
+    int                         m_HO;
 public:
     WaveFunction() {}
-    int setTrialWF              (int dim, int N, double a, int n_or_a);
+    int setTrialWF              (int dim, int N, double a, int n_or_a, int HO);
     double Psi_value(double pos_mat[][3], double alpha, double beta);
     double Psi_value_sqrd(double pos_mat[][3], double alpha, double beta);
-    double E_L(double pos_mat[][3], double alpha, double omega_HO, double beta);
+    double E_L(double pos_mat[][3], double alpha, double beta, double omega_HO, double omega_z);
 };

@@ -4,14 +4,52 @@
 
 using namespace std;
 
+double rij(double pos1[3], double pos2[3]) {
+    return sqrt((pos1[0]-pos2[0])*(pos1[0]-pos2[0])+(pos1[1]-pos2[1])*(pos1[1]-pos2[1])+(pos1[2]-pos2[2])*(pos1[2]-pos2[2]));
+}
 
-int WaveFunction::setTrialWF(int dim, int N, double a, int n_or_a)
+double u_der(double dist, double a) {
+    if(dist > a) {
+        return (a/(dist*dist))/(1-a/dist);
+    }
+    else {
+        return 0;
+    }
+}
+
+double u_secder(double dist, double a) {
+    double C;
+    if(dist > a) {
+        C = (1/(1-a/dist));
+        return -(a/pow(dist, 3))*C*(2+(a/dist)*C);
+    }
+    else {
+        return 0;
+    }
+}
+
+double V_ext(double pos[3], int HO, double omega_HO, double omega_z) {
+    if(HO == 0) {
+        return 0.5*omega_HO*omega_HO*(pos[0]*pos[0] + pos[1]*pos[1] + pos[2]*pos[2]);
+    }
+    else if(HO == 1) {
+        return 0.5*(omega_HO*omega_HO*(pos[0]*pos[0] + pos[1]*pos[1]) + omega_z*omega_z*pos[2]*pos[2]);
+    }
+    else {
+        cout << "HO has unexpected value" << endl;
+        return false;
+    }
+}
+
+
+int WaveFunction::setTrialWF(int dim, int N, double a, int n_or_a, int HO)
 {
 
     m_dim = dim;        //number of dimensions
     m_N = N;            //number of particles
     m_n_or_a = n_or_a;  //analytical (0) or numerical (1) E_L calculation
     m_a = a;            //dimension of trap
+    m_HO = HO;          //circular (0) or elliptical (1) harmonic oscillator
 }
 
 double WaveFunction::Psi_value(double pos_mat[][3], double alpha, double beta)
@@ -84,8 +122,12 @@ double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double be
 }
 
 
-double WaveFunction::E_L(double pos_mat[][3], double alpha, double omega_HO, double beta)
+double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double omega_HO, double omega_z)
 {
+    double distij;
+    double distik;
+    double EL;
+
     if(m_n_or_a==0){
 
         if(m_a==0){
@@ -110,9 +152,38 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double omega_HO, dou
             if(m_dim==2){
                 func += alpha*m_N*m_N;
             }
+
             else if(m_dim==3){
                 func +=  2*alpha*m_N*m_N + beta*alpha*m_N*m_N;
             }
+        }
+
+        else {
+            // This should work for all a's, but only in 3 dimensions
+            for(int i=0; i<m_N; i++) {
+                EL += 4*alpha*alpha*(pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1] + \
+                      beta*beta*pos_mat[i][2]*pos_mat[i][2] -1/alpha -beta/(2*alpha));
+                for(int j=m_N; j>i; j--) {
+                    distij = rij(pos_mat[i], pos_mat[j]);
+                    EL += -4*alpha*(pos_mat[i][0]*(pos_mat[i][0]-pos_mat[j][0]) +\
+                                    pos_mat[i][1]*(pos_mat[i][1]-pos_mat[j][1]) +\
+                                    pos_mat[i][2]*(pos_mat[i][2]-pos_mat[j][2])*beta)*(u_der(distij, m_a)/distij);
+
+                    for(int k=m_N; k>i; k--) {
+                        distik = rij(pos_mat[i], pos_mat[k]);
+                        EL += ((pos_mat[i][0] - pos_mat[k][0]) * (pos_mat[i][0] - pos_mat[j][0]) + \
+                               (pos_mat[i][1] - pos_mat[k][1]) * (pos_mat[i][1] - pos_mat[j][1]) + \
+                               (pos_mat[i][2] - pos_mat[k][2]) * (pos_mat[i][2] - pos_mat[j][2])) * \
+                              u_der(distij, m_a) * u_der(distik, m_a)/(distij*distik);
+                    }
+
+                    EL += u_secder(distij, m_a) + (2/distij)*u_der(distij, m_a);
+                }
+                EL = -0.5*EL + V_ext(pos_mat[i], 0, omega_HO, 1.0);
+
+            }
+            cout << "Final EL: " << EL << endl;
+            return EL;
         }
     }
 

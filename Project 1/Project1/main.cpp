@@ -14,14 +14,16 @@ double random_position(double steplength){
 int main()
 {
     //variables chosen by user
-    double beta = 1;            //weight parameter for z-axis
-    double omega_HO = 1;        //frequency
+    double beta = 1;            //weight parameter along z-axis
+    double omega_HO = 1;        //HO frequency in x- and y-direction
+    double omega_z = 1;         //HO frequency in z-direction
     int M = 1000;               //number of MC cycles
     double steplength = 1;      //steplength when changing position
-    int N = 10;                  //number of particles
-    int dim = 2;                //number of dimensions concidered
+    int N = 10;                 //number of particles
+    int dim = 3;                //number of dimensions concidered
     int num_or_an = 0;          //if calculation is to be based on analytical(0) or numerical(1) E_L
-    double a = 0;               //distance parameter
+    int HO = 0;
+    double a = 0.4*pow(10,-10); //distance parameter
 
     //loop over several alphas
     double alpha = 1;           //variational parameter
@@ -56,10 +58,10 @@ int main()
 
     //Initialize wave function
     WaveFunction Psi;
-    Psi.setTrialWF(dim, N, a, num_or_an);
+    Psi.setTrialWF(dim, N, a, num_or_an, HO);
 
     //Add initial energies to averages
-    E = Psi.E_L(pos_mat, alpha, omega_HO, beta);
+    E = Psi.E_L(pos_mat, alpha, beta, omega_HO, omega_z);
     E_tot += E;
     E_tot_sqrd += E*E;
 
@@ -77,7 +79,7 @@ int main()
 
         //Metropolis algorithm
         psi_ratio = Psi.Psi_value_sqrd(pos_mat_new, alpha, beta)/(Psi.Psi_value_sqrd(pos_mat, alpha, beta));
-        E_prev = Psi.E_L(pos_mat, alpha, omega_HO, beta);
+        E_prev = Psi.E_L(pos_mat, alpha, beta, omega_HO, omega_z);
 
         r = ((double)rand() / (double)RAND_MAX);
         if(psi_ratio >= r){
@@ -86,7 +88,7 @@ int main()
         }
 
 
-        E = Psi.E_L(pos_mat, alpha, omega_HO, beta);
+        E = Psi.E_L(pos_mat, alpha, beta, omega_HO, omega_z);
         delta_EL = E - E_prev;
         E_tot += E;
         E_tot_sqrd += E*E;
