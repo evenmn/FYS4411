@@ -16,7 +16,7 @@ int main()
     double beta = 1;            //weight parameter along z-axis
     double omega_HO = 1;        //HO frequency in x- and y-direction
     double omega_z = 1;         //HO frequency in z-direction
-    int M = 100000;               //number of MC cycles
+    int M = 10000;               //number of MC cycles
     double steplength = 1;      //steplength when changing position
     int N = 1;                 //number of particles
     int dim = 1;                //number of dimensions concidered

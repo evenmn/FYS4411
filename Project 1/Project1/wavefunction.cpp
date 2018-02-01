@@ -116,7 +116,7 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double 
     double distij;
     double distik;
     double EL;
-    double E_TOT;
+    double E_TOT =0;
 
     // This should work for all a's and in all dimensions
     for(int i=0; i<m_N; i++) {
@@ -135,14 +135,14 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double 
             EL += -4*alpha -2*alpha*beta;
         }
 
-        for(int j=m_N; j>i; j--) {
+        for(int j=m_N-1; j>i; j--) {
             distij = rij(pos_mat[i], pos_mat[j]);
             EL += -4*alpha*(pos_mat[i][0] * (pos_mat[i][0]-pos_mat[j][0]) +\
                             pos_mat[i][1] * (pos_mat[i][1]-pos_mat[j][1]) +\
                             pos_mat[i][2] * (pos_mat[i][2]-pos_mat[j][2])*beta) * \
                   (u_der(distij, m_a)/distij);
 
-            for(int k=m_N; k>i; k--) {
+            for(int k=m_N-1; k>i; k--) {
                 distik = rij(pos_mat[i], pos_mat[k]);
                 EL += ((pos_mat[i][0] - pos_mat[k][0]) * (pos_mat[i][0] - pos_mat[j][0]) + \
                        (pos_mat[i][1] - pos_mat[k][1]) * (pos_mat[i][1] - pos_mat[j][1]) + \
@@ -152,7 +152,7 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double 
 
             EL += u_secder(distij, m_a) + (2/distij)*u_der(distij, m_a);
         }
-        E_TOT = -0.5*EL + V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
+        E_TOT += -0.5*EL + V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
     }
     return E_TOT;
 
