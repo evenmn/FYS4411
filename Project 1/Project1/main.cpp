@@ -10,7 +10,6 @@ double random_position(double steplength){
     return ((double)rand() / (double)RAND_MAX)*steplength;
 }
 
-
 int main()
 {
     //variables chosen by user
@@ -19,11 +18,11 @@ int main()
     double omega_z = 1;         //HO frequency in z-direction
     int M = 1000;               //number of MC cycles
     double steplength = 1;      //steplength when changing position
-    int N = 10;                 //number of particles
+    int N = 100;                 //number of particles
     int dim = 3;                //number of dimensions concidered
     int num_or_an = 0;          //if calculation is to be based on analytical(0) or numerical(1) E_L
-    int HO = 0;
-    double a = 0.4*pow(10,-10); //distance parameter
+    int HO = 0;                 //spherical (0) or elliptical (1) harmonic oscillator
+    double a = 0.4*pow(10,-10); //distance par        if(psi_ratio > 1) {
 
     //loop over several alphas
     double alpha = 1;           //variational parameter
@@ -75,18 +74,21 @@ int main()
         memcpy(pos_mat_new, pos_mat, sizeof(pos_mat_new));
 
         //Proposed new position
-        pos_mat_new[N_rand][dim_rand] = random_position(steplength);
+        pos_mat_new[N_rand][dim_rand] = (random_position(1)-0.5)*steplength;
 
         //Metropolis algorithm
         psi_ratio = Psi.Psi_value_sqrd(pos_mat_new, alpha, beta)/(Psi.Psi_value_sqrd(pos_mat, alpha, beta));
         E_prev = Psi.E_L(pos_mat, alpha, beta, omega_HO, omega_z);
 
         r = ((double)rand() / (double)RAND_MAX);
+
         if(psi_ratio >= r){
             //accept and update pos_mat
             memcpy(pos_mat, pos_mat_new, sizeof(pos_mat)); //maybe more time efficient to only update the one changed position?
         }
-
+        if(psi_ratio > 1) {
+            memcpy(pos_mat, pos_mat_new, sizeof(pos_mat));
+        }
 
         E = Psi.E_L(pos_mat, alpha, beta, omega_HO, omega_z);
         delta_EL = E - E_prev;

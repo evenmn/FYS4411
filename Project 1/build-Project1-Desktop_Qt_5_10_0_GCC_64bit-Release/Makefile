@@ -52,10 +52,12 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../Project1/main.cpp \
 		../Project1/vec3.cpp \
-		../Project1/wavefunction.cpp 
+		../Project1/wavefunction.cpp \
+		../Project1/BF_met.cpp 
 OBJECTS       = main.o \
 		vec3.o \
-		wavefunction.o
+		wavefunction.o \
+		BF_met.o
 DIST          = ../../../Qt/5.10.0/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt/5.10.0/gcc_64/mkspecs/common/unix.conf \
 		../../../Qt/5.10.0/gcc_64/mkspecs/common/linux.conf \
@@ -235,7 +237,8 @@ DIST          = ../../../Qt/5.10.0/gcc_64/mkspecs/features/spec_pre.prf \
 		../Project1/Project1.pro vec3.h \
 		wavefunction.h ../Project1/main.cpp \
 		../Project1/vec3.cpp \
-		../Project1/wavefunction.cpp
+		../Project1/wavefunction.cpp \
+		../Project1/BF_met.cpp
 QMAKE_TARGET  = Project1
 DESTDIR       = 
 TARGET        = Project1
@@ -655,6 +658,9 @@ vec3.o: ../Project1/vec3.cpp ../Project1/vec3.h
 wavefunction.o: ../Project1/wavefunction.cpp ../Project1/wavefunction.h \
 		../Project1/vec3.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o wavefunction.o ../Project1/wavefunction.cpp
+
+BF_met.o: ../Project1/BF_met.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o BF_met.o ../Project1/BF_met.cpp
 
 ####### Install
 

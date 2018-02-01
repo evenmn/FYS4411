@@ -5,7 +5,8 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     vec3.cpp \
-    wavefunction.cpp
+    wavefunction.cpp \
+    BF_met.cpp
 
 HEADERS += \
     vec3.h \

@@ -49,7 +49,7 @@ int WaveFunction::setTrialWF(int dim, int N, double a, int n_or_a, int HO)
     m_N = N;            //number of particles
     m_n_or_a = n_or_a;  //analytical (0) or numerical (1) E_L calculation
     m_a = a;            //dimension of trap
-    m_HO = HO;          //circular (0) or elliptical (1) harmonic oscillator
+    m_HO = HO;          //spherical (0) or elliptical (1) harmonic oscillator
 }
 
 double WaveFunction::Psi_value(double pos_mat[][3], double alpha, double beta)
@@ -126,7 +126,7 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double 
 {
     double distij;
     double distik;
-    double EL;
+    double EL = 0;
 
     if(m_n_or_a==0){
 
@@ -159,15 +159,28 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double 
         }
 
         else {
-            // This should work for all a's, but only in 3 dimensions
+            // This should work for all a's and in all dimensions
             for(int i=0; i<m_N; i++) {
                 EL += 4*alpha*alpha*(pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1] + \
-                      beta*beta*pos_mat[i][2]*pos_mat[i][2] -1/alpha -beta/(2*alpha));
+                      beta*beta*pos_mat[i][2]*pos_mat[i][2]);
+
+                if(m_dim==1) {
+                    EL += -2*alpha;
+                }
+                else if(m_dim==2) {
+                    EL += -4*alpha;
+                }
+
+                else if(m_dim==3) {
+                    EL += -4*alpha -2*alpha*beta;
+                }
+
                 for(int j=m_N; j>i; j--) {
                     distij = rij(pos_mat[i], pos_mat[j]);
-                    EL += -4*alpha*(pos_mat[i][0]*(pos_mat[i][0]-pos_mat[j][0]) +\
-                                    pos_mat[i][1]*(pos_mat[i][1]-pos_mat[j][1]) +\
-                                    pos_mat[i][2]*(pos_mat[i][2]-pos_mat[j][2])*beta)*(u_der(distij, m_a)/distij);
+                    EL += -4*alpha*(pos_mat[i][0] * (pos_mat[i][0]-pos_mat[j][0]) +\
+                                    pos_mat[i][1] * (pos_mat[i][1]-pos_mat[j][1]) +\
+                                    pos_mat[i][2] * (pos_mat[i][2]-pos_mat[j][2])*beta) * \
+                          (u_der(distij, m_a)/distij);
 
                     for(int k=m_N; k>i; k--) {
                         distik = rij(pos_mat[i], pos_mat[k]);
@@ -179,10 +192,10 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double 
 
                     EL += u_secder(distij, m_a) + (2/distij)*u_der(distij, m_a);
                 }
-                EL = -0.5*EL + V_ext(pos_mat[i], 0, omega_HO, 1.0);
+                EL = -0.5*EL + V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
 
             }
-            cout << "Final EL: " << EL << endl;
+            //cout << "Final EL: " << EL << endl;
             return EL;
         }
     }
