@@ -83,9 +83,7 @@ double WaveFunction::Psi_value(double pos_mat[][3], double alpha, double beta)
 
 double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double beta)
 {
-
     //Returns the wavefunction
-
     double sumsqrt = 0;         // x1^2 + y1^2 + B*z1^2 + ... + B*zn^2
     double sumu = 0;            // sum(u(rij))
 
@@ -109,6 +107,7 @@ double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double be
     }
     return exp(-alpha*sumsqrt*2)*exp(sumu*2);
 
+
 }
 
 
@@ -119,77 +118,44 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double 
     double EL;
     double E_TOT;
 
-    if(m_n_or_a==0){
+    // This should work for all a's and in all dimensions
+    for(int i=0; i<m_N; i++) {
+        EL = 0;
+        EL += 4*alpha*alpha*(pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1] + \
+              beta*beta*pos_mat[i][2]*pos_mat[i][2]);
 
-        if(m_a==3){
-            //OBS! For a=0
-            double sum_xixj = 0;
-            double sum_yiyj = 0;
-            double sum_zizj = 0;
-            double sum_xyz_sqrd = 0;
-
-            for(int i=0; i<m_N; i++){
-                sum_xyz_sqrd += pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1] + beta*pos_mat[i][2]*pos_mat[i][2];
-                cout << sum_xyz_sqrd << endl;
-                for(int j=0; j<m_N; j++){
-                    sum_xixj += pos_mat[i][0]*pos_mat[j][0];
-                    sum_yiyj += pos_mat[i][1]*pos_mat[j][1];
-                    sum_zizj += pos_mat[i][2]*pos_mat[j][2];
-                }
-            }
-
-            double func = -2*m_N*alpha*(sum_xixj + sum_yiyj + beta*beta*sum_zizj) + alpha*m_N*m_N + 0.5*omega_HO*omega_HO*sum_xyz_sqrd;
-
-            if(m_dim==2){
-                func += alpha*m_N*m_N;
-            }
-
-            else if(m_dim==3){
-                func +=  2*alpha*m_N*m_N + beta*alpha*m_N*m_N;
-            }
+        if(m_dim==1) {
+            EL += -2*alpha;
+        }
+        else if(m_dim==2) {
+            EL += -4*alpha;
         }
 
-        else {
-            // This should work for all a's and in all dimensions
-            for(int i=0; i<m_N; i++) {
-                EL = 0;
-                EL += 4*alpha*alpha*(pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1] + \
-                      beta*beta*pos_mat[i][2]*pos_mat[i][2]);
-
-                if(m_dim==1) {
-                    EL += -2*alpha;
-                }
-                else if(m_dim==2) {
-                    EL += -4*alpha;
-                }
-
-                else if(m_dim==3) {
-                    EL += -4*alpha -2*alpha*beta;
-                }
-
-                for(int j=m_N; j>i; j--) {
-                    distij = rij(pos_mat[i], pos_mat[j]);
-                    EL += -4*alpha*(pos_mat[i][0] * (pos_mat[i][0]-pos_mat[j][0]) +\
-                                    pos_mat[i][1] * (pos_mat[i][1]-pos_mat[j][1]) +\
-                                    pos_mat[i][2] * (pos_mat[i][2]-pos_mat[j][2])*beta) * \
-                          (u_der(distij, m_a)/distij);
-
-                    for(int k=m_N; k>i; k--) {
-                        distik = rij(pos_mat[i], pos_mat[k]);
-                        EL += ((pos_mat[i][0] - pos_mat[k][0]) * (pos_mat[i][0] - pos_mat[j][0]) + \
-                               (pos_mat[i][1] - pos_mat[k][1]) * (pos_mat[i][1] - pos_mat[j][1]) + \
-                               (pos_mat[i][2] - pos_mat[k][2]) * (pos_mat[i][2] - pos_mat[j][2])) * \
-                              u_der(distij, m_a) * u_der(distik, m_a)/(distij*distik);
-                    }
-
-                    EL += u_secder(distij, m_a) + (2/distij)*u_der(distij, m_a);
-                }
-                E_TOT = -0.5*EL + V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
-            }
-            return E_TOT;
+        else if(m_dim==3) {
+            EL += -4*alpha -2*alpha*beta;
         }
+
+        for(int j=m_N; j>i; j--) {
+            distij = rij(pos_mat[i], pos_mat[j]);
+            EL += -4*alpha*(pos_mat[i][0] * (pos_mat[i][0]-pos_mat[j][0]) +\
+                            pos_mat[i][1] * (pos_mat[i][1]-pos_mat[j][1]) +\
+                            pos_mat[i][2] * (pos_mat[i][2]-pos_mat[j][2])*beta) * \
+                  (u_der(distij, m_a)/distij);
+
+            for(int k=m_N; k>i; k--) {
+                distik = rij(pos_mat[i], pos_mat[k]);
+                EL += ((pos_mat[i][0] - pos_mat[k][0]) * (pos_mat[i][0] - pos_mat[j][0]) + \
+                       (pos_mat[i][1] - pos_mat[k][1]) * (pos_mat[i][1] - pos_mat[j][1]) + \
+                       (pos_mat[i][2] - pos_mat[k][2]) * (pos_mat[i][2] - pos_mat[j][2])) * \
+                      u_der(distij, m_a) * u_der(distik, m_a)/(distij*distik);
+            }
+
+            EL += u_secder(distij, m_a) + (2/distij)*u_der(distij, m_a);
+        }
+        E_TOT = -0.5*EL + V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
     }
-    else if(m_n_or_a==1){
-        //Implement numerical solution
-    }
+    return E_TOT;
+
+
+
 }
