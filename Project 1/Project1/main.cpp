@@ -16,16 +16,16 @@ int main()
     double beta = 1;            //weight parameter along z-axis
     double omega_HO = 1;        //HO frequency in x- and y-direction
     double omega_z = 1;         //HO frequency in z-direction
-    int M = 1000;               //number of MC cycles
+    int M = 10000;               //number of MC cycles
     double steplength = 1;      //steplength when changing position
-    int N = 100;                 //number of particles
-    int dim = 3;                //number of dimensions concidered
+    int N = 1;                 //number of particles
+    int dim = 1;                //number of dimensions concidered
     int num_or_an = 0;          //if calculation is to be based on analytical(0) or numerical(1) E_L
     int HO = 0;                 //spherical (0) or elliptical (1) harmonic oscillator
-    double a = 0.4*pow(10,-10); //distance par        if(psi_ratio > 1) {
+    double a = 0; //0.4*pow(10,-10); //distance par        if(psi_ratio > 1) {
 
     //loop over several alphas
-    double alpha = 1;           //variational parameter
+    double alpha = 1/sqrt(2);           //variational parameter
 
 
     //Everything below here could be put in own script
@@ -49,7 +49,7 @@ int main()
         for(int j=0; j<dim; j++) {
             pos_mat[i][j] = random_position(1);
         }
-        for(int k=dim;k<3;k++){
+        for(int k=dim; k<3; k++){
             pos_mat[i][k] = 0;
         }
     }
@@ -74,7 +74,7 @@ int main()
         memcpy(pos_mat_new, pos_mat, sizeof(pos_mat_new));
 
         //Proposed new position
-        pos_mat_new[N_rand][dim_rand] = (random_position(1)-0.5)*steplength;
+        pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + (random_position(1)-0.5)*steplength;
 
         //Metropolis algorithm
         psi_ratio = Psi.Psi_value_sqrd(pos_mat_new, alpha, beta)/(Psi.Psi_value_sqrd(pos_mat, alpha, beta));
@@ -85,9 +85,6 @@ int main()
         if(psi_ratio >= r){
             //accept and update pos_mat
             memcpy(pos_mat, pos_mat_new, sizeof(pos_mat)); //maybe more time efficient to only update the one changed position?
-        }
-        if(psi_ratio > 1) {
-            memcpy(pos_mat, pos_mat_new, sizeof(pos_mat));
         }
 
         E = Psi.E_L(pos_mat, alpha, beta, omega_HO, omega_z);

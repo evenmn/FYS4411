@@ -65,23 +65,18 @@ double WaveFunction::Psi_value(double pos_mat[][3], double alpha, double beta)
                    beta*pos_mat[i][2]*pos_mat[i][2];
 
         for(int j=m_N; j>i; j--) {
-            double rij = sqrt((pos_mat[i][0]-pos_mat[j][0])*(pos_mat[i][0]-pos_mat[j][0]) + \
-                              (pos_mat[i][1]-pos_mat[j][1])*(pos_mat[i][1]-pos_mat[j][1]) + \
-                              (pos_mat[i][2]-pos_mat[j][2])*(pos_mat[i][2]-pos_mat[j][2]));
+            double norm = rij(pos_mat[i], pos_mat[j]);
             double f;
 
-            if(rij>m_a){
-                f = 1 - m_a/rij;
+            if(norm > m_a){
+                f = 1 - m_a/norm;
             }
             else{
                 f = 0;
             }
-
-            double u = log(f);
-            sumu += u;
+            sumu += log(f);
         }
     }
-    //cout << sumu << " " << sumsqrt << endl;
     return exp(-alpha*sumsqrt)*exp(sumu);
 
 }
@@ -100,23 +95,18 @@ double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double be
                    beta*pos_mat[i][2]*pos_mat[i][2];
 
         for(int j=m_N; j>i; j--) {
-            double rij = sqrt((pos_mat[i][0]-pos_mat[j][0])*(pos_mat[i][0]-pos_mat[j][0]) + \
-                              (pos_mat[i][1]-pos_mat[j][1])*(pos_mat[i][1]-pos_mat[j][1]) + \
-                              (pos_mat[i][2]-pos_mat[j][2])*(pos_mat[i][2]-pos_mat[j][2]));
+            double norm = rij(pos_mat[i], pos_mat[j]);
             double f;
 
-            if(rij>m_a){
-                f = 1 - m_a/rij;
+            if(norm > m_a){
+                f = 1 - m_a/norm;
             }
             else{
                 f = 0;
             }
-
-            double u = log(f);
-            sumu += u;
+            sumu += log(f);
         }
     }
-    //cout << sumu << " " << sumsqrt << endl;
     return exp(-alpha*sumsqrt*2)*exp(sumu*2);
 
 }
@@ -126,21 +116,22 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double 
 {
     double distij;
     double distik;
-    double EL = 0;
+    double EL;
+    double E_TOT;
 
     if(m_n_or_a==0){
 
-        if(m_a==0){
+        if(m_a==3){
             //OBS! For a=0
             double sum_xixj = 0;
             double sum_yiyj = 0;
             double sum_zizj = 0;
             double sum_xyz_sqrd = 0;
 
-            for(int i=0;i<m_N;i++){
+            for(int i=0; i<m_N; i++){
                 sum_xyz_sqrd += pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1] + beta*pos_mat[i][2]*pos_mat[i][2];
                 cout << sum_xyz_sqrd << endl;
-                for(int j=0;j<m_N;j++){
+                for(int j=0; j<m_N; j++){
                     sum_xixj += pos_mat[i][0]*pos_mat[j][0];
                     sum_yiyj += pos_mat[i][1]*pos_mat[j][1];
                     sum_zizj += pos_mat[i][2]*pos_mat[j][2];
@@ -161,6 +152,7 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double 
         else {
             // This should work for all a's and in all dimensions
             for(int i=0; i<m_N; i++) {
+                EL = 0;
                 EL += 4*alpha*alpha*(pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1] + \
                       beta*beta*pos_mat[i][2]*pos_mat[i][2]);
 
@@ -192,16 +184,12 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double 
 
                     EL += u_secder(distij, m_a) + (2/distij)*u_der(distij, m_a);
                 }
-                EL = -0.5*EL + V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
-
+                E_TOT = -0.5*EL + V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
             }
-            //cout << "Final EL: " << EL << endl;
-            return EL;
+            return E_TOT;
         }
     }
-
     else if(m_n_or_a==1){
         //Implement numerical solution
     }
 }
-

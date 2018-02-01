@@ -235,7 +235,8 @@ DIST          = ../../../Qt/5.10.0/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt/5.10.0/gcc_64/mkspecs/features/yacc.prf \
 		../../../Qt/5.10.0/gcc_64/mkspecs/features/lex.prf \
 		../Project1/Project1.pro vec3.h \
-		wavefunction.h ../Project1/main.cpp \
+		wavefunction.h \
+		BF_met.h ../Project1/main.cpp \
 		../Project1/vec3.cpp \
 		../Project1/wavefunction.cpp \
 		../Project1/BF_met.cpp

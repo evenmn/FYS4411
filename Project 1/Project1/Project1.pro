@@ -10,4 +10,5 @@ SOURCES += main.cpp \
 
 HEADERS += \
     vec3.h \
-    wavefunction.h
+    wavefunction.h \
+    BF_met.h
