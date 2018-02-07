@@ -1,4 +1,3 @@
-#ifndef BF_MET_H
-#define BF_MET_H
+#pragma once
 
-#endif // BF_MET_H
+void BF_calc(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_Z, int HO, double alpha, double beta);
