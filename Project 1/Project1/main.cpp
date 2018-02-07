@@ -16,23 +16,23 @@ int main()
     double beta = 1;            //weight parameter along z-axis
     double omega_HO = 1;        //HO frequency in x- and y-direction
     double omega_z = 1;         //HO frequency in z-direction
-    int M = 10000;               //number of MC cycles
+    int M = 100000;               //number of MC cycles
     double steplength = 1;      //steplength when changing position
-    int N = 1;                 //number of particles
-    int dim = 1;                //number of dimensions concidered
+    int N = 10;                 //number of particles
+    int dim = 3;                //number of dimensions concidered
     int num_or_an = 0;          //if calculation is to be based on analytical(0) or numerical(1) E_L
     int HO = 0;                 //spherical (0) or elliptical (1) harmonic oscillator
-    double a = 0; //0.4*pow(10,-10); //distance par        if(psi_ratio > 1) {
+    double a = 0;               //distance parameter
 
     //loop over several alphas
     double alpha[] = {0.1, 0.25, 0.5, 0.75, 1.0};           //variational parameter
     int length_alpha = sizeof(alpha)/sizeof(*alpha);
 
     //Everything below here could be put in own script
-    for(int k=0; k<length_alpha;k++){
+    for(int k=0; k<length_alpha; k++){
         //averages and energies
         double E_tot = 0;           //sum of energies of all states
-        double E_tot_sqrd = 0;       //sum of energies of all states squared
+        double E_tot_sqrd = 0;      //sum of energies of all states squared
         double E = 0;               //energy after change in position
         double E_prev = 0;          //energy before change in position
         double delta_EL;            //change in energy
@@ -97,11 +97,8 @@ int main()
         double E_L_avg = E_tot/M;
         double E_L_avg_sqrd = E_tot_sqrd/M;
 
-    cout << "E_L_avg: " << E_L_avg << endl;
-    cout << "E_L_avg_tot: " << E_L_avg_sqrd << "\n" << endl;
+        cout << "E_L_avg: " << E_L_avg << endl;
+        cout << "E_L_avg_tot: " << E_L_avg_sqrd << "\n" << endl;
     }
-
     return 0;
-
 }
-

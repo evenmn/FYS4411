@@ -5,7 +5,7 @@
 using namespace std;
 
 double rij(double pos1[3], double pos2[3]) {
-    return sqrt((pos1[0]-pos2[0])*(pos1[0]-pos2[0])+(pos1[1]-pos2[1])*(pos1[1]-pos2[1])+(pos1[2]-pos2[2])*(pos1[2]-pos2[2]));
+    return sqrt((pos1[0]-pos2[0])*(pos1[0]-pos2[0]) + (pos1[1]-pos2[1])*(pos1[1]-pos2[1]) + (pos1[2]-pos2[2])*(pos1[2]-pos2[2]));
 }
 
 double u_der(double dist, double a) {
@@ -106,8 +106,6 @@ double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double be
         }
     }
     return exp(-alpha*sumsqrt*2)*exp(sumu*2);
-
-
 }
 
 
@@ -116,7 +114,7 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double 
     double distij;
     double distik;
     double EL;
-    double E_TOT =0;
+    double E_TOT = 0;
 
     // This should work for all a's and in all dimensions
     for(int i=0; i<m_N; i++) {
@@ -139,7 +137,7 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double 
             distij = rij(pos_mat[i], pos_mat[j]);
             EL += -4*alpha*(pos_mat[i][0] * (pos_mat[i][0]-pos_mat[j][0]) +\
                             pos_mat[i][1] * (pos_mat[i][1]-pos_mat[j][1]) +\
-                            pos_mat[i][2] * (pos_mat[i][2]-pos_mat[j][2])*beta) * \
+                            pos_mat[i][2] * (pos_mat[i][2]-pos_mat[j][2]) * beta) * \
                   (u_der(distij, m_a)/distij);
 
             for(int k=m_N-1; k>i; k--) {
@@ -147,15 +145,41 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double 
                 EL += ((pos_mat[i][0] - pos_mat[k][0]) * (pos_mat[i][0] - pos_mat[j][0]) + \
                        (pos_mat[i][1] - pos_mat[k][1]) * (pos_mat[i][1] - pos_mat[j][1]) + \
                        (pos_mat[i][2] - pos_mat[k][2]) * (pos_mat[i][2] - pos_mat[j][2])) * \
-                      u_der(distij, m_a) * u_der(distik, m_a)/(distij*distik);
+                      u_der(distij, m_a) * u_der(distik, m_a) / (distij * distik);
             }
 
-            EL += u_secder(distij, m_a) + (2/distij)*u_der(distij, m_a);
+            EL += u_secder(distij, m_a) + (2/distij) * u_der(distij, m_a);
         }
         E_TOT += -0.5*EL + V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
     }
     return E_TOT;
+}
 
+double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, double h)
+{
+    // Kinetic energy
+    double psi_old = Psi_value(pos_mat, alpha, beta);
 
+    double pos_mat_plus[m_N][3];
+    double pos_mat_minus[m_N][3];
 
+    for(int i=0; i<m_N; i++) {
+        for(int j=0; j<m_dim; j++) {
+            pos_mat_plus[i][j] = pos_mat[i][j] + h;
+            pos_mat_minus[i][j] = pos_mat[i][j] - h;
+        }
+    }
+    cout << pos_mat_plus << endl;
+
+    double sec_der_psi = (Psi_value(pos_mat_plus, alpha, beta) -2*psi_old + Psi_value(pos_mat_minus, alpha, beta))/(h*h);
+    double E_k = -0.5*(sec_der_psi/psi_old);
+
+    // Potential energy
+    double E_p = 0;
+    for(int i=0; i<m_N; i++) {
+        for(int j=m_N-1; j>i; j--) {
+            E_p += rij(pos_mat[i], pos_mat[j]);
+        }
+    }
+    return E_k + E_p;
 }
