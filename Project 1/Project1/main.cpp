@@ -80,6 +80,8 @@ int main()
             psi_ratio = Psi.Psi_value_sqrd(pos_mat_new, alpha[k], beta)/(Psi.Psi_value_sqrd(pos_mat, alpha[k], beta));
             E_prev = Psi.E_L(pos_mat, alpha[k], beta, omega_HO, omega_z);
 
+            //cout << Psi.E_L_num(pos_mat, alpha[k], beta, 0.001) << endl;
+
             r = ((double)rand() / (double)RAND_MAX);
 
             if(psi_ratio >= r){

@@ -169,7 +169,6 @@ double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, dou
             pos_mat_minus[i][j] = pos_mat[i][j] - h;
         }
     }
-    cout << pos_mat_plus << endl;
 
     double sec_der_psi = (Psi_value(pos_mat_plus, alpha, beta) -2*psi_old + Psi_value(pos_mat_minus, alpha, beta))/(h*h);
     double E_k = -0.5*(sec_der_psi/psi_old);
