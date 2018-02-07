@@ -5,6 +5,7 @@
 #include <string.h>
 #include <vector>
 #include <BF_met.h>
+
 using namespace std;
 
 double random_position(double steplength){
@@ -38,8 +39,7 @@ int main()
         i.resize(dim);
    */
 
-    BF_calc(N, dim, M, a, steplength, omega_HO, omega_z, HO, alpha, length_alpha_1, beta, h);
-
+    Met_algo(N, dim, M, a, steplength, omega_HO, omega_z, HO, alpha, length_alpha_1, beta, h);
 
     return 0;
 }

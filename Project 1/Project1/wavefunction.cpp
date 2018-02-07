@@ -185,13 +185,13 @@ double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, dou
         }
     }
     kineticEnergy = -(0.5/(h*h))*kineticEnergy;
-    cout << kineticEnergy << endl;
+    //cout << kineticEnergy << endl;
 
     // Potential energy
     double E_p = 0;
     for(int i=0; i<m_N; i++) {
         E_p += V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
     }
-    cout << E_p << "\n" << endl;
+    //cout << E_p << "\n" << endl;
     return kineticEnergy + E_p;
 }
