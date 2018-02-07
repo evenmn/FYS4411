@@ -11,7 +11,7 @@ double random_position_1(double steplength){
     return ((double)rand() / (double)RAND_MAX)*steplength;
 }
 
-void BF_calc(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, int HO, double alpha[], int length_alpha_1, double beta)
+void BF_calc(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, int HO, double alpha[], int length_alpha_1, double beta, double h)
 {
     cout << length_alpha_1 << endl;
     cout << alpha[0] << " " << alpha[1] << " "<< alpha[2] << endl;
@@ -22,6 +22,8 @@ void BF_calc(int N, int dim, int M, double a, double steplength, double omega_HO
         double E_tot_sqrd_1 = 0;      //sum of energies of all states squared
         double E_1 = 0;               //energy after change in position
         double E_prev_1 = 0;          //energy before change in position
+        double E_num_1 = 0;
+        double E_num_tot = 0;
         double delta_EL_1;            //change in energy
 
         double psi_ratio_1;           //ratio of new and old wave function
@@ -49,6 +51,7 @@ void BF_calc(int N, int dim, int M, double a, double steplength, double omega_HO
 
         //Add initial energies to averages
         E_1 = Psi_1.E_L(pos_mat_1, alpha[k], beta, omega_HO, omega_z);
+        E_num_1 = Psi_1.E_L_num(pos_mat_1, alpha[k], beta, h, omega_HO, omega_z);
         E_tot_1 += E_1;
         E_tot_sqrd_1 += E_1*E_1;
 
@@ -68,7 +71,8 @@ void BF_calc(int N, int dim, int M, double a, double steplength, double omega_HO
             psi_ratio_1 = Psi_1.Psi_value_sqrd(pos_mat_new_1, alpha[k], beta)/(Psi_1.Psi_value_sqrd(pos_mat_1, alpha[k], beta));
             E_prev_1 = Psi_1.E_L(pos_mat_1, alpha[k], beta, omega_HO, omega_z);
 
-            //cout << Psi.E_L_num(pos_mat, alpha[k], beta, 0.001) << endl;
+            //cout << Psi_1.E_L_num(pos_mat_1, alpha[k], beta, 0.001, omega_HO, omega_z) <<  endl;
+            //cout << E_prev_1 << "\n" << endl;
 
             r_1 = ((double)rand() / (double)RAND_MAX);
 
@@ -78,16 +82,21 @@ void BF_calc(int N, int dim, int M, double a, double steplength, double omega_HO
             }
 
             E_1 = Psi_1.E_L(pos_mat_1, alpha[k], beta, omega_HO, omega_z);
+            E_num_1 = Psi_1.E_L_num(pos_mat_1, alpha[k], beta, h, omega_HO, omega_z);
             delta_EL_1 = E_1 - E_prev_1;
             E_tot_1 += E_1;
             E_tot_sqrd_1 += E_1*E_1;
+            E_num_tot += E_num_1;
         }
 
         //Calculate <E_l> and <E_L**2>
         double E_L_avg_1 = E_tot_1/M;
         double E_L_avg_sqrd_1 = E_tot_sqrd_1/M;
+        double E_L_num_avg_1 = E_num_tot/M;
 
         cout << "E_L_avg: " << E_L_avg_1 << endl;
-        cout << "E_L_avg_tot: " << E_L_avg_sqrd_1 << "\n" << endl;
+        cout << "E_L_avg_tot: " << E_L_avg_sqrd_1 << endl;
+        cout << "E_L_num_avg: " << E_L_num_avg_1 << "\n" << endl;
+
     }
 }

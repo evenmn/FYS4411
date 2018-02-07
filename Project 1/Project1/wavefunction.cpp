@@ -1,6 +1,7 @@
 #include "wavefunction.h"
 #include <cmath>
 #include <iostream>
+#include <string.h>
 
 using namespace std;
 
@@ -155,30 +156,42 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double 
     return E_TOT;
 }
 
-double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, double h)
+double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, double h, double omega_HO, double omega_z)
 {
-    // Kinetic energy
-    double psi_old = Psi_value(pos_mat, alpha, beta);
+    double wavefunction_old = Psi_value(pos_mat, alpha, beta);
 
+    // Kinetic energy
     double pos_mat_plus[m_N][3];
     double pos_mat_minus[m_N][3];
 
-    for(int i=0; i<m_N; i++) {
-        for(int j=0; j<m_dim; j++) {
-            pos_mat_plus[i][j] = pos_mat[i][j] + h;
-            pos_mat_minus[i][j] = pos_mat[i][j] - h;
+    memcpy(pos_mat_plus, pos_mat, sizeof(pos_mat_plus));
+    memcpy(pos_mat_minus, pos_mat, sizeof(pos_mat_minus));
+
+    double waveFunctionMinus = 0;
+    double waveFunctionPlus = 0;
+    double waveFunctionCurrent = Psi_value(pos_mat, alpha, beta);
+
+    // Kinetic energy
+    double kineticEnergy = 0;
+    for(int i = 0; i < m_N; i++) {
+        for(int j = 0; j < m_dim; j++) {
+            pos_mat_plus[i][j] += h;
+            pos_mat_minus[i][j] -= h;
+            waveFunctionPlus = Psi_value(pos_mat_plus, alpha, beta);
+            waveFunctionMinus = Psi_value(pos_mat_minus, alpha, beta);
+            kineticEnergy += waveFunctionPlus + waveFunctionMinus -2*wavefunction_old;
+            pos_mat_plus[i][j] = pos_mat[i][j];
+            pos_mat_minus[i][j] = pos_mat[i][j];
         }
     }
-
-    double sec_der_psi = (Psi_value(pos_mat_plus, alpha, beta) -2*psi_old + Psi_value(pos_mat_minus, alpha, beta))/(h*h);
-    double E_k = -0.5*(sec_der_psi/psi_old);
+    kineticEnergy = -(0.5/(h*h))*kineticEnergy;
+    cout << kineticEnergy << endl;
 
     // Potential energy
     double E_p = 0;
     for(int i=0; i<m_N; i++) {
-        for(int j=m_N-1; j>i; j--) {
-            E_p += rij(pos_mat[i], pos_mat[j]);
-        }
+        E_p += V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
     }
-    return E_k + E_p;
+    cout << E_p << "\n" << endl;
+    return kineticEnergy + E_p;
 }

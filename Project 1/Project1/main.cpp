@@ -26,6 +26,7 @@ int main()
     double a = 0;               //distance parameter
     double alpha[] = {0.25, 0.5, 1.0, 1.5};           //variational parameter
     int length_alpha_1 = sizeof(alpha)/sizeof(*alpha);
+    double h = 0.01;            // Step length when numerical double differentiating
 
     /*
     vector<vector<double>> posmat;
@@ -37,7 +38,8 @@ int main()
         i.resize(dim);
    */
 
-    BF_calc(N, dim, M, a, steplength, omega_HO, omega_z, HO, alpha, length_alpha_1, beta);
+    BF_calc(N, dim, M, a, steplength, omega_HO, omega_z, HO, alpha, length_alpha_1, beta, h);
+
 
     return 0;
 }
