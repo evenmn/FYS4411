@@ -30,20 +30,16 @@ double u_secder(double dist, double a) {
 }
 
 double V_ext(double pos[3], int HO, double omega_HO, double omega_z) {
-    if(HO == 0) {
+    if(HO) {
         return 0.5*omega_HO*omega_HO*(pos[0]*pos[0] + pos[1]*pos[1] + pos[2]*pos[2]);
     }
-    else if(HO == 1) {
-        return 0.5*(omega_HO*omega_HO*(pos[0]*pos[0] + pos[1]*pos[1]) + omega_z*omega_z*pos[2]*pos[2]);
-    }
     else {
-        cout << "HO has unexpected value" << endl;
-        return false;
+        return 0.5*(omega_HO*omega_HO*(pos[0]*pos[0] + pos[1]*pos[1]) + omega_z*omega_z*pos[2]*pos[2]);
     }
 }
 
 
-int WaveFunction::setTrialWF(int dim, int N, double a, int n_or_a, int HO)
+int WaveFunction::setTrialWF(int dim, int N, double a, int n_or_a, bool HO)
 {
 
     m_dim = dim;        //number of dimensions
@@ -110,14 +106,13 @@ double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double be
 }
 
 
-double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double omega_HO, double omega_z)
+double WaveFunction::E_L_ana(double pos_mat[][3], double alpha, double beta, double omega_HO, double omega_z)
 {
     double distij;
     double distik;
     double EL;
     double E_TOT = 0;
 
-    // This should work for all a's and in all dimensions
     for(int i=0; i<m_N; i++) {
         EL = 0;
         EL += 4*alpha*alpha*(pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1] + \
@@ -156,9 +151,8 @@ double WaveFunction::E_L(double pos_mat[][3], double alpha, double beta, double 
     return E_TOT;
 }
 
-double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, double h, double omega_HO, double omega_z)
+double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, double omega_HO, double omega_z, double h)
 {
-    double wavefunction_old = Psi_value(pos_mat, alpha, beta);
 
     // Kinetic energy
     double pos_mat_plus[m_N][3];
@@ -169,9 +163,8 @@ double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, dou
 
     double waveFunctionMinus = 0;
     double waveFunctionPlus = 0;
-    double waveFunctionCurrent = Psi_value(pos_mat, alpha, beta);
+    double waveFunctionOld = Psi_value(pos_mat, alpha, beta);
 
-    // Kinetic energy
     double kineticEnergy = 0;
     for(int i = 0; i < m_N; i++) {
         for(int j = 0; j < m_dim; j++) {
@@ -179,19 +172,17 @@ double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, dou
             pos_mat_minus[i][j] -= h;
             waveFunctionPlus = Psi_value(pos_mat_plus, alpha, beta);
             waveFunctionMinus = Psi_value(pos_mat_minus, alpha, beta);
-            kineticEnergy += (waveFunctionPlus + waveFunctionMinus -2*wavefunction_old)/wavefunction_old;
+            kineticEnergy += waveFunctionPlus + waveFunctionMinus -2*waveFunctionOld;
             pos_mat_plus[i][j] = pos_mat[i][j];
             pos_mat_minus[i][j] = pos_mat[i][j];
         }
     }
-    kineticEnergy = -(0.5/(h*h))*kineticEnergy;
-    //cout << kineticEnergy << endl;
+    kineticEnergy = -(0.5/(waveFunctionOld*h*h))*kineticEnergy;
 
     // Potential energy
-    double E_p = 0;
+    double potentialEnergy = 0;
     for(int i=0; i<m_N; i++) {
-        E_p += V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
+        potentialEnergy += V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
     }
-    //cout << E_p << "\n" << endl;
-    return kineticEnergy + E_p;
+    return kineticEnergy + potentialEnergy;
 }

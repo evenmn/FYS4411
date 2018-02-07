@@ -51,11 +51,9 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../Project1/main.cpp \
-		../Project1/vec3.cpp \
 		../Project1/wavefunction.cpp \
 		../Project1/BF_met.cpp 
 OBJECTS       = main.o \
-		vec3.o \
 		wavefunction.o \
 		BF_met.o
 DIST          = ../../../Qt/5.10.0/gcc_64/mkspecs/features/spec_pre.prf \
@@ -234,10 +232,8 @@ DIST          = ../../../Qt/5.10.0/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt/5.10.0/gcc_64/mkspecs/features/exceptions.prf \
 		../../../Qt/5.10.0/gcc_64/mkspecs/features/yacc.prf \
 		../../../Qt/5.10.0/gcc_64/mkspecs/features/lex.prf \
-		../Project1/Project1.pro vec3.h \
-		wavefunction.h \
+		../Project1/Project1.pro wavefunction.h \
 		BF_met.h ../Project1/main.cpp \
-		../Project1/vec3.cpp \
 		../Project1/wavefunction.cpp \
 		../Project1/BF_met.cpp
 QMAKE_TARGET  = Project1
@@ -649,18 +645,15 @@ compiler_clean:
 
 ####### Compile
 
-main.o: ../Project1/main.cpp ../Project1/vec3.h \
-		../Project1/wavefunction.h
+main.o: ../Project1/main.cpp ../Project1/wavefunction.h \
+		../Project1/BF_met.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../Project1/main.cpp
 
-vec3.o: ../Project1/vec3.cpp ../Project1/vec3.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o vec3.o ../Project1/vec3.cpp
-
-wavefunction.o: ../Project1/wavefunction.cpp ../Project1/wavefunction.h \
-		../Project1/vec3.h
+wavefunction.o: ../Project1/wavefunction.cpp ../Project1/wavefunction.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o wavefunction.o ../Project1/wavefunction.cpp
 
-BF_met.o: ../Project1/BF_met.cpp 
+BF_met.o: ../Project1/BF_met.cpp ../Project1/BF_met.h \
+		../Project1/wavefunction.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o BF_met.o ../Project1/BF_met.cpp
 
 ####### Install

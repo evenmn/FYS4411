@@ -1,6 +1,4 @@
 #pragma once
-#include "vec3.h"
-
 
 class WaveFunction
 {
@@ -12,9 +10,9 @@ private:
     int                         m_HO;
 public:
     WaveFunction() {}
-    int setTrialWF              (int dim, int N, double a, int n_or_a, int HO);
+    int setTrialWF              (int dim, int N, double a, int n_or_a, bool HO);
     double Psi_value(double pos_mat[][3], double alpha, double beta);
     double Psi_value_sqrd(double pos_mat[][3], double alpha, double beta);
-    double E_L(double pos_mat[][3], double alpha, double beta, double omega_HO, double omega_z);
-    double E_L_num(double pos_mat[][3], double alpha, double beta, double h, double omega_HO, double omega_z);
+    double E_L_ana(double pos_mat[][3], double alpha, double beta, double omega_HO, double omega_z);
+    double E_L_num(double pos_mat[][3], double alpha, double beta, double omega_HO, double omega_z, double h);
 };
