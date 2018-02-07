@@ -64,7 +64,7 @@ double WaveFunction::Psi_value(double pos_mat[][3], double alpha, double beta)
                    pos_mat[i][1]*pos_mat[i][1] + \
                    beta*pos_mat[i][2]*pos_mat[i][2];
 
-        for(int j=m_N; j>i; j--) {
+        for(int j=m_N-1; j>i; j--) {
             double norm = rij(pos_mat[i], pos_mat[j]);
             double f;
 
@@ -92,7 +92,7 @@ double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double be
                    pos_mat[i][1]*pos_mat[i][1] + \
                    beta*pos_mat[i][2]*pos_mat[i][2];
 
-        for(int j=m_N; j>i; j--) {
+        for(int j=m_N-1; j>i; j--) {
             double norm = rij(pos_mat[i], pos_mat[j]);
             double f;
 

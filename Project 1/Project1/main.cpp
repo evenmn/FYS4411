@@ -3,7 +3,7 @@
 #include <vec3.h>
 #include <wavefunction.h>
 #include <string.h>
-
+#include <vector>
 using namespace std;
 
 double random_position(double steplength){
@@ -18,11 +18,22 @@ int main()
     double omega_z = 1;         //HO frequency in z-direction
     int M = 100000;               //number of MC cycles
     double steplength = 1;      //steplength when changing position
-    int N = 10;                 //number of particles
+    int N = 4;                 //number of particles
     int dim = 3;                //number of dimensions concidered
     int num_or_an = 0;          //if calculation is to be based on analytical(0) or numerical(1) E_L
     int HO = 0;                 //spherical (0) or elliptical (1) harmonic oscillator
     double a = 0;               //distance parameter
+
+    /*
+    vector<vector<double>> posmat;
+    posmat.resize(N);
+    for(int i = 0; i < posmat.size(); i++)
+        posmat[i].resize(dim);
+
+    for(auto* i : posmat)
+        i.resize(dim);
+
+   */
 
     //loop over several alphas
     double alpha[] = {0.1, 0.25, 0.5, 0.75, 1.0};           //variational parameter
