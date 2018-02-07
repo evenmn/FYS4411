@@ -179,7 +179,7 @@ double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, dou
             pos_mat_minus[i][j] -= h;
             waveFunctionPlus = Psi_value(pos_mat_plus, alpha, beta);
             waveFunctionMinus = Psi_value(pos_mat_minus, alpha, beta);
-            kineticEnergy += waveFunctionPlus + waveFunctionMinus -2*wavefunction_old;
+            kineticEnergy += (waveFunctionPlus + waveFunctionMinus -2*wavefunction_old)/wavefunction_old;
             pos_mat_plus[i][j] = pos_mat[i][j];
             pos_mat_minus[i][j] = pos_mat[i][j];
         }
