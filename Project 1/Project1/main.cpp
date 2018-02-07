@@ -37,7 +37,7 @@ int main()
         i.resize(dim);
    */
 
-    BF_calc(N, dim, M, a, steplength, omega_HO, omega_z, HO, alpha, length_alpha_1, beta);
+    Met_algo(N, dim, M, a, steplength, omega_HO, omega_z, HO, alpha, length_alpha_1, beta);
 
     return 0;
 }

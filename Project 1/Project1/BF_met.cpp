@@ -11,10 +11,8 @@ double random_position_1(double steplength){
     return ((double)rand() / (double)RAND_MAX)*steplength;
 }
 
-void BF_calc(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, int HO, double alpha[], int length_alpha_1, double beta)
+void Met_algo(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, int HO, double alpha[], int length_alpha_1, double beta)
 {
-    cout << length_alpha_1 << endl;
-    cout << alpha[0] << " " << alpha[1] << " "<< alpha[2] << endl;
 
     for(int k=0; k<length_alpha_1; k++){
         //averages and energies
