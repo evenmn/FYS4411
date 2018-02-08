@@ -9,6 +9,7 @@
 \usepackage{color}
 \usepackage{listings}
 \usepackage{hyperref}
+\usepackage{amsmath}
 
 \lstset{language=c++}
 \lstset{basicstyle=\small}
@@ -54,34 +55,75 @@ Write the abstract here
 Introduction
 
 \section{Theory}
-Describe the physics here, including wavefunction and Hamiltonian
-
 We study a system of $N$ bosons trapped in a harmonic oscillator with the Hamiltonian given by 
 \begin{equation}
 \hat{H}=\sum_i^N\bigg(-\frac{\hbar^2}{2m}\nabla_i^2+V_{ext}(\vec{r}_i)\bigg)+\sum_{i<j}^NV_{int}(\vec{r}_i,\vec{r}_j)
 \end{equation}
-with $V_{ext}$ as the external potential, given by the harmonic oscillator potential,
+with $V_{ext}$ as the external potential, which is the harmonic oscillator potential,
 and $V_{int}$ as the interaction term, which can be ignored when developing the benchmarks. 
 
 The wavefunction is on the form 
 \begin{equation}
 \Psi_T(\vec{r}_1, \vec{r}_2, ..., \vec{r}_N, \alpha, \beta)=\prod_i^Ng(\alpha, \beta, \vec{r}_i)\prod_{i<j}f(a,r_{ij})
 \end{equation}
-where $g$ is assumed to be an exponential
+where $r_{ij}=|\vec{r}_i-\vec{r}_j|$ and $g$ is assumed to be an exponential
 \begin{equation}
 g(\alpha, \beta, \vec{r}_i)=\exp[-\alpha(x_i^2+y_i^2+\beta z_i^2)]
 \end{equation}
-which is practicle since
+which is practical since
 \begin{equation}
-\prod_i^Ng(\alpha, \beta, \vec{r}_i)=\exp[-\alpha(x_1^2+y_1^2+\beta z_1^2+\cdots x_N^2+y_N^2+\beta z_N^2)]
+\prod_i^Ng(\alpha, \beta, \vec{r}_i)=\exp[-\alpha(x_1^2+y_1^2+\beta z_1^2+\cdots x_N^2+y_N^2+\beta z_N^2)].
 \end{equation}
+$\alpha$ is a variational parameter that we later use to find the energy minimum, and $\beta$ is a constant. The $f$ presented above is the correlation wave function, which is 
+\begin{equation}
+f(a,r_{ij})=
+\begin{cases} 
+   0 & r_{ij} \leq a \\
+   \left(1-\frac{a}{r_{ij}}\right) & r_{ij} > a.
+\end{cases}
+\end{equation}
+The first case we will take into account, is when $a=0$, and one might observe that $f=1$ then. Anyway, ...
 
-Present most important results form exercise a
+We want to calculate the local energy as a function of $\alpha$, and then use Variational Monte Carlo (VMC) described in section \ref{VMC}. For the non-interacting case, the analytical expression is well-known and given by
+\begin{equation}
+E = \hbar\omega(n + 1/2)
+\end{equation}
+where $n$ is the total number of free dimensions, which gonna be an useful benchmark. The local energy is
+\begin{equation}
+E_L(\vec{r})=\frac{1}{\Psi_T(\vec{r})}\hat{H}\Psi_T(\vec{r})
+\end{equation}
+which gives the following results considering $a=0$:
 
+INSERT ANALYTICAL EXPRESSIONS FROM A
+
+For $a\neq0$ it gets rather more complicated, because we need to deal with the correction wave function as well. By defining
+\begin{equation}
+f(a, r_{ij})=\exp{\bigg(\sum_{i<j}u(r_{ij})\bigg)}
+\end{equation}
+and doing a change of variables
+\begin{equation}
+\frac{\partial}{\partial r_k}=\frac{\partial}{\partial r_k}\frac{\partial r_{kj}}{\partial r_{kj}}=\frac{\partial r_{kj}}{\partial r_k}\frac{\partial}{\partial r_{kj}}=\frac{(r_k-r_j)}{r_{kj}}\frac{\partial}{\partial r_{kj}}
+\end{equation}
+one will end up with
+\begin{align}
+E_L=\sum_k\Bigg(-\frac{1}{2}\bigg(&4\alpha^2\Big(x_k^2+y_k^2+\beta^2z_k^2-\frac{1}{\alpha}-\frac{\beta}{2\alpha}\Big)\notag\\
+&-4\alpha\sum_{j\neq k}(x_k, y_k, \beta z_k)\frac{(\vec{r}_k-\vec{r}_j)}{r_{kj}}u'(r_{kj})\\
+&+\sum_{ij\neq k}\frac{(\vec{r}_k-\vec{r}_j)(\vec{r}_k-\vec{r}_i)}{r_{ki}r_{kj}}u'(r_{ki})u'(r_{kj})\notag\\
+&+\sum_{j\neq k}\Big(u''(r_{kj})+\frac{2}{r_{kj}}u'(r_{kj})\Big)\bigg)+V_{ext}(\vec{r}_k)\Bigg).\notag
+\end{align}
+This is not a pretty expression, but .. We could also split up the local energy expression 
+\begin{equation}
+E_{L,i}=-\frac{\hbar^2}{2m}\frac{\nabla_i^2\Psi_T}{\Psi_T}+V_{ext}(\vec{r}_i)=E_{k,i}+E_{p,i}
+\end{equation}
+and calculate the local energy with a numerical approach where the second derivative can be approximated by the three-point formula:
+\begin{equation}
+f''(x)\simeq\frac{f(x+h)-2f(x)+f(x-h)}{h^2}.
+\end{equation}
+In our case the position is a three dimensional vector, so we need to handle each dimension separately. However, in section \ref{CPU}, the CPU time for the analytical and numerical approach are compared. 
 
 
 \section{Methods}
-\subsection{Variational Monte Carlo}
+\subsection{Variational Monte Carlo}\label{VMC}
 
 \subsection{Metropolis algorithm}
 \subsubsection{Brute force}
@@ -90,7 +132,7 @@ Present most important results form exercise a
 
 
 \section{Results}
-
+\subsection{CPU-time}\label{CPU}
 
 \section{Discussion}
 
