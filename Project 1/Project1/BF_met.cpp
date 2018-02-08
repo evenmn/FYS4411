@@ -46,6 +46,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
     default_random_engine generator;
     normal_distribution<double> eps_gauss(0,1);
 
+
     for(int k=0; k<length_alpha_1; k++){
 
         double D = 0.5;                 //Diffusion coeff, to be used in Hastings met.algo
@@ -100,6 +101,8 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
         E_tot += E;
         E_tot_sqrd += E*E;
 
+        int accept = 0;
+
         clock_t start_time = clock();
         //Start Monte Carlo iterations
         for(int i=0; i<M; i++){
@@ -117,7 +120,6 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
                 //Proposed new position
                 pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + (random_position()-0.5)*steplength;
                 psi_ratio = Psi.Psi_value_sqrd(pos_mat_new, alpha[k], beta)/(Psi.Psi_value_sqrd(pos_mat, alpha[k], beta));
-
             }
             else if(BF_H == 1){
                 //Hastings metropolis
@@ -130,6 +132,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
             if(psi_ratio >= random_position()){
                 //accept and update pos_mat
                 memcpy(pos_mat, pos_mat_new, sizeof(pos_mat)); //maybe more time efficient to only update the one changed position?
+                accept += 1;
             }
 
 
@@ -148,11 +151,15 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
         //Calculate <E_l> and <E_L**2>
         double E_L_avg = E_tot/M;
         double E_L_avg_sqrd = E_tot_sqrd/M;
+        double accept_ratio = accept*1.0/M;
         double CPU_time = 1.0*(end_time - start_time)/CLOCKS_PER_SEC;
+        double variance = E_L_avg_sqrd - E_L_avg*E_L_avg;
 
         cout << "--- ALPHA: " << alpha[k] << " ---" << endl;
         cout << "E_L_avg: " << E_L_avg << endl;
         cout << "E_L_avg_tot: " << E_L_avg_sqrd << endl;
+        cout << "Acceptance ratio: " << accept_ratio << endl;
+        cout << "Variance: " << variance << endl;
         cout << "CPU time: " << CPU_time << "\n" << endl;
     }
 }
