@@ -19,7 +19,25 @@ double QForce(double pos, double alpha, double beta, int dim_rand){
         QF = QF*beta;
     }
     return QF;
+}
 
+double GreenFuncSum(double pos_mat[][3], double pos_mat_new[][3], double D, double timestep, int N, double alpha, double beta){
+    double GreenSum = 0; //Sum of ratios for all particles
+
+    for(int i=0; i<N; i++) {
+        double GreenOld = 0;
+        double GreenNew = 0;
+        for(int j=0; j<3; j++) {
+            GreenOld += (pos_mat_new[i][j] - pos_mat[i][j] - D*timestep*QForce(pos_mat[i][j], alpha, beta, j))*(pos_mat_new[i][j] - pos_mat[i][j] - D*timestep*QForce(pos_mat[i][j], alpha, beta, j));
+            GreenNew += (pos_mat[i][j] - pos_mat_new[i][j] - D*timestep*QForce(pos_mat_new[i][j], alpha, beta, j))*(pos_mat[i][j] - pos_mat_new[i][j] - D*timestep*QForce(pos_mat_new[i][j], alpha, beta, j));
+        }
+        GreenOld = exp(-GreenOld/(4*D*timestep));
+        GreenNew = exp(-GreenNew/(4*D*timestep));
+
+        GreenSum += GreenOld/GreenNew;
+        //cout << GreenOld << " " << GreenNew << " " << GreenSum << endl;
+    }
+    return GreenSum;
 }
 
 void Met_algo(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, bool HO, double alpha[], int length_alpha_1, double beta, double h, int num_or_an, int BF_H, double timestep)
@@ -104,14 +122,9 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
             else if(BF_H == 1){
                 //Hastings metropolis
 
-                //To be turend into functions
-                double GreenFunc = 1.0;
-
                 //Proposed new position
                 pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + D*QForce(pos_mat[N_rand][dim_rand], alpha[k], beta, dim_rand)*timestep + eps_gauss(generator)*sqrt(timestep);
-
-                psi_ratio = GreenFunc*Psi.Psi_value_sqrd(pos_mat_new, alpha[k], beta)/(GreenFunc*Psi.Psi_value_sqrd(pos_mat, alpha[k], beta));
-
+                psi_ratio = GreenFuncSum(pos_mat, pos_mat_new, D, timestep, N, alpha[k], beta)*Psi.Psi_value_sqrd(pos_mat_new, alpha[k], beta)/(Psi.Psi_value_sqrd(pos_mat, alpha[k], beta));
             }
 
             if(psi_ratio >= random_position()){
