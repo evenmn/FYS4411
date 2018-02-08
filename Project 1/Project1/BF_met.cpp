@@ -5,6 +5,7 @@
 #include <string.h>
 #include <vector>
 #include <ctime>
+#include<random>
 
 using namespace std;
 
@@ -12,10 +13,18 @@ double random_position(){
     return (double)rand() / (double)RAND_MAX;
 }
 
-void Met_algo(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, bool HO, double alpha[], int length_alpha_1, double beta, double h, int num_or_an)
+
+void Met_algo(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, bool HO, double alpha[], int length_alpha_1, double beta, double h, int num_or_an, int BF_H, double timestep)
 {
+    //Gaussian distr random number generator
+    default_random_engine generator;
+    normal_distribution<double> eps_gauss(0.5,0.34);
 
     for(int k=0; k<length_alpha_1; k++){
+
+        double D = 0.5;                 //Diffusion coeff, to be used in Hastings met.algo
+
+
         //averages and energies
         double E_tot      = 0;          //sum of energies of all states
         double E_tot_sqrd = 0;          //sum of energies of all states squared
@@ -76,16 +85,35 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
             //Set new meatrix equal old one
             memcpy(pos_mat_new, pos_mat, sizeof(pos_mat_new));
 
-            //Proposed new position
-            pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + (random_position()-0.5)*steplength;
+            //Choose between Brute force and Hastings
+            if(BF_H == 0){
+                //Brute force metropolis
 
-            //Metropolis algorithm
-            psi_ratio = Psi.Psi_value_sqrd(pos_mat_new, alpha[k], beta)/(Psi.Psi_value_sqrd(pos_mat, alpha[k], beta));
+                //Proposed new position
+                pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + (random_position()-0.5)*steplength;
+                psi_ratio = Psi.Psi_value_sqrd(pos_mat_new, alpha[k], beta)/(Psi.Psi_value_sqrd(pos_mat, alpha[k], beta));
+
+            }
+            if(BF_H == 1){
+                //Hastings metropolis
+
+                //To be turend into functions
+                double QForce    = 1.0;
+                double GreenFunc = 1.0;
+                //eps_gauss(generator) ??
+
+                //Proposed new position
+                pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + D*QForce*timestep + eps_gauss(generator)*sqrt(timestep);
+
+                psi_ratio = GreenFunc*Psi.Psi_value_sqrd(pos_mat_new, alpha[k], beta)/(GreenFunc*Psi.Psi_value_sqrd(pos_mat, alpha[k], beta));
+
+            }
 
             if(psi_ratio >= random_position()){
                 //accept and update pos_mat
                 memcpy(pos_mat, pos_mat_new, sizeof(pos_mat)); //maybe more time efficient to only update the one changed position?
             }
+
 
             if(num_or_an == 0) {
                 E = Psi.E_L_ana(pos_mat, alpha[k], beta, omega_HO, omega_z);

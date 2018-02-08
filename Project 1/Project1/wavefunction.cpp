@@ -29,7 +29,7 @@ double u_secder(double dist, double a) {
     }
 }
 
-double V_ext(double pos[3], int HO, double omega_HO, double omega_z) {
+double V_ext(double pos[3], bool HO, double omega_HO, double omega_z) {
     if(HO) {
         return 0.5*omega_HO*omega_HO*(pos[0]*pos[0] + pos[1]*pos[1] + pos[2]*pos[2]);
     }
@@ -46,7 +46,7 @@ int WaveFunction::setTrialWF(int dim, int N, double a, int n_or_a, bool HO)
     m_N = N;            //number of particles
     m_n_or_a = n_or_a;  //analytical (0) or numerical (1) E_L calculation
     m_a = a;            //dimension of trap
-    m_HO = HO;          //spherical (0) or elliptical (1) harmonic oscillator
+    m_HO = HO;          //spherical (true) or elliptical (false) harmonic oscillator
 }
 
 double WaveFunction::Psi_value(double pos_mat[][3], double alpha, double beta)
