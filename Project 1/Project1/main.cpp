@@ -13,13 +13,13 @@ int main()
     double beta       = 1;       //weight parameter along z-axis
     double omega_HO   = 1;       //HO frequency in x- and y-direction
     double omega_z    = 1;       //HO frequency in z-direction
-    int    M          = 10000;  //number of MC cycles
+    int    M          = 10;  //number of MC cycles
     double steplength = 1;       //steplength when changing position
-    int    N          = 100;      //number of particles
+    int    N          = 10;      //number of particles
     int    dim        = 3;       //number of dimensions concidered
     int    num_or_an  = 0;       //if calculation is to be based on analytical(0) or numerical(1) E_L
-    bool   HO         = true;       //spherical (true) or elliptical (false) harmonic oscillator
-    int    BF_H       = 0;       //brute force (0) or hastings(1) metropolis algorithm
+    bool   HO         = true;    //spherical (true) or elliptical (false) harmonic oscillator
+    int    BF_H       = 1;       //brute force (0) or hastings(1) metropolis algorithm
     double a          = 0;       //distance parameter
     double h          = 0.01;    // Step length when numerical double differentiating
 

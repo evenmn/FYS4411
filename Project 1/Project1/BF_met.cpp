@@ -13,17 +13,24 @@ double random_position(){
     return (double)rand() / (double)RAND_MAX;
 }
 
+double QForce(double pos, double alpha, double beta, int dim_rand){
+    double QF = -4*alpha*pos;
+    if (dim_rand==2){
+        QF = QF*beta;
+    }
+    return QF;
+
+}
 
 void Met_algo(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, bool HO, double alpha[], int length_alpha_1, double beta, double h, int num_or_an, int BF_H, double timestep)
 {
     //Gaussian distr random number generator
     default_random_engine generator;
-    normal_distribution<double> eps_gauss(0.5,0.34);
+    normal_distribution<double> eps_gauss(0,1);
 
     for(int k=0; k<length_alpha_1; k++){
 
         double D = 0.5;                 //Diffusion coeff, to be used in Hastings met.algo
-
 
         //averages and energies
         double E_tot      = 0;          //sum of energies of all states
@@ -94,16 +101,14 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
                 psi_ratio = Psi.Psi_value_sqrd(pos_mat_new, alpha[k], beta)/(Psi.Psi_value_sqrd(pos_mat, alpha[k], beta));
 
             }
-            if(BF_H == 1){
+            else if(BF_H == 1){
                 //Hastings metropolis
 
                 //To be turend into functions
-                double QForce    = 1.0;
                 double GreenFunc = 1.0;
-                //eps_gauss(generator) ??
 
                 //Proposed new position
-                pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + D*QForce*timestep + eps_gauss(generator)*sqrt(timestep);
+                pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + D*QForce(pos_mat[N_rand][dim_rand], alpha[k], beta, dim_rand)*timestep + eps_gauss(generator)*sqrt(timestep);
 
                 psi_ratio = GreenFunc*Psi.Psi_value_sqrd(pos_mat_new, alpha[k], beta)/(GreenFunc*Psi.Psi_value_sqrd(pos_mat, alpha[k], beta));
 
