@@ -124,12 +124,72 @@ In our case the position is a three dimensional vector, so we need to handle eac
 
 \section{Methods}
 \subsection{Variational Monte Carlo}\label{VMC}
+Variational Monte Carlo (VMC) is a widely used method for approximating the ground state of a quantum system. The method is based on Markov chains, and move a particle (or a set of particles) one step for each cycle, i.e.
+\begin{equation}
+\vec{R}_{new} = \vec{R} + r\cdot \text{step}
+\end{equation}
+Both the direction and the change in position are randomly chosen, so with a plain VMC implementation the particles will move randomly and independently of each other. We are going to use the Metropolis algorithm in addition to the VMC, which accepts or rejects moves based on the probability ratio between the old and the new position. This makes the system approach the most likely state, and the idea is that after a certain number of cycles the system will be in the most likely state. 
 
-\subsection{Metropolis algorithm}
+\subsection{Metropolis Algorithm}
+As mentioned above the task of the Metropolis algorithm is to move the system against the most likely state. The original algorithm, here named brute force, is the simplest one, and does not deal with the transition probabilities. The modified Metropolis-Hastings algorithm includes, on the other hand, the transition probabilities and will be slightly more time consuming per cycle. We expect the latter to converge faster to the most likely state. 
+
+The foundation of the Metropolis algorithm is that the probability for a system to undergo a transition from state $i$ to state $j$ is given by the transition probability multiplied by the acceptance probability
+\begin{equation}
+W_{i\rightarrow j} = T_{i \rightarrow j}\cdot A_{i \rightarrow j}
+\end{equation}
+where $T_{i \rightarrow j}$ is the transition probability and $A_{i \rightarrow j}$ is the acceptance probability. Built on this, the probability for being in a state $i$ at time (step) $n$ is
+\begin{equation}
+P_i^{(n)} = \sum_j\bigg[P_j^{(n-1)}T_{j \rightarrow i}A_{j \rightarrow i} + P_i^{(n-1)}T_{i \rightarrow j}(1-A_{i \rightarrow j})\bigg]
+\end{equation}
+since this can happend in two ways. One can start in this state $i$ at time $n-1$ and be rejected or one can start in another state $j$ at time $n-1$ and complete an accepted move to state $i$. In fact $\sum_j T_{i \rightarrow j} =1$, so we can rewrite this as 
+\begin{equation}
+P_i^{(n)} = P_i^{(n-1)} + \sum_j\bigg[P_j^{(n-1)}T_{j \rightarrow i}A_{j \rightarrow i} - P_i^{(n-1)}T_{i \rightarrow j}A_{i \rightarrow j}\bigg].
+\end{equation}
+When the times goes to infinity, the system will approach the most likely state and we will have $P_i^{(n)} = p_i$, which requires
+\begin{equation}
+\sum_j\bigg[p_jT_{j \rightarrow i}A_{j \rightarrow i} - p_iT_{i \rightarrow j}A_{i \rightarrow j}\bigg]=0.
+\end{equation}
+Rearranging, we obtain a quite useful results
+\begin{equation}
+\frac{A_{j\rightarrow i}}{A_{i\rightarrow j}}=\frac{p_iT_{i\rightarrow j}}{p_jT_{j\rightarrow i}}
+\end{equation}
+
 \subsubsection{Brute force}
+In the brute force Metropolis algorithm we want to check if the new position is more likely than the current position, and for that we calculate the probabilities $P(\vec{R})=|\Psi_T(\vec{R})|^2$ for both positions. We get rid off the transition probabilities setting $T_{i\rightarrow j}=T_{j\rightarrow i}$, and then end up with the plain ratio
+\begin{equation}
+w=\frac{P(\vec{R}_{new})}{P(\vec{R})}=\frac{|\Psi_T(\vec{R}_{new})|^2}{|\Psi_T(\vec{R})|^2}.
+\end{equation}
+$w$ will be larger than one if the new position is more likely than the current, and smaller than one if the current position is more likely than the new one. Metropolis handle this by accepting if the ratio $w$ is larger than a random number $r$ in the interval $[0,1]$, and rejecting if not:
+\begin{equation}
+\text{New position: }
+\begin{cases} 
+   \text{accept} & \text{if}\quad w > r \\
+   \text{reject} & \text{if}\quad w \leq r.
+\end{cases}
+\end{equation}
+
 \subsubsection{Importance sampling}
-
-
+The important sampling technique is often refered to as Metropolis-Hastings algorithm. The approach is the same as for the brute force Metropolis algorithm, but we will end ut with a slightly more complicated acceptation criteria. To understand the details, we need to begin with the Fokker-Planck equation, which describes the time-evolution of the probability density function $P(R,t)$. In one dimension it reads
+\begin{equation}
+\frac{\partial P(R,t)}{\partial t} = D\frac{\partial}{\partial R}\bigg(\frac{\partial}{\partial R} - F\bigg)P(R,t).
+\end{equation}
+where $F$ is the drift force and $D$ is the diffusion coefficient. Even though the probability density function can give a lot of useful information, an equation describing the motion of a such particle would be more appropriate for our purposes. Fortunately this equation exists, and satisfies the Fokker-Planck equation. The Langevin equation is given by
+\begin{equation}
+\frac{\partial R(t)}{\partial t}=DF(R(t)) + \eta
+\end{equation}
+where $\eta$ can be considered as a random variable. One can solve this differetial equation by applying the forward Euler method and introducing gaussian variables $\xi$
+\begin{equation}
+R_{new} = R + DF(R)\Delta t + \xi\sqrt{\Delta t}
+\end{equation}
+which will be used to update the position. Moreover we also need to update the acceptance criteria since we no longer ignore the transition probabilities. With the Fokker-Planck equation as base, the transition probabilities are given by Green's function
+\begin{align}
+T_{R\rightarrow R_{new}}&=G(R_{new},R,\Delta t)\notag\\
+&=\frac{1}{(4\pi D\Delta t)^{3N/2}}\exp[-(R_{new} - R - D\Delta tF(R))^2/4D\Delta t] 
+\end{align}
+and the acceptance criteria becomes
+\begin{equation}
+r<\frac{G(R,R_{new},\Delta t)|\Psi_T(R_{new})|^2}{G(R_{new},R,\Delta t)|\Psi_T(R)|^2}.
+\end{equation}
 
 \section{Results}
 \subsection{CPU-time}\label{CPU}
@@ -143,7 +203,7 @@ For the brute force Metropolis algorithm we developed both an analytical and a n
 \#Particles & $\langle E_L\rangle$ [..] & CPU-time [s] & $\langle E_L\rangle$ [..] & CPU-time [s]\\ \hline
 1 & 1.50000 & 0.146392 & 1.49999 & 0.426018 \\
 10 & 15.000 & 11.8992 & 14.9999 & 38.0378 \\
-100 & & & & \\
+100 & 150.00 & 8326.16 & & \\
 500 & & & & \\ \hline
 \end{tabularx}
 \end{table}
