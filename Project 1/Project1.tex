@@ -133,6 +133,20 @@ In our case the position is a three dimensional vector, so we need to handle eac
 
 \section{Results}
 \subsection{CPU-time}\label{CPU}
+For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the local energy. In table (\ref{tab:BFmet}) we present the results from these calculations and the performance. All the measurements are done in three dimensions with $\alpha=0.5$ and $1e6$ Monte Carlo cycles. $a$ is fixed to zero.
+\begin{table} [H]
+\centering
+\caption{Optimal parameters $\alpha$ and $\beta$ and resulting energy $E_{L2}$ and variance $\sigma_{E_{L2}}$ for different $\omega$ for $\Psi_{T2}$.}
+\begin{tabularx}{\textwidth}{X|XX|XX} \hline
+\label{tab:BFmet}
+& \multicolumn{2}{X}{\textbf{Analytical}} & \multicolumn{2}{X}{\textbf{Numerical}} \\
+\#Particles & $\langle E_L\rangle$ [..] & CPU-time [s] & $\langle E_L\rangle$ [..] & CPU-time [s]\\ \hline
+1 & 1.50000 & 0.146392 & 1.49999 & 0.426018 \\
+10 & 15.000 & 11.8992 & 14.9999 & 38.0378 \\
+100 & & & & \\
+500 & & & & \\ \hline
+\end{tabularx}
+\end{table}
 
 \section{Discussion}
 
