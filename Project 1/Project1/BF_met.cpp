@@ -5,12 +5,15 @@
 #include <string.h>
 #include <vector>
 #include <ctime>
-#include<random>
+#include <random>
 
 using namespace std;
 
 double random_position(){
-    return (double)rand() / (double)RAND_MAX;
+    random_device rd;                   //Will be used to obtain a seed for the random number engine
+    mt19937 gen(rd());                  //Standard mersenne_twister_engine seeded with rd()
+    uniform_real_distribution<> dis(0, 1);
+    return dis(gen);
 }
 
 double QForce(double pos, double alpha, double beta, int dim_rand){
@@ -46,6 +49,11 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
     default_random_engine generator;
     normal_distribution<double> eps_gauss(0,1);
 
+    //Marsenne Twister Random Number Generator
+    random_device rd;                               //Will be used to obtain a seed for the random number engine
+    mt19937 seed(rd());                              //Standard mersenne_twister_engine seeded with rd()
+    uniform_int_distribution<> nrand(0, N);         //Random number between 0 and N
+    uniform_int_distribution<> dimrand(0, dim);     //Random number between 0 and dim
 
     for(int k=0; k<length_alpha_1; k++){
 
@@ -107,8 +115,8 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
         //Start Monte Carlo iterations
         for(int i=0; i<M; i++){
             //Draw random position, for one particle and one dimention
-            N_rand   = rand()%N;
-            dim_rand = rand()%dim;
+            N_rand   = nrand(seed);
+            dim_rand = dimrand(seed);
 
             //Set new meatrix equal old one
             memcpy(pos_mat_new, pos_mat, sizeof(pos_mat_new));
@@ -118,7 +126,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
                 //Brute force metropolis
 
                 //Proposed new position
-                pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + (random_position()-0.5)*steplength;
+                pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + (2*random_position()-1.0)*steplength;
                 psi_ratio = Psi.Psi_value_sqrd(pos_mat_new, alpha[k], beta)/(Psi.Psi_value_sqrd(pos_mat, alpha[k], beta));
             }
             else if(BF_H == 1){
