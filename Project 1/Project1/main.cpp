@@ -10,7 +10,7 @@ int main()
     double beta       = 1;       //weight parameter along z-axis
     double omega_HO   = 1;       //HO frequency in x- and y-direction
     double omega_z    = 1;       //HO frequency in z-direction
-    int    M          = 1000;  //number of MC cycles
+    int    M          = 1000000;  //number of MC cycles
     double steplength = 1.0;       //steplength when changing position ->Is this correct?
     int    N          = 10;      //number of particles
     int    dim        = 3;       //number of dimensions concidered
@@ -21,7 +21,7 @@ int main()
     double h          = 0.01;    //Step length for numerical double differentiation
     double timestep   = 0.01;    //Timestep, to be used in Hastings algo
 
-    double alpha[]    = {0.5};//{0.25, 0.5, 1.0, 1.5};           //variational parameter
+    double alpha[]    = {0.25, 0.5, 1.0, 1.5};           //variational parameter
     int    len_alpha  = sizeof(alpha)/sizeof(*alpha);    //length of alpha
 
     cout << "Running with the following paramteres:" << endl;

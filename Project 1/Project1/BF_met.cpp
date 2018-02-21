@@ -52,8 +52,8 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
     //Marsenne Twister Random Number Generator
     random_device rd;                               //Will be used to obtain a seed for the random number engine
     mt19937 seed(rd());                              //Standard mersenne_twister_engine seeded with rd()
-    uniform_int_distribution<> nrand(0, N);         //Random number between 0 and N
-    uniform_int_distribution<> dimrand(0, dim);     //Random number between 0 and dim
+    uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
+    uniform_int_distribution<> dimrand(0, dim-1);     //Random number between 0 and dim
 
     for(int k=0; k<length_alpha_1; k++){
 
