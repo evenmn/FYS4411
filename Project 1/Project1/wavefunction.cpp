@@ -10,8 +10,9 @@ double rij(double pos1[3], double pos2[3]) {
 }
 
 double u_der(double dist, double a) {
+    // u_der/rij
     if(dist > a) {
-        return (a/(dist*dist))/(1-a/dist);
+        return (a/(dist*dist))/(dist-a);
     }
     else {
         return 0;
@@ -134,17 +135,17 @@ double WaveFunction::E_L_ana(double pos_mat[][3], double alpha, double beta, dou
             EL += -4*alpha*(pos_mat[i][0] * (pos_mat[i][0]-pos_mat[j][0]) +\
                             pos_mat[i][1] * (pos_mat[i][1]-pos_mat[j][1]) +\
                             pos_mat[i][2] * (pos_mat[i][2]-pos_mat[j][2]) * beta) * \
-                  (u_der(distij, m_a)/distij);
+                  (u_der(distij, m_a));
 
             for(int k=m_N-1; k>i; k--) {
                 distik = rij(pos_mat[i], pos_mat[k]);
                 EL += ((pos_mat[i][0] - pos_mat[k][0]) * (pos_mat[i][0] - pos_mat[j][0]) + \
                        (pos_mat[i][1] - pos_mat[k][1]) * (pos_mat[i][1] - pos_mat[j][1]) + \
                        (pos_mat[i][2] - pos_mat[k][2]) * (pos_mat[i][2] - pos_mat[j][2])) * \
-                      u_der(distij, m_a) * u_der(distik, m_a) / (distij * distik);
+                      u_der(distij, m_a) * u_der(distik, m_a);
             }
 
-            EL += u_secder(distij, m_a) + (2/distij) * u_der(distij, m_a);
+            EL += u_secder(distij, m_a) + 2 * u_der(distij, m_a);
         }
         E_TOT += -0.5*EL + V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
     }
