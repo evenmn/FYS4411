@@ -10,10 +10,11 @@
 
 using namespace std;
 
+random_device rd;                   //Will be used to obtain a seed for the random number engine
+mt19937 gen(rd());                  //Standard mersenne_twister_engine seeded with rd()
+uniform_real_distribution<> dis(0, 1);
+
 double random_position(){
-    random_device rd;                   //Will be used to obtain a seed for the random number engine
-    mt19937 gen(rd());                  //Standard mersenne_twister_engine seeded with rd()
-    uniform_real_distribution<> dis(0, 1);
     return dis(gen);
 }
 
@@ -35,10 +36,10 @@ double GreenFuncSum(double pos_mat[][3], double pos_mat_new[][3], double D, doub
             GreenOld += (pos_mat_new[i][j] - pos_mat[i][j] - D*timestep*QForce(pos_mat[i][j], alpha, beta, j))*(pos_mat_new[i][j] - pos_mat[i][j] - D*timestep*QForce(pos_mat[i][j], alpha, beta, j));
             GreenNew += (pos_mat[i][j] - pos_mat_new[i][j] - D*timestep*QForce(pos_mat_new[i][j], alpha, beta, j))*(pos_mat[i][j] - pos_mat_new[i][j] - D*timestep*QForce(pos_mat_new[i][j], alpha, beta, j));
         }
-        GreenOld = exp(-GreenOld/(4*D*timestep));
-        GreenNew = exp(-GreenNew/(4*D*timestep));
+        //GreenOld = exp(-GreenOld/(4*D*timestep));
+        //GreenNew = exp(-GreenNew/(4*D*timestep));
 
-        GreenSum += GreenOld/GreenNew;
+        GreenSum += exp(GreenOld/GreenNew);
         //cout << GreenOld << " " << GreenNew << " " << GreenSum << endl;
     }
     return GreenSum;
@@ -146,15 +147,15 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
                 //accept and update pos_mat
                 memcpy(pos_mat, pos_mat_new, sizeof(pos_mat)); //maybe more time efficient to only update the one changed position?
                 accept += 1;
+
+                if(num_or_an == 0) {
+                    E = Psi.E_L_ana(pos_mat, alpha[k], beta, omega_HO, omega_z);
+                }
+                else if(num_or_an == 1) {
+                    E = Psi.E_L_num(pos_mat, alpha[k], beta, omega_HO, omega_z, h);
+                }
             }
 
-
-            if(num_or_an == 0) {
-                E = Psi.E_L_ana(pos_mat, alpha[k], beta, omega_HO, omega_z);
-            }
-            else if(num_or_an == 1) {
-                E = Psi.E_L_num(pos_mat, alpha[k], beta, omega_HO, omega_z, h);
-            }
 
             E_tot += E;
             E_tot_sqrd += E*E;
