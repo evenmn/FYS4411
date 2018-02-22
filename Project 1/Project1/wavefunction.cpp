@@ -10,24 +10,12 @@ double rij(double pos1[3], double pos2[3]) {
 }
 
 double u_der(double dist, double a) {
-    // u_der/rij
-    if(dist > a) {
-        return (a/(dist*dist))/(dist-a);
-    }
-    else {
-        return 0;
-    }
+    return (a/(dist*dist))/(dist-a);
 }
 
 double u_secder(double dist, double a) {
-    double C;
-    if(dist > a) {
-        C = (1/(1-a/dist));
-        return -(a/(dist*dist*dist))*C*(2+(a/dist)*C);
-    }
-    else {
-        return 0;
-    }
+    double C = (1/(1-a/dist));
+    return -(a/(dist*dist*dist))*C*(2+(a/dist)*C);
 }
 
 double V_ext(double pos[3], bool HO, double omega_HO, double omega_z) {
@@ -55,35 +43,6 @@ double WaveFunction::Psi_value(double pos_mat[][3], double alpha, double beta)
 
     //Returns the wavefunction
     double sumsqrt = 0;         // x1^2 + y1^2 + B*z1^2 + ... + B*zn^2
-    double sumu = 0;            // sum(u(rij))
-
-    for(int i=0; i<m_N; i++) {
-        sumsqrt += pos_mat[i][0]*pos_mat[i][0] + \
-                   pos_mat[i][1]*pos_mat[i][1] + \
-                   beta*pos_mat[i][2]*pos_mat[i][2];
-
-        for(int j=m_N-1; j>i; j--) {
-            double norm = rij(pos_mat[i], pos_mat[j]);
-            double f;
-
-            if(norm > m_a){
-                f = 1 - m_a/norm;
-            }
-            else{
-                f = 0;
-            }
-            sumu += log(f);
-        }
-    }
-    return exp(-alpha*sumsqrt)*exp(sumu);
-
-}
-
-double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double beta)
-{
-    //Returns the wavefunction
-    double sumsqrt = 0;         // x1^2 + y1^2 + B*z1^2 + ... + B*zn^2
-    double sumu = 0;            // sum(u(rij))
     double prodf = 1;
 
     for(int i=0; i<m_N; i++) {
@@ -102,7 +61,35 @@ double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double be
                 prodf = 0;
                 break;
             }
-            //sumu += log(f);
+            prodf *= f;
+        }
+    }
+    return exp(-alpha*sumsqrt)*prodf;
+
+}
+
+double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double beta)
+{
+    //Returns the wavefunction
+    double sumsqrt = 0;         // x1^2 + y1^2 + B*z1^2 + ... + B*zn^2
+    double prodf = 1;
+
+    for(int i=0; i<m_N; i++) {
+        sumsqrt += pos_mat[i][0]*pos_mat[i][0] + \
+                   pos_mat[i][1]*pos_mat[i][1] + \
+                   beta*pos_mat[i][2]*pos_mat[i][2];
+
+        for(int j=m_N-1; j>i; j--) {
+            double norm = rij(pos_mat[i], pos_mat[j]);
+            double f;
+
+            if(norm > m_a){
+                f = 1 - m_a/norm;
+            }
+            else{
+                prodf = 0;
+                break;
+            }
             prodf *= f;
         }
     }
@@ -114,6 +101,8 @@ double WaveFunction::E_L_ana(double pos_mat[][3], double alpha, double beta, dou
 {
     double distij;
     double distik;
+    double r_ij[3];
+    double r_ik[3];
     double EL;
     double E_TOT = 0;
 
@@ -134,18 +123,22 @@ double WaveFunction::E_L_ana(double pos_mat[][3], double alpha, double beta, dou
         }
 
         for(int j=m_N-1; j>i; j--) {
-            distij = rij(pos_mat[i], pos_mat[j]);
+            for(int l = 0; l < m_dim; l++)
+                r_ij[l] = pos_mat[i][l] - pos_mat[j][l];
+            distij = sqrt(r_ij[0]*r_ij[0] + r_ij[1]*r_ij[1] + r_ij[2]*r_ij[2]);
             double u_der_ij = u_der(distij, m_a);
-            EL += -4*alpha*(pos_mat[i][0] * (pos_mat[i][0]-pos_mat[j][0]) +\
-                            pos_mat[i][1] * (pos_mat[i][1]-pos_mat[j][1]) +\
-                            pos_mat[i][2] * (pos_mat[i][2]-pos_mat[j][2]) * beta) * \
+            EL += -4*alpha*(pos_mat[i][0] * r_ij[0] +\
+                            pos_mat[i][1] * r_ij[1] +\
+                            pos_mat[i][2] * r_ij[2] * beta) * \
                   (u_der_ij);
 
             for(int k=m_N-1; k>i; k--) {
-                distik = rij(pos_mat[i], pos_mat[k]);
-                EL += ((pos_mat[i][0] - pos_mat[k][0]) * (pos_mat[i][0] - pos_mat[j][0]) + \
-                       (pos_mat[i][1] - pos_mat[k][1]) * (pos_mat[i][1] - pos_mat[j][1]) + \
-                       (pos_mat[i][2] - pos_mat[k][2]) * (pos_mat[i][2] - pos_mat[j][2])) * \
+                for(int l = 0; l < m_dim; l++)
+                    r_ik[l] = pos_mat[i][l] - pos_mat[k][l];
+                distik = sqrt(r_ik[0]*r_ik[0] + r_ik[1]*r_ik[1] + r_ik[2]*r_ik[2]);
+                EL += (r_ik[0] * r_ij[0] + \
+                       r_ik[1] * r_ij[1] + \
+                       r_ik[2] * r_ij[2]) * \
                       u_der_ij * u_der(distik, m_a);
             }
 

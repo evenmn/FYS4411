@@ -58,8 +58,8 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
     uniform_int_distribution<> dimrand(0, dim-1);     //Random number between 0 and dim
 
     //Open file for writing
-    ofstream myfile;
-    myfile.open ("/home/evenmn/FYS4411/Project 1/local_energy.dat");
+    //ofstream myfile;
+    //myfile.open ("/home/evenmn/FYS4411/Project 1/local_energy.dat");
 
     for(int k=0; k<length_alpha_1; k++){
 
@@ -177,9 +177,9 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
         cout << "CPU time: " << CPU_time << "\n" << endl;
 
         //Write to file
-        myfile << alpha[k] << " " << E_L_avg << " " << variance << "\n";
+        //myfile << alpha[k] << " " << E_L_avg << " " << variance << "\n";
     }
 
     //Close myfile
-    myfile.close();
+    //myfile.close();
 }

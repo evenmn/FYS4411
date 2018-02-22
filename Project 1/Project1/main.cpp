@@ -10,7 +10,7 @@ int main()
     double beta       = 1;       //weight parameter along z-axis
     double omega_HO   = 1;       //HO frequency in x- and y-direction
     double omega_z    = 1;       //HO frequency in z-direction
-    int    M          = 1000000;  //number of MC cycles
+    int    M          = 100;  //number of MC cycles
     double steplength = 1.0;       //steplength when changing position ->Is this correct?
     int    N          = 10;      //number of particles
     int    dim        = 3;       //number of dimensions concidered
