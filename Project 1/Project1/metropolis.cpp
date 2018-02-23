@@ -1,4 +1,4 @@
-#include <BF_met.h>
+#include <metropolis.h>
 #include <iostream>
 #include <cmath>
 #include <wavefunction.h>
@@ -10,6 +10,7 @@
 
 using namespace std;
 
+//Mersenne Twister RNG
 random_device rd;                   //Will be used to obtain a seed for the random number engine
 mt19937 gen(rd());                  //Standard mersenne_twister_engine seeded with rd()
 uniform_real_distribution<> dis(0, 1);
@@ -52,8 +53,6 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
     normal_distribution<double> eps_gauss(0,1);
 
     //Marsenne Twister Random Number Generator
-    random_device rd;                               //Will be used to obtain a seed for the random number engine
-    mt19937 seed(rd());                              //Standard mersenne_twister_engine seeded with rd()
     uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
     uniform_int_distribution<> dimrand(0, dim-1);     //Random number between 0 and dim
 
@@ -121,8 +120,8 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
         //Start Monte Carlo iterations
         for(int i=0; i<M; i++){
             //Draw random position, for one particle and one dimention
-            N_rand   = nrand(seed);
-            dim_rand = dimrand(seed);
+            N_rand   = nrand(gen);
+            dim_rand = dimrand(gen);
 
             //Set new meatrix equal old one
             memcpy(pos_mat_new, pos_mat, sizeof(pos_mat_new));

@@ -193,20 +193,35 @@ r<\frac{G(R,R_{new},\Delta t)|\Psi_T(R_{new})|^2}{G(R_{new},R,\Delta t)|\Psi_T(R
 
 \section{Results}
 \subsection{CPU-time}\label{CPU}
-For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the local energy. In table (\ref{tab:BFmet}) we present the results from these calculations and the performance. All the measurements are done in three dimensions with $\alpha=0.5$ and $1e6$ Monte Carlo cycles. $a$ is fixed to zero.
+For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the local energy. In table (\ref{tab:BFmet}) we present the results from these calculations and the performance. All the measurements are done in three dimensions with $1e6$ Monte Carlo cycles. $a$ is fixed to zero.
 \begin{table} [H]
 \centering
-\caption{Optimal parameters $\alpha$ and $\beta$ and resulting energy $E_{L2}$ and variance $\sigma_{E_{L2}}$ for different $\omega$ for $\Psi_{T2}$.}
+\caption{The local energy calculated numerically for $a=0$ and without repulsive interaction. The number of Monte Carlo cycles is fixed to 1e6, and the performance is presented along with the local energies. The analytical local energy is given by $E_L=0.5\cdot N\cdot d$ where $N$ is the number of particles and $d$ is the number of dimensions, in our case set to 3.}
 \begin{tabularx}{\textwidth}{X|XX|XX} \hline
 \label{tab:BFmet}
 & \multicolumn{2}{X}{\textbf{Analytical}} & \multicolumn{2}{X}{\textbf{Numerical}} \\
-\#Particles & $\langle E_L\rangle$ [..] & CPU-time [s] & $\langle E_L\rangle$ [..] & CPU-time [s]\\ \hline
+$N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s]\\ \hline
 1 & 1.50000 & 0.146392 & 1.49999 & 0.426018 \\
 10 & 15.000 & 11.8992 & 14.9999 & 38.0378 \\
 100 & 150.00 & 8326.16 & & \\
 500 & & & & \\ \hline
 \end{tabularx}
 \end{table}
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[scale=0.65]{energy.png}
+    \caption{Add caption}
+    \label{fig:energy}
+\end{figure} 
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[scale=0.65]{variance.png}
+    \caption{Add caption}
+    \label{fig:variance}
+\end{figure} 
+
 
 \section{Discussion}
 
