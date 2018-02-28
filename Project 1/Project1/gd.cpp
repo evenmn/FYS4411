@@ -53,9 +53,11 @@ void Metropolis(int N, int dim, int M, double a, double steplength, double omega
     uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
     uniform_int_distribution<> dimrand(0, dim-1);     //Random number between 0 and dim
 
-    double alpha = 0;          //Initial guess
-    double eta0 = 0.5;              //Learning rate
-    double D = 0.1;                 //Diffusion coeff, to be used in Hastings met.algo
+    double alpha = 0.5;          //Initial guess
+    double alpha_old;
+    double eps = 0.0001;
+    double eta0 = 0.001;              //Learning rate
+    double D = 0.1;               //Diffusion coeff, to be used in Hastings met.algo
     int T = 50;                     //Number of iterations (alphas)
 
 
@@ -69,10 +71,8 @@ void Metropolis(int N, int dim, int M, double a, double steplength, double omega
         double E_tot       = 0;          //sum of energies of all states
         double E_tot_sqrd  = 0;          //sum of energies of all states squared
         double E           = 0;          //energy after change in position
-        double E_plus      = 0;
-        double E_minus     = 0;
-        double E_tot_plus  = 0;
-        double E_tot_minus = 0;
+        double psi_E_tot   = 0;         //used for calculating derv of local energy
+        double psi_tot     = 0;         //used for calculating derv of local energy
 
         double psi_ratio;               //ratio of new and old wave function
         int    N_rand;                  //randomly chosen N
@@ -91,15 +91,6 @@ void Metropolis(int N, int dim, int M, double a, double steplength, double omega
             }
         }
 
-        /*
-        vector<vector<double>> posmat;
-        posmat.resize(N);
-        for(int i = 0; i < posmat.size(); i++)
-            posmat[i].resize(dim);
-
-        for(auto* i : posmat)
-            i.resize(dim);
-       */
 
         //Initialize wave function
         WaveFunction Psi;
@@ -108,22 +99,19 @@ void Metropolis(int N, int dim, int M, double a, double steplength, double omega
         //Add initial energies to averages
         if(num_or_an == 0) {
             E = Psi.E_L_ana(pos_mat, alpha, beta, omega_HO, omega_z);
-            E_plus = Psi.E_L_ana(pos_mat, alpha + timestep, beta, omega_HO, omega_z);
-            E_minus = Psi.E_L_ana(pos_mat, alpha - timestep, beta, omega_HO, omega_z);
         }
         else if(num_or_an == 1) {
             E = Psi.E_L_num(pos_mat, alpha, beta, omega_HO, omega_z, h);
-            E_plus = Psi.E_L_num(pos_mat, alpha + timestep, beta, omega_HO, omega_z, h);
-            E_minus = Psi.E_L_num(pos_mat, alpha - timestep, beta, omega_HO, omega_z, h);
+
         }
         else {
             cout << "num_or_an is out of range" << endl;
         }
 
-        E_tot_plus += E_plus;
-        E_tot_minus += E_minus;
         E_tot += E;
         E_tot_sqrd += E*E;
+        psi_tot += Psi.Psi_der(pos_mat, alpha, beta);
+        psi_E_tot += Psi.Psi_der(pos_mat, alpha, beta)*E;
 
         int accept = 0;
 
@@ -160,39 +148,31 @@ void Metropolis(int N, int dim, int M, double a, double steplength, double omega
 
                 if(num_or_an == 0) {
                     E = Psi.E_L_ana(pos_mat, alpha, beta, omega_HO, omega_z);
-                    E_plus = Psi.E_L_ana(pos_mat, alpha + timestep, beta, omega_HO, omega_z);
-                    E_minus = Psi.E_L_ana(pos_mat, alpha - timestep, beta, omega_HO, omega_z);
                 }
                 else if(num_or_an == 1) {
                     E = Psi.E_L_num(pos_mat, alpha, beta, omega_HO, omega_z, h);
-                    E_plus = Psi.E_L_num(pos_mat, alpha + timestep, beta, omega_HO, omega_z, h);
-                    E_minus = Psi.E_L_num(pos_mat, alpha - timestep, beta, omega_HO, omega_z, h);
                 }
             }
 
-            E_tot_plus += E_plus;
-            E_tot_minus += E_minus;
             E_tot += E;
             E_tot_sqrd += E*E;
+            psi_tot += Psi.Psi_der(pos_mat, alpha, beta);
+            psi_E_tot += Psi.Psi_der(pos_mat, alpha, beta)*E;
         }
         clock_t end_time = clock();
-
-        // d<E_L>/d alpha
-        //double E_der = (E_tot_plus - E_tot_minus)/(2 * M * timestep);
-        cout << (E_tot_plus - E_tot_minus)/(2 * M * timestep) << endl;
-        double E_der = Psi.E_L_der(pos_mat, alpha, beta);
-        cout << N * E_der << endl;
-
-        //Update alpha
-        alpha = alpha - eta0 * E_der / sqrt(iter + 1);
 
         //Calculate <E_L> and <E_L**2>
         double E_L_avg = E_tot/M;
         double E_L_avg_sqrd = E_tot_sqrd/M;
-        double accept_ratio = accept/M;
+        double accept_ratio = accept/M; //too small for wrong alpha; can say 0, but is not exactly 0
         double CPU_time = 1.0*(end_time - start_time)/CLOCKS_PER_SEC;
         double variance = E_L_avg_sqrd - E_L_avg*E_L_avg;
 
+        double psi_E_avg = psi_E_tot/M;
+        double psi_avg = psi_tot/M;
+        double E_L_der = 2*(psi_E_avg - psi_avg*E_L_avg);
+
+        cout << "E_L_der: " << E_L_der << endl;
         cout << "--- ALPHA: " << alpha << " ---" << endl;
         cout << "E_L_avg: " << E_L_avg << endl;
         cout << "E_L_avg_tot: " << E_L_avg_sqrd << endl;
@@ -200,6 +180,18 @@ void Metropolis(int N, int dim, int M, double a, double steplength, double omega
         cout << "Variance: " << variance << endl;
         cout << "CPU time: " << CPU_time << "\n" << endl;
 
+        alpha_old = alpha;
+        //Update alpha
+        alpha = alpha; //- eta0 * E_L_der; //*sqrt(iter + 1);
+
+        /*
+        if(abs(E_L_der)<eps&&abs(alpha-alpha_old)<eps){
+            cout <<"FINAL VALUES" << endl;
+            cout << "alpha: " << alpha << endl;
+            cout << "iteration alpha nr: " << iter << endl;
+            break;
+        }
+        */
         //Write to file
         //myfile << alpha << " " << E_L_avg << " " << variance << "\n";
     }

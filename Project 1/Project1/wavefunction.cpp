@@ -143,7 +143,7 @@ double WaveFunction::E_L_ana(double pos_mat[][3], double alpha, double beta, dou
 
 double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, double omega_HO, double omega_z, double h)
 {
-
+    //Obs:momentarily only work with a=0
     // Kinetic energy
     double pos_mat_plus[m_N][3];
     double pos_mat_minus[m_N][3];
@@ -177,35 +177,16 @@ double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, dou
     return kineticEnergy + potentialEnergy;
 }
 
-double WaveFunction::E_L_der(double pos_mat[][3], double alpha, double beta) {
+double WaveFunction::Psi_der(double pos_mat[][3], double alpha, double beta) {
 
-    double EL_der = 0;
-    double r_ij[3];
-    double distij;
+    double psi_der_div_psi = 1;
 
-    for(int i=0; i<m_N; i++) {
-        EL_der += 8*alpha *(pos_mat[i][0]*pos_mat[i][0] + \
-                            pos_mat[i][1]*pos_mat[i][1] + \
-                            pos_mat[i][2]*pos_mat[i][2]*beta*beta);
-
-        if(m_dim==1) {
-            EL_der -= 2;
-        }
-        else if(m_dim==2) {
-            EL_der -= 4;
-        }
-
-        else if(m_dim==3) {
-            EL_der -= 4 + 2*beta;
-        }
-
-        for(int j=m_N-1; j>i; j--) {
-            for(int l = 0; l < m_dim; l++)
-                r_ij[l] = pos_mat[i][l] - pos_mat[j][l];
-            distij = sqrt(r_ij[0]*r_ij[0] + r_ij[1]*r_ij[1] + r_ij[2]*r_ij[2]);
-            EL_der -= 4*(pos_mat[i][0]*r_ij[0] + pos_mat[i][1]*r_ij[1] + \
-                         pos_mat[i][2]*r_ij[2] * beta) * u_der(distij, m_a);
-        }
-    return -0.5 * EL_der;
+    for(int i=0; i<m_N; i++){
+        psi_der_div_psi += (pos_mat[i][0]*pos_mat[i][0]+pos_mat[i][1]*pos_mat[i][1] + beta*pos_mat[i][2]*pos_mat[i][2]);
     }
+    return -psi_der_div_psi;
+    //return -(pos_mat[0][0]*pos_mat[0][0]+pos_mat[0][1]*pos_mat[0][1] + beta*pos_mat[0][2]*pos_mat[0][2]); //correct for 1 particle, 1 dim
+
 }
+
+

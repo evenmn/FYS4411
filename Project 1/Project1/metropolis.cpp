@@ -155,6 +155,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
                 }
             }
 
+            //cout << "x_pos: " << pos_mat[0][0] << endl;
 
             E_tot += E;
             E_tot_sqrd += E*E;
@@ -167,6 +168,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
         double accept_ratio = accept*1.0/M;
         double CPU_time = 1.0*(end_time - start_time)/CLOCKS_PER_SEC;
         double variance = E_L_avg_sqrd - E_L_avg*E_L_avg;
+
 
         cout << "--- ALPHA: " << alpha[k] << " ---" << endl;
         cout << "E_L_avg: " << E_L_avg << endl;
