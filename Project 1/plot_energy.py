@@ -9,9 +9,7 @@ def E_L(alpha):
 
 # Numerical values
 dirpath = os.getcwd()
-print(dirpath)
 data = np.loadtxt("%s/data/local_energy.dat" % dirpath)
-print(data)
 
 sns.set()
 plt.plot(data[:,0], data[:,1], label="Numerical")
@@ -28,4 +26,3 @@ plt.xlabel(r"$\alpha$")
 plt.ylabel(r"$\sigma$")
 plt.legend(loc="best")
 plt.savefig("%s/images/variance.png" % dirpath)
-plt.show()

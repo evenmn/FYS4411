@@ -46,14 +46,14 @@ double Greenfuncsum(double pos_mat[][3], double pos_mat_new[][3], double D, doub
     return GreenSum;
 }
 
-void Metropolis(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, bool HO, double alpha0, double beta, double h, int num_or_an, int BF_H, double timestep)
+void Metropolis(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, bool HO, double beta, double h, int num_or_an, int BF_H, double timestep)
 {
     //Marsenne Twister Random Number Generator
     normal_distribution<double> eps_gauss(0,1);
     uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
     uniform_int_distribution<> dimrand(0, dim-1);     //Random number between 0 and dim
 
-    double alpha = alpha0;          //Initial guess
+    double alpha = 0;          //Initial guess
     double eta0 = 0.5;              //Learning rate
     double D = 0.1;                 //Diffusion coeff, to be used in Hastings met.algo
     int T = 50;                     //Number of iterations (alphas)
@@ -61,7 +61,7 @@ void Metropolis(int N, int dim, int M, double a, double steplength, double omega
 
     //Open file for writing
     //ofstream myfile;
-    //myfile.open ("/home/evenmn/FYS4411/Project 1/local_energy.dat");
+    //myfile.open ("data/local_energy.dat");
 
     for(int iter=0; iter<T; iter++){
 
@@ -178,16 +178,18 @@ void Metropolis(int N, int dim, int M, double a, double steplength, double omega
         clock_t end_time = clock();
 
         // d<E_L>/d alpha
-        double E_der = (E_tot_plus - E_tot_minus)/(2 * M * timestep);
-        cout << E_der << endl;
+        //double E_der = (E_tot_plus - E_tot_minus)/(2 * M * timestep);
+        cout << (E_tot_plus - E_tot_minus)/(2 * M * timestep) << endl;
+        double E_der = Psi.E_L_der(pos_mat, alpha, beta);
+        cout << N * E_der << endl;
 
         //Update alpha
-        alpha = alpha + eta0 * E_der / sqrt(iter + 1);
+        alpha = alpha - eta0 * E_der / sqrt(iter + 1);
 
         //Calculate <E_L> and <E_L**2>
         double E_L_avg = E_tot/M;
         double E_L_avg_sqrd = E_tot_sqrd/M;
-        double accept_ratio = accept*1.0/M;
+        double accept_ratio = accept/M;
         double CPU_time = 1.0*(end_time - start_time)/CLOCKS_PER_SEC;
         double variance = E_L_avg_sqrd - E_L_avg*E_L_avg;
 

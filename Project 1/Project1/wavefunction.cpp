@@ -108,14 +108,14 @@ double WaveFunction::E_L_ana(double pos_mat[][3], double alpha, double beta, dou
               beta*beta * pos_mat[i][2]*pos_mat[i][2]);
 
         if(m_dim==1) {
-            EL += -2*alpha;
+            EL -= 2*alpha;
         }
         else if(m_dim==2) {
-            EL += -4*alpha;
+            EL -= 4*alpha;
         }
 
         else if(m_dim==3) {
-            EL += -4*alpha - 2*alpha*beta;
+            EL -= 4*alpha + 2*alpha*beta;
         }
 
         for(int j=m_N-1; j>i; j--) {
@@ -124,8 +124,8 @@ double WaveFunction::E_L_ana(double pos_mat[][3], double alpha, double beta, dou
             distij = sqrt(r_ij[0]*r_ij[0] + r_ij[1]*r_ij[1] + r_ij[2]*r_ij[2]);
             double u_der_ij = u_der(distij, m_a);
 
-            EL += -4*alpha*(pos_mat[i][0] * r_ij[0] + pos_mat[i][1] * r_ij[1] +\
-                            pos_mat[i][2] * r_ij[2] * beta) * (u_der_ij);
+            EL -= 4*alpha*(pos_mat[i][0] * r_ij[0] + pos_mat[i][1] * r_ij[1] +\
+                           pos_mat[i][2] * r_ij[2] * beta) * (u_der_ij);
 
             for(int k=m_N-1; k>i; k--) {
                 for(int l = 0; l < m_dim; l++)
@@ -175,4 +175,37 @@ double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, dou
         potentialEnergy += V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
     }
     return kineticEnergy + potentialEnergy;
+}
+
+double WaveFunction::E_L_der(double pos_mat[][3], double alpha, double beta) {
+
+    double EL_der = 0;
+    double r_ij[3];
+    double distij;
+
+    for(int i=0; i<m_N; i++) {
+        EL_der += 8*alpha *(pos_mat[i][0]*pos_mat[i][0] + \
+                            pos_mat[i][1]*pos_mat[i][1] + \
+                            pos_mat[i][2]*pos_mat[i][2]*beta*beta);
+
+        if(m_dim==1) {
+            EL_der -= 2;
+        }
+        else if(m_dim==2) {
+            EL_der -= 4;
+        }
+
+        else if(m_dim==3) {
+            EL_der -= 4 + 2*beta;
+        }
+
+        for(int j=m_N-1; j>i; j--) {
+            for(int l = 0; l < m_dim; l++)
+                r_ij[l] = pos_mat[i][l] - pos_mat[j][l];
+            distij = sqrt(r_ij[0]*r_ij[0] + r_ij[1]*r_ij[1] + r_ij[2]*r_ij[2]);
+            EL_der -= 4*(pos_mat[i][0]*r_ij[0] + pos_mat[i][1]*r_ij[1] + \
+                         pos_mat[i][2]*r_ij[2] * beta) * u_der(distij, m_a);
+        }
+    return -0.5 * EL_der;
+    }
 }
