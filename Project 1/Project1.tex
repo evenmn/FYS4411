@@ -58,15 +58,22 @@ Introduction
 We study a system of $N$ bosons trapped in a harmonic oscillator with the Hamiltonian given by 
 \begin{equation}
 \hat{H}=\sum_i^N\bigg(-\frac{\hbar^2}{2m}\nabla_i^2+V_{ext}(\vec{r}_i)\bigg)+\sum_{i<j}^NV_{int}(\vec{r}_i,\vec{r}_j)
-\label{Hamiltonian}
+\label{eq:Hamilton}
 \end{equation}
 with $V_{ext}$ as the external potential, which is the harmonic oscillator potential,
-and $V_{int}$ as the interaction term. The interaction will in the first place be ignored, and is given later.
+and $V_{int}$ as the interaction term. The interaction will in the first place be ignored, and is specified later. We will consider a harmonic oscillator which can either be spherical (all dimensions have the same scales) or elliptical (the vertical dimension has a different frequency from the horizontals),
+\begin{equation}
+V_{ext}(\vec{r})=
+\begin{cases} 
+   \frac{1}{2}m\omega_{HO}^2\vec{r}^2 & \text{(Spherical)} \\
+   \frac{1}{2}m[\omega_{HO}^2(x^2 + y^2) + \omega_z^2z^2] & \text{(Elliptical)}.
+\end{cases}
+\end{equation}
 
 The trial wavefunction is on the form 
 \begin{equation}
-\Psi_T(\vec{r}_1, \vec{r}_2, ..., \vec{r}_N, \alpha, \beta)=\prod_i^Ng(\alpha, \beta, \vec{r}_i)\prod_{i<j}^Nf(a,r_{ij})
-\label{WF}
+\Psi_T(\vec{r}_1, \vec{r}_2, ..., \vec{r}_N, \alpha, \beta)=\prod_i^Ng(\alpha, \beta, \vec{r}_i)\prod_{i<j}f(a,r_{ij})
+\label{eq:WF}
 \end{equation}
 where $r_{ij}=|\vec{r}_i-\vec{r}_j|$ and $g$ is assumed to be an exponential function,
 \begin{equation}
@@ -74,7 +81,7 @@ g(\alpha, \beta, \vec{r}_i)=\exp[-\alpha(x_i^2+y_i^2+\beta z_i^2)],
 \end{equation}
 which is practical since
 \begin{equation}
-\prod_i^Ng(\alpha, \beta, \vec{r}_i)=\exp[-\alpha(x_1^2+y_1^2+\beta z_1^2+\cdots x_N^2+y_N^2+\beta z_N^2)].
+\prod_i^Ng(\alpha, \beta, \vec{r}_i)=\exp\Big[-\alpha\sum_{i=1}^N(x_i^2+y_i^2+\beta z_i^2)\Big].
 \end{equation}
 $\alpha$ is a variational parameter that we later use to find the energy minimum, and $\beta$ is a constant. This is also the form of the exact ground state wave function for a harmonic oscillator, so by choosing the correct $\alpha$, we will find the exact ground state energy (when $V_{int}$ is ignored). The $f$ presented above is the correlation wave function, which is 
 \begin{equation}
@@ -94,19 +101,19 @@ E = \hbar\omega(n + dim/2)
 where $n$ is the energy level and $dim$ is number of dimensions. In this project we will study the ground state only, such that $n=0$. The local energy is
 \begin{equation}
 E_L(\vec{r})=\frac{1}{\Psi_T(\vec{r})}\hat{H}\Psi_T(\vec{r})
-\label{Local_energy}
+\label{eq:Local_energy}
 \end{equation}
 which gives the following results considering $a=0$:
 
 INSERT ANALYTICAL EXPRESSIONS FROM A
 
-For $a\neq0$ it gets rather more complicated, because we need to deal with the correction wave function as well. By defining
+For $a\neq0$ it gets rather more complicated, because we need to deal with the correlation term as well. By defining
 \begin{equation}
 f(a, r_{ij})=\exp{\bigg(\sum_{i<j}u(r_{ij})\bigg)}
 \end{equation}
 and doing a change of variables
 \begin{equation}
-\frac{\partial}{\partial r_k}=\frac{\partial}{\partial r_k}\frac{\partial r_{kj}}{\partial r_{kj}}=\frac{\partial r_{kj}}{\partial r_k}\frac{\partial}{\partial r_{kj}}=\frac{(r_k-r_j)}{r_{kj}}\frac{\partial}{\partial r_{kj}}
+\frac{\partial}{\partial \vec{r}_k}=\frac{\partial}{\partial \vec{r}_k}\frac{\partial r_{kj}}{\partial r_{kj}}=\frac{\partial r_{kj}}{\partial \vec{r}_k}\frac{\partial}{\partial r_{kj}}=\frac{(\vec{r}_k-\vec{r}_j)}{r_{kj}}\frac{\partial}{\partial r_{kj}}
 \end{equation}
 one will end up with
 \begin{align}
@@ -124,9 +131,9 @@ and calculate the local energy with a numerical approach where the second deriva
 \begin{equation}
 f''(x)\simeq\frac{f(x+h)-2f(x)+f(x-h)}{h^2}.
 \end{equation}
-In our case the position is a three dimensional vector, so we need to handle each dimension separately. However, in section \ref{CPU}, the CPU time for the analytical and numerical approach are compared. 
+In our case the position is a three dimensional vector, so we need to handle each dimension separately. Both the analytical and the numerical local energy are implemented, and in section \ref{CPU}, the CPU time for the analytical and numerical approach are compared for a various number of particles. 
 
-The most interesting and realistic case is when the interaction is included, so let us now include the interaction term, which is given by a so-called hard-sphere
+The most interesting and realistic case is when the interaction is included, so let us now set it to a so-called hard-sphere potential
 \begin{equation}
 V_{int}(\vec{r}_i, \vec{r}_j)=
 \begin{cases} 
@@ -136,17 +143,26 @@ V_{int}(\vec{r}_i, \vec{r}_j)=
 \end{equation}
 which ensures that the particles are separated by a distance $a$. The local energy is slightly changing, because we need to add the interaction potential to it as well. 
 
+For the case when we have elliptical harmonic oscillator potential, we can obtain a quite simple expression for the Hamiltonian when scaling with respect to $\hbar\omega_{HO}$ (something we actually already have done with the energy). The expression we get is
+\begin{equation}
+H=\sum_i\bigg(\frac{1}{2}\Big(-\nabla^2 + x_i^2 + y_i^2 + \gamma^2z_i^2\Big)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
+\end{equation}
+where
+\begin{equation*}
+\gamma=\frac{\omega_z}{\omega_{HO}}.
+\end{equation*}
+This quantity is equivalent to $\beta$, see Appendix B to see how this expression is derived. 
 
 \section{Methods}
 \subsection{Variational Monte Carlo}\label{VMC}
 Variational Monte Carlo (VMC) is a widely used method for approximating the ground state of a quantum system. The method is based on Markov chains, and move a particle (or a set of particles) one step for each cycle, i.e.
 \begin{equation}
-\vec{R}_{new} = \vec{R} + r\cdot \text{step}
+\vec{R}_{new} = \vec{R} + r\cdot \text{step}.
 \end{equation}
 Both the direction and the change in position are randomly chosen, so with a plain VMC implementation the particles will move randomly and independently of each other. We are going to use the Metropolis algorithm in addition to the VMC, which accepts or rejects moves based on the probability ratio between the old and the new position. This makes the system approach the most likely state, and the idea is that after a certain number of cycles the system will be in the most likely state. 
 
 \subsection{Metropolis Algorithm}
-As mentioned above the task of the Metropolis algorithm is to move the system against the most likely state. The original algorithm, here named brute force, is the simplest one, and does not deal with the transition probabilities. The modified Metropolis-Hastings algorithm includes, on the other hand, the transition probabilities and will be slightly more time consuming per cycle. We expect the latter to converge faster to the most likely state. 
+As mentioned above the task of the Metropolis algorithm is to move the system against the most likely state. The standard algorithm, here named brute force, is the simplest one, and does not deal with the transition probabilities. The modified Metropolis-Hastings algorithm includes, on the other hand, the transition probabilities and will be slightly more time consuming per cycle. We expect the latter to converge faster to the most likely state. 
 
 The foundation of the Metropolis algorithm is that the probability for a system to undergo a transition from state $i$ to state $j$ is given by the transition probability multiplied by the acceptance probability
 \begin{equation}
@@ -164,7 +180,7 @@ When the times goes to infinity, the system will approach the most likely state 
 \begin{equation}
 \sum_j\bigg[p_jT_{j \rightarrow i}A_{j \rightarrow i} - p_iT_{i \rightarrow j}A_{i \rightarrow j}\bigg]=0.
 \end{equation}
-Rearranging, we obtain a quite useful results
+Rearranging, we obtain a quite useful result
 \begin{equation}
 \frac{A_{j\rightarrow i}}{A_{i\rightarrow j}}=\frac{p_iT_{i\rightarrow j}}{p_jT_{j\rightarrow i}}
 \end{equation}
@@ -184,15 +200,15 @@ $w$ will be larger than one if the new position is more likely than the current,
 \end{equation}
 
 \subsubsection{Importance sampling}
-The important sampling technique is often refered to as Metropolis-Hastings algorithm. The approach is the same as for the brute force Metropolis algorithm, but we will end ut with a slightly more complicated acceptation criteria. To understand the details, we need to begin with the Fokker-Planck equation, which describes the time-evolution of the probability density function $P(R,t)$. In one dimension it reads
+The importance sampling technique is often refered to as Metropolis-Hastings algorithm. The approach is the same as for the brute force Metropolis algorithm, but we will end ut with a slightly more complicated acceptation criteria. To understand the details, we need to begin with the Fokker-Planck equation, which describes the time-evolution of the probability density function $P(R,t)$. In one dimension it reads
 \begin{equation}
 \frac{\partial P(R,t)}{\partial t} = D\frac{\partial}{\partial R}\bigg(\frac{\partial}{\partial R} - F\bigg)P(R,t).
 \end{equation}
-where $F$ is the drift force and $D$ is the diffusion coefficient. Even though the probability density function can give a lot of useful information, an equation describing the motion of a such particle would be more appropriate for our purposes. Fortunately this equation exists, and satisfies the Fokker-Planck equation. The Langevin equation is given by
+where $F$ is the drift force and $D$ is the diffusion coefficient. Even though the probability density function can give a lot of useful information, an equation describing the motion of a such particle would be more appropriate for our purposes. Fortunately this equation exists, and satisfies the Fokker-Planck equation. The Langevin equation can be written as
 \begin{equation}
 \frac{\partial R(t)}{\partial t}=DF(R(t)) + \eta
 \end{equation}
-where $\eta$ can be considered as a random variable. One can solve this differetial equation by applying the forward Euler method and introducing gaussian variables $\xi$
+where $\eta$ can be considered as a random variable. This differential equation can be solved by applying the forward Euler method and introducing gaussian variables $\xi$
 \begin{equation}
 R_{new} = R + DF(R)\Delta t + \xi\sqrt{\Delta t}
 \end{equation}
@@ -206,12 +222,24 @@ and the acceptance criteria becomes
 r<\frac{G(R,R_{new},\Delta t)|\Psi_T(R_{new})|^2}{G(R_{new},R,\Delta t)|\Psi_T(R)|^2}.
 \end{equation}
 
+\subsection{Minimization methods}
+When the interaction term is excluded, we know which $\alpha$ that corresponds to the energy minima, and it is in principle no need to try different $\alpha$'s. However, sometimes we have no idea where to search for the minimum point, and we need to try various $\alpha$ values to determine the lowest energy. If we do not know where to start searching, this can be a time consuming activity. Would it not be nice if the program could do this for us?
+
+In fact there are multiple techniques for doing this, where the most complicated ones obviously also are the best. Anyway, in this project we will have good initial guesses, and are therefore not in need for the most fancy algorithms. 
+
+\subsubsection{Gradient descent}
+Perhaps the simplest and most intuitive method for finding the minima is the gradient descent method, which reads
+\begin{equation}
+\alpha^+=\alpha - \eta\cdot\frac{d\langle E_L(\alpha)\rangle}{d\alpha}.
+\end{equation}
+where $\alpha^+$ is the updated $\alpha$ and $\eta$ is the step size. The idea is that one finds the gradient of the energy with respect to a certain $\alpha$, and moves in the direction which minimizes the energy the most. This is repeated until one has found an energy minimum. 
+
 \section{Results}
 \subsection{CPU-time}\label{CPU}
 For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the local energy. In table (\ref{tab:BFmet}) we present the results from these calculations and the performance. All the measurements are done in three dimensions with $1e6$ Monte Carlo cycles. $a$ is fixed to zero.
 \begin{table} [H]
 \centering
-\caption{The local energy calculated numerically for $a=0$ and without repulsive interaction. The number of Monte Carlo cycles is fixed to 1e6, and the performance is presented along with the local energies. The analytical local energy is given by $E_L=0.5\cdot N\cdot d$ where $N$ is the number of particles and $d$ is the number of dimensions, in our case set to 3.}
+\caption{The local energy calculated numerically for $a=0$ and without hard-sphere interaction. The number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the local energies. The analytical local energy is given by $E_L=0.5\cdot N\cdot d$ where $N$ is the number of particles and $d$ is the number of dimensions, in our case set to 3.}
 \begin{tabularx}{\textwidth}{X|XX|XX} \hline
 \label{tab:BFmet}
 & \multicolumn{2}{X}{\textbf{Analytical}} & \multicolumn{2}{X}{\textbf{Numerical}} \\
@@ -222,6 +250,9 @@ $N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] & $\langle E_L\ra
 500 & & & & \\ \hline
 \end{tabularx}
 \end{table}
+We observe that the calculated local energy is close to the exact energy. 
+
+\subsection{VMC without repulsive interaction}
 
 \begin{figure} [H]
     \centering
@@ -237,9 +268,87 @@ $N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] & $\langle E_L\ra
     \label{fig:variance}
 \end{figure} 
 
+\subsection{Standard Metropolis vs. Importance sampling}
+We want to see if the importance sampling really converges faster, and compare the energy with respect to the number of cycles. The interaction is still turned off, and we study 10 particles in 3 dimensions in the minimum point. \\
+The only thing that is different is the acceptance ratio?
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[scale=0.65]{images/acceptance_IS.png}
+    \caption{Add caption}
+    \label{fig:acceptance_IS}
+\end{figure} 
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[scale=0.65]{images/acceptance_BF.png}
+    \caption{Add caption}
+    \label{fig:acceptance_BF}
+\end{figure} 
+
+\subsection{VMC with repulsive interaction}
+We are now turning on the interaction and the elliptical harmonic oscillator at the same time. 
 
 \section{Discussion}
 
 \section{Conclusion}
 
+\section{Appendix}
+\subsection{Appendix A}
+\label{appendix_A}
+
+We calculated the analytical expression for the local energy $E_L$, as given by \ref{eq:Local_energy}, for the no-interaction ($a=0$) case for the spherical harmonic oscillator. In this case, the wave trial function for only consists of the one body part, and is thus for $N$ particles given by:
+
+\begin{equation}
+	\label{eq:WF_nointeract}
+	\Psi_T(\vec{r}) = \prod_i^N e^{-\alpha(x_i^2 + y_i^2 + \beta z_i^2)}
+\end{equation}
+
+We now want to calculate the analytical expressions for $E_L$ for one particle and one dimention, and $N$ particles and three dimentions.
+
+\subsubsection{One particle, one dimention}
+
+From \ref{eq:WF_nointeract}, the trial wave function for one particle and one dimention is as follows:
+
+\begin{equation}
+	\Psi_T(x) = e^{-\alpha x^2} 
+\end{equation}
+
+In the Hamiltonian, the Laplace-operator reduces to the partial derivative in the x-direction, $\frac{\partial^2 }{\partial x^2}$, and $E_L$ is 
+
+\begin{equation}
+\begin{aligned}
+E_L(x) &=  \frac{1}{\Psi_T(x)}\hat{H}\Psi_T(x) \\ 
+			 & =  e^{\alpha x^2} (-\frac{\hbar^2}{2m}\frac{\partial^2 }{\partial x^2} + \frac{1}{2} m \omega_{HO}^2 x^2) e^{-\alpha x^2}  \\
+			 & = e^{\alpha x^2} [-\frac{\hbar^2}{2m}\frac{\partial^2 }{\partial x^2} (e^{-\alpha x^2}) + \frac{1}{2} m \omega_{HO}^2 x^2 ()e^{-\alpha x^2})]
+\end{aligned}
+\end{equation}
+
+
+\subsection{Appendix B}
+In the theory part we claimed that the Hamiltonian could be written as
+\begin{equation}
+H=\sum_i\bigg(\frac{1}{2}\Big(-\nabla^2 + x_i^2 + y_i^2 + \gamma^2z_i^2\Big)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
+\end{equation}
+with
+\begin{equation*}
+\gamma=\frac{\omega_z}{\omega_{HO}}
+\end{equation*}
+for an elliptical harmonic oscillator potential with repulsive interaction. All the quantities in the expression are scalled, such that it is dimensionless. The energy ($H$) is scalled with respect to $\hbar\omega_{HO}$, while the length is scalled with respect to the characteristic length of the trap, $a_{HO}=(\hbar/m\omega_{HO})^{1/2}$. Let us start from scratch, where the unscalled Hamiltonian for an elliptical harmonic oscillator reads
+\begin{equation*}
+H=\sum_i\bigg(-\frac{\hbar^2}{2m}\nabla_i^2+\frac{1}{2}m\Big(\omega_{HO}^2(x_i^2+y_i^2)+\omega_z^2z_i^2\Big)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i, \vec{r}_j).
+\end{equation*}
+We then scale the entire equation with respect to $\hbar\omega_{HO}$
+\begin{equation*}
+\frac{H}{\hbar\omega_{HO}}=\sum_i\bigg(-\frac{\hbar}{2m\omega_{HO}}\nabla_i^2+\frac{1}{2}\frac{m}{\hbar}\omega_{HO}(x_i^2+y_i^2)+\frac{1}{2}\frac{m}{\hbar}\frac{\omega_z^2}{\omega_{HO}}z_i^2\bigg)+\sum_{i<j}V_{int}(\vec{r}_i, \vec{r}_j)
+\end{equation*}
+where we can take $H'=H/\hbar\omega_{HO}$ as the dimensionless energy. Further we scale the all the lengths in the same way
+\begin{equation*}
+x_i^2=(x_i')^2\cdot a_{HO}^2=(x_i')^2\cdot\frac{\hbar}{m\omega_{HO}},
+\end{equation*}
+and we finally obtain
+\begin{equation}
+H'=\sum_i\frac{1}{2}\bigg(-\nabla_i^2+(x_i')^2+(y_i')^2+\frac{\omega_z^2}{\omega_{HO}^2}(z_i')^2\bigg)+\sum_{i<j}V_{int}(\vec{r}_i, \vec{r}_j).
+\end{equation}
+which is the Hamiltonian that we were hunting.
 \end{document}
