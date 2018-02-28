@@ -53,7 +53,7 @@ void Metropolis(int N, int dim, int M, double a, double steplength, double omega
     uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
     uniform_int_distribution<> dimrand(0, dim-1);     //Random number between 0 and dim
 
-    double alpha = 0.5;          //Initial guess
+    double alpha = 0.7;          //Initial guess
     double alpha_old;
     double eps = 0.0001;
     double eta0 = 0.001;              //Learning rate
@@ -182,16 +182,16 @@ void Metropolis(int N, int dim, int M, double a, double steplength, double omega
 
         alpha_old = alpha;
         //Update alpha
-        alpha = alpha; //- eta0 * E_L_der; //*sqrt(iter + 1);
+        alpha = alpha - eta0 * E_L_der*sqrt(iter + 1);
 
-        /*
+
         if(abs(E_L_der)<eps&&abs(alpha-alpha_old)<eps){
             cout <<"FINAL VALUES" << endl;
             cout << "alpha: " << alpha << endl;
             cout << "iteration alpha nr: " << iter << endl;
             break;
         }
-        */
+
         //Write to file
         //myfile << alpha << " " << E_L_avg << " " << variance << "\n";
     }
