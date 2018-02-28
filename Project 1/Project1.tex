@@ -58,25 +58,25 @@ Introduction
 We study a system of $N$ bosons trapped in a harmonic oscillator with the Hamiltonian given by 
 \begin{equation}
 \hat{H}=\sum_i^N\bigg(-\frac{\hbar^2}{2m}\nabla_i^2+V_{ext}(\vec{r}_i)\bigg)+\sum_{i<j}^NV_{int}(\vec{r}_i,\vec{r}_j)
-\label{Hamilton}
+\label{Hamiltonian}
 \end{equation}
 with $V_{ext}$ as the external potential, which is the harmonic oscillator potential,
-and $V_{int}$ as the interaction term. The interaction will in the first place be ignored, and will be given later.
+and $V_{int}$ as the interaction term. The interaction will in the first place be ignored, and is given later.
 
-The wavefunction is on the form 
+The trial wavefunction is on the form 
 \begin{equation}
-\Psi_T(\vec{r}_1, \vec{r}_2, ..., \vec{r}_N, \alpha, \beta)=\prod_i^Ng(\alpha, \beta, \vec{r}_i)\prod_{i<j}f(a,r_{ij})
+\Psi_T(\vec{r}_1, \vec{r}_2, ..., \vec{r}_N, \alpha, \beta)=\prod_i^Ng(\alpha, \beta, \vec{r}_i)\prod_{i<j}^Nf(a,r_{ij})
 \label{WF}
 \end{equation}
-where $r_{ij}=|\vec{r}_i-\vec{r}_j|$ and $g$ is assumed to be an exponential
+where $r_{ij}=|\vec{r}_i-\vec{r}_j|$ and $g$ is assumed to be an exponential function,
 \begin{equation}
-g(\alpha, \beta, \vec{r}_i)=\exp[-\alpha(x_i^2+y_i^2+\beta z_i^2)]
+g(\alpha, \beta, \vec{r}_i)=\exp[-\alpha(x_i^2+y_i^2+\beta z_i^2)],
 \end{equation}
 which is practical since
 \begin{equation}
 \prod_i^Ng(\alpha, \beta, \vec{r}_i)=\exp[-\alpha(x_1^2+y_1^2+\beta z_1^2+\cdots x_N^2+y_N^2+\beta z_N^2)].
 \end{equation}
-$\alpha$ is a variational parameter that we later use to find the energy minimum, and $\beta$ is a constant. This is also the form of the exact ground state wave function for a harmonic oscillator, so by choosing the correct $\alpha$, we will find the exact ground state energy (when we  The $f$ presented above is the correlation wave function, which is 
+$\alpha$ is a variational parameter that we later use to find the energy minimum, and $\beta$ is a constant. This is also the form of the exact ground state wave function for a harmonic oscillator, so by choosing the correct $\alpha$, we will find the exact ground state energy (when $V_{int}$ is ignored). The $f$ presented above is the correlation wave function, which is 
 \begin{equation}
 f(a,r_{ij})=
 \begin{cases} 
@@ -84,14 +84,14 @@ f(a,r_{ij})=
    \left(1-\frac{a}{r_{ij}}\right) & r_{ij} > a.
 \end{cases}
 \end{equation}
-The first case we will take into account, is when $a=0$, and one might observe that $f=1$ then. Anyway, ...
+The first case we will take into account is when $a=0$, such that the corretation term is 1. 
 
-We want to calculate the local energy as a function of $\alpha$, and then use Variational Monte Carlo (VMC) described in section \ref{VMC}. For the non-interacting case, the analytical expression is well-known and given by
+We want to calculate the local energy as a function of $\alpha$, and then use Variational Monte Carlo (VMC) described in section \ref{VMC}. For the non-interacting case, the analytical expression for one particle in a harmonic oscillator is well-known and reads
 \begin{equation}
-E = \hbar\omega(n + 1/2)
+E = \hbar\omega(n + dim/2)
 \label{Energy_exact}
 \end{equation}
-where $n$ is the total number of free dimensions, which gonna be an useful benchmark. The local energy is
+where $n$ is the energy level and $dim$ is number of dimensions. In this project we will study the ground state only, such that $n=0$. The local energy is
 \begin{equation}
 E_L(\vec{r})=\frac{1}{\Psi_T(\vec{r})}\hat{H}\Psi_T(\vec{r})
 \label{Local_energy}
@@ -116,7 +116,7 @@ E_L=\sum_k\Bigg(-\frac{1}{2}\bigg(&4\alpha^2\Big(x_k^2+y_k^2+\beta^2z_k^2-\frac{
 &+\sum_{j\neq k}\Big(u''(r_{kj})+\frac{2}{r_{kj}}u'(r_{kj})\Big)\bigg)+V_{ext}(\vec{r}_k)\Bigg).\notag
 \label{EL_total}
 \end{align}
-This is not a pretty expression, but .. We could also split up the local energy expression 
+This is not a pretty expression, but hopefully it will give us the correct answers. We could also split up the local energy expression 
 \begin{equation}
 E_{L,i}=-\frac{\hbar^2}{2m}\frac{\nabla_i^2\Psi_T}{\Psi_T}+V_{ext}(\vec{r}_i)=E_{k,i}+E_{p,i}
 \end{equation}
@@ -125,6 +125,16 @@ and calculate the local energy with a numerical approach where the second deriva
 f''(x)\simeq\frac{f(x+h)-2f(x)+f(x-h)}{h^2}.
 \end{equation}
 In our case the position is a three dimensional vector, so we need to handle each dimension separately. However, in section \ref{CPU}, the CPU time for the analytical and numerical approach are compared. 
+
+The most interesting and realistic case is when the interaction is included, so let us now include the interaction term, which is given by a so-called hard-sphere
+\begin{equation}
+V_{int}(\vec{r}_i, \vec{r}_j)=
+\begin{cases} 
+   0 & \text{if}\quad |\vec{r}_i-\vec{r}_j| \geq a \\
+   \infty & \text{if}\quad |\vec{r}_i-\vec{r}_j| < a.
+\end{cases}
+\end{equation}
+which ensures that the particles are separated by a distance $a$. The local energy is slightly changing, because we need to add the interaction potential to it as well. 
 
 
 \section{Methods}
