@@ -58,7 +58,7 @@ Introduction
 We study a system of $N$ bosons trapped in a harmonic oscillator with the Hamiltonian given by 
 \begin{equation}
 \hat{H}=\sum_i^N\bigg(-\frac{\hbar^2}{2m}\nabla_i^2+V_{ext}(\vec{r}_i)\bigg)+\sum_{i<j}^NV_{int}(\vec{r}_i,\vec{r}_j)
-\label{Hamilton}
+\label{eq:Hamilton}
 \end{equation}
 with $V_{ext}$ as the external potential, which is the harmonic oscillator potential,
 and $V_{int}$ as the interaction term. The interaction will in the first place be ignored, and will be given later.
@@ -66,7 +66,7 @@ and $V_{int}$ as the interaction term. The interaction will in the first place b
 The wavefunction is on the form 
 \begin{equation}
 \Psi_T(\vec{r}_1, \vec{r}_2, ..., \vec{r}_N, \alpha, \beta)=\prod_i^Ng(\alpha, \beta, \vec{r}_i)\prod_{i<j}f(a,r_{ij})
-\label{WF}
+\label{eq:WF}
 \end{equation}
 where $r_{ij}=|\vec{r}_i-\vec{r}_j|$ and $g$ is assumed to be an exponential
 \begin{equation}
@@ -94,7 +94,7 @@ E = \hbar\omega(n + 1/2)
 where $n$ is the total number of free dimensions, which gonna be an useful benchmark. The local energy is
 \begin{equation}
 E_L(\vec{r})=\frac{1}{\Psi_T(\vec{r})}\hat{H}\Psi_T(\vec{r})
-\label{Local_energy}
+\label{eq:Local_energy}
 \end{equation}
 which gives the following results considering $a=0$:
 
@@ -231,5 +231,41 @@ $N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] & $\langle E_L\ra
 \section{Discussion}
 
 \section{Conclusion}
+
+\section{Appendix}
+\subsection{Appendix A}
+\label{appendix_A}
+
+We calculated the analytical expression for the local energy $E_L$, as given by \ref{eq:Local_energy}, for the no-interaction ($a=0$) case for the spherical harmonic oscillator. In this case, the wave trial function for only consists of the one body part, and is thus for $N$ particles given by:
+
+\begin{equation}
+	\label{eq:WF_nointeract}
+	\Psi_T(\vec{r}) = \prod_i^N e^{-\alpha(x_i^2 + y_i^2 + \beta z_i^2)}
+\end{equation}
+
+We now want to calculate the analytical expressions for $E_L$ for one particle and one dimention, and $N$ particles and three dimentions.
+
+\subsubsection{One particle, one dimention}
+
+From \ref{eq:WF_nointeract}, the trial wave function for one particle and one dimention is as follows:
+
+\begin{equation}
+	\Psi_T(x) = e^{-\alpha x^2} 
+\end{equation}
+
+In the Hamiltonian, the Laplace-operator reduces to the partial derivative in the x-direction, $\frac{\partial^2 }{\partial x^2}$, and $E_L$ is 
+
+\begin{equation}
+\begin{aligned}
+E_L(x) &=  \frac{1}{\Psi_T(x)}\hat{H}\Psi_T(x) \\ 
+			 & =  e^{\alpha x^2} (-\frac{\hbar^2}{2m}\frac{\partial^2 }{\partial x^2} + \frac{1}{2} m \omega_{HO}^2 x^2) e^{-\alpha x^2}  \\
+			 & = e^{\alpha x^2} [-\frac{\hbar^2}{2m}\frac{\partial^2 }{\partial x^2} (e^{-\alpha x^2}) + \frac{1}{2} m \omega_{HO}^2 x^2 ()e^{-\alpha x^2})]
+\end{aligned}
+\end{equation}
+
+
+
+
+
 
 \end{document}
