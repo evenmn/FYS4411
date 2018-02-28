@@ -55,7 +55,7 @@ void Metropolis(int N, int dim, int M, double a, double steplength, double omega
 
     double alpha = 0.7;          //Initial guess
     double alpha_old;
-    double eps = 0.0001;
+    double eps = 0.001;
     double eta0 = 0.001;              //Learning rate
     double D = 0.1;               //Diffusion coeff, to be used in Hastings met.algo
     int T = 50;                     //Number of iterations (alphas)
