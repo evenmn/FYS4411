@@ -11,18 +11,19 @@ int main()
     double beta       = 1;       //weight parameter along z-axis
     double omega_HO   = 1;       //HO frequency in x- and y-direction
     double omega_z    = 1;       //HO frequency in z-direction
-    int    M          = 500000;  //number of MC cycles
+    int    M          = 1;  //number of MC cycles
     double steplength = 0.1;     //steplength when changing position ->Is this correct?
-    int    N          = 10;      //number of particles
-    int    dim        = 3;       //number of dimensions concidered
+    int    N          = 1;      //number of particles
+    int    dim        = 1;       //number of dimensions concidered
     int    num_or_an  = 0;       //if calculation is to be based on analytical(0) or numerical(1) E_L
     bool   HO         = true;    //spherical (true) or elliptical (false) harmonic oscillator
     int    BF_H       = 0;       //brute force (0) or hastings(1) metropolis algorithm
+    int    one_body   = 1;       //calculate one body density (1) or not calculate (0)
     double a          = 0.0; //distance parameter
     double h          = 0.01;    //Step length for numerical double differentiation
     double timestep   = 1.0;    //Timestep, to be used in numerical derivatives
 
-    double alpha[]    = {0.4, 0.5, 0.6};           //variational parameter
+    double alpha[]    = {0.5};           //variational parameter
     int    len_alpha  = sizeof(alpha)/sizeof(*alpha);    //length of alpha
 
     cout << "Running with the following paramteres:" << endl;
@@ -32,9 +33,10 @@ int main()
     cout << "Analytical(0) or numerical(1) E_L calcualtion: " << num_or_an << endl;
     cout << "Spherical(true) or elliptical(false) harmonic oscillator: " << HO << endl;
     cout << "Brute force(0) or Hastings(1) Metropolis algo:" << BF_H << "\n" << endl;
+    cout << "One body calculations active (1): " << one_body << endl;
 
-    //Met_algo(N, dim, M, a, steplength, omega_HO, omega_z, HO, alpha, len_alpha, beta, h, num_or_an, BF_H, timestep);
-    GradientDecent(N, dim, M, a, steplength, omega_HO, omega_z, HO, beta, h, num_or_an, BF_H, timestep);
+    Met_algo(N, dim, M, a, steplength, omega_HO, omega_z, HO, alpha, len_alpha, beta, h, num_or_an, BF_H, timestep, one_body);
+    //GradientDecent(N, dim, M, a, steplength, omega_HO, omega_z, HO, beta, h, num_or_an, BF_H, timestep);
 
     return 0;
 }
