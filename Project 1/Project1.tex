@@ -320,10 +320,25 @@ In the Hamiltonian, the Laplace-operator reduces to the partial derivative in th
 \begin{aligned}
 E_L(x) &=  \frac{1}{\Psi_T(x)}\hat{H}\Psi_T(x) \\ 
 			 & =  e^{\alpha x^2} (-\frac{\hbar^2}{2m}\frac{\partial^2 }{\partial x^2} + \frac{1}{2} m \omega_{HO}^2 x^2) e^{-\alpha x^2}  \\
-			 & = e^{\alpha x^2} [-\frac{\hbar^2}{2m}\frac{\partial^2 }{\partial x^2} (e^{-\alpha x^2}) + \frac{1}{2} m \omega_{HO}^2 x^2 ()e^{-\alpha x^2})]
+			 & = e^{\alpha x^2} [-\frac{\hbar^2}{2m}\frac{\partial^2 }{\partial x^2} (e^{-\alpha x^2}) + \frac{1}{2} m \omega_{HO}^2 x^2 (^{-\alpha x^2})]
 \end{aligned}
 \end{equation}
 
+Double differentiation of $ e^{-\alpha x^2}$ yields
+
+\begin{equation}
+\frac{\partial^2}{\partial x^2} (e^{-\alpha x^2}) = e^{-\alpha x^2} 2 \alpha (2x^2 -1)
+\end{equation}
+
+Inserting this into the expression for $E_L$ gives
+
+\begin{equation}
+E_L(\alpha) = -\frac{\hbar^2}{m} \alpha (2x\alpha^2 -1) + \frac{1}{2} m\omega_{HO}^2x^2
+\end{equation}
+
+\subsection{$N$ particles, three dimentions}
+
+When extending the non-interaction case to $N$ particles and three dimentions, the 
 
 \subsection{Appendix B}
 In the theory part we claimed that the Hamiltonian could be written as

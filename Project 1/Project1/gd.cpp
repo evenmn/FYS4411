@@ -7,6 +7,7 @@
 #include <ctime>
 #include <random>
 #include <fstream>
+#include <tools.h>
 
 using namespace std;
 
@@ -19,33 +20,6 @@ double Random_position(){
     return diss(seed);
 }
 
-double qForce(double pos, double alpha, double beta, int dim_rand){
-    double QF = -4*alpha*pos;
-    if (dim_rand==2){
-        QF = QF*beta;
-    }
-    return QF;
-}
-
-double Greenfuncsum(double pos_mat[][3], double pos_mat_new[][3], double D, double timestep, int N, double alpha, double beta){
-    double GreenSum = 0; //Sum of ratios for all particles
-
-    for(int i=0; i<N; i++) {
-        double GreenOld = 0;
-        double GreenNew = 0;
-        for(int j=0; j<3; j++) {
-            GreenOld += (pos_mat_new[i][j] - pos_mat[i][j] - D*timestep*qForce(pos_mat[i][j], alpha, beta, j))*(pos_mat_new[i][j] - pos_mat[i][j] - D*timestep*qForce(pos_mat[i][j], alpha, beta, j));
-            GreenNew += (pos_mat[i][j] - pos_mat_new[i][j] - D*timestep*qForce(pos_mat_new[i][j], alpha, beta, j))*(pos_mat[i][j] - pos_mat_new[i][j] - D*timestep*qForce(pos_mat_new[i][j], alpha, beta, j));
-        }
-        //GreenOld = exp(-GreenOld/(4*D*timestep));
-        //GreenNew = exp(-GreenNew/(4*D*timestep));
-
-        GreenSum += exp(GreenOld/GreenNew);
-        //cout << GreenOld << " " << GreenNew << " " << GreenSum << endl;
-    }
-    return GreenSum;
-}
-
 void GradientDecent(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, bool HO, double beta, double h, int num_or_an, int BF_H, double timestep)
 {
     //Marsenne Twister Random Number Generator
@@ -53,12 +27,12 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
     uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
     uniform_int_distribution<> dimrand(0, dim-1);     //Random number between 0 and dim
 
-    double alpha = 0.4;          //Initial guess
+    double alpha = 0.6;          //Initial guess
     double alpha_old;
     double eps = 0.01;
-    double eta0 = 0.001;              //Learning rate
+    double eta0 = 0.01;              //Learning rate
     double D = 0.5;               //Diffusion coeff, to be used in Hastings met.algo
-    int T = 100;                     //Number of iterations (alphas)
+    int T = 10;                     //Number of iterations (alphas)
 
 
     //Open file for writing
@@ -137,8 +111,8 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
                 //Hastings metropolis
 
                 //Proposed new position
-                pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + D*qForce(pos_mat[N_rand][dim_rand], alpha, beta, dim_rand)*timestep + eps_gauss(seed)*sqrt(timestep);
-                psi_ratio = Greenfuncsum(pos_mat, pos_mat_new, D, timestep, N, alpha, beta)*Psi.Psi_value_sqrd(pos_mat_new, alpha, beta)/(Psi.Psi_value_sqrd(pos_mat, alpha, beta));
+                pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + D*QForce(pos_mat[N_rand][dim_rand], alpha, beta, dim_rand)*timestep + eps_gauss(seed)*sqrt(timestep);
+                psi_ratio = GreenFuncSum(pos_mat, pos_mat_new, D, timestep, N, alpha, beta)*Psi.Psi_value_sqrd(pos_mat_new, alpha, beta)/(Psi.Psi_value_sqrd(pos_mat, alpha, beta));
             }
 
             if(psi_ratio >= Random_position()){

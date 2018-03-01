@@ -6,12 +6,14 @@ CONFIG -= qt
 SOURCES += main.cpp \
     wavefunction.cpp \
     metropolis.cpp \
-    gd.cpp
+    gd.cpp \
+    tools.cpp
 
 HEADERS += \
     wavefunction.h \
     metropolis.h \
-    gd.h
+    gd.h \
+    tools.h
 
 # remove possible other optimization flags
 #QMAKE_CXXFLAGS_RELEASE -= -O
