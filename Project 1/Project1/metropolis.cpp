@@ -32,8 +32,8 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
     uniform_int_distribution<> dimrand(0, dim-1);     //Random number between 0 and dim
 
     //Open file for writing
-    //ofstream myfile;
-    //myfile.open ("/home/evenmn/FYS4411/Project 1/local_energy.dat");
+    ofstream myfile;
+    myfile.open ("ob_density.dat");
 
     for(int k=0; k<length_alpha_1; k++){
 
@@ -91,13 +91,15 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
 
         double accept = 0;
 
-        int number_of_bins = 100;
-        double max_radius = 10;
+        int number_of_bins = 500;
+        double max_radius = 5;
         double radius_step = max_radius/number_of_bins;
         double bin_array[number_of_bins];
+        double bin_dist[number_of_bins];
 
         for(int i=0; i<number_of_bins; i++){
             bin_array[i] = i * radius_step;
+            bin_dist[i] = 0;
         }
 
         clock_t start_time = clock();
@@ -150,8 +152,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
                             bin_nr = j;
                         }
                     }
-                    cout << err << endl;
-                    cout << bin_nr << endl;
+                    bin_dist[bin_nr] += 1;
                 }
             }
 
@@ -159,6 +160,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
             E_tot_sqrd += E*E;
         }
         clock_t end_time = clock();
+
 
         //Calculate <E_l> and <E_L**2>
         double E_L_avg = E_tot/M;
@@ -176,9 +178,11 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
         cout << "CPU time: " << CPU_time << "\n" << endl;
 
         //Write to file
-        //myfile << alpha[k] << " " << E_L_avg << " " << variance << "\n";
+        for(int j=0; j<number_of_bins; j++) {
+            myfile << bin_dist[j] << "\n";
+        }
     }
 
     //Close myfile
-    //myfile.close();
+    myfile.close();
 }
