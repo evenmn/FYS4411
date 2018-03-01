@@ -63,6 +63,7 @@ We study a system of $N$ bosons trapped in a harmonic oscillator with the Hamilt
 with $V_{ext}$ as the external potential, which is the harmonic oscillator potential,
 and $V_{int}$ as the interaction term. The interaction will in the first place be ignored, and is specified later. We will consider a harmonic oscillator which can either be spherical (all dimensions have the same scales) or elliptical (the vertical dimension has a different frequency from the horizontals),
 \begin{equation}
+\label{eq:V_ext}
 V_{ext}(\vec{r})=
 \begin{cases} 
    \frac{1}{2}m\omega_{HO}^2\vec{r}^2 & \text{(Spherical)} \\
@@ -338,7 +339,34 @@ E_L(\alpha) = -\frac{\hbar^2}{m} \alpha (2x\alpha^2 -1) + \frac{1}{2} m\omega_{H
 
 \subsection{$N$ particles, three dimentions}
 
-When extending the non-interaction case to $N$ particles and three dimentions, the 
+When extending the non-interaction case to $N$ particles and three dimentions, the trial wave function will take the form listed in \ref{eq:WF_nointeract}, and the Hamiltonian will be as listed in \ref{eq:Hamilton}, with the spherical harmonic oscillator potential $\frac{1}{2}m\omega_{HO}^2r_i^2$, as listed in \ref{eq:V_ext}.
+
+The local energy is then
+
+\begin{equation}
+	E_L(\alpha) = \prod_i^N e^{\alpha(x_i^2 + y_i^2 + \beta z_i^2)} \sum_i [ -\frac{\hbar^2}{2m} \nabla_i^2 + \frac{1}{2}m\omega_{HO}^2(x_i^2 + y_i^2 + z_i^2)] \prod_i^N e^{-\alpha(x_i^2 + y_i^2 + \beta z_i^2)}
+\end{equation}
+
+Double differentiation of $\Psi_T$ with respect to x gives
+
+\begin{equation}
+	\frac{\partial^2}{\partial x^2} (\prod_i e^{-\alpha(x_i^2 + y_i^2 + \beta z_i^2)}) = \prod_i e^{-\alpha(x_i^2 + y_i^2 + \beta z_i^2)} [\sum_{i,j} 4 \alpha^2 x_i x_j -2 \alpha N ]
+\end{equation}
+
+Double differentiation with respect to y will give similar answer, while for z there will be a factor $\beta$ difference
+
+\begin{equation}
+\frac{\partial^2}{\partial z^2} (\prod_i e^{-\alpha(x_i^2 + y_i^2 + \beta z_i^2)}) = \prod_i e^{-\alpha(x_i^2 + y_i^2 + \beta z_i^2)} [\sum_{i,j} 4 \alpha^2 \beta^2 y_i y_j -2 \alpha \beta N ]
+\end{equation}
+
+By including the answers from the differentiations in the x,y and z directions and simplifying the expression results in the following expression for the local energy
+
+\begin{equation}
+\begin{aligned}
+	E_L(\alpha) & = -\frac{\hbar^2}{2m} N [ \sum_{i,j} 4 \alpha^2 x_i x_j + \sum_{i,j} 4 \alpha^2 y_i y_j + \sum_{i,j} 4 \alpha^2 \beta^2 z_i z_j] +  \\ & \frac{2 \hbar^2}{m}\alpha N^2 + \sum_i \frac{1}{2}m\omega_{HO^2}(x_i^2 + y_i^2 + z_i^2) + \frac{\hbar^2}{m}\beta \alpha N^2
+\end{aligned}
+\end{equation}
+
 
 \subsection{Appendix B}
 In the theory part we claimed that the Hamiltonian could be written as
