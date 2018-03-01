@@ -53,11 +53,13 @@ OBJECTS_DIR   = ./
 SOURCES       = ../Project1/main.cpp \
 		../Project1/wavefunction.cpp \
 		../Project1/metropolis.cpp \
-		../Project1/gd.cpp 
+		../Project1/gd.cpp \
+		../Project1/tools.cpp 
 OBJECTS       = main.o \
 		wavefunction.o \
 		metropolis.o \
-		gd.o
+		gd.o \
+		tools.o
 DIST          = ../../../Qt/5.10.0/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt/5.10.0/gcc_64/mkspecs/common/unix.conf \
 		../../../Qt/5.10.0/gcc_64/mkspecs/common/linux.conf \
@@ -236,10 +238,12 @@ DIST          = ../../../Qt/5.10.0/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt/5.10.0/gcc_64/mkspecs/features/lex.prf \
 		../Project1/Project1.pro wavefunction.h \
 		metropolis.h \
-		gd.h ../Project1/main.cpp \
+		gd.h \
+		tools.h ../Project1/main.cpp \
 		../Project1/wavefunction.cpp \
 		../Project1/metropolis.cpp \
-		../Project1/gd.cpp
+		../Project1/gd.cpp \
+		../Project1/tools.cpp
 QMAKE_TARGET  = Project1
 DESTDIR       = 
 TARGET        = Project1
@@ -658,12 +662,17 @@ wavefunction.o: ../Project1/wavefunction.cpp ../Project1/wavefunction.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o wavefunction.o ../Project1/wavefunction.cpp
 
 metropolis.o: ../Project1/metropolis.cpp ../Project1/metropolis.h \
-		../Project1/wavefunction.h
+		../Project1/wavefunction.h \
+		../Project1/tools.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o metropolis.o ../Project1/metropolis.cpp
 
 gd.o: ../Project1/gd.cpp ../Project1/gd.h \
-		../Project1/wavefunction.h
+		../Project1/wavefunction.h \
+		../Project1/tools.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o gd.o ../Project1/gd.cpp
+
+tools.o: ../Project1/tools.cpp ../Project1/tools.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tools.o ../Project1/tools.cpp
 
 ####### Install
 

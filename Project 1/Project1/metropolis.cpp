@@ -21,7 +21,7 @@ double random_position(){
 }
 
 
-void Met_algo(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, bool HO, double alpha[], int length_alpha_1, double beta, double h, int num_or_an, int BF_H, double timestep)
+void Met_algo(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, bool HO, double alpha[], int length_alpha_1, double beta, double h, int num_or_an, int BF_H, double timestep, int one_body)
 {
     //Gaussian distr random number generator
     default_random_engine generator;
@@ -91,6 +91,15 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
 
         double accept = 0;
 
+        int number_of_bins = 100;
+        double max_radius = 10;
+        double radius_step = max_radius/number_of_bins;
+        double bin_array[number_of_bins];
+
+        for(int i=0; i<number_of_bins; i++){
+            bin_array[i] = i * radius_step;
+        }
+
         clock_t start_time = clock();
         //Start Monte Carlo iterations
         for(int i=0; i<M; i++){
@@ -129,8 +138,22 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
                     E = Psi.E_L_num(pos_mat, alpha[k], beta, omega_HO, omega_z, h);
                 }
             }
-
-            //cout << "x_pos: " << pos_mat[0][0] << endl;
+            if(one_body == 1) {
+                for(int l=0; l<N; l++){
+                    double r = sqrt(pos_mat[l][0]*pos_mat[l][0] + pos_mat[l][1]*pos_mat[l][1] + pos_mat[l][2]*pos_mat[l][2]);
+                    double err = 1000000;
+                    int bin_nr;
+                    for(int j=0; j<number_of_bins; j++) {
+                        double e = fabs(bin_array[j] - r);
+                        if(e < err) {
+                            err = e;
+                            bin_nr = j;
+                        }
+                    }
+                    cout << err << endl;
+                    cout << bin_nr << endl;
+                }
+            }
 
             E_tot += E;
             E_tot_sqrd += E*E;
