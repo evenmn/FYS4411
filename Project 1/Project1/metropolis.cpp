@@ -114,7 +114,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
         E_tot += E;
         E_tot_sqrd += E*E;
 
-        int accept = 0;
+        double accept = 0;
 
         clock_t start_time = clock();
         //Start Monte Carlo iterations

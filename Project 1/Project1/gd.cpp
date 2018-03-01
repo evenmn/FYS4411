@@ -46,19 +46,19 @@ double Greenfuncsum(double pos_mat[][3], double pos_mat_new[][3], double D, doub
     return GreenSum;
 }
 
-void Metropolis(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, bool HO, double beta, double h, int num_or_an, int BF_H, double timestep)
+void GradientDecent(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, bool HO, double beta, double h, int num_or_an, int BF_H, double timestep)
 {
     //Marsenne Twister Random Number Generator
     normal_distribution<double> eps_gauss(0,1);
     uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
     uniform_int_distribution<> dimrand(0, dim-1);     //Random number between 0 and dim
 
-    double alpha = 0.7;          //Initial guess
+    double alpha = 0.4;          //Initial guess
     double alpha_old;
-    double eps = 0.001;
+    double eps = 0.01;
     double eta0 = 0.001;              //Learning rate
-    double D = 0.1;               //Diffusion coeff, to be used in Hastings met.algo
-    int T = 50;                     //Number of iterations (alphas)
+    double D = 0.5;               //Diffusion coeff, to be used in Hastings met.algo
+    int T = 100;                     //Number of iterations (alphas)
 
 
     //Open file for writing
@@ -113,7 +113,7 @@ void Metropolis(int N, int dim, int M, double a, double steplength, double omega
         psi_tot += Psi.Psi_der(pos_mat, alpha, beta);
         psi_E_tot += Psi.Psi_der(pos_mat, alpha, beta)*E;
 
-        int accept = 0;
+        double accept = 0;
 
         clock_t start_time = clock();
         //Start Monte Carlo iterations
@@ -185,7 +185,7 @@ void Metropolis(int N, int dim, int M, double a, double steplength, double omega
         alpha = alpha - eta0 * E_L_der*sqrt(iter + 1);
 
 
-        if(abs(E_L_der)<eps&&abs(alpha-alpha_old)<eps){
+        if(abs(E_L_der)<eps){
             cout <<"FINAL VALUES" << endl;
             cout << "alpha: " << alpha << endl;
             cout << "iteration alpha nr: " << iter << endl;
