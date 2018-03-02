@@ -1,9 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <wavefunction.h>
-#include <string.h>
 #include <vector>
-#include <ctime>
 #include <random>
 #include <tools.h>
 
@@ -18,19 +16,20 @@ double Random_position(){
     return diss(seed);
 }
 
-void GradientDecent(int N, int dim, int M, double a, double steplength, double omega_HO, bool HO, double beta, double h, int num_or_an, int BF_H, double timestep)
+void GradientDecent(int N, int dim, int M, double a, double steplength, double omega_HO, bool HO, \
+                    double beta, double h, int num_or_an, int BF_H, double timestep)
 {
     //Marsenne Twister Random Number Generator
-    normal_distribution<double> eps_gauss(0,1);
+    normal_distribution<double> eps_gauss(0,1);       //Random gaussian
     uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
     uniform_int_distribution<> dimrand(0, dim-1);     //Random number between 0 and dim
 
-    double alpha = 0.6;          //Initial guess
-    double alpha_old;
-    double eps = 0.01;
-    double eta0 = 0.01;              //Learning rate
-    double D = 0.5;               //Diffusion coeff, to be used in Hastings met.algo
-    int T = 10;                     //Number of iterations (alphas)
+    //Parameters
+    double alpha        = 0.6;          //Initial guess
+    double eps          = 0.001;        //Tolerance
+    double eta0         = 0.01;         //Learning rate
+    double D            = 0.5;          //Diffusion coeff, to be used in Hastings met.algo
+    int T               = 100;          //Number of iterations (alphas)
 
     for(int iter=0; iter<T; iter++){
 
@@ -38,19 +37,19 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
         double E_tot       = 0;          //sum of energies of all states
         double E_tot_sqrd  = 0;          //sum of energies of all states squared
         double E           = 0;          //energy after change in position
-        double psi_E_tot   = 0;         //used for calculating derv of local energy
-        double psi_tot     = 0;         //used for calculating derv of local energy
+        double psi_E_tot   = 0;          //used for calculating derv of local energy
+        double psi_tot     = 0;          //used for calculating derv of local energy
 
-        double psi_ratio;               //ratio of new and old wave function
-        int    N_rand;                  //randomly chosen N
-        int    dim_rand;                //randomly chosen dimension
+        double psi_ratio;                //ratio of new and old wave function
+        int    N_rand;                   //randomly chosen N
+        int    dim_rand;                 //randomly chosen dimension
 
         //Initialize position matrix for N particles in dim dimentions
         vector<vector<double>> pos_mat;
         vector<vector<double>> pos_mat_new;
         pos_mat.resize(N);
         pos_mat_new.resize(N);
-        for(int i = 0; i < pos_mat.size(); i++){
+        for(int i = 0; i < N; i++){
             pos_mat[i].resize(dim);
             pos_mat_new[i].resize(dim);
         }
@@ -85,12 +84,11 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
 
         E_tot += E;
         E_tot_sqrd += E*E;
-        psi_tot += Psi.Psi_der(pos_mat, alpha, beta);
-        psi_E_tot += Psi.Psi_der(pos_mat, alpha, beta)*E;
+        psi_tot += Psi.Psi_der(pos_mat, beta);
+        psi_E_tot += Psi.Psi_der(pos_mat, beta)*E;
 
         double accept = 0;
 
-        clock_t start_time = clock();
         //Start Monte Carlo iterations
         for(int i=0; i<M; i++){
             //Draw random position, for one particle and one dimention
@@ -98,7 +96,6 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
             dim_rand = dimrand(seed);
 
             //Set new meatrix equal old one
-            //memcpy(pos_mat_new, pos_mat, sizeof(pos_mat_new));
             pos_mat_new = pos_mat;
 
             //Choose between Brute force and Hastings
@@ -113,13 +110,14 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
                 //Hastings metropolis
 
                 //Proposed new position
-                pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + D*QForce(pos_mat[N_rand][dim_rand], alpha, beta, dim_rand)*timestep + eps_gauss(seed)*sqrt(timestep);
-                psi_ratio = GreenFuncSum(pos_mat, pos_mat_new, D, timestep, N, alpha, beta)*Psi.Psi_value_sqrd(pos_mat_new, alpha, beta)/(Psi.Psi_value_sqrd(pos_mat, alpha, beta));
+                pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + D*QForce(pos_mat[N_rand][dim_rand], \
+                                                alpha, beta, dim_rand)*timestep + eps_gauss(seed)*sqrt(timestep);
+                psi_ratio = GreenFuncSum(pos_mat, pos_mat_new, D, timestep, N, alpha, beta)*Psi.Psi_value_sqrd(pos_mat_new, \
+                                                alpha, beta)/(Psi.Psi_value_sqrd(pos_mat, alpha, beta));
             }
 
             if(psi_ratio >= Random_position()){
                 //accept and update pos_mat
-                //memcpy(pos_mat, pos_mat_new, sizeof(pos_mat)); //maybe more time efficient to only update the one changed position?
                 pos_mat = pos_mat_new;
                 accept += 1;
 
@@ -133,34 +131,29 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
 
             E_tot += E;
             E_tot_sqrd += E*E;
-            psi_tot += Psi.Psi_der(pos_mat, alpha, beta);
-            psi_E_tot += Psi.Psi_der(pos_mat, alpha, beta)*E;
+            psi_tot += Psi.Psi_der(pos_mat, beta);
+            psi_E_tot += Psi.Psi_der(pos_mat, beta)*E;
         }
-        clock_t end_time = clock();
 
         //Calculate <E_L> and <E_L**2>
         double E_L_avg = E_tot/M;
         double E_L_avg_sqrd = E_tot_sqrd/M;
         double accept_ratio = accept/M; //too small for wrong alpha; can say 0, but is not exactly 0
-        double CPU_time = 1.0*(end_time - start_time)/CLOCKS_PER_SEC;
         double variance = E_L_avg_sqrd - E_L_avg*E_L_avg;
 
         double psi_E_avg = psi_E_tot/M;
         double psi_avg = psi_tot/M;
         double E_L_der = 2*(psi_E_avg - psi_avg*E_L_avg);
 
-        cout << "E_L_der: " << E_L_der << endl;
         cout << "--- ALPHA: " << alpha << " ---" << endl;
+        cout << "E_L_der: " << E_L_der << endl;
         cout << "E_L_avg: " << E_L_avg << endl;
         cout << "E_L_avg_tot: " << E_L_avg_sqrd << endl;
         cout << "Acceptance ratio: " << accept_ratio << endl;
-        cout << "Variance: " << variance << endl;
-        cout << "CPU time: " << CPU_time << "\n" << endl;
+        cout << "Variance: " << variance << "\n" << endl;
 
-        alpha_old = alpha;
         //Update alpha
-        alpha = alpha - eta0 * E_L_der*sqrt(iter + 1);
-
+        alpha = alpha - eta0 * E_L_der;//sqrt(iter + 1);
 
         if(abs(E_L_der)<eps){
             cout <<"FINAL VALUES" << endl;

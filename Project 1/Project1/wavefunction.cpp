@@ -182,7 +182,7 @@ double WaveFunction::E_L_num(vector<vector<double>> &pos_mat, double alpha, doub
     return kineticEnergy + potentialEnergy;
 }
 
-double WaveFunction::Psi_der(vector<vector<double>> &pos_mat, double alpha, double beta) {
+double WaveFunction::Psi_der(vector<vector<double>> &pos_mat, double beta) {
 
     double psi_der_div_psi = 1;
 

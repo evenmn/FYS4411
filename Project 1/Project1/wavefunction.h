@@ -16,5 +16,5 @@ public:
     double Psi_value_sqrd(std::vector<std::vector<double>> &pos_mat, double alpha, double beta);
     double E_L_ana(std::vector<std::vector<double>> &pos_mat, double alpha, double beta, double omega_HO);
     double E_L_num(std::vector<std::vector<double>> &pos_mat, double alpha, double beta, double omega_HO, double h);
-    double Psi_der(std::vector<std::vector<double> > &pos_mat, double alpha, double beta);
+    double Psi_der(std::vector<std::vector<double> > &pos_mat, double beta);
 };

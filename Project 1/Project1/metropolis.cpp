@@ -1,6 +1,5 @@
 #include <iostream>
 #include <wavefunction.h>
-#include <string.h>
 #include <vector>
 #include <ctime>
 #include <random>
@@ -19,13 +18,12 @@ double random_position(){
 }
 
 
-void Met_algo(int N, int dim, int M, double a, double steplength, double omega_HO, bool HO, double alpha[], int length_alpha_1, double beta, double h, int num_or_an, int BF_H, double timestep, int one_body)
+void Met_algo(int N, int dim, int M, double a, double steplength, double omega_HO, bool HO, double alpha[], \
+              int length_alpha_1, double beta, double h, int num_or_an, int BF_H, double timestep, int one_body)
 {
-    //Gaussian distr random number generator
-    default_random_engine generator;
-    normal_distribution<double> eps_gauss(0,1);
 
     //Marsenne Twister Random Number Generator
+    normal_distribution<double> eps_gauss(0,1);       //Gaussian distr random number generator
     uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
     uniform_int_distribution<> dimrand(0, dim-1);     //Random number between 0 and dim
 
@@ -112,7 +110,6 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
             dim_rand = dimrand(gen);
 
             //Set new meatrix equal old one
-            //memcpy(pos_mat_new, pos_mat, sizeof(pos_mat_new));
             pos_mat_new = pos_mat;
 
             //Choose between Brute force and Hastings
@@ -127,13 +124,14 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
                 //Hastings metropolis
 
                 //Proposed new position
-                pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + D*QForce(pos_mat[N_rand][dim_rand], alpha[k], beta, dim_rand)*timestep + eps_gauss(generator)*sqrt(timestep);
-                psi_ratio = GreenFuncSum(pos_mat, pos_mat_new, D, timestep, N, alpha[k], beta)*Psi.Psi_value_sqrd(pos_mat_new, alpha[k], beta)/(Psi.Psi_value_sqrd(pos_mat, alpha[k], beta));
+                pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + D*QForce(pos_mat[N_rand][dim_rand], alpha[k], beta, \
+                                                dim_rand)*timestep + eps_gauss(gen)*sqrt(timestep);
+                psi_ratio = GreenFuncSum(pos_mat, pos_mat_new, D, timestep, N, alpha[k], beta)*Psi.Psi_value_sqrd(pos_mat_new, \
+                            alpha[k], beta)/(Psi.Psi_value_sqrd(pos_mat, alpha[k], beta));
             }
 
             if(psi_ratio >= random_position()){
                 //accept and update pos_mat
-                //memcpy(pos_mat, pos_mat_new, sizeof(pos_mat)); //maybe more time efficient to only update the one changed position?
                 pos_mat = pos_mat_new;
                 accept += 1;
 
