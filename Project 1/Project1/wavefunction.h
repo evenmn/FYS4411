@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 
 class WaveFunction
 {
@@ -11,9 +12,9 @@ private:
 public:
     WaveFunction() {}
     int setTrialWF              (int dim, int N, double a, int n_or_a, bool HO);
-    double Psi_value(double pos_mat[][3], double alpha, double beta);
-    double Psi_value_sqrd(double pos_mat[][3], double alpha, double beta);
-    double E_L_ana(double pos_mat[][3], double alpha, double beta, double omega_HO);
-    double E_L_num(double pos_mat[][3], double alpha, double beta, double omega_HO, double h);
-    double Psi_der(double pos_mat[][3], double alpha, double beta);
+    double Psi_value(std::vector<std::vector<double> > &pos_mat, double alpha, double beta);
+    double Psi_value_sqrd(std::vector<std::vector<double>> &pos_mat, double alpha, double beta);
+    double E_L_ana(std::vector<std::vector<double>> &pos_mat, double alpha, double beta, double omega_HO);
+    double E_L_num(std::vector<std::vector<double>> &pos_mat, double alpha, double beta, double omega_HO, double h);
+    double Psi_der(std::vector<std::vector<double> > &pos_mat, double alpha, double beta);
 };

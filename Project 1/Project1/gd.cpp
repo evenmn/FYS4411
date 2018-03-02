@@ -45,16 +45,24 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
         int    N_rand;                  //randomly chosen N
         int    dim_rand;                //randomly chosen dimension
 
-        double pos_mat[N][3];           //current position
-        double pos_mat_new[N][3];       //new position with random step
-
         //Initialize position matrix for N particles in dim dimentions
+        vector<vector<double>> pos_mat;
+        vector<vector<double>> pos_mat_new;
+        pos_mat.resize(N);
+        pos_mat_new.resize(N);
+        for(int i = 0; i < pos_mat.size(); i++){
+            pos_mat[i].resize(dim);
+            pos_mat_new[i].resize(dim);
+        }
+
+        for(auto i : pos_mat)
+            i.resize(dim);
+        for(auto i : pos_mat_new)
+            i.resize(dim);
+
         for(int i=0; i<N; i++) {
-            for(int j=0; j<dim; j++) {
+            for(int j=0; j<dim; j++){
                 pos_mat[i][j] = Random_position();
-            }
-            for(int k=dim; k<3; k++){
-                pos_mat[i][k] = 0;
             }
         }
 
@@ -90,7 +98,8 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
             dim_rand = dimrand(seed);
 
             //Set new meatrix equal old one
-            memcpy(pos_mat_new, pos_mat, sizeof(pos_mat_new));
+            //memcpy(pos_mat_new, pos_mat, sizeof(pos_mat_new));
+            pos_mat_new = pos_mat;
 
             //Choose between Brute force and Hastings
             if(BF_H == 0){
@@ -110,7 +119,8 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
 
             if(psi_ratio >= Random_position()){
                 //accept and update pos_mat
-                memcpy(pos_mat, pos_mat_new, sizeof(pos_mat)); //maybe more time efficient to only update the one changed position?
+                //memcpy(pos_mat, pos_mat_new, sizeof(pos_mat)); //maybe more time efficient to only update the one changed position?
+                pos_mat = pos_mat_new;
                 accept += 1;
 
                 if(num_or_an == 0) {

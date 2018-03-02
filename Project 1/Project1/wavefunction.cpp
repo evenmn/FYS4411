@@ -14,7 +14,7 @@ double u_secder(double dist, double a) {
     return -(a/(dist*dist*dist))*C*(2+(a/dist)*C);
 }
 
-double V_ext(double pos[3], bool HO, double beta, double omega_HO) {
+double V_ext(vector<double> &pos, bool HO, double beta, double omega_HO) {
     if(HO) {
         return 0.5*omega_HO*omega_HO*(pos[0]*pos[0] + pos[1]*pos[1] + pos[2]*pos[2]);
     }
@@ -34,7 +34,7 @@ int WaveFunction::setTrialWF(int dim, int N, double a, int n_or_a, bool HO)
     m_HO     = HO;      //spherical (true) or elliptical (false) harmonic oscillator
 }
 
-double WaveFunction::Psi_value(double pos_mat[][3], double alpha, double beta)
+double WaveFunction::Psi_value(vector<vector<double>> &pos_mat, double alpha, double beta)
 {
 
     //Returns the wavefunction
@@ -64,7 +64,7 @@ double WaveFunction::Psi_value(double pos_mat[][3], double alpha, double beta)
 
 }
 
-double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double beta)
+double WaveFunction::Psi_value_sqrd(vector<vector<double>> &pos_mat, double alpha, double beta)
 {
     //Returns the wavefunction squared
     double sumsqrt = 0;         // x1^2 + y1^2 + B*z1^2 + ... + B*zn^2
@@ -93,7 +93,7 @@ double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double be
 }
 
 
-double WaveFunction::E_L_ana(double pos_mat[][3], double alpha, double beta, double omega_HO)
+double WaveFunction::E_L_ana(vector<vector<double>> &pos_mat, double alpha, double beta, double omega_HO)
 {
     double distij;
     double distik;
@@ -141,15 +141,20 @@ double WaveFunction::E_L_ana(double pos_mat[][3], double alpha, double beta, dou
     return E_TOT;
 }
 
-double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, double omega_HO, double h)
+double WaveFunction::E_L_num(vector<vector<double>> &pos_mat, double alpha, double beta, double omega_HO, double h)
 {
     //Obs:momentarily only work with a=0
     // Kinetic energy
-    double pos_mat_plus[m_N][3];
-    double pos_mat_minus[m_N][3];
+    vector<vector<double>> pos_mat_plus;
+    vector<vector<double>> pos_mat_minus;
 
-    memcpy(pos_mat_plus, pos_mat, sizeof(pos_mat_plus));
-    memcpy(pos_mat_minus, pos_mat, sizeof(pos_mat_minus));
+    pos_mat_plus.swap(pos_mat);
+    pos_mat_minus.swap(pos_mat);
+    //double pos_mat_plus[m_N][3];
+    //double pos_mat_minus[m_N][3];
+
+    //memcpy(pos_mat_plus, pos_mat, sizeof(pos_mat_plus));
+    //memcpy(pos_mat_minus, pos_mat, sizeof(pos_mat_minus));
 
     double waveFunctionMinus = 0;
     double waveFunctionPlus  = 0;
@@ -177,7 +182,7 @@ double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, dou
     return kineticEnergy + potentialEnergy;
 }
 
-double WaveFunction::Psi_der(double pos_mat[][3], double alpha, double beta) {
+double WaveFunction::Psi_der(vector<vector<double>> &pos_mat, double alpha, double beta) {
 
     double psi_der_div_psi = 1;
 
