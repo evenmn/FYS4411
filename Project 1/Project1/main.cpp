@@ -33,8 +33,8 @@ int main()
     cout << "Brute force(0) or Hastings(1) Metropolis algo:" << BF_H << endl;
     cout << "One body calculations active (1): " << one_body << "\n" << endl;
 
-    //Met_algo(N, dim, M, a, steplength, omega_HO, HO, alpha, len_alpha, beta, h, num_or_an, BF_H, timestep, one_body);
-    GradientDecent(N, dim, M, a, steplength, omega_HO, HO, beta, h, num_or_an, BF_H, timestep);
+    Met_algo(N, dim, M, a, steplength, omega_HO, HO, alpha, len_alpha, beta, h, num_or_an, BF_H, timestep, one_body);
+    //GradientDecent(N, dim, M, a, steplength, omega_HO, HO, beta, h, num_or_an, BF_H, timestep);
 
     return 0;
 }

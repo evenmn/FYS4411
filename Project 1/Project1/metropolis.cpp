@@ -1,6 +1,4 @@
-#include <metropolis.h>
 #include <iostream>
-#include <cmath>
 #include <wavefunction.h>
 #include <string.h>
 #include <vector>
@@ -31,9 +29,9 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
     uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
     uniform_int_distribution<> dimrand(0, dim-1);     //Random number between 0 and dim
 
-    //Open file for writing
-    ofstream myfile;
-    myfile.open ("ob_density.dat");
+    //Open file for writing (will write for a specific alpha)
+    //ofstream energy_file;
+    //energy_file.open ("../data/local_energy.dat");
 
     for(int k=0; k<length_alpha_1; k++){
 
@@ -89,18 +87,25 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
         E_tot += E;
         E_tot_sqrd += E*E;
 
-        double accept = 0;
-
+        //Define bins for the one body density measure
         int number_of_bins = 500;
         double max_radius = 5;
         double radius_step = max_radius/number_of_bins;
         double bin_array[number_of_bins];
         double bin_dist[number_of_bins];
+        ofstream ob_file;
 
-        for(int i=0; i<number_of_bins; i++){
-            bin_array[i] = i * radius_step;
-            bin_dist[i] = 0;
+        if(one_body == 1) {
+            for(int i=0; i<number_of_bins; i++){
+                bin_array[i] = i * radius_step;
+                bin_dist[i] = 0;
+            }
+
+            //Open file for writing (will write for a specific alpha)
+            ob_file.open ("../data/ob_density.dat");
         }
+
+        double accept = 0;
 
         clock_t start_time = clock();
         //Start Monte Carlo iterations
@@ -144,7 +149,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
                 for(int l=0; l<N; l++){
                     double r = sqrt(pos_mat[l][0]*pos_mat[l][0] + pos_mat[l][1]*pos_mat[l][1] + pos_mat[l][2]*pos_mat[l][2]);
                     double err = 1000000;
-                    int bin_nr;
+                    int bin_nr = 0;
                     for(int j=0; j<number_of_bins; j++) {
                         double e = fabs(bin_array[j] - r);
                         if(e < err) {
@@ -161,6 +166,14 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
         }
         clock_t end_time = clock();
 
+        if(one_body == 1){
+            //Write to file
+            for(int j=0; j<number_of_bins; j++) {
+               ob_file << bin_dist[j] << "\n";
+            }
+            //Close myfile
+            ob_file.close();
+        }
 
         //Calculate <E_l> and <E_L**2>
         double E_L_avg = E_tot/M;
@@ -178,11 +191,9 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
         cout << "CPU time: " << CPU_time << "\n" << endl;
 
         //Write to file
-        for(int j=0; j<number_of_bins; j++) {
-            myfile << bin_dist[j] << "\n";
-        }
+        //energy_file << alpha << " " << E_L_avg << " " << variance << "\n";
     }
 
     //Close myfile
-    myfile.close();
+    //energy_file.close();
 }
