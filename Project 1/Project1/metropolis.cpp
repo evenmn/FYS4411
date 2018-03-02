@@ -21,7 +21,7 @@ double random_position(){
 }
 
 
-void Met_algo(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, bool HO, double alpha[], int length_alpha_1, double beta, double h, int num_or_an, int BF_H, double timestep, int one_body)
+void Met_algo(int N, int dim, int M, double a, double steplength, double omega_HO, bool HO, double alpha[], int length_alpha_1, double beta, double h, int num_or_an, int BF_H, double timestep, int one_body)
 {
     //Gaussian distr random number generator
     default_random_engine generator;
@@ -77,10 +77,10 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
 
         //Add initial energies to averages
         if(num_or_an == 0) {
-            E = Psi.E_L_ana(pos_mat, alpha[k], beta, omega_HO, omega_z);
+            E = Psi.E_L_ana(pos_mat, alpha[k], beta, omega_HO);
         }
         else if(num_or_an == 1) {
-            E = Psi.E_L_num(pos_mat, alpha[k], beta, omega_HO, omega_z, h);
+            E = Psi.E_L_num(pos_mat, alpha[k], beta, omega_HO, h);
         }
         else {
             cout << "num_or_an is out of range" << endl;
@@ -134,10 +134,10 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
                 accept += 1;
 
                 if(num_or_an == 0) {
-                    E = Psi.E_L_ana(pos_mat, alpha[k], beta, omega_HO, omega_z);
+                    E = Psi.E_L_ana(pos_mat, alpha[k], beta, omega_HO);
                 }
                 else if(num_or_an == 1) {
-                    E = Psi.E_L_num(pos_mat, alpha[k], beta, omega_HO, omega_z, h);
+                    E = Psi.E_L_num(pos_mat, alpha[k], beta, omega_HO, h);
                 }
             }
             if(one_body == 1) {

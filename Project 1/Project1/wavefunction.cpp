@@ -14,12 +14,12 @@ double u_secder(double dist, double a) {
     return -(a/(dist*dist*dist))*C*(2+(a/dist)*C);
 }
 
-double V_ext(double pos[3], bool HO, double omega_HO, double omega_z) {
+double V_ext(double pos[3], bool HO, double beta, double omega_HO) {
     if(HO) {
         return 0.5*omega_HO*omega_HO*(pos[0]*pos[0] + pos[1]*pos[1] + pos[2]*pos[2]);
     }
     else {
-        return 0.5*(omega_HO*omega_HO*(pos[0]*pos[0] + pos[1]*pos[1]) + omega_z*omega_z*pos[2]*pos[2]);
+        return 0.5*omega_HO*omega_HO*(pos[0]*pos[0] + pos[1]*pos[1] + beta*beta*pos[2]*pos[2]);
     }
 }
 
@@ -93,7 +93,7 @@ double WaveFunction::Psi_value_sqrd(double pos_mat[][3], double alpha, double be
 }
 
 
-double WaveFunction::E_L_ana(double pos_mat[][3], double alpha, double beta, double omega_HO, double omega_z)
+double WaveFunction::E_L_ana(double pos_mat[][3], double alpha, double beta, double omega_HO)
 {
     double distij;
     double distik;
@@ -136,12 +136,12 @@ double WaveFunction::E_L_ana(double pos_mat[][3], double alpha, double beta, dou
             }
             EL += u_secder(distij, m_a) + 2 * u_der_ij;
         }
-        E_TOT += -0.5*EL + V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
+        E_TOT += -0.5*EL + V_ext(pos_mat[i], m_HO, beta, omega_HO);
     }
     return E_TOT;
 }
 
-double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, double omega_HO, double omega_z, double h)
+double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, double omega_HO, double h)
 {
     //Obs:momentarily only work with a=0
     // Kinetic energy
@@ -172,7 +172,7 @@ double WaveFunction::E_L_num(double pos_mat[][3], double alpha, double beta, dou
     // Potential energy
     double potentialEnergy = 0;
     for(int i=0; i<m_N; i++) {
-        potentialEnergy += V_ext(pos_mat[i], m_HO, omega_HO, omega_z);
+        potentialEnergy += V_ext(pos_mat[i], m_HO, beta, omega_HO);
     }
     return kineticEnergy + potentialEnergy;
 }

@@ -1,4 +1,3 @@
-#include <gd.h>
 #include <iostream>
 #include <cmath>
 #include <wavefunction.h>
@@ -6,7 +5,6 @@
 #include <vector>
 #include <ctime>
 #include <random>
-#include <fstream>
 #include <tools.h>
 
 using namespace std;
@@ -20,7 +18,7 @@ double Random_position(){
     return diss(seed);
 }
 
-void GradientDecent(int N, int dim, int M, double a, double steplength, double omega_HO, double omega_z, bool HO, double beta, double h, int num_or_an, int BF_H, double timestep)
+void GradientDecent(int N, int dim, int M, double a, double steplength, double omega_HO, bool HO, double beta, double h, int num_or_an, int BF_H, double timestep)
 {
     //Marsenne Twister Random Number Generator
     normal_distribution<double> eps_gauss(0,1);
@@ -33,11 +31,6 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
     double eta0 = 0.01;              //Learning rate
     double D = 0.5;               //Diffusion coeff, to be used in Hastings met.algo
     int T = 10;                     //Number of iterations (alphas)
-
-
-    //Open file for writing
-    //ofstream myfile;
-    //myfile.open ("data/local_energy.dat");
 
     for(int iter=0; iter<T; iter++){
 
@@ -72,10 +65,10 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
 
         //Add initial energies to averages
         if(num_or_an == 0) {
-            E = Psi.E_L_ana(pos_mat, alpha, beta, omega_HO, omega_z);
+            E = Psi.E_L_ana(pos_mat, alpha, beta, omega_HO);
         }
         else if(num_or_an == 1) {
-            E = Psi.E_L_num(pos_mat, alpha, beta, omega_HO, omega_z, h);
+            E = Psi.E_L_num(pos_mat, alpha, beta, omega_HO, h);
 
         }
         else {
@@ -121,10 +114,10 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
                 accept += 1;
 
                 if(num_or_an == 0) {
-                    E = Psi.E_L_ana(pos_mat, alpha, beta, omega_HO, omega_z);
+                    E = Psi.E_L_ana(pos_mat, alpha, beta, omega_HO);
                 }
                 else if(num_or_an == 1) {
-                    E = Psi.E_L_num(pos_mat, alpha, beta, omega_HO, omega_z, h);
+                    E = Psi.E_L_num(pos_mat, alpha, beta, omega_HO, h);
                 }
             }
 
@@ -165,11 +158,5 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
             cout << "iteration alpha nr: " << iter << endl;
             break;
         }
-
-        //Write to file
-        //myfile << alpha << " " << E_L_avg << " " << variance << "\n";
     }
-
-    //Close myfile
-    //myfile.close();
 }

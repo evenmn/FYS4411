@@ -13,7 +13,7 @@ public:
     int setTrialWF              (int dim, int N, double a, int n_or_a, bool HO);
     double Psi_value(double pos_mat[][3], double alpha, double beta);
     double Psi_value_sqrd(double pos_mat[][3], double alpha, double beta);
-    double E_L_ana(double pos_mat[][3], double alpha, double beta, double omega_HO, double omega_z);
-    double E_L_num(double pos_mat[][3], double alpha, double beta, double omega_HO, double omega_z, double h);
+    double E_L_ana(double pos_mat[][3], double alpha, double beta, double omega_HO);
+    double E_L_num(double pos_mat[][3], double alpha, double beta, double omega_HO, double h);
     double Psi_der(double pos_mat[][3], double alpha, double beta);
 };
