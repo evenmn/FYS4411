@@ -112,7 +112,7 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
                 //Proposed new position
                 pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + D*QForce(pos_mat[N_rand][dim_rand], \
                                                 alpha, beta, dim_rand)*timestep + eps_gauss(seed)*sqrt(timestep);
-                psi_ratio = GreenFuncSum(pos_mat, pos_mat_new, D, timestep, N, alpha, beta)*Psi.Psi_value_sqrd(pos_mat_new, \
+                psi_ratio = GreenFuncSum(pos_mat, pos_mat_new, D, timestep, N, alpha, beta, dim)*Psi.Psi_value_sqrd(pos_mat_new, \
                                                 alpha, beta)/(Psi.Psi_value_sqrd(pos_mat, alpha, beta));
             }
 

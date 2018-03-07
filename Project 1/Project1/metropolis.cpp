@@ -54,9 +54,9 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
             pos_mat_new[i].resize(dim);
         }
 
-        for(auto i : pos_mat)
+        for(auto& i : pos_mat)
             i.resize(dim);
-        for(auto i : pos_mat_new)
+        for(auto& i : pos_mat_new)
             i.resize(dim);
 
         for(int i=0; i<N; i++) {
@@ -126,7 +126,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double omega_H
                 //Proposed new position
                 pos_mat_new[N_rand][dim_rand] = pos_mat[N_rand][dim_rand] + D*QForce(pos_mat[N_rand][dim_rand], alpha[k], beta, \
                                                 dim_rand)*timestep + eps_gauss(gen)*sqrt(timestep);
-                psi_ratio = GreenFuncSum(pos_mat, pos_mat_new, D, timestep, N, alpha[k], beta)*Psi.Psi_value_sqrd(pos_mat_new, \
+                psi_ratio = GreenFuncSum(pos_mat, pos_mat_new, D, timestep, N, alpha[k], beta, dim)*Psi.Psi_value_sqrd(pos_mat_new, \
                             alpha[k], beta)/(Psi.Psi_value_sqrd(pos_mat, alpha[k], beta));
             }
 
