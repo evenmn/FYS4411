@@ -54,17 +54,14 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
             pos_mat_new[i].resize(dim);
         }
 
-        for(auto i : pos_mat)
+        for(auto& i : pos_mat)
             i.resize(dim);
-        for(auto i : pos_mat_new)
+        for(auto& i : pos_mat_new)
             i.resize(dim);
 
-        for(int i=0; i<N; i++) {
-            for(int j=0; j<dim; j++){
-                pos_mat[i][j] = Random_position();
-            }
-        }
-
+        for(auto& particle : pos_mat)
+            for(auto& coord : particle)
+                coord = Random_position();
 
         //Initialize wave function
         WaveFunction Psi;

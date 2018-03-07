@@ -16,21 +16,13 @@ double u_secder(double dist, double a) {
 
 double V_ext(vector<double> &pos, bool HO, double beta, double omega_HO, int dim) {
     double VEXT = 0;
-    if(HO) {
-        for(int i=0;i<dim;i++){
+    for(int i=0;i<dim;i++){
+        if(i==2 && HO){
+            VEXT += beta*beta*pos[i]*pos[i];
+        }
+        else{
             VEXT += pos[i]*pos[i];
         }
-    }
-    else {
-        for(int i=0;i<dim;i++){
-            if(i==2){
-                VEXT += beta*beta*pos[i]*pos[i];
-            }
-            else{
-                VEXT += pos[i]*pos[i];
-            }
-        }
-
     }
     return 0.5*omega_HO*omega_HO*VEXT;
 }
@@ -122,38 +114,27 @@ double WaveFunction::E_L_ana(vector<vector<double>> &pos_mat, double alpha, doub
     double E_TOT = 0;
 
     if(m_a==0 && m_dim==1&&m_HO==true){
-        double xixj = 0;
-        double xixi = 0;
-        for(int i=0;i<m_N;i++){
-            xixi += pos_mat[i][0]*pos_mat[i][0];
+        double energy = 0;
+        for(int i=0; i<m_N; i++) {
+            energy += (0.5 - 2*alpha*alpha) * pos_mat[i][0]*pos_mat[i][0];
         }
-        E_TOT = -2*m_N*xixi*alpha*alpha + alpha*m_N*m_N + 0.5*xixi;
+        return energy + m_N*alpha;
     }
 
     else if(m_a==0 &&m_dim==2&&m_HO==true){
-        double sum_xixi = 0;
-        double sum_yiyi = 0;
-        double sum_xy_sqrd = 0;
-        for(int i=0;i<m_N;i++){
-            sum_xy_sqrd += pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1];
-            sum_xixi += pos_mat[i][0]*pos_mat[i][0];
-            sum_yiyi += pos_mat[i][1]*pos_mat[i][1];
+        double energy = 0;
+        for(int i=0; i<m_N; i++){
+            energy += (0.5 - 2*alpha*alpha) * (pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1]);
         }
-        return -2*m_N*alpha*alpha*(sum_xixi + sum_yiyi) + 2*alpha*m_N*m_N + 0.5*omega_HO*omega_HO*sum_xy_sqrd;
+        return energy + 2*m_N*alpha;
     }
 
     else if(m_a==0&&m_dim ==3&&m_HO==true){
-        double sum_xixi = 0;
-        double sum_yiyi = 0;
-        double sum_zizi = 0;
-        double sum_xyz_sqrd = 0;
-        for(int i=0;i<m_N;i++){
-            sum_xyz_sqrd += pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1] + beta*pos_mat[i][2]*pos_mat[i][2];
-            sum_xixi = pos_mat[i][0]*pos_mat[i][0];
-            sum_yiyi = pos_mat[i][1]*pos_mat[i][1];
-            sum_zizi = pos_mat[i][2]*pos_mat[i][2];
+        double energy = 0;
+        for(int i=0; i<m_N; i++) {
+            energy += (0.5 - 2*alpha*alpha) * (pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1] + beta*pos_mat[i][2]*pos_mat[i][2]);
         }
-        return -2*m_N*alpha*alpha*(sum_xixi + sum_yiyi + beta*beta*sum_zizi) + 2*alpha*m_N*m_N + beta*alpha*m_N*m_N+ 0.5*omega_HO*omega_HO*sum_xyz_sqrd;
+        return energy + 3*m_N*alpha;
     }
 
     else{
