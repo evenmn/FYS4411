@@ -121,67 +121,105 @@ double WaveFunction::E_L_ana(vector<vector<double>> &pos_mat, double alpha, doub
     double EL;
     double E_TOT = 0;
 
-    for(int i=0; i<m_N; i++) {
-        EL = 0;
-
-        for(int j=0; j<m_dim; j++){
-            if(j==2){
-                EL += beta*beta*pos_mat[i][j]*pos_mat[i][j];
-            }
-            else{
-                EL += pos_mat[i][j]*pos_mat[i][j];
-            }
+    if(m_a==0 && m_dim==1){
+        double xixj = 0;
+        double xixi = 0;
+        for(int i=0;i<m_N;i++){
+            xixi += pos_mat[i][0]*pos_mat[i][0];
         }
+        E_TOT = -2*m_N*xixi*alpha*alpha + alpha*m_N*m_N + 0.5*xixi;
+    }
 
-        EL = 4*alpha*alpha*EL;
-
-        if(m_dim==1) {
-            EL -= 2*alpha;
+    else if(m_a==0 &&m_dim==2){
+        double sum_xixi = 0;
+        double sum_yiyi = 0;
+        double sum_xy_sqrd = 0;
+        for(int i=0;i<m_N;i++){
+            sum_xy_sqrd += pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1];
+            sum_xixi += pos_mat[i][0]*pos_mat[i][0];
+            sum_yiyi += pos_mat[i][1]*pos_mat[i][1];
         }
-        else if(m_dim==2) {
-            EL -= 4*alpha;
-        }
+        return -2*m_N*alpha*alpha*(sum_xixi + sum_yiyi) + 2*alpha*m_N*m_N + 0.5*omega_HO*omega_HO*sum_xy_sqrd;
+    }
 
-        else if(m_dim==3) {
-            EL -= 4*alpha + 2*alpha*beta;
+    else if(m_a==0&&m_dim ==3){
+        double sum_xixi = 0;
+        double sum_yiyi = 0;
+        double sum_zizi = 0;
+        double sum_xyz_sqrd = 0;
+        for(int i=0;i<m_N;i++){
+            sum_xyz_sqrd += pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1] + beta*pos_mat[i][2]*pos_mat[i][2];
+            sum_xixi = pos_mat[i][0]*pos_mat[i][0];
+            sum_yiyi = pos_mat[i][1]*pos_mat[i][1];
+            sum_zizi = pos_mat[i][2]*pos_mat[i][2];
         }
+        return -2*m_N*alpha*alpha*(sum_xixi + sum_yiyi + beta*beta*sum_zizi) + 2*alpha*m_N*m_N + beta*alpha*m_N*m_N+ 0.5*omega_HO*omega_HO*sum_xyz_sqrd;
+    }
 
-        double term1 = 0;
-        for(int j=m_N-1; j>i; j--) {
-            for(int l = 0; l < m_dim; l++){
-                r_ij[l] = pos_mat[i][l] - pos_mat[j][l];
-                distij += r_ij[l]*r_ij[l];
-                if(l==2){
-                    term1 += pos_mat[i][l] * r_ij[l] * beta;
+    else{
+        for(int i=0; i<m_N; i++) {
+            EL = 0;
+
+            for(int j=0; j<m_dim; j++){
+                if(j==2){
+                    EL += beta*beta*pos_mat[i][j]*pos_mat[i][j];
                 }
                 else{
-                    term1 += pos_mat[i][l] * r_ij[l];
+                    EL += pos_mat[i][j]*pos_mat[i][j];
                 }
-
-
             }
-            distij = sqrt(distij);
 
-            double u_der_ij = u_der(distij, m_a);
-            EL -= 4*alpha*term1*u_der_ij;
+            EL = 4*alpha*alpha*EL;
 
-            double term2 = 0;
-            for(int k=m_N-1; k>i; k--) {
+            if(m_dim==1) {
+                EL -= 2*alpha;
+            }
+            else if(m_dim==2) {
+                EL -= 4*alpha;
+            }
+
+            else if(m_dim==3) {
+                EL -= 4*alpha + 2*alpha*beta;
+            }
+
+            double term1 = 0;
+            for(int j=m_N-1; j>i; j--) {
                 for(int l = 0; l < m_dim; l++){
-                    r_ik[l] = pos_mat[i][l] - pos_mat[k][l];
-                    distik += r_ik[l]*r_ik[l];
-                    term2 += r_ik[l]*r_ij[l];
-                }
-                distik = sqrt(distik);
+                    r_ij[l] = pos_mat[i][l] - pos_mat[j][l];
+                    distij += r_ij[l]*r_ij[l];
+                    if(l==2){
+                        term1 += pos_mat[i][l] * r_ij[l] * beta;
+                    }
+                    else{
+                        term1 += pos_mat[i][l] * r_ij[l];
+                    }
 
-                EL += term2*u_der_ij * u_der(distik, m_a);
+
+                }
+                distij = sqrt(distij);
+
+                double u_der_ij = u_der(distij, m_a);
+                EL -= 4*alpha*term1*u_der_ij;
+
+                double term2 = 0;
+                for(int k=m_N-1; k>i; k--) {
+                    for(int l = 0; l < m_dim; l++){
+                        r_ik[l] = pos_mat[i][l] - pos_mat[k][l];
+                        distik += r_ik[l]*r_ik[l];
+                        term2 += r_ik[l]*r_ij[l];
+                    }
+                    distik = sqrt(distik);
+
+                    EL += term2*u_der_ij * u_der(distik, m_a);
+                }
+
+                EL += u_secder(distij, m_a) + 2 * u_der_ij;
             }
 
-            EL += u_secder(distij, m_a) + 2 * u_der_ij;
+            E_TOT += -0.5*EL + V_ext(pos_mat[i], m_HO, beta, omega_HO, m_dim);
         }
-
-        E_TOT += -0.5*EL + V_ext(pos_mat[i], m_HO, beta, omega_HO, m_dim);
     }
+
     return E_TOT;
 }
 

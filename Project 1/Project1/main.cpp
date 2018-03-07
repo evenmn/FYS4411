@@ -8,8 +8,8 @@ int main()
 {
     //variables chosen by user
     int    M          = 100000;  //number of MC cycles
-    int    N          = 1;      //number of particles
-    int    dim        = 1;       //number of dimensions concidered
+    int    N          = 10;      //number of particles
+    int    dim        = 3;       //number of dimensions concidered
     double beta       = 1;       //weight parameter along z-axis
     double omega_HO   = 1;       //HO frequency in x- and y-direction
     double steplength = 1.0;     //steplength when changing position ->Is this correct?
@@ -24,7 +24,7 @@ int main()
     int    num_or_an  = 0;       //if calculation is to be based on analytical(0) or numerical(1) E_L
 
 
-    double alpha[]    = {0.4, 0.5, 0.6};           //variational parameter
+    double alpha[]    = {0.5};           //variational parameter
     int    len_alpha  = sizeof(alpha)/sizeof(*alpha);    //length of alpha
 
     cout << "Running with the following paramteres:" << endl;
