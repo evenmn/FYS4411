@@ -121,7 +121,7 @@ double WaveFunction::E_L_ana(vector<vector<double>> &pos_mat, double alpha, doub
     double EL;
     double E_TOT = 0;
 
-    if(m_a==0 && m_dim==1){
+    if(m_a==0 && m_dim==1&&m_HO==true){
         double xixj = 0;
         double xixi = 0;
         for(int i=0;i<m_N;i++){
@@ -130,7 +130,7 @@ double WaveFunction::E_L_ana(vector<vector<double>> &pos_mat, double alpha, doub
         E_TOT = -2*m_N*xixi*alpha*alpha + alpha*m_N*m_N + 0.5*xixi;
     }
 
-    else if(m_a==0 &&m_dim==2){
+    else if(m_a==0 &&m_dim==2&&m_HO==true){
         double sum_xixi = 0;
         double sum_yiyi = 0;
         double sum_xy_sqrd = 0;
@@ -142,7 +142,7 @@ double WaveFunction::E_L_ana(vector<vector<double>> &pos_mat, double alpha, doub
         return -2*m_N*alpha*alpha*(sum_xixi + sum_yiyi) + 2*alpha*m_N*m_N + 0.5*omega_HO*omega_HO*sum_xy_sqrd;
     }
 
-    else if(m_a==0&&m_dim ==3){
+    else if(m_a==0&&m_dim ==3&&m_HO==true){
         double sum_xixi = 0;
         double sum_yiyi = 0;
         double sum_zizi = 0;

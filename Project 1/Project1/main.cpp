@@ -7,7 +7,7 @@ using namespace std;
 int main()
 {
     //variables chosen by user
-    int    M          = 100000;  //number of MC cycles
+    int    M          = 1000000;  //number of MC cycles
     int    N          = 10;      //number of particles
     int    dim        = 3;       //number of dimensions concidered
     double beta       = 1;       //weight parameter along z-axis
