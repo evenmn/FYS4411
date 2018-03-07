@@ -14,7 +14,7 @@ double u_secder(double dist, double a) {
     return -(a/(dist*dist*dist))*C*(2+(a/dist)*C);
 }
 
-double V_ext(vector<double> &pos, bool HO, double beta, double omega_HO, int dim) {
+double V_ext(vector<double> &pos, bool HO, double beta, int dim) {
     double VEXT = 0;
     for(int i=0;i<dim;i++){
         if(i==2 && HO){
@@ -24,7 +24,7 @@ double V_ext(vector<double> &pos, bool HO, double beta, double omega_HO, int dim
             VEXT += pos[i]*pos[i];
         }
     }
-    return 0.5*omega_HO*omega_HO*VEXT;
+    return 0.5*VEXT;
 }
 
 
@@ -104,7 +104,7 @@ double WaveFunction::Psi_value_sqrd(vector<vector<double>> &pos_mat, double alph
 }
 
 
-double WaveFunction::E_L_ana(vector<vector<double>> &pos_mat, double alpha, double beta, double omega_HO)
+double WaveFunction::E_L_ana(vector<vector<double>> &pos_mat, double alpha, double beta)
 {
     double distij=0;
     double distik=0;
@@ -113,28 +113,14 @@ double WaveFunction::E_L_ana(vector<vector<double>> &pos_mat, double alpha, doub
     double EL;
     double E_TOT = 0;
 
-    if(m_a==0 && m_dim==1&&m_HO==true){
-        double energy = 0;
-        for(int i=0; i<m_N; i++) {
-            energy += (0.5 - 2*alpha*alpha) * pos_mat[i][0]*pos_mat[i][0];
-        }
-        return energy + m_N*alpha;
-    }
-
-    else if(m_a==0 &&m_dim==2&&m_HO==true){
-        double energy = 0;
+    if(m_a==0 && m_HO){
+        double r_sqrt = 0;
         for(int i=0; i<m_N; i++){
-            energy += (0.5 - 2*alpha*alpha) * (pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1]);
+            for(int j=0; j<m_dim; j++){
+                r_sqrt += pos_mat[i][j]*pos_mat[i][j];
+            }
         }
-        return energy + 2*m_N*alpha;
-    }
-
-    else if(m_a==0&&m_dim ==3&&m_HO==true){
-        double energy = 0;
-        for(int i=0; i<m_N; i++) {
-            energy += (0.5 - 2*alpha*alpha) * (pos_mat[i][0]*pos_mat[i][0] + pos_mat[i][1]*pos_mat[i][1] + beta*pos_mat[i][2]*pos_mat[i][2]);
-        }
-        return energy + 3*m_N*alpha;
+        return (0.5 - 2*alpha*alpha)*r_sqrt + m_dim*m_N*alpha;
     }
 
     else{
@@ -143,25 +129,14 @@ double WaveFunction::E_L_ana(vector<vector<double>> &pos_mat, double alpha, doub
 
             for(int j=0; j<m_dim; j++){
                 if(j==2){
-                    EL += beta*beta*pos_mat[i][j]*pos_mat[i][j];
+                    EL += beta*beta*pos_mat[i][j]*pos_mat[i][j] - beta/(2*alpha);
                 }
                 else{
-                    EL += pos_mat[i][j]*pos_mat[i][j];
+                    EL += pos_mat[i][j]*pos_mat[i][j] - 1/(2*alpha);
                 }
             }
 
             EL = 4*alpha*alpha*EL;
-
-            if(m_dim==1) {
-                EL -= 2*alpha;
-            }
-            else if(m_dim==2) {
-                EL -= 4*alpha;
-            }
-
-            else if(m_dim==3) {
-                EL -= 4*alpha + 2*alpha*beta;
-            }
 
             double term1 = 0;
             for(int j=m_N-1; j>i; j--) {
@@ -197,14 +172,14 @@ double WaveFunction::E_L_ana(vector<vector<double>> &pos_mat, double alpha, doub
                 EL += u_secder(distij, m_a) + 2 * u_der_ij;
             }
 
-            E_TOT += -0.5*EL + V_ext(pos_mat[i], m_HO, beta, omega_HO, m_dim);
+            E_TOT += -0.5*EL + V_ext(pos_mat[i], m_HO, beta, m_dim);
         }
     }
 
     return E_TOT;
 }
 
-double WaveFunction::E_L_num(vector<vector<double>> &pos_mat, double alpha, double beta, double omega_HO, double h)
+double WaveFunction::E_L_num(vector<vector<double>> &pos_mat, double alpha, double beta, double h)
 {
     //Obs:momentarily only work with a=0
     // Kinetic energy
@@ -235,7 +210,7 @@ double WaveFunction::E_L_num(vector<vector<double>> &pos_mat, double alpha, doub
     // Potential energy
     double potentialEnergy = 0;
     for(int i=0; i<m_N; i++) {
-        potentialEnergy += V_ext(pos_mat[i], m_HO, beta, omega_HO, m_dim);
+        potentialEnergy += V_ext(pos_mat[i], m_HO, beta, m_dim);
     }
     return kineticEnergy + potentialEnergy;
 }

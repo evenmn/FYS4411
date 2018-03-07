@@ -16,7 +16,7 @@ double Random_position(){
     return diss(seed);
 }
 
-void GradientDecent(int N, int dim, int M, double a, double steplength, double omega_HO, bool HO, \
+void GradientDecent(int N, int dim, int M, double a, double steplength, bool HO, \
                     double beta, double h, int num_or_an, int BF_H, double timestep)
 {
     //Marsenne Twister Random Number Generator
@@ -69,10 +69,10 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
 
         //Add initial energies to averages
         if(num_or_an == 0) {
-            E = Psi.E_L_ana(pos_mat, alpha, beta, omega_HO);
+            E = Psi.E_L_ana(pos_mat, alpha, beta);
         }
         else if(num_or_an == 1) {
-            E = Psi.E_L_num(pos_mat, alpha, beta, omega_HO, h);
+            E = Psi.E_L_num(pos_mat, alpha, beta, h);
 
         }
         else {
@@ -119,10 +119,10 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, double o
                 accept += 1;
 
                 if(num_or_an == 0) {
-                    E = Psi.E_L_ana(pos_mat, alpha, beta, omega_HO);
+                    E = Psi.E_L_ana(pos_mat, alpha, beta);
                 }
                 else if(num_or_an == 1) {
-                    E = Psi.E_L_num(pos_mat, alpha, beta, omega_HO, h);
+                    E = Psi.E_L_num(pos_mat, alpha, beta, h);
                 }
             }
 

@@ -8,13 +8,12 @@ int main()
 {
     //variables chosen by user
     int    M          = 1000000; //number of MC cycles
-    int    N          = 10;      //number of particles
+    int    N          = 20;      //number of particles
     int    dim        = 3;       //number of dimensions concidered
     double beta       = 1;       //weight parameter along z-axis
-    double omega_HO   = 1;       //HO frequency in x- and y-direction
-    double steplength = 1.0;     //steplength when changing position ->Is this correct?
+    double steplength = 1.0;     //steplength when changing position
     double h          = 0.01;    //Step length for numerical double differentiation
-    double timestep   = 1.0;     //Timestep, to be used in numerical derivatives
+    double timestep   = 1.0;     //Timestep, to be used in Metropolis-Hastings
     double a          = 0.0;     //distance parameter
 
     //Buttons (true/false)
@@ -36,7 +35,7 @@ int main()
     cout << "Brute force(0) or Hastings(1) Metropolis algo:" << BF_H << endl;
     cout << "One body calculations active (1): " << one_body << "\n" << endl;
 
-    Met_algo(N, dim, M, a, steplength, omega_HO, HO, alpha, len_alpha, beta, h, num_or_an, BF_H, timestep, one_body);
+    Met_algo(N, dim, M, a, steplength, HO, alpha, len_alpha, beta, h, num_or_an, BF_H, timestep, one_body);
     //GradientDecent(N, dim, M, a, steplength, omega_HO, HO, beta, h, num_or_an, BF_H, timestep);
 
     return 0;
