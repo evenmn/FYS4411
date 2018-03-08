@@ -258,16 +258,28 @@ We observe that the calculated local energy is close to the exact energy.
 \begin{figure} [H]
     \centering
     \includegraphics[scale=0.65]{images/energy.png}
-    \caption{Add caption}
+    \caption{The local energy for various $\alpha$'s in the interval $\alpha\in[0.1,0.9]$ without interaction. The measure is done with $1e6$ Monte Carlo cycles and the spherical harmonic oscillator trap. }
     \label{fig:energy}
 \end{figure} 
 
 \begin{figure} [H]
     \centering
     \includegraphics[scale=0.65]{images/variance.png}
-    \caption{Add caption}
+    \caption{This variance was found simultaneously with the local energy plotted in figure (\ref{fig:energy}), and was conducted for $\alpha$'s in the interval $\alpha\in[0.1,0.9]$ without interaction. The measure is done with $1e6$ Monte Carlo cycles and the spherical harmonic oscillator trap. }
     \label{fig:variance}
 \end{figure} 
+
+\begin{figure}[h] % Do not use only [h] in real documents.
+	\begin{minipage}[t]{.45\linewidth}
+		\includegraphics[width=\linewidth]{images/energy.png}
+		\caption{Subfigure 1}
+	\end{minipage}\hfill
+	\begin{minipage}[b]{.45\linewidth}
+		\includegraphics[width=\linewidth]{images/variance.png}
+		%\caption{Subfigure 2}
+	\end{minipage}
+	\caption{Subfigure 3}
+\end{figure}
 
 \subsection{Standard Metropolis vs. Importance sampling}
 We want to see if the importance sampling really converges faster, and compare the energy with respect to the number of cycles. The interaction is still turned off, and we study 10 particles in 3 dimensions in the minimum point. \\
@@ -289,6 +301,28 @@ The only thing that is different is the acceptance ratio?
 
 \subsection{VMC with repulsive interaction}
 We are now turning on the interaction and the elliptical harmonic oscillator at the same time. 
+
+\subsection{One-body densities}
+\begin{figure} [H]
+    \centering
+    \includegraphics[scale=0.65]{images/ob_a_0.png}
+    \caption{Add caption}
+    \label{fig:ob0}
+\end{figure} 
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[scale=0.65]{images/ob_a_00043.png}
+    \caption{Add caption}
+    \label{fig:ob00043}
+\end{figure} 
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[scale=0.65]{images/ob_a_1.png}
+    \caption{Add caption}
+    \label{fig:ob1}
+\end{figure} 
 
 \section{Discussion}
 
