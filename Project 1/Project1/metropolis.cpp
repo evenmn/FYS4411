@@ -104,6 +104,11 @@ void Met_algo(int N, int dim, int M, double a, double steplength, bool HO, doubl
         clock_t start_time = clock();
         //Start Monte Carlo iterations
         for(int i=0; i<M; i++){
+
+            //if(i%(M/100)==0){
+            //    cout << "Iteration: " << i << " of " << M << endl;
+            //}
+
             //Draw random position, for one particle and one dimention
             N_rand   = nrand(gen);
             dim_rand = dimrand(gen);
