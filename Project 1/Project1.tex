@@ -312,20 +312,20 @@ In table \ref{tab:variance_analysis}, we present the results of the local energy
 
 \begin{table} [H]
 	\centering
-	\caption{The local energy calculated for $a=0$  without hard-sphere interaction with the Metropolis-Hastings algorithm with analytical local energy calculation, this time with proper evaluation of the statistical error. The calculations are run in three dimentions, and with $1e6$ Monte Carlo cycles}
+	\caption{The local energy calculated for $a=0$  without hard-sphere interaction with the Metropolis-Hastings algorithm with analytical local energy calculation, this time with proper evaluation of the statistical error.  The calculations are run in three dimentions with $1e6$ Monte Carlo cycles, and the variational paramameter $\alpha=0.6$}
 	\begin{tabularx}{\textwidth}{X|XXXX} \hline
 		\label{tab:variance_analysis}
 		$N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & $\sigma^2$ Blocking & $\sigma^2 \approx \langle E_L^2 \rangle - \langle E_L \rangle^2$ \\ \hline
-		1 & 1.5000 &  & -2.25e-06\\
-		10 & 15.000 &  & -2.25e-4\\
-		100 & 150.00 &  &\\
-		500 & 750.00 &  &\\ \hline
+		1 & 1.5000 & 5.0102e-2  & 5.0100e-2 \\
+		10 & 15.000 & 4.9701e-1 & 4.9678e-1  \\
+		100 & 150.00 & 5.2417 & 5.2184\\
+		500 & 750.00 & 9.0710 & 8.4831 \\ \hline
 	\end{tabularx}
 \end{table}
 
 
 \subsection{VMC with repulsive interaction}
-In table \ref{tab:}, the results from the 
+In table \ref{tab:}, the results from the calculation of the elliptical trap are presented. The variational parameter $\alpha$ was varied manually to find the minimum
 
 \section{Discussion}
 
