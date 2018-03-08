@@ -205,6 +205,7 @@ double WaveFunction::E_L_num(vector<vector<double>> &pos_mat, double alpha, doub
             pos_mat_minus[i][j] = pos_mat[i][j];
         }
     }
+
     kineticEnergy = -(0.5/(waveFunctionOld*h*h))*kineticEnergy;
 
     // Potential energy
