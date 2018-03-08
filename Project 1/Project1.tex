@@ -278,14 +278,26 @@ $N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] & $\langle E_L\ra
 \begin{figure} [H]
     \centering
     \includegraphics[scale=0.65]{images/energy.png}
-    \caption{The local energy $E_L$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$}
-    \label{fig:EL_as_func_of_alpha}
+    \caption{The local energy for various $\alpha$'s in the interval $\alpha\in[0.1,0.9]$ without interaction. The measure is done with $1e6$ Monte Carlo cycles and the spherical harmonic oscillator trap. }
+    \label{fig:local_energy_as_func_of_alpha}
 \end{figure} 
+
+\begin{figure}[h] % Do not use only [h] in real documents.
+	\begin{minipage}[t]{.45\linewidth}
+		\includegraphics[width=\linewidth]{images/energy.png}
+		\caption{Subfigure 1}
+	\end{minipage}\hfill
+	\begin{minipage}[b]{.45\linewidth}
+		\includegraphics[width=\linewidth]{images/variance.png}
+		%\caption{Subfigure 2}
+	\end{minipage}
+	\caption{Subfigure 3}
+\end{figure}
 
 \begin{figure} [H]
     \centering
     \includegraphics[scale=0.65]{images/variance.png}
-    \caption{The variance of the local energy $E_L$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$. \textcolor{red}{CALCULATED with imprecise var}}
+    \caption{This variance was found simultaneously with the local energy plotted in figure (\ref{fig:energy}), and was conducted for $\alpha$'s in the interval $\alpha\in[0.1,0.9]$ without interaction. The measure is done with $1e6$ Monte Carlo cycles and the spherical harmonic oscillator trap. }
     \label{fig:variance_EL_as_func_of_alpha}
 \end{figure} 
 
@@ -326,6 +338,28 @@ In table \ref{tab:variance_analysis}, we present the results of the local energy
 
 \subsection{VMC with repulsive interaction}
 In table \ref{tab:}, the results from the calculation of the elliptical trap are presented. The variational parameter $\alpha$ was varied manually to find the minimum
+
+\subsection{One-body densities}
+\begin{figure} [H]
+    \centering
+    \includegraphics[scale=0.65]{images/ob_a_0.png}
+    \caption{Add caption}
+    \label{fig:ob0}
+\end{figure} 
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[scale=0.65]{images/ob_a_00043.png}
+    \caption{Add caption}
+    \label{fig:ob00043}
+\end{figure} 
+
+\begin{figure} [H]
+    \centering
+    \includegraphics[scale=0.65]{images/ob_a_1.png}
+    \caption{Add caption}
+    \label{fig:ob1}
+\end{figure} 
 
 \section{Discussion}
 
