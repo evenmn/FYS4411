@@ -30,6 +30,8 @@ void Met_algo(int N, int dim, int M, double a, double steplength, bool HO, doubl
     //Open file for writing (will write for a specific alpha)
     //ofstream energy_file;
     //energy_file.open ("../data/local_energy.dat");
+    ofstream local_energy_var;
+    local_energy_var.open ("../data/energy.txt");
 
     for(int k=0; k<length_alpha_1; k++){
 
@@ -165,6 +167,10 @@ void Met_algo(int N, int dim, int M, double a, double steplength, bool HO, doubl
 
             E_tot += E;
             E_tot_sqrd += E*E;
+
+            //If blocking to analyze error
+            local_energy_var << E << endl;
+
         }
         clock_t end_time = clock();
 
@@ -176,6 +182,9 @@ void Met_algo(int N, int dim, int M, double a, double steplength, bool HO, doubl
             //Close myfile
             ob_file.close();
         }
+
+        local_energy_var.close();
+
 
         //Calculate <E_l> and <E_L**2>
         double E_L_avg = E_tot/M;

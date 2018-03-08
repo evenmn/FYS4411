@@ -55,9 +55,6 @@ Write the abstract here
 Introduction
 
 \section{Theory}
-
-\subsection{Presentation of problem}
-
 We study a system of $N$ bosons trapped in a harmonic oscillator with the Hamiltonian given by 
 \begin{equation}
 \hat{H}=\sum_i^N\bigg(-\frac{\hbar^2}{2m}\nabla_i^2+V_{ext}(\vec{r}_i)\bigg)+\sum_{i<j}^NV_{int}(\vec{r}_i,\vec{r}_j)
@@ -96,8 +93,6 @@ f(a,r_{ij})=
 \end{cases}
 \end{equation}
 The first case we will take into account is when $a=0$, such that the corretation term is 1. 
-
-\subsection{Local Energy $E_L$}
 
 We want to calculate the local energy as a function of $\alpha$, and then use Variational Monte Carlo (VMC) described in section \ref{VMC}. For the non-interacting case, the analytical expression for one particle in a harmonic oscillator is well-known and reads
 \begin{equation}
@@ -158,6 +153,9 @@ where
 \gamma=\frac{\omega_z}{\omega_{HO}}.
 \end{equation*}
 This quantity is equivalent to $\beta$, see Appendix B to see how this expression is derived. 
+
+\subsection{One-body density}
+In many cases it is convenient to know the positions of the particles, but with many particles the positions itself will be overwhelming and not really give us a good picture. Instead of presenting the positions, the density of particles can give us a good overview of where the particles can be found. In this project we will study the radial density, and find the particle densities at various distances from origin. We do this by dividing the volume where the particles can be found in multiple bins and counting the number of particles in the bin. Thereafter the number of particles in each bin needs to be divided by the area of the bin, which will be a sphere surface in our case. 
 
 \section{Methods}
 \subsection{Variational Monte Carlo}\label{VMC}
@@ -241,56 +239,35 @@ Perhaps the simplest and most intuitive method for finding the minima is the gra
 where $\alpha^+$ is the updated $\alpha$ and $\eta$ is the step size. The idea is that one finds the gradient of the energy with respect to a certain $\alpha$, and moves in the direction which minimizes the energy the most. This is repeated until one has found an energy minimum. 
 
 \section{Results}
-\subsection{$E_L$ calculation and CPU-time}\label{CPU}
-For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the local energy. In table (\ref{tab:BFmet}) we present the results from these calculations and the performance. The results from the calculations with the Metropolis-Hastings algorithm are presentet in table \ref{tab:ISmet}. All the measurements are done in three dimensions with $1e6$ Monte Carlo cycles. $a$ is fixed to zero. The analytical local energy is given by $E_L=0.5\cdot N\cdot d$ where $N$ is the number of particles and $d$ is the number of dimensions, in our case set to 3
-
+\subsection{CPU-time}\label{CPU}
+For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the local energy. In table (\ref{tab:BFmet}) we present the results from these calculations and the performance. All the measurements are done in three dimensions with $1e6$ Monte Carlo cycles. $a$ is fixed to zero.
 \begin{table} [H]
 \centering
-\caption{The local energy calculated for $a=0$  without hard-sphere interaction with brute force Metropolis algorithm, for both the analytical and numerical local energy calculation. The number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the local energies. }
+\caption{The local energy calculated numerically for $a=0$ and without hard-sphere interaction. The number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the local energies. The analytical local energy is given by $E_L=0.5\cdot N\cdot d$ where $N$ is the number of particles and $d$ is the number of dimensions, in our case set to 3.}
 \begin{tabularx}{\textwidth}{X|XX|XX} \hline
 \label{tab:BFmet}
 & \multicolumn{2}{X}{\textbf{Analytical}} & \multicolumn{2}{X}{\textbf{Numerical}} \\
 $N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s]\\ \hline
-1 & 1.50000 & 0.154195 & 1.49999 & 0.657138 \\
-10 & 15.000 & 0.54785 & 14.9999 & 9.98436 \\
-100 & 150.00 & 13.573 & 149.999 & 2743.4\\
-500 & 750.00 & 282.794 & & \\ \hline
+1 & 1.50000 & 0.146392 & 1.49999 & 0.426018 \\
+10 & 15.000 & 11.8992 & 14.9999 & 38.0378 \\
+100 & 150.00 & 8326.16 & & \\
+500 & & & & \\ \hline
 \end{tabularx}
 \end{table}
+We observe that the calculated local energy is close to the exact energy. 
 
-\begin{table} [H]
-	\centering
-	\caption{The local energy calculated for $a=0$  without hard-sphere interaction with the Metropolis-Hastings algorithm with analytical local energy calculation. The number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the local energies.}
-	\begin{tabularx}{\textwidth}{X|XX|XX} \hline
-		\label{tab:ISmet}
-		& \textbf{Analytical} \\
-		$N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] \\ \hline
-		1 & 1.5000 & 0.266929  \\
-		10 & 15.000 &  0.549303  \\
-		100 & 150.00 & 16.117 \\
-		500 & 750.00 & 292.102 \\ \hline
-	\end{tabularx}
-\end{table}
-
-
-\subsection{$E_L$ as function of the variational parameter $\alpha$}
+\subsection{VMC without repulsive interaction}
 
 \begin{figure} [H]
     \centering
     \includegraphics[scale=0.65]{images/energy.png}
-<<<<<<< HEAD
     \caption{The local energy for various $\alpha$'s in the interval $\alpha\in[0.1,0.9]$ without interaction. The measure is done with $1e6$ Monte Carlo cycles and the spherical harmonic oscillator trap. }
     \label{fig:energy}
-=======
-    \caption{The local energy $E_L$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$}
-    \label{fig:EL_as_func_of_alpha}
->>>>>>> cc07920967e43dca6926e2516373c0a7bcc352d1
 \end{figure} 
 
 \begin{figure} [H]
     \centering
     \includegraphics[scale=0.65]{images/variance.png}
-<<<<<<< HEAD
     \caption{This variance was found simultaneously with the local energy plotted in figure (\ref{fig:energy}), and was conducted for $\alpha$'s in the interval $\alpha\in[0.1,0.9]$ without interaction. The measure is done with $1e6$ Monte Carlo cycles and the spherical harmonic oscillator trap. }
     \label{fig:variance}
 \end{figure} 
@@ -310,14 +287,6 @@ $N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] & $\langle E_L\ra
 \subsection{Standard Metropolis vs. Importance sampling}
 We want to see if the importance sampling really converges faster, and compare the energy with respect to the number of cycles. The interaction is still turned off, and we study 10 particles in 3 dimensions in the minimum point. \\
 The only thing that is different is the acceptance ratio?
-=======
-    \caption{The variance of the local energy $E_L$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$. \textcolor{red}{CALCULATED with imprecise var}}
-    \label{fig:variance_EL_as_func_of_alpha}
-\end{figure} 
-
-\subsection{Brute Force  vs. Importance sampling}
-We study the acceptance ratio for the brute force and importance sampling algorithms, with no interaction. These calculations are done with ten particles in three dimentions.
->>>>>>> cc07920967e43dca6926e2516373c0a7bcc352d1
 
 \begin{figure} [H]
     \centering
@@ -333,28 +302,11 @@ We study the acceptance ratio for the brute force and importance sampling algori
     \label{fig:acceptance_BF}
 \end{figure} 
 
-\subsection{Variance calculation}
-
-In table \ref{tab:variance_analysis}, we present the results of the local energy calculation with proper error evaluation of statistical error. The statistical error as found with the Blocking method is also compared to the simple way of approximating the variance by $\sigma^2 \approx \langle E_L^2 \rangle - \langle E_L \rangle^2$. 
-
-\begin{table} [H]
-	\centering
-	\caption{The local energy calculated for $a=0$  without hard-sphere interaction with the Metropolis-Hastings algorithm with analytical local energy calculation, this time with proper evaluation of the statistical error. The calculations are run in three dimentions, and with $1e6$ Monte Carlo cycles}
-	\begin{tabularx}{\textwidth}{X|XXXX} \hline
-		\label{tab:variance_analysis}
-		$N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & $\sigma^2$ Blocking & $\sigma^2 \approx \langle E_L^2 \rangle - \langle E_L \rangle^2$ \\ \hline
-		1 & 1.5000 &  & -2.25e-06\\
-		10 & 15.000 &  & -2.25e-4\\
-		100 & 150.00 &  &\\
-		500 & 750.00 &  &\\ \hline
-	\end{tabularx}
-\end{table}
-
-
 \subsection{VMC with repulsive interaction}
-In table \ref{tab:}, the results from the 
+We are now turning on the interaction and the elliptical harmonic oscillator at the same time. 
 
 \subsection{One-body densities}
+
 \begin{figure} [H]
     \centering
     \includegraphics[scale=0.65]{images/ob_a_0.png}
@@ -423,7 +375,7 @@ Inserting this into the expression for $E_L$ gives
 E_L(\alpha) = -\frac{\hbar^2}{m} \alpha (2x\alpha^2 -1) + \frac{1}{2} m\omega_{HO}^2x^2
 \end{equation}
 
-\subsubsection{$N$ particles, three dimentions}
+\subsection{$N$ particles, three dimentions}
 
 When extending the non-interaction case to $N$ particles and three dimentions, the trial wave function will take the form listed in \ref{eq:WF_nointeract}, and the Hamiltonian will be as listed in \ref{eq:Hamilton}, with the spherical harmonic oscillator potential $\frac{1}{2}m\omega_{HO}^2r_i^2$, as listed in \ref{eq:V_ext}.
 
