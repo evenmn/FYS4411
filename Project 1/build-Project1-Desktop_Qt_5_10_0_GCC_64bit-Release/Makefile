@@ -10,11 +10,11 @@ MAKEFILE      = Makefile
 
 ####### Compiler, tools and options
 
-CC            = gcc
-CXX           = g++
+CC            = mpicc
+CXX           = mpicxx
 DEFINES       = 
 CFLAGS        = -pipe -O2 -Wall -W -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -O2 -std=gnu++11 -Wall -W -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -DMPICH_IGNORE_CXX_SEEK -O3 -DMPICH_IGNORE_CXX_SEEK -std=gnu++11 -Wall -W -fPIC $(DEFINES)
 INCPATH       = -I../Project1 -I. -I../../../Qt/5.10.0/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/evenmn/Qt/5.10.0/gcc_64/bin/qmake
 DEL_FILE      = rm -f
@@ -36,7 +36,7 @@ TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = Project11.0.0
 DISTDIR = /home/evenmn/FYS4411/Project\ 1/build-Project1-Desktop_Qt_5_10_0_GCC_64bit-Release/.tmp/Project11.0.0
-LINK          = g++
+LINK          = mpicxx
 LFLAGS        = -Wl,-O1
 LIBS          = $(SUBLIBS)  
 AR            = ar cqs

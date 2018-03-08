@@ -87,6 +87,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, bool HO, doubl
         double radius_step = max_radius/number_of_bins;
         double bin_array[number_of_bins];
         double bin_dist[number_of_bins];
+
         ofstream ob_file;
 
         if(one_body == 1) {
@@ -170,7 +171,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, bool HO, doubl
         if(one_body == 1){
             //Write to file
             for(int j=0; j<number_of_bins; j++) {
-               ob_file << bin_dist[j] << "\n";
+               ob_file << bin_dist[j]/(bin_array[j]*bin_array[j]*M) << "\n";
             }
             //Close myfile
             ob_file.close();
@@ -180,7 +181,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, bool HO, doubl
         double E_L_avg = E_tot/M;
         double E_L_avg_sqrd = E_tot_sqrd/M;
         double accept_ratio = accept*1.0/M;
-        double CPU_time = 1.0*(end_time - start_time)/CLOCKS_PER_SEC;
+        double CPU_time = (double)(end_time - start_time)/CLOCKS_PER_SEC;
         double variance = E_L_avg_sqrd - E_L_avg*E_L_avg;
 
 
