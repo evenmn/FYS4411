@@ -94,12 +94,12 @@ f(a,r_{ij})=
 \end{equation}
 The first case we will take into account is when $a=0$, such that the corretation term is 1. 
 
-We want to calculate the local energy as a function of $\alpha$, and then use Variational Monte Carlo (VMC) described in section \ref{VMC}. For the non-interacting case, the analytical expression for one particle in a harmonic oscillator is well-known and reads
+We want to calculate the local energy as a function of $\alpha$, and then use Variational Monte Carlo (VMC) described in section \ref{VMC}. For the non-interacting case, the analytical expression for one particle in a harmonic oscillator is well-known and reads $E = \hbar\omega(n + dim/2)$ where $n$ is the energy level and $dim$ is number of dimensions. In this project we will study the ground state only, such that $n=0$, and for $N$ particles we therefore obtain 
 \begin{equation}
-E = \hbar\omega(n + dim/2)
+E = \frac{1}{2}N\cdot dim\cdot\hbar\omega
 \label{Energy_exact}
 \end{equation}
-where $n$ is the energy level and $dim$ is number of dimensions. In this project we will study the ground state only, such that $n=0$. The local energy is
+The local energy is
 \begin{equation}
 E_L(\vec{r})=\frac{1}{\Psi_T(\vec{r})}\hat{H}\Psi_T(\vec{r})
 \label{eq:Local_energy}
@@ -144,18 +144,35 @@ V_{int}(\vec{r}_i, \vec{r}_j)=
 \end{equation}
 which ensures that the particles are separated by a distance $a$. The local energy is slightly changing, because we need to add the interaction potential to it as well. 
 
-For the case when we have elliptical harmonic oscillator potential, we can obtain a quite simple expression for the Hamiltonian when scaling with respect to $\hbar\omega_{HO}$ (something we actually already have done with the energy). The expression we get is
-\begin{equation}
-H=\sum_i\bigg(\frac{1}{2}\Big(-\nabla^2 + x_i^2 + y_i^2 + \gamma^2z_i^2\Big)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
-\end{equation}
-where
-\begin{equation*}
-\gamma=\frac{\omega_z}{\omega_{HO}}.
-\end{equation*}
-This quantity is equivalent to $\beta$, see Appendix B to see how this expression is derived. 
-
 \subsection{One-body density}
-In many cases it is convenient to know the positions of the particles, but with many particles the positions itself will be overwhelming and not really give us a good picture. Instead of presenting the positions, the density of particles can give us a good overview of where the particles can be found. In this project we will study the radial density, and find the particle densities at various distances from origin. We do this by dividing the volume where the particles can be found in multiple bins and counting the number of particles in the bin. Thereafter the number of particles in each bin needs to be divided by the area of the bin, which will be a sphere surface in our case. 
+In many cases it is convenient to know the positions of the particles, but when the number of particles increases, the set of positions turns into a messy collection of numbers which is not really informative. Instead of presenting the positions, the density of particles can give us a good overview of where the particles can be found. With $N$ particles, the one-body density with respect to a particle $i$ is an integral over all particles but particle $i$
+\begin{equation}
+\rho_i=\int_{-\infty}^{\infty}d\vec{r}_1\hdots d\vec{r}_{i-1}d\vec{r}_{i+1}\hdots d\vec{r}_N |\Psi(\vec{r}_1,\hdots \vec{r}_N)|^2.
+\end{equation}
+For the non-interacting case this integral can be solved analytically, or we can use Monte Carlo integration to solve it for any case. Anyhow, the interesting part is the radial density, so we either have to solve the integral in spherical coordinates or convert to spherical coordinates afterwards. 
+
+Alternatively, the one-body radial density can be found in a more intuitive way. Imagine we divide the volume around particle $i$ into bins, where bin $j$ is located at a distance $j\cdot r_1$ (the radii are quantized). By counting the number of particles in a bin and dividing on the surface area, we find the average density of the bin. If we further decrease the initial radius $r_1$ (radius of the innermost bin) such that we have a large number of bins, this method can be used to find the one-body density. 
+
+\subsection{Scaling}
+For big numerical projects, working with dimensionless quantities is a big advantage. Not only does it improve the code structure and performance, but it also avoids truncation errors due to small constants. For this project a natural scaling parameter for the energy is $\hbar\omega_{HO}$, which appears in the analytical energy expression in equation (\ref{Energy_exact}). The equivalent dimensionless equation can then be written as
+\begin{equation}
+E'=\frac{N\cdot dim}{2}
+\end{equation}
+where $E'=E/\hbar\omega_{HO}$. Additionally we can scale the position with respect to the length of the spherical trap, $a_{HO}$, such that 
+\begin{equation}
+r_i'=\frac{r_i}{a_{HO}}=r_i\cdot\sqrt{\frac{m\omega_{HO}}{\hbar}},
+\end{equation}
+and the Hamiltonian turns into
+\begin{equation}
+H=\frac{1}{2}\sum_i\Big(-\nabla^2 + \vec{r}_i^2\Big)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
+\end{equation}
+A watchful eye will see that this corresponds to setting $\hbar=\omega_{HO}=m=1$, which is the natural units. 
+
+For the spherical trap situation we are left with the variational parameters $\alpha$ and $\beta$ only, but when we study an elliptical trap we still want to get rid of $\omega_z$. Since $\beta^2$ should be the factor in front of the z-coordinate when the Hamiltonian is dimensionless, it can be proven that $\beta=\omega_z/\omega_{HO}$, see Appendix B. We end up with the Hamiltonian
+\begin{equation}
+H=\sum_i\bigg(\frac{1}{2}\Big(-\nabla^2 + x_i^2 + y_i^2 + \beta^2z_i^2\Big)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
+\end{equation} 
+where $\beta$ is chosen to be 2.82843 due to experimental results.
 
 \section{Methods}
 \subsection{Variational Monte Carlo}\label{VMC}
@@ -176,7 +193,7 @@ where $T_{i \rightarrow j}$ is the transition probability and $A_{i \rightarrow 
 \begin{equation}
 P_i^{(n)} = \sum_j\bigg[P_j^{(n-1)}T_{j \rightarrow i}A_{j \rightarrow i} + P_i^{(n-1)}T_{i \rightarrow j}(1-A_{i \rightarrow j})\bigg]
 \end{equation}
-since this can happend in two ways. One can start in this state $i$ at time $n-1$ and be rejected or one can start in another state $j$ at time $n-1$ and complete an accepted move to state $i$. In fact $\sum_j T_{i \rightarrow j} =1$, so we can rewrite this as 
+since this can happen in two different ways. One can start in this state $i$ at time $n-1$ and be rejected or one can start in another state $j$ at time $n-1$ and complete an accepted move to state $i$. In fact $\sum_j T_{i \rightarrow j} =1$, so we can rewrite this as 
 \begin{equation}
 P_i^{(n)} = P_i^{(n-1)} + \sum_j\bigg[P_j^{(n-1)}T_{j \rightarrow i}A_{j \rightarrow i} - P_i^{(n-1)}T_{i \rightarrow j}A_{i \rightarrow j}\bigg].
 \end{equation}
@@ -466,9 +483,9 @@ H=\sum_i\bigg(\frac{1}{2}\Big(-\nabla^2 + x_i^2 + y_i^2 + \gamma^2z_i^2\Big)\big
 \end{equation}
 with
 \begin{equation*}
-\gamma=\frac{\omega_z}{\omega_{HO}}
+\gamma=\beta=\frac{\omega_z}{\omega_{HO}}
 \end{equation*}
-for an elliptical harmonic oscillator potential with repulsive interaction. All the quantities in the expression are scalled, such that it is dimensionless. The energy ($H$) is scalled with respect to $\hbar\omega_{HO}$, while the length is scalled with respect to the characteristic length of the trap, $a_{HO}=(\hbar/m\omega_{HO})^{1/2}$. Let us start from scratch, where the unscalled Hamiltonian for an elliptical harmonic oscillator reads
+for an elliptical harmonic oscillator potential with repulsive interaction. Let us start from scratch, where the unscalled Hamiltonian for an elliptical harmonic oscillator reads
 \begin{equation*}
 H=\sum_i\bigg(-\frac{\hbar^2}{2m}\nabla_i^2+\frac{1}{2}m\Big(\omega_{HO}^2(x_i^2+y_i^2)+\omega_z^2z_i^2\Big)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i, \vec{r}_j).
 \end{equation*}
@@ -484,5 +501,5 @@ and we finally obtain
 \begin{equation}
 H'=\sum_i\frac{1}{2}\bigg(-\nabla_i^2+(x_i')^2+(y_i')^2+\frac{\omega_z^2}{\omega_{HO}^2}(z_i')^2\bigg)+\sum_{i<j}V_{int}(\vec{r}_i, \vec{r}_j).
 \end{equation}
-which is the Hamiltonian that we were hunting.
+which is the Hamiltonian that we were hunting. We know how the z-component is affected by $\beta$, so $\beta$ has to be equal to $\omega_z/\omega_{HO}$.
 \end{document}
