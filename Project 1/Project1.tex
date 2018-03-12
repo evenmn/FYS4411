@@ -239,7 +239,8 @@ Perhaps the simplest and most intuitive method for finding the minima is the gra
 where $\alpha^+$ is the updated $\alpha$ and $\eta$ is the step size. The idea is that one finds the gradient of the energy with respect to a certain $\alpha$, and moves in the direction which minimizes the energy the most. This is repeated until one has found an energy minimum. 
 
 \section{Results}
-\subsection{CPU-time}\label{CPU}
+
+\subsection{Local energy and CPU-time}\label{CPU}
 For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the local energy. In table (\ref{tab:BFmet}) we present the results from these calculations and the performance. All the measurements are done in three dimensions with $1e6$ Monte Carlo cycles. $a$ is fixed to zero.
 \begin{table} [H]
 \centering
@@ -254,7 +255,6 @@ $N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] & $\langle E_L\ra
 500 & & & & \\ \hline
 \end{tabularx}
 \end{table}
-We observe that the calculated local energy is close to the exact energy. 
 
 \subsection{VMC without repulsive interaction}
 
@@ -286,7 +286,6 @@ We observe that the calculated local energy is close to the exact energy.
 
 \subsection{Standard Metropolis vs. Importance sampling}
 We want to see if the importance sampling really converges faster, and compare the energy with respect to the number of cycles. The interaction is still turned off, and we study 10 particles in 3 dimensions in the minimum point. \\
-The only thing that is different is the acceptance ratio?
 
 \begin{figure} [H]
     \centering
