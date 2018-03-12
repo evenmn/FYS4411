@@ -250,10 +250,10 @@ For the brute force Metropolis algorithm we developed both an analytical and a n
 		\label{tab:BFmet}
 		& \multicolumn{2}{X}{\textbf{Analytical}} & \multicolumn{2}{X}{\textbf{Numerical}} \\
 		$N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s]\\ \hline
-		1 & 1.50000 & 0.154195 & 1.49999 & 0.657138 \\
-		10 & 15.000 & 0.54785 & 14.9999 & 9.98436 \\
+		1 & 1.50000 & 0.15420 & 1.49999 & 0.65714 \\
+		10 & 15.000 & 0.54785 & 14.9999 & 9.9844 \\
 		100 & 150.00 & 13.573 & 149.999 & 2743.4\\
-		500 & 750.00 & 282.794 & & \\ \hline
+		500 & 750.00 & 282.79 & 749.996 & 2.8744e5\\ \hline
 	\end{tabularx}
 \end{table}
 
@@ -264,10 +264,10 @@ For the brute force Metropolis algorithm we developed both an analytical and a n
 		\label{tab:ISmet}
 		& \textbf{Analytical} \\
 		$N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] \\ \hline
-		1 & 1.5000 & 0.266929  \\
-		10 & 15.000 &  0.549303  \\
+		1 & 1.5000 & 0.26693  \\
+		10 & 15.000 &  0.54930  \\
 		100 & 150.00 & 16.117 \\
-		500 & 750.00 & 292.102 \\ \hline
+		500 & 750.00 & 292.10 \\ \hline
 	\end{tabularx}
 \end{table}
 
@@ -288,21 +288,27 @@ For the brute force Metropolis algorithm we developed both an analytical and a n
 	\label{fig:variance_EL_as_func_of_alpha}
 \end{figure} 
 
-\subsection{Brute Force  vs. Importance sampling}
-We study the acceptance ratio for the brute force and importance sampling algorithms, with no interaction. These calculations are done with ten particles in three dimentions.
+\subsection{Acceptance ratios}
+We study the acceptance ratio for the brute force and importance sampling algorithms, with no interaction. These calculations are done with ten particles in three dimentions. The number of Monte Carlo cycles is fixed to $M=1e6$, and the variational parameter $\alpha$ is equal to $0.5$.
+
+\subsubsection{Importance sampling dependence on timestep }
+The acceptance ratio for the importance sampling algorithm as a function of the timestep $\delta t$ is shown in figure \ref{fig:acceptance_IS_timestep}. 
 
 \begin{figure} [H]
 	\centering
 	\includegraphics[scale=0.65]{images/acceptance_IS.png}
-	\caption{Add caption}
-	\label{fig:acceptance_IS}
+	\caption{Acceptance ratio for different choices of the timestep $\delta t$  with the Metropolis-Hastings algorithm.}
+	\label{fig:acceptance_IS_timestep}
 \end{figure} 
+
+\subsubsection{Brute force dependence on stepsize}
+The acceptance ratio for the brute force algorithm as a function of the stepsize is shown in figure \ref{fig:acceptance_BF_stepsize}. 
 
 \begin{figure} [H]
 	\centering
 	\includegraphics[scale=0.65]{images/acceptance_BF.png}
-	\caption{Add caption}
-	\label{fig:acceptance_BF}
+	\caption{Acceptance ratio for different choices of the stepsize used in the brute force algorithm}
+	\label{fig:acceptance_BF_stepsize}
 \end{figure} 
 
  \subsection{Variance calculation}
@@ -335,6 +341,22 @@ In table \ref{tab:EL_calc_repulsive_pot}, the results from the calculation of th
 		100 & 255.34 & 253.248 & 262.777 & 275.639 & 307.241\\ \hline
 	\end{tabularx}
 \end{table}
+
+\subsubsection{Gradient Decent}
+The gradient decent method was then used to find the minimum in the local energy in the interacting case. The results are presented in table \ref{tab:EL_calc_gradientdecent}.
+
+\begin{table} [H]
+	\centering
+	\caption{The local energy $E_L$ calculated with the gradient decenet method, with $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=2.82843$, with the brute force algorithm with analytical local energy calculation. The table shows the optimal $\alpha$ found by the method, and the resulting local energy. The calculations are run in for  three dimentions with $1e6$ Monte Carlo cycles.}
+	\begin{tabularx}{\textwidth}{X|XXX} \hline
+		\label{tab:EL_calc_gradientdecent}
+		$N$ & $\alpha $ & $E_L$  & $\frac{\partial E_L}{\partial \alpha}$   \\ \hline
+		1 & 0.34842 & 1.68441\\
+		10 &  &  \\ \hline
+	\end{tabularx}
+\end{table}
+
+
 
 \subsection{One-body densities}
 
@@ -406,7 +428,7 @@ Inserting this into the expression for $E_L$ gives
 E_L(\alpha) = -\frac{\hbar^2}{m} \alpha (2x\alpha^2 -1) + \frac{1}{2} m\omega_{HO}^2x^2
 \end{equation}
 
-\subsection{$N$ particles, three dimentions}
+\subsubsection{$N$ particles, three dimentions}
 
 When extending the non-interaction case to $N$ particles and three dimentions, the trial wave function will take the form listed in \ref{eq:WF_nointeract}, and the Hamiltonian will be as listed in \ref{eq:Hamilton}, with the spherical harmonic oscillator potential $\frac{1}{2}m\omega_{HO}^2r_i^2$, as listed in \ref{eq:V_ext}.
 
