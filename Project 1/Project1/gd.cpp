@@ -25,11 +25,16 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, bool HO,
     uniform_int_distribution<> dimrand(0, dim-1);     //Random number between 0 and dim
 
     //Parameters
-    double alpha        = 0.6;          //Initial guess
+    double alpha        = 0.4;          //Initial guess
     double eps          = 0.001;        //Tolerance
     double eta0         = 0.01;         //Learning rate
     double D            = 0.5;          //Diffusion coeff, to be used in Hastings met.algo
-    int T               = 100;          //Number of iterations (alphas)
+    int T               = 1000;          //Number of iterations (alphas)
+
+    double alpha_old[5];
+    for(int i=0;i<5;i++){
+        alpha_old[i] = 0;
+    }
 
     for(int iter=0; iter<T; iter++){
 
@@ -145,18 +150,30 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, bool HO,
         cout << "--- ALPHA: " << alpha << " ---" << endl;
         cout << "E_L_der: " << E_L_der << endl;
         cout << "E_L_avg: " << E_L_avg << endl;
-        cout << "E_L_avg_tot: " << E_L_avg_sqrd << endl;
         cout << "Acceptance ratio: " << accept_ratio << endl;
         cout << "Variance: " << variance << "\n" << endl;
 
-        //Update alpha
-        alpha = alpha - eta0 * E_L_der;//sqrt(iter + 1);
+        for(int j=0; j<4; j++) {
+            alpha_old[j] = alpha_old[j+1];
+        }
+        alpha_old[4] = alpha;
 
-        if(abs(E_L_der)<eps){
+
+
+        if(abs(E_L_der)<eps||abs(alpha-alpha_old[1])/alpha_old[1] < eps) {
             cout <<"FINAL VALUES" << endl;
-            cout << "alpha: " << alpha << endl;
+            if(abs(E_L_der)<eps){
+                cout << "small E_L" << endl;
+            }
+            cout << "Alpha: " << alpha << endl;
+            cout << "E_L_avg: " << E_L_avg << endl;
+            cout << "E_L_der: " << E_L_der << endl;
             cout << "iteration alpha nr: " << iter << endl;
             break;
         }
+
+        //Update alpha
+        alpha = alpha - eta0 * E_L_der;//sqrt(iter + 1.0);
+
     }
 }
