@@ -236,12 +236,12 @@ Perhaps the simplest and most intuitive method for finding the minima is the gra
 \begin{equation}
 \alpha^+=\alpha - \eta\cdot\frac{d\langle E_L(\alpha)\rangle}{d\alpha}.
 \end{equation}
-where $\alpha^+$ is the updated $\alpha$ and $\eta$ is the step size. The idea is that one finds the gradient of the energy with respect to a certain $\alpha$, and moves in the direction which minimizes the energy the most. This is repeated until one has found an energy minimum. 
+where $\alpha^+$ is the updated $\alpha$ and $\eta$ is the step size. The idea is that one finds the gradient of the energy with respect to a certain $\alpha$, and moves in the direction which minimizes the energy. This is repeated until one has found an energy minimum. 
 
 \section{Results}
 
 \subsection{$E_L$ calculation and CPU-time}\label{CPU}
-For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the local energy. In table (\ref{tab:BFmet}) we present the results from these calculations and the performance. The results from the calculations with the Metropolis-Hastings algorithm are presentet in table \ref{tab:ISmet}. All the measurements are done in three dimensions with $1e6$ Monte Carlo cycles. $a$ is fixed to zero. The analytical local energy is given by $E_L=0.5\cdot N\cdot d$ where $N$ is the number of particles and $d$ is the number of dimensions, in our case set to 3
+For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the local energy. In table (\ref{tab:BFmet}) we present the results from these calculations and the performance. The results from the calculations with the Metropolis-Hastings algorithm are presentet in table \ref{tab:ISmet}. All the measurements are done in three dimensions with $1e6$ Monte Carlo cycles. $a$ is fixed to zero.
 
 \begin{table} [H]
 	\centering
