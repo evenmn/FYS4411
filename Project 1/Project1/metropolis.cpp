@@ -30,8 +30,8 @@ void Met_algo(int N, int dim, int M, double a, double steplength, bool HO, doubl
     //Open file for writing (will write for a specific alpha)
     //ofstream energy_file;
     //energy_file.open ("../data/local_energy.dat");
-    ofstream local_energy_var;
-    local_energy_var.open ("../data/energy.txt");
+    //ofstream local_energy_var;
+    //local_energy_var.open ("../data/energy.txt");
 
     for(int k=0; k<length_alpha_1; k++){
 
@@ -108,9 +108,9 @@ void Met_algo(int N, int dim, int M, double a, double steplength, bool HO, doubl
         //Start Monte Carlo iterations
         for(int i=0; i<M; i++){
 
-            if(i%(M/100)==0){
-                cout << "Iteration: " << i << " of " << M << endl;
-            }
+            //if(i%(M/100)==0){
+            //    cout << "Iteration: " << i << " of " << M << endl;
+            //}
 
             //Draw random position, for one particle and one dimention
             N_rand   = nrand(gen);
@@ -169,7 +169,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, bool HO, doubl
             E_tot_sqrd += E*E;
 
             //If blocking to analyze error
-            local_energy_var << E << endl;
+            //local_energy_var << E << endl;
 
         }
         clock_t end_time = clock();
@@ -183,7 +183,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, bool HO, doubl
             ob_file.close();
         }
 
-        local_energy_var.close();
+        //local_energy_var.close();
 
 
         //Calculate <E_l> and <E_L**2>
