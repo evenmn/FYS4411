@@ -240,66 +240,86 @@ where $\alpha^+$ is the updated $\alpha$ and $\eta$ is the step size. The idea i
 
 \section{Results}
 
-\subsection{Local energy and CPU-time}\label{CPU}
-For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the local energy. In table (\ref{tab:BFmet}) we present the results from these calculations and the performance. All the measurements are done in three dimensions with $1e6$ Monte Carlo cycles. $a$ is fixed to zero.
+\subsection{$E_L$ calculation and CPU-time}\label{CPU}
+For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the local energy. In table (\ref{tab:BFmet}) we present the results from these calculations and the performance. The results from the calculations with the Metropolis-Hastings algorithm are presentet in table \ref{tab:ISmet}. All the measurements are done in three dimensions with $1e6$ Monte Carlo cycles. $a$ is fixed to zero. The analytical local energy is given by $E_L=0.5\cdot N\cdot d$ where $N$ is the number of particles and $d$ is the number of dimensions, in our case set to 3
+
 \begin{table} [H]
-\centering
-\caption{The local energy calculated numerically for $a=0$ and without hard-sphere interaction. The number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the local energies. The analytical local energy is given by $E_L=0.5\cdot N\cdot d$ where $N$ is the number of particles and $d$ is the number of dimensions, in our case set to 3.}
-\begin{tabularx}{\textwidth}{X|XX|XX} \hline
-\label{tab:BFmet}
-& \multicolumn{2}{X}{\textbf{Analytical}} & \multicolumn{2}{X}{\textbf{Numerical}} \\
-$N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s]\\ \hline
-1 & 1.50000 & 0.146392 & 1.49999 & 0.426018 \\
-10 & 15.000 & 11.8992 & 14.9999 & 38.0378 \\
-100 & 150.00 & 8326.16 & & \\
-500 & & & & \\ \hline
-\end{tabularx}
+	\centering
+	\caption{The local energy calculated for $a=0$  without hard-sphere interaction with brute force Metropolis algorithm, for both the analytical and numerical local energy calculation. The number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the local energies. }
+	\begin{tabularx}{\textwidth}{X|XX|XX} \hline
+		\label{tab:BFmet}
+		& \multicolumn{2}{X}{\textbf{Analytical}} & \multicolumn{2}{X}{\textbf{Numerical}} \\
+		$N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s]\\ \hline
+		1 & 1.50000 & 0.154195 & 1.49999 & 0.657138 \\
+		10 & 15.000 & 0.54785 & 14.9999 & 9.98436 \\
+		100 & 150.00 & 13.573 & 149.999 & 2743.4\\
+		500 & 750.00 & 282.794 & & \\ \hline
+	\end{tabularx}
 \end{table}
 
-\subsection{VMC without repulsive interaction}
+\begin{table} [H]
+	\centering
+	\caption{The local energy calculated for $a=0$  without hard-sphere interaction with the Metropolis-Hastings algorithm with analytical local energy calculation. The number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the local energies.}
+	\begin{tabularx}{\textwidth}{X|XX|XX} \hline
+		\label{tab:ISmet}
+		& \textbf{Analytical} \\
+		$N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] \\ \hline
+		1 & 1.5000 & 0.266929  \\
+		10 & 15.000 &  0.549303  \\
+		100 & 150.00 & 16.117 \\
+		500 & 750.00 & 292.102 \\ \hline
+	\end{tabularx}
+\end{table}
+
+
+ \subsection{$E_L$ as function of the variational parameter $\alpha$}
 
 \begin{figure} [H]
-    \centering
-    \includegraphics[scale=0.65]{images/energy.png}
-    \caption{The local energy for various $\alpha$'s in the interval $\alpha\in[0.1,0.9]$ without interaction. The measure is done with $1e6$ Monte Carlo cycles and the spherical harmonic oscillator trap. }
-    \label{fig:energy}
+	\centering
+	\includegraphics[scale=0.65]{images/energy.png}
+	\caption{The local energy $E_L$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$}
+	\label{fig:EL_as_func_of_alpha}
 \end{figure} 
 
 \begin{figure} [H]
-    \centering
-    \includegraphics[scale=0.65]{images/variance.png}
-    \caption{This variance was found simultaneously with the local energy plotted in figure (\ref{fig:energy}), and was conducted for $\alpha$'s in the interval $\alpha\in[0.1,0.9]$ without interaction. The measure is done with $1e6$ Monte Carlo cycles and the spherical harmonic oscillator trap. }
-    \label{fig:variance}
+	\centering
+	\includegraphics[scale=0.65]{images/variance.png}
+	\caption{The variance of the local energy $E_L$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$. \textcolor{red}{CALCULATED with imprecise var}}
+	\label{fig:variance_EL_as_func_of_alpha}
 \end{figure} 
 
-\begin{figure}[h] % Do not use only [h] in real documents.
-	\begin{minipage}[t]{.45\linewidth}
-		\includegraphics[width=\linewidth]{images/energy.png}
-		\caption{Subfigure 1}
-	\end{minipage}\hfill
-	\begin{minipage}[b]{.45\linewidth}
-		\includegraphics[width=\linewidth]{images/variance.png}
-		%\caption{Subfigure 2}
-	\end{minipage}
-	\caption{Subfigure 3}
-\end{figure}
-
-\subsection{Standard Metropolis vs. Importance sampling}
-We want to see if the importance sampling really converges faster, and compare the energy with respect to the number of cycles. The interaction is still turned off, and we study 10 particles in 3 dimensions in the minimum point. \\
+\subsection{Brute Force  vs. Importance sampling}
+We study the acceptance ratio for the brute force and importance sampling algorithms, with no interaction. These calculations are done with ten particles in three dimentions.
 
 \begin{figure} [H]
-    \centering
-    \includegraphics[scale=0.65]{images/acceptance_IS.png}
-    \caption{Add caption}
-    \label{fig:acceptance_IS}
+	\centering
+	\includegraphics[scale=0.65]{images/acceptance_IS.png}
+	\caption{Add caption}
+	\label{fig:acceptance_IS}
 \end{figure} 
 
 \begin{figure} [H]
-    \centering
-    \includegraphics[scale=0.65]{images/acceptance_BF.png}
-    \caption{Add caption}
-    \label{fig:acceptance_BF}
+	\centering
+	\includegraphics[scale=0.65]{images/acceptance_BF.png}
+	\caption{Add caption}
+	\label{fig:acceptance_BF}
 \end{figure} 
+
+ \subsection{Variance calculation}
+
+In table \ref{tab:variance_analysis}, we present the results of the local energy calculation with proper error evaluation of statistical error. The statistical error as found with the Blocking method is also compared to the simple way of approximating the variance by $\sigma^2 \approx \langle E_L^2 \rangle - \langle E_L \rangle^2$. 
+
+\begin{table} [H]
+	\caption{The local energy calculated for $a=0$  without hard-sphere interaction with the Metropolis-Hastings algorithm with analytical local energy calculation, this time with proper evaluation of the statistical error.  The calculations are run in three dimentions with $1e6$ Monte Carlo cycles, and the variational paramameter $\alpha=0.6$}
+	\begin{tabularx}{\textwidth}{X|XXXX} \hline
+		\label{tab:variance_analysis}
+		$N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & $\sigma^2$ Blocking & $\sigma^2 \approx \langle E_L^2 \rangle - \langle E_L \rangle^2$ \\ \hline
+				1 & 1.5000 & 5.0102e-2  & 5.0100e-2 \\
+				10 & 15.000 & 4.9701e-1 & 4.9678e-1  \\
+				100 & 150.00 & 5.2417 & 5.2184\\
+				500 & 750.00 & 9.0710 & 8.4831 \\ \hline
+	\end{tabularx}
+\end{table}
 
 \subsection{VMC with repulsive interaction}
 In table \ref{tab:EL_calc_repulsive_pot}, the results from the calculation of the elliptical trap are presented. The variational parameter $\alpha$ was varied manually to find the minimum of the local energy $E_L$.
