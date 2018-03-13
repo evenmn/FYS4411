@@ -174,6 +174,67 @@ H=\sum_i\bigg(\frac{1}{2}\Big(-\nabla^2 + x_i^2 + y_i^2 + \beta^2z_i^2\Big)\bigg
 \end{equation} 
 where $\beta$ is chosen to be 2.82843 due to experimental results.
 
+\subsection{Error estimation}
+When presenting data from an experiment, one should always know the errors in the answer. Experimental data, including data from numerical experiments, are never determined beyond any doubt, and an estimate of this error should therefore be presented alongside the data. 
+There are two kinds of errors. Statistical errors originate from how much statistics one has; when $10^6$ measured points give approximately the same answer, one can be more sure that the actual value is close to those points, more than if one only has 1 point of statistical data. Estimating the statistical error is easily done. The systematic error, however, is harder to handle. It arises for example from calculations being based on faulty theory, or defect measurement devices. Here, we will present how to get an estimate of the statistical error in a numerical experiment.
+\par 
+\vspace{3mm}
+When conducting an experiment $\alpha$ with $n$ measured points,$x_n$, the sample mean of the experiment $\langle x \rangle$ is defined as shown in equation \ref{eq:sample_mean}.
+
+\begin{equation}
+\label{eq:sample_mean}
+\langle x_{\alpha} \rangle = \frac{1}{n} \sum_{k=1}^n x_{\alpha,k}
+\end{equation}
+
+The corresonding sample variance $\sigma_{\alpha}$ is then defined as
+
+\begin{equation}
+\sigma_{\alpha}^2 = \frac{1}{n} \sum_{k=1}^n (x_{\alpha,k} - \langle x_{\alpha} \rangle )^2
+\end{equation}
+
+This gives us the error in the given experiment $\alpha$. If we repeat this experiment $m$ times, the mean after all the experiments are
+
+\begin{equation}
+\label{eq:mean}
+\langle x_{m} \rangle = \frac{1}{n} \sum_{k=1}^n  \langle x_{\alpha} \rangle
+\end{equation}
+
+The total variance is then
+
+\begin{equation}
+\sigma_m^2 = \frac{1}{m} \sum_{\alpha=1}^m ( \langle x_{\alpha} \rangle - \langle x_{m} \rangle )^2
+\end{equation}
+
+This can be reduced to 
+
+\begin{equation}
+\label{eq:sample_var_all_exp}
+\sigma_m^2 = \frac{\sigma^2}{n} + covariance term
+\end{equation}
+
+where $\sigma$ is the sample variance over all the experiments, defined as 
+
+\begin{equation}
+\sigma^2 = \frac{1}{mn} \sum_{\alpha=1}^m \sum_{k=1}^n (x_{\alpha, k} - \langle x_m \rangle )^2
+\end{equation}
+
+and the covariance is the linear correlation between the measured points. The definition of the covariance is shown in equation \ref{eq:covariance}.
+
+\begin{equation}
+cov(x,y) = \frac{1}{n^2} \sum_i \sum_{j >i} (x_i - x_j) (y_i - y_j)
+\end{equation}
+
+A common simplification is to reduce equation \ref{eq:sample_var_all_exp} to the following:
+
+\begin{equation}
+\label{eq:variance_simplified}
+\sigma^2 \approx \langle x^2 \rangle - \langle x \rangle^2
+\end{equation}
+
+This equation, however, does not take into account the covariance term from equation \ref{eq:sample_var_all_exp}, and as the covariance term is added to the expression for the variance, \ref{eq:variance_simplified} will underestimate the uncertainty $\sigma$ for positive covariances.
+
+A direct implementation of equation \ref{eq:sample_var_all_exp} including the covariance term is not suitable, as the expresion for the covariance includes a double sum, and for a large number of iterations, this will turn into an extremely time-consuming process for a large number of Monte Carlo iterations. Luckily, there are methods for calculating an accurate estimation of the variance without including a double loop in the Monte Carlo program. One of these methods is the blocking method, which is presented in section \ref{Blocking}.
+
 \section{Methods}
 \subsection{Variational Monte Carlo}\label{VMC}
 Variational Monte Carlo (VMC) is a widely used method for approximating the ground state of a quantum system. The method is based on Markov chains, and move a particle (or a set of particles) one step for each cycle, i.e.
@@ -255,26 +316,9 @@ Perhaps the simplest and most intuitive method for finding the minima is the gra
 \end{equation}
 where $\alpha^+$ is the updated $\alpha$ and $\eta$ is the step size. The idea is that one finds the gradient of the energy with respect to a certain $\alpha$, and moves in the direction which minimizes the energy. This is repeated until one has found an energy minimum. 
 
-\subsection{Error estimation}
-When conducting an experiment $\alpha$ with $n$ measured points,$x_n$, the sample mean of the experiment $\langle x \rangle$ is defined as shown in equation \ref{eq:sample_mean}.
 
-\begin{equation}
-	\label{eq:sample_mean}
-	\langle x_{\alpha} \rangle = \frac{1}{n} \sum_{k=1}^n x_{\alpha,k}
-\end{equation}
-
-The corresonding sample variance $\sigma_{\alpha}$ is then defined as
-
-\begin{equation}
-	\sigma_{\alpha}^2 = \frac{1}{n} \sum_{k=1}^n (x_{\alpha,k} - \langle x_{\alpha} \rangle )
-\end{equation}
-
-This gives us the error in the given experiment $\alpha$. If we repeat this experiment $m$ times, the mean after all these experiments are
-
-\begin{equation}
-		\label{eq:mean}
-	\langle x_{m} \rangle = \frac{1}{n} \sum_{k=1}^n  \langle x_{\alpha} \rangle
-\end{equation}
+\subsection{Blocking method}
+\label{Blocking}
 
 \section{Results}
 
