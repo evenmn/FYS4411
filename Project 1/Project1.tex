@@ -255,6 +255,27 @@ Perhaps the simplest and most intuitive method for finding the minima is the gra
 \end{equation}
 where $\alpha^+$ is the updated $\alpha$ and $\eta$ is the step size. The idea is that one finds the gradient of the energy with respect to a certain $\alpha$, and moves in the direction which minimizes the energy. This is repeated until one has found an energy minimum. 
 
+\subsection{Error estimation}
+When conducting an experiment $\alpha$ with $n$ measured points,$x_n$, the sample mean of the experiment $\langle x \rangle$ is defined as shown in equation \ref{eq:sample_mean}.
+
+\begin{equation}
+	\label{eq:sample_mean}
+	\langle x_{\alpha} \rangle = \frac{1}{n} \sum_{k=1}^n x_{\alpha,k}
+\end{equation}
+
+The corresonding sample variance $\sigma_{\alpha}$ is then defined as
+
+\begin{equation}
+	\sigma_{\alpha}^2 = \frac{1}{n} \sum_{k=1}^n (x_{\alpha,k} - \langle x_{\alpha} \rangle )
+\end{equation}
+
+This gives us the error in the given experiment $\alpha$. If we repeat this experiment $m$ times, the mean after all these experiments are
+
+\begin{equation}
+		\label{eq:mean}
+	\langle x_{m} \rangle = \frac{1}{n} \sum_{k=1}^n  \langle x_{\alpha} \rangle
+\end{equation}
+
 \section{Results}
 
 \subsection{$E_L$ calculation and CPU-time}\label{CPU}
