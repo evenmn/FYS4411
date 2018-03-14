@@ -531,7 +531,7 @@ The gradient decent method was then used to find the minimum in the local energy
 
 
 
-\subsection{Onebody densities}
+\subsection{Onebody density}
 In section \ref{sec:OB_theory} we presented a couple of ways computing the onebody density. Because both should give the same result, we selected the simplest one, which is the method with the bins. We conduct the investigations in elliptic traps, with 100 particles, 3 dimensions and 1e6 Monte Carlo cycles. For three different choices of $a$, the onebody density plots are found in figure (\ref{fig:ob0}-\ref{fig:ob1}).
 
 \begin{figure} [H]
@@ -618,6 +618,18 @@ From \ref{eq:WF_nointeract}, the trial wave function for one particle and one di
 	\Psi_T(x) = e^{-\alpha x^2} 
 \end{equation}
 
+We are starting from the local energy equation (equation (\ref{eq:Local_energy})), where we need to take the second derivative
+\begin{align}
+\frac{d\Psi_T}{dx}&=-2\alpha xe^{-\alpha x^2}\\
+\frac{d^2\Psi_T}{dx^2}&=-2\alpha e^{-\alpha x^2}+4\alpha^2x^2e^{-\alpha x^2}.
+\end{align}
+To get a neat expression, we use the dimensionless Hamiltonian with spherical harmonic oscillator potential, and obtain
+\begin{align}
+E_L(\alpha)&=-\frac{1}{2}(-2\alpha + 4\alpha^2x^2)+\frac{1}{2}x^2\notag\\
+&=\alpha+\Big(\frac{1}{2}-2\alpha^2\Big)x^2
+\end{align}
+
+\iffalse
 In the Hamiltonian, the Laplace-operator reduces to the partial derivative in the x-direction, $\frac{\partial^2 }{\partial x^2}$, and $E_L$ is 
 
 \begin{equation}
@@ -639,11 +651,13 @@ Inserting this into the expression for $E_L$ gives
 \begin{equation}
 E_L(\alpha) = -\frac{\hbar^2}{m} \alpha (2x\alpha^2 -1) + \frac{1}{2} m\omega_{HO}^2x^2
 \end{equation}
+\fi
 
 \subsubsection{$N$ particles, three dimentions}
 
-When extending the non-interaction case to $N$ particles and three dimentions, the trial wave function will take the form listed in \ref{eq:WF_nointeract}, and the Hamiltonian will be as listed in \ref{eq:Hamilton}, with the spherical harmonic oscillator potential $\frac{1}{2}m\omega_{HO}^2r_i^2$, as listed in \ref{eq:V_ext}.
+When extending the non-interaction case to $N$ particles and three dimentions, the trial wave function will take the form listed in \ref{eq:WF_nointeract}, and the Hamiltonian will be as listed in \ref{eq:Hamilton}, with the dimensionless spherical harmonic oscillator potential $\frac{1}{2}r_i^2$, as listed in \ref{eq:V_ext}.
 
+\iffalse
 The local energy is then
 
 \begin{equation}
@@ -669,7 +683,37 @@ By including the answers from the differentiations in the x,y and z directions a
 	E_L(\alpha) & = -\frac{\hbar^2}{2m} N [ \sum_{i,j} 4 \alpha^2 x_i x_j + \sum_{i,j} 4 \alpha^2 y_i y_j + \sum_{i,j} 4 \alpha^2 \beta^2 z_i z_j] +  \\ & \frac{2 \hbar^2}{m}\alpha N^2 + \sum_i \frac{1}{2}m\omega_{HO^2}(x_i^2 + y_i^2 + z_i^2) + \frac{\hbar^2}{m}\beta \alpha N^2
 \end{aligned}
 \end{equation}
+\fi
 
+
+For this case it might be better to use spherical coordinates, where the Laplace operator is given by
+\begin{equation}
+\nabla^2=\frac{1}{r^2}\frac{\partial}{\partial r}\bigg(r^2\frac{\partial}{\partial r}\bigg)
+\end{equation}
+when we only take the radial part into account. We transform the wavefunction from a product to a function with a sum in the exponent, and calculate the first derivative
+\begin{equation}
+\frac{\partial\Psi_T}{\partial r_j}=-2\alpha r_j \exp\bigg[-\alpha\bigg(\sum_i r_i^2\bigg)\bigg].
+\end{equation}
+After adding a $r_j^2$, we differentiate the expression again
+\begin{equation*}
+\frac{\partial}{\partial r_j}\bigg(-2\alpha r_j^3\exp\Big[-\alpha\Big(\sum_i r_i^2\Big)\Big]\bigg)
+=(-6\alpha r_j^2 + 4\alpha^2r_j^4)\exp\Big[-\alpha\Big(\sum_i r_i^2\Big)\Big]
+\end{equation*}
+and we obtain
+\begin{equation}
+\frac{\nabla_j^2\Psi_T}{\Psi_T}=-6\alpha+4\alpha^2r_j^2.
+\end{equation}
+Again we get the local energy from the Hamiltonian with a spherical harmonic oscillator potential. 
+\begin{align}
+E_L(\alpha)&=\sum_j-\frac{1}{2}(-6\alpha+4\alpha^2r_j^2) + \frac{1}{2}r_j^2\notag\\
+&=3N\alpha + \Big(\frac{1}{2}-2\alpha^2\Big)\sum_{j=1}^Nr_j^2
+\end{align}
+
+\subsubsection{General}
+If one now studies the local energy expressions for one particle in 1 dimension and $N$ particles in 3 dimensions, one can see a pattern and it is easy to imagine that there exists a general expression for the local energy. At least for 1, 2, and 3 dimensions (probably all), it can be shown that
+\begin{equation}
+E_L(\alpha)=dim\cdot N\cdot \alpha+\Big(\frac{1}{2}-2\alpha^2\Big)\sum_jr_j^2
+\end{equation}
 
 \subsection{Appendix B}
 In the theory part we claimed that the Hamiltonian could be written as

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.2.8)  14 MAR 2018 13:55
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.2.8)  14 MAR 2018 15:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1132,14 +1132,14 @@ Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `math shift' on input line 448.
 
-<images/energy.png, id=307, 462.528pt x 346.896pt>
+<images/energy.png, id=311, 462.528pt x 346.896pt>
 File: images/energy.png Graphic file (type png)
 <use images/energy.png>
 Package pdftex.def Info: images/energy.png  used on input line 452. on input li
 ne 452.
 Package pdftex.def Info: Requested size: 300.63962pt x 225.47972pt on input lin
 e 452.
-<images/variance.png, id=309, 462.528pt x 346.896pt>
+<images/variance.png, id=313, 462.528pt x 346.896pt>
 File: images/variance.png Graphic file (type png)
 <use images/variance.png>
 Package pdftex.def Info: images/variance.png  used on input line 459. on input 
@@ -1147,7 +1147,7 @@ line 459.
 Package pdftex.def Info: Requested size: 300.63962pt x 225.47972pt on input lin
 e 459.
 [13 <./images/energy.png>]
-<images/acceptance_IS.png, id=318, 462.528pt x 346.896pt>
+<images/acceptance_IS.png, id=322, 462.528pt x 346.896pt>
 File: images/acceptance_IS.png Graphic file (type png)
 <use images/acceptance_IS.png>
 Package pdftex.def Info: images/acceptance_IS.png  used on input line 472. on i
@@ -1155,7 +1155,7 @@ nput line 472.
 Package pdftex.def Info: Requested size: 300.63962pt x 225.47972pt on input lin
 e 472.
  [14 <./images/variance.png>]
-<images/acceptance_BF.png, id=327, 462.528pt x 346.896pt>
+<images/acceptance_BF.png, id=331, 462.528pt x 346.896pt>
 File: images/acceptance_BF.png Graphic file (type png)
 <use images/acceptance_BF.png>
 Package pdftex.def Info: images/acceptance_BF.png  used on input line 482. on i
@@ -1169,7 +1169,7 @@ m/n/12 i ^^@
  []
 
 [16 <./images/acceptance_BF.png>]
-<images/ob_a_0.png, id=346, 462.528pt x 346.896pt>
+<images/ob_a_0.png, id=350, 462.528pt x 346.896pt>
 File: images/ob_a_0.png Graphic file (type png)
 <use images/ob_a_0.png>
 Package pdftex.def Info: images/ob_a_0.png  used on input line 539. on input li
@@ -1177,14 +1177,14 @@ ne 539.
 Package pdftex.def Info: Requested size: 300.63962pt x 225.47972pt on input lin
 e 539.
  [17]
-<images/ob_a_00043.png, id=355, 462.528pt x 346.896pt>
+<images/ob_a_00043.png, id=359, 462.528pt x 346.896pt>
 File: images/ob_a_00043.png Graphic file (type png)
 <use images/ob_a_00043.png>
 Package pdftex.def Info: images/ob_a_00043.png  used on input line 546. on inpu
 t line 546.
 Package pdftex.def Info: Requested size: 300.63962pt x 225.47972pt on input lin
 e 546.
-<images/ob_a_1.png, id=356, 462.528pt x 346.896pt>
+<images/ob_a_1.png, id=360, 462.528pt x 346.896pt>
 File: images/ob_a_1.png Graphic file (type png)
 <use images/ob_a_1.png>
 Package pdftex.def Info: images/ob_a_1.png  used on input line 553. on input li
@@ -1195,61 +1195,52 @@ e 553.
 ] [20] [21]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 643.
+(hyperref)                removing `math shift' on input line 656.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 643.
+(hyperref)                removing `math shift' on input line 656.
 
-[22]
-Overfull \hbox (4.50435pt too wide) detected at line 651
-[]\OML/cmm/m/it/12 E[]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 \OT1/cmr/m/n/12 ) = []
- \OML/cmm/m/it/12 e[] []\OT1/cmr/m/n/12 [\OMS/cmsy/m/n/12 ^^@[]r[] \OT1/cmr/m/n
-/12 + []\OML/cmm/m/it/12 m![]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x[] \OT1/cmr/m/n
-/12 + \OML/cmm/m/it/12 y[] \OT1/cmr/m/n/12 + \OML/cmm/m/it/12 z[]\OT1/cmr/m/n/1
-2 )] [] \OML/cmm/m/it/12 e[]
- []
-
-[23]
+[22] [23]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 705.
+(hyperref)                removing `math shift' on input line 749.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 705.
+(hyperref)                removing `math shift' on input line 749.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 707.
+(hyperref)                removing `math shift' on input line 751.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 707.
+(hyperref)                removing `math shift' on input line 751.
 
 [24]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 709.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 709.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 753.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 753.
  (./Project1.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 709.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 709.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 753.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 753.
 Package rerunfilecheck Info: File `Project1.out' has not changed.
-(rerunfilecheck)             Checksum: AF239947C1C5C5503A5A502C8CCA1D32;2511.
+(rerunfilecheck)             Checksum: D6E567E541D59370308C977D2B272949;2576.
 
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 709.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 753.
  )
 (\end occurred inside a group at level 1)
 
 ### semi simple group (level 1) entered at line 583 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 18588 strings out of 494888
- 334000 string characters out of 6179711
+ 18591 strings out of 494888
+ 334053 string characters out of 6179711
  441774 words of memory out of 5000000
- 21440 multiletter control sequences out of 15000+600000
+ 21441 multiletter control sequences out of 15000+600000
  11897 words of font info for 43 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  55i,12n,61p,1365b,1935s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1268,10 +1259,10 @@ s/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cms
 y10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb
 ></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr
 /share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on Project1.pdf (24 pages, 389248 bytes).
+Output written on Project1.pdf (24 pages, 389107 bytes).
 PDF statistics:
- 512 PDF objects out of 1000 (max. 8388607)
- 449 compressed objects within 5 object streams
- 146 named destinations out of 1000 (max. 500000)
- 336 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 518 PDF objects out of 1000 (max. 8388607)
+ 455 compressed objects within 5 object streams
+ 148 named destinations out of 1000 (max. 500000)
+ 344 words of extra memory for PDF output out of 10000 (max. 10000000)
 
