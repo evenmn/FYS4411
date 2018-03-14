@@ -335,9 +335,58 @@ In fact there are multiple techniques for doing this, where the most complicated
 \subsubsection{Gradient descent}
 Perhaps the simplest and most intuitive method for finding the minima is the gradient descent method, which reads
 \begin{equation}
+\label{eq:GD}
 \alpha^+=\alpha - \eta\cdot\frac{d\langle E_L(\alpha)\rangle}{d\alpha}.
 \end{equation}
-where $\alpha^+$ is the updated $\alpha$ and $\eta$ is the step size. The idea is that one finds the gradient of the energy with respect to a certain $\alpha$, and moves in the direction which minimizes the energy. This is repeated until one has found an energy minimum. 
+where $\alpha^+$ is the updated $\alpha$ and $\eta$ is the step size. The idea is that one finds the gradient of the energy with respect to a certain $\alpha$, and moves in the direction which minimizes the energy. This is repeated until one has found an energy minimum, where the energy minimum is defined as either where $\frac{d\langle E_L(\alpha)\rangle}{d\alpha}$ is smaller than a given tolerance, or the $\alpha$ energy fluctuates around a value, and thus changes minimally.
+\par 
+\vspace{3mm}
+
+To implement equation \ref{eq:GD}, we need an expression for the derivative of $E_L$ with respect to alpha
+
+\begin{equation}
+	\label{eq:E_L_der_wrt_alpha}
+	\bar{E_{\alpha}} = \frac{d \langle E_L (\alpha) \rangle}{d \alpha}
+\end{equation}
+
+By using the expression for the exprectation value for the local energy $ \langle E_L (\alpha) \rangle$ in equation \ref{eq:exp_EL} 
+
+\begin{equation}
+	\label{eq:exp_EL}
+	\langle E_L (\alpha) \rangle = \frac{ \langle \psi_T(\alpha) | H | \psi_T(\alpha)  \rangle}{ \langle \psi_T(\alpha)  |  \psi_T(\alpha)  \rangle }
+\end{equation}
+
+and applying the chain rule of differentiation, it can be shown that equation \ref{eq:E_L_der_wrt_alpha} reduces to equation \ref{eq:E_L_der_wrt_alpha_expression}
+
+\begin{equation}
+	\label{eq:E_L_der_wrt_alpha_expression}
+	\bar{E_{\alpha}} = 2 [\langle E_L (\alpha)  \frac{ \bar{\psi_{\alpha}}}{\psi_{\alpha}}\rangle - \langle E_L (\alpha) \rangle \langle \frac{\bar{\psi_{\alpha}}}{\psi_{\alpha}} \rangle ]
+\end{equation}
+
+where
+
+\begin{equation}
+	\bar{\psi_{\alpha}} = \frac{d \psi (\alpha)}{d \alpha}
+\end{equation}
+
+The algorithm of this minimization method is thus as follows:
+
+\begin{lstlisting}
+
+for(number max number of iterations with minimizing)
+	
+	do N Monte Carlo cycles
+	calculate E_L and d E_L/d alpha 
+	
+	Check if d E_L/d alpha < eps or alpha fluctuation over the last 5 steps is < eps
+	
+	
+		if yes, print optimal alpha and break loop
+		if no, continue to next iteration
+
+
+\end{lstlisting}
+
 
 
 \subsection{Blocking method}
@@ -492,6 +541,20 @@ In section \ref{sec:OB_theory} we presented a couple of ways computing the onebo
 
 
 \section{Conclusion}
+
+\newpage
+\section{References}
+\begingroup
+\renewcommand{\section}[2]{}
+\begin{thebibliography}{}
+	\bibitem{MHJ15}
+	Morten Hjorth-Jensen.
+	Computational Physics, Lecture Notes Fall 2015.
+	Department of Physics, University of Oslo. ->wrong lecture notes, but we need reference list
+	August 2015.
+\end{thebibliography}
+
+\newpage
 
 \section{Appendix}
 \subsection{Appendix A}
