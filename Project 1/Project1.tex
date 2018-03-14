@@ -55,6 +55,9 @@ Write the abstract here
 Introduction
 
 \section{Theory}
+
+\subsection{Presentation of potential and trial wavefunction} 
+
 We study a system of $N$ bosons trapped in a harmonic oscillator with the Hamiltonian given by 
 \begin{equation}
 \hat{H}=\sum_i^N\bigg(-\frac{\hbar^2}{2m}\nabla_i^2+V_{ext}(\vec{r}_i)\bigg)+\sum_{i<j}^NV_{int}(\vec{r}_i,\vec{r}_j)
@@ -86,31 +89,42 @@ which is practical since
 \end{equation}
 $\alpha$ is a variational parameter that we later use to find the energy minimum, and $\beta$ is a constant. This is also the form of the exact ground state wave function for a harmonic oscillator, so by choosing the correct $\alpha$, we will find the exact ground state energy (when $V_{int}$ is ignored). The $f$ presented above is the correlation wave function, which is 
 \begin{equation}
+\label{eq:WF_interaction_part}
 f(a,r_{ij})=
 \begin{cases} 
    0 & r_{ij} \leq a \\
    \left(1-\frac{a}{r_{ij}}\right) & r_{ij} > a.
 \end{cases}
 \end{equation}
-The first case we will take into account is when $a=0$, such that the corretation term is 1. 
 
-We want to calculate the local energy as a function of $\alpha$, and then use Variational Monte Carlo (VMC) described in section \ref{VMC}. For the non-interacting case, the analytical expression for one particle in a harmonic oscillator is well-known and reads $E = \hbar\omega(n + dim/2)$ where $n$ is the energy level and $dim$ is number of dimensions. In this project we will study the ground state only, such that $n=0$, and for $N$ particles and $dim$ free dimensions we therefore obtain 
-\begin{equation}
-E = \frac{1}{2}N\cdot dim\cdot\hbar\omega_{HO}.
-\label{Energy_exact}
-\end{equation}
-We will focus on the the local energy, which follows from a remodeling of Schr\"{o}dinger's equation
+where $a$ is a parameter describing the minimum distance allowed between particles in the trap.
+
+\subsection{Local energy $E_L$ calculation}
+
+We want to calculate the local energy as a function of $\alpha$ for the trial wave function given in equation \ref{eq:WF}, and then use Variational Monte Carlo (VMC) described in section \ref{VMC}. 
+
+ We obtrain the general  expression for $E_L$ by rewriting Schr\"{o}dinger's equation, as shown in \ref{eq:Local_energy}.
+
 \begin{equation}
 E_L(\vec{r})=\frac{1}{\Psi_T(\vec{r})}\hat{H}\Psi_T(\vec{r}).
 \label{eq:Local_energy}
 \end{equation}
+
 When the repulsive interaction is ignored ($a=0$), it can be shown that the local energy for a system of $N$ particles and $dim$ free dimensions is given by
 \begin{equation}
 E_L=dim\cdot N\cdot \alpha + \Big(\frac{1}{2}-2\alpha^2\Big)\sum_i\vec{r}_i^2,
 \end{equation}
-which is actually proven in Appendix A.
+which is proven in Appendix A. \textcolor{red}{IS THIS TRUE ALSO FOR SELLIPTICAL HO?}
 
-For $a\neq0$ it gets rather more complicated, because we need to deal with the correlation term as well. By defining
+For the a spherical harmonic oscillator where particle interactions are ignored, the analytical expression for one particle in a harmonic oscillator is well-known and reads $E = \hbar\omega(n + dim/2)$ where $n$ is the energy level and $dim$ is number of dimensions. In this project we will study the ground state only, such that $n=0$, and for $N$ particles and $dim$ free dimensions we therefore obtain the expression for the ground state $E_L$ shown in equation \ref{eq:Energy_exact}.
+
+\begin{equation}
+E = \frac{1}{2}N\cdot dim\cdot\hbar\omega_{HO}.
+\label{eq:Energy_exact}
+\end{equation}
+
+
+For $a\neq0$ it gets rather more complicated  (\textcolor{red}{also true for elliptical case??}), because the correlation term from equation  \ref{eq:WF_interaction_part} is now different from 1. By defining
 \begin{equation}
 f(a, r_{ij})=\exp{\bigg(\sum_{i<j}u(r_{ij})\bigg)}
 \end{equation}
@@ -126,17 +140,9 @@ E_L=\sum_k\Bigg(-\frac{1}{2}\bigg(&4\alpha^2\Big(x_k^2+y_k^2+\beta^2z_k^2-\frac{
 &+\sum_{j\neq k}\Big(u''(r_{kj})+\frac{2}{r_{kj}}u'(r_{kj})\Big)\bigg)+V_{ext}(\vec{r}_k)\Bigg).\notag
 \label{EL_total}
 \end{align}
-This is not a pretty expression, but hopefully it will give us the correct answers. We could also split up the local energy expression 
-\begin{equation}
-E_{L,i}=-\frac{\hbar^2}{2m}\frac{\nabla_i^2\Psi_T}{\Psi_T}+V_{ext}(\vec{r}_i)=E_{k,i}+E_{p,i}
-\end{equation}
-and calculate the local energy with a numerical approach where the second derivative can be approximated by the three-point formula:
-\begin{equation}
-f''(x)\simeq\frac{f(x+h)-2f(x)+f(x-h)}{h^2}.
-\end{equation}
-In our case the position is a three dimensional vector, so we need to handle each dimension separately. Both the analytical and the numerical local energy are implemented, and in section \ref{CPU}, the CPU time for the analytical and numerical approach are compared for a various number of particles. 
+This is not a pretty expression, but hopefully it will give us the correct answers. 
 
-The most interesting and realistic case is when the interaction is included, so let us now set it to a so-called hard-sphere potential
+The most realistic potental is when the interaction is included, so let us now set it to a so-called hard-sphere potential \textcolor{red}{burde ikke denne være med i $E_L$ ovenfor?}
 \begin{equation}
 V_{int}(\vec{r}_i, \vec{r}_j)=
 \begin{cases} 
@@ -145,6 +151,21 @@ V_{int}(\vec{r}_i, \vec{r}_j)=
 \end{cases}
 \end{equation}
 which ensures that the particles are separated by a distance $a$. The local energy is slightly changing, because we need to add the interaction potential to it as well. 
+
+\subsubsection{Numerical calculation of $E_L$}
+
+Another approach when calculating $E_L$ is to split up the local energy expression as shown in equation \ref{eq:EL_num}, and calculate the local energy with a numerical approach where the second derivative can be approximated by the three-point formula, shown in equation \ref{eq:num_derv}
+\begin{equation}
+\label{eq:EL_num}
+E_{L,i}=-\frac{\hbar^2}{2m}\frac{\nabla_i^2\Psi_T}{\Psi_T}+V_{ext}(\vec{r}_i)=E_{k,i}+E_{p,i}
+\end{equation}
+
+\begin{equation}
+\label{eq:num_derv}
+f''(x)\simeq\frac{f(x+h)-2f(x)+f(x-h)}{h^2}.
+\end{equation}
+In our case the position is a three dimensional vector, so we need to handle each dimension separately. Both the analytical and the numerical local energy are implemented, and in section \ref{CPU}, the CPU time for the analytical and numerical approach are compared for a various number of particles. 
+
 
 \subsection{One-body density} \label{sec:OB_theory}
 In many cases it is convenient to know the positions of the particles, but when the number of particles increases, the set of positions turns into a messy collection of numbers which is not really informative. Instead of presenting the positions, the density of particles can give us a good overview of where the particles can be found. With $N$ particles, the one-body density with respect to a particle $i$ is an integral over all particles but particle $i$
@@ -467,6 +488,8 @@ In section \ref{sec:OB_theory} we presented a couple of ways computing the onebo
 \end{figure} 
 
 \section{Discussion}
+
+
 
 \section{Conclusion}
 
