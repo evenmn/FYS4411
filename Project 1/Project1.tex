@@ -10,6 +10,7 @@
 \usepackage{listings}
 \usepackage{hyperref}
 \usepackage{amsmath}
+\usepackage{tikz}
 
 \lstset{language=c++}
 \lstset{basicstyle=\small}
@@ -26,6 +27,7 @@
 \usepackage{titlesec}
 
 \setcounter{secnumdepth}{4}
+\usetikzlibrary{through,calc}
 
 \titleformat{\paragraph}
 {\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
@@ -103,7 +105,7 @@ where $a$ is a parameter describing the minimum distance allowed between particl
 
 We want to calculate the local energy as a function of $\alpha$ for the trial wave function given in equation \ref{eq:WF}, and then use Variational Monte Carlo (VMC) described in section \ref{VMC}. 
 
- We obtrain the general  expression for $E_L$ by rewriting Schr\"{o}dinger's equation, as shown in \ref{eq:Local_energy}.
+We obtain the general  expression for $E_L$ by rewriting Schr\"{o}dinger's equation, as shown in \ref{eq:Local_energy}.
 
 \begin{equation}
 E_L(\vec{r})=\frac{1}{\Psi_T(\vec{r})}\hat{H}\Psi_T(\vec{r}).
@@ -114,7 +116,7 @@ When the repulsive interaction is ignored ($a=0$), it can be shown that the loca
 \begin{equation}
 E_L=dim\cdot N\cdot \alpha + \Big(\frac{1}{2}-2\alpha^2\Big)\sum_i\vec{r}_i^2,
 \end{equation}
-which is proven in Appendix A. \textcolor{red}{IS THIS TRUE ALSO FOR SELLIPTICAL HO?}
+which is proven in Appendix A. This is only true for the a spherical harmonic oscillator trap, for the elliptical trap we need to add $\beta$ in front of the z-component. You may also notice that this equation is scaled, more about that in section \ref{sec:scaling}.
 
 For the a spherical harmonic oscillator where particle interactions are ignored, the analytical expression for one particle in a harmonic oscillator is well-known and reads $E = \hbar\omega(n + dim/2)$ where $n$ is the energy level and $dim$ is number of dimensions. In this project we will study the ground state only, such that $n=0$, and for $N$ particles and $dim$ free dimensions we therefore obtain the expression for the ground state $E_L$ shown in equation \ref{eq:Energy_exact}.
 
@@ -124,7 +126,15 @@ E = \frac{1}{2}N\cdot dim\cdot\hbar\omega_{HO}.
 \end{equation}
 
 
-For $a\neq0$ it gets rather more complicated  (\textcolor{red}{also true for elliptical case??}), because the correlation term from equation  \ref{eq:WF_interaction_part} is now different from 1. By defining
+For $a\neq0$ it gets rather more complicated, because the correlation term from equation \ref{eq:WF_interaction_part} is now different from 1. We also need to add the interaction term, set to a so-called hard-sphere potential
+\begin{equation}
+V_{int}(\vec{r}_i, \vec{r}_j)=
+\begin{cases} 
+   0 & \text{if}\quad |\vec{r}_i-\vec{r}_j| \geq a \\
+   \infty & \text{if}\quad |\vec{r}_i-\vec{r}_j| < a
+\end{cases}
+\end{equation}
+which ensures the particles to be separated by a distance $a$. We are now ready to find a general expression for the local energy. By defining
 \begin{equation}
 f(a, r_{ij})=\exp{\bigg(\sum_{i<j}u(r_{ij})\bigg)}
 \end{equation}
@@ -134,23 +144,15 @@ and doing a change of variables
 \end{equation}
 one will end up with
 \begin{align}
-E_L=\sum_k\Bigg(-\frac{1}{2}\bigg(&4\alpha^2\Big(x_k^2+y_k^2+\beta^2z_k^2-\frac{1}{\alpha}-\frac{\beta}{2\alpha}\Big)\notag\\
-&-4\alpha\sum_{j\neq k}(x_k, y_k, \beta z_k)\frac{(\vec{r}_k-\vec{r}_j)}{r_{kj}}u'(r_{kj})\\
-&+\sum_{ij\neq k}\frac{(\vec{r}_k-\vec{r}_j)(\vec{r}_k-\vec{r}_i)}{r_{ki}r_{kj}}u'(r_{ki})u'(r_{kj})\notag\\
-&+\sum_{j\neq k}\Big(u''(r_{kj})+\frac{2}{r_{kj}}u'(r_{kj})\Big)\bigg)+V_{ext}(\vec{r}_k)\Bigg).\notag
+E_L=\sum_k\Bigg(-\frac{1}{2}\bigg(4\alpha^2\Big(x_k^2+y_k^2+\beta^2z_k^2-\frac{1}{\alpha}-\frac{\beta}{2\alpha}\Big)
+-4\alpha\sum_{j\neq k}(x_k, y_k, \beta z_k)\frac{(\vec{r}_k-\vec{r}_j)}{r_{kj}}u'(r_{kj})\notag\\
++\sum_{ij\neq k}\frac{(\vec{r}_k-\vec{r}_j)(\vec{r}_k-\vec{r}_i)}{r_{ki}r_{kj}}u'(r_{ki})u'(r_{kj})
++\sum_{j\neq k}\Big(u''(r_{kj})+\frac{2}{r_{kj}}u'(r_{kj})\Big)\bigg)+V_{ext}(\vec{r}_k)\Bigg) + V_{int}.\notag
 \label{EL_total}
 \end{align}
 This is not a pretty expression, but hopefully it will give us the correct answers. 
 
-The most realistic potental is when the interaction is included, so let us now set it to a so-called hard-sphere potential \textcolor{red}{burde ikke denne være med i $E_L$ ovenfor?}
-\begin{equation}
-V_{int}(\vec{r}_i, \vec{r}_j)=
-\begin{cases} 
-   0 & \text{if}\quad |\vec{r}_i-\vec{r}_j| \geq a \\
-   \infty & \text{if}\quad |\vec{r}_i-\vec{r}_j| < a.
-\end{cases}
-\end{equation}
-which ensures that the particles are separated by a distance $a$. The local energy is slightly changing, because we need to add the interaction potential to it as well. 
+
 
 \subsubsection{Numerical calculation of $E_L$} \label{Numerical_calc_E_L}
 
@@ -167,17 +169,29 @@ f''(x)\simeq\frac{f(x+h)-2f(x)+f(x-h)}{h^2}.
 In our case the position is a three dimensional vector, so we need to handle each dimension separately. Both the analytical and the numerical local energy are implemented, and in section \ref{CPU}, the CPU time for the analytical and numerical approach are compared for a various number of particles. 
 
 
-\subsection{One-body density} \label{sec:OB_theory}
-In many cases it is convenient to know the positions of the particles, but when the number of particles increases, the set of positions turns into a messy collection of numbers which is not really informative. Instead of presenting the positions, the density of particles can give us a good overview of where the particles can be found. With $N$ particles, the one-body density with respect to a particle $i$ is an integral over all particles but particle $i$
+\subsection{Onebody density} \label{sec:OB_theory}
+In many cases it is convenient to know the positions of the particles, but when the number of particles increases, the set of positions turns into a messy collection of numbers which is not really informative (and in fact the exact positions cannot be revealed according to the uncertainity principle). Instead of presenting the positions, the density of particles can give us a good overview of where the particles can be found. With $N$ particles, the one-body density with respect to a particle $i$ is an integral over all particles but particle $i$
 \begin{equation}
 \rho_i=\int_{-\infty}^{\infty}d\vec{r}_1\hdots d\vec{r}_{i-1}d\vec{r}_{i+1}\hdots d\vec{r}_N |\Psi(\vec{r}_1,\hdots \vec{r}_N)|^2.
 \end{equation}
 For the non-interacting case this integral can be solved analytically, or we can use Monte Carlo integration to solve it for any case. Anyhow, the interesting part is the radial density, so we either have to solve the integral in spherical coordinates or convert to spherical coordinates afterwards. 
 
-Alternatively, the one-body radial density can be found in a more intuitive way. Imagine we divide the volume around particle $i$ into bins, where bin $j$ is located at a distance $j\cdot r_1$ (the radii are quantized). By counting the number of particles in a bin and dividing on the surface area, we find the average density of the bin. If we further decrease the initial radius $r_1$ (radius of the innermost bin) such that we have a large number of bins, this method can be used to find the one-body density. 
+Alternatively, the onebody radial density can be found in a more intuitive way. Imagine we divide the volume around particle $i$ into bins, where bin $j$ is located at a distance $j\cdot r_1$ (the radii are quantized). By counting the number of particles in a bin and dividing on the surface area, we find the average density of the bin. If we further decrease the initial radius $r_1$ (radius of the innermost bin) such that we have a large number of bins, this method can be used to find the onebody density. 
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[scale=0.50, thick, dot/.style={shape=circle,inner sep=+0pt, minimum size=+2pt, fill, label={#1}}]
+       \coordinate[dot=r] (r) at (1,4);
+       \coordinate[dot=rj] (rj) at (1,7);
 
-\subsection{Scaling}
-For big numerical projects, working with dimensionless quantities is a big advantage. Not only does it improve the code structure and performance, but it also avoids truncation errors due to small constants. For this project a natural scaling parameter for the energy is $\hbar\omega_{HO}$, which appears in the analytical energy expression in equation (\ref{Energy_exact}). The equivalent dimensionless equation can then be written as
+       \foreach \cnt[count=\Cnt] in {.5, 1, 1.5, 2}
+         \node[draw, color=red!\Cnt 0!blue, label={[inner sep=+1pt, red!\Cnt 0!blue]below:$ r_{\Cnt} = \Cnt\cdot r_1$}] at (r) [circle through=($(r)!\cnt!(rj)$)] {};
+	\end{tikzpicture}
+	\caption{One can find the onebody densiy by dividing the volume around a particle with coordinates $\vec{r}_i$ into bins and then count the number of particles, here illustrated in two dimensions.}
+\end{figure}
+
+
+\subsection{Scaling} \label{sec:scaling}
+For big numerical projects, working with dimensionless quantities is a great advantage. Not only does it improve the code structure and performance, but it also avoids truncation errors due to small constants. For this project a natural scaling parameter for the energy is $\hbar\omega_{HO}$, which appears in the analytical energy expression in equation (\ref{eq:Energy_exact}). The equivalent dimensionless equation can then be written as
 \begin{equation}
 E'=\frac{N\cdot dim}{2}
 \end{equation}
@@ -583,6 +597,7 @@ Must benchmark results from e and f!
 \newpage
 
 \section{Appendix}
+
 \subsection{Appendix A}
 \label{appendix_A}
 

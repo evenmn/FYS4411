@@ -3,7 +3,7 @@
 \BOOKMARK [2][-]{subsection.2.1}{Presentation of potential and trial wavefunction}{section.2}% 3
 \BOOKMARK [2][-]{subsection.2.2}{Local energy EL calculation}{section.2}% 4
 \BOOKMARK [3][-]{subsubsection.2.2.1}{Numerical calculation of EL}{subsection.2.2}% 5
-\BOOKMARK [2][-]{subsection.2.3}{One-body density}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.3}{Onebody density}{section.2}% 6
 \BOOKMARK [2][-]{subsection.2.4}{Scaling}{section.2}% 7
 \BOOKMARK [2][-]{subsection.2.5}{Error estimation}{section.2}% 8
 \BOOKMARK [1][-]{section.3}{Methods}{}% 9
@@ -27,9 +27,10 @@
 \BOOKMARK [1][-]{section.5}{Discussion}{}% 27
 \BOOKMARK [1][-]{section.6}{Conclusion}{}% 28
 \BOOKMARK [1][-]{section.7}{References}{}% 29
-\BOOKMARK [2][-]{subsubsection.7.0.1}{One particle, one dimention}{section.7}% 30
-\BOOKMARK [3][-]{subsubsection.7.0.2}{N particles, three dimentions}{subsubsection.7.0.1}% 31
-\BOOKMARK [2][-]{subsection.7.1}{Appendix B}{section.7}% 32
-\BOOKMARK [2][-]{subsection.7.2}{Appendix C}{section.7}% 33
-\BOOKMARK [3][-]{subsubsection.7.2.1}{N particles, 1 dimention}{subsection.7.2}% 34
-\BOOKMARK [3][-]{subsubsection.7.2.2}{N particles, 3 dimentions}{subsection.7.2}% 35
+\BOOKMARK [2][-]{subsection.7.1}{Appendix A}{section.7}% 30
+\BOOKMARK [3][-]{subsubsection.7.1.1}{One particle, one dimention}{subsection.7.1}% 31
+\BOOKMARK [3][-]{subsubsection.7.1.2}{N particles, three dimentions}{subsection.7.1}% 32
+\BOOKMARK [2][-]{subsection.7.2}{Appendix B}{section.7}% 33
+\BOOKMARK [2][-]{subsection.7.3}{Appendix C}{section.7}% 34
+\BOOKMARK [3][-]{subsubsection.7.3.1}{N particles, 1 dimention}{subsection.7.3}% 35
+\BOOKMARK [3][-]{subsubsection.7.3.2}{N particles, 3 dimentions}{subsection.7.3}% 36
