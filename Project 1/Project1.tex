@@ -94,19 +94,21 @@ f(a,r_{ij})=
 \end{equation}
 The first case we will take into account is when $a=0$, such that the corretation term is 1. 
 
-We want to calculate the local energy as a function of $\alpha$, and then use Variational Monte Carlo (VMC) described in section \ref{VMC}. For the non-interacting case, the analytical expression for one particle in a harmonic oscillator is well-known and reads $E = \hbar\omega(n + dim/2)$ where $n$ is the energy level and $dim$ is number of dimensions. In this project we will study the ground state only, such that $n=0$, and for $N$ particles we therefore obtain 
+We want to calculate the local energy as a function of $\alpha$, and then use Variational Monte Carlo (VMC) described in section \ref{VMC}. For the non-interacting case, the analytical expression for one particle in a harmonic oscillator is well-known and reads $E = \hbar\omega(n + dim/2)$ where $n$ is the energy level and $dim$ is number of dimensions. In this project we will study the ground state only, such that $n=0$, and for $N$ particles and $dim$ free dimensions we therefore obtain 
 \begin{equation}
-E = \frac{1}{2}N\cdot dim\cdot\hbar\omega
+E = \frac{1}{2}N\cdot dim\cdot\hbar\omega_{HO}.
 \label{Energy_exact}
 \end{equation}
-The local energy is
+We will focus on the the local energy, which follows from a remodeling of Schr\"{o}dinger's equation
 \begin{equation}
-E_L(\vec{r})=\frac{1}{\Psi_T(\vec{r})}\hat{H}\Psi_T(\vec{r})
+E_L(\vec{r})=\frac{1}{\Psi_T(\vec{r})}\hat{H}\Psi_T(\vec{r}).
 \label{eq:Local_energy}
 \end{equation}
-which gives the following results considering $a=0$:
-
-INSERT ANALYTICAL EXPRESSIONS FROM A
+When the repulsive interaction is ignored ($a=0$), it can be shown that the local energy for a system of $N$ particles and $dim$ free dimensions is given by
+\begin{equation}
+E_L=dim\cdot N\cdot \alpha + \Big(\frac{1}{2}-2\alpha^2\Big)\sum_i\vec{r}_i^2,
+\end{equation}
+which is actually proven in Appendix A.
 
 For $a\neq0$ it gets rather more complicated, because we need to deal with the correlation term as well. By defining
 \begin{equation}
@@ -144,7 +146,7 @@ V_{int}(\vec{r}_i, \vec{r}_j)=
 \end{equation}
 which ensures that the particles are separated by a distance $a$. The local energy is slightly changing, because we need to add the interaction potential to it as well. 
 
-\subsection{One-body density}
+\subsection{One-body density} \label{sec:OB_theory}
 In many cases it is convenient to know the positions of the particles, but when the number of particles increases, the set of positions turns into a messy collection of numbers which is not really informative. Instead of presenting the positions, the density of particles can give us a good overview of where the particles can be found. With $N$ particles, the one-body density with respect to a particle $i$ is an integral over all particles but particle $i$
 \begin{equation}
 \rho_i=\int_{-\infty}^{\infty}d\vec{r}_1\hdots d\vec{r}_{i-1}d\vec{r}_{i+1}\hdots d\vec{r}_N |\Psi(\vec{r}_1,\hdots \vec{r}_N)|^2.
@@ -440,7 +442,8 @@ The gradient decent method was then used to find the minimum in the local energy
 
 
 
-\subsection{One-body densities}
+\subsection{Onebody densities}
+In section \ref{sec:OB_theory} we presented a couple of ways computing the onebody density. Because both should give the same result, we selected the simplest one, which is the method with the bins. We conduct the investigations in elliptic traps, with 100 particles, 3 dimensions and 1e6 Monte Carlo cycles. For three different choices of $a$, the onebody density plots are found in figure (\ref{fig:ob0}-\ref{fig:ob1}).
 
 \begin{figure} [H]
     \centering
@@ -558,13 +561,13 @@ We then scale the entire equation with respect to $\hbar\omega_{HO}$
 \begin{equation*}
 \frac{H}{\hbar\omega_{HO}}=\sum_i\bigg(-\frac{\hbar}{2m\omega_{HO}}\nabla_i^2+\frac{1}{2}\frac{m}{\hbar}\omega_{HO}(x_i^2+y_i^2)+\frac{1}{2}\frac{m}{\hbar}\frac{\omega_z^2}{\omega_{HO}}z_i^2\bigg)+\sum_{i<j}V_{int}(\vec{r}_i, \vec{r}_j)
 \end{equation*}
-where we can take $H'=H/\hbar\omega_{HO}$ as the dimensionless energy. Further we scale the all the lengths in the same way
+where we can take $H'=H/\hbar\omega_{HO}$ as the dimensionless energy. Further we scale all the lengths in the same way
 \begin{equation*}
 x_i^2=(x_i')^2\cdot a_{HO}^2=(x_i')^2\cdot\frac{\hbar}{m\omega_{HO}},
 \end{equation*}
 and we finally obtain
 \begin{equation}
-H'=\sum_i\frac{1}{2}\bigg(-\nabla_i^2+(x_i')^2+(y_i')^2+\frac{\omega_z^2}{\omega_{HO}^2}(z_i')^2\bigg)+\sum_{i<j}V_{int}(\vec{r}_i, \vec{r}_j).
+H'=\sum_i\frac{1}{2}\bigg(-\nabla_i^2+(x_i')^2+(y_i')^2+\frac{\omega_z^2}{\omega_{HO}^2}(z_i')^2\bigg)+\sum_{i<j}V_{int}(\vec{r}_i, \vec{r}_j)
 \end{equation}
 which is the Hamiltonian that we were hunting. We know how the z-component is affected by $\beta$, so $\beta$ has to be equal to $\omega_z/\omega_{HO}$.
 \end{document}
