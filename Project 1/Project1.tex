@@ -594,14 +594,14 @@ Must benchmark results from e and f!
 	\bibitem{Nilsen}
 	J. K. Nilsen,  J. Mur-Petit, M. Guilleumas, M. Hjorth-Jensen, and A. Polls, \emph{Vortices in atomic Bose-Einstein condensates in the large-gas-parameter region}, Phys. Rev. A \textbf{71}, 053610 (2005).
 \end{thebibliography}
+\endgroup
 
 \newpage
 
-\section{Appendix}
+\section*{Appendix A} \label{appendix_A}
 
-\subsection{Appendix A}
-\label{appendix_A}
-
+For the 
+\subsection{Without repulsive interaction}
 We calculated the analytical expression for the local energy $E_L$, as given by \ref{eq:Local_energy}, for the non-interaction ($a=0$) case for the spherical harmonic oscillator. In this case, the wave trial function for only consists of the one body part, and is thus for $N$ particles given by:
 
 \begin{equation}
@@ -611,7 +611,7 @@ We calculated the analytical expression for the local energy $E_L$, as given by 
 
 We now want to calculate the analytical expressions for $E_L$ for one particle and one dimention, and $N$ particles and three dimentions.
 
-\subsubsection{One particle, one dimention}
+\subsubsection{One particle, one dimension}
 
 From \ref{eq:WF_nointeract}, the trial wave function for one particle and one dimention is as follows:
 
@@ -654,7 +654,7 @@ E_L(\alpha) = -\frac{\hbar^2}{m} \alpha (2x\alpha^2 -1) + \frac{1}{2} m\omega_{H
 \end{equation}
 \fi
 
-\subsubsection{$N$ particles, three dimentions}
+\subsubsection{$N$ particles, three dimensions}
 
 When extending the non-interaction case to $N$ particles and three dimentions, the trial wave function will take the form listed in \ref{eq:WF_nointeract}, and the Hamiltonian will be as listed in \ref{eq:Hamilton}, with the dimensionless spherical harmonic oscillator potential $\frac{1}{2}r_i^2$, as listed in \ref{eq:V_ext}.
 
@@ -711,12 +711,83 @@ E_L(\alpha)&=\sum_j-\frac{1}{2}(-6\alpha+4\alpha^2r_j^2) + \frac{1}{2}r_j^2\nota
 \end{align}
 
 \subsubsection{General}
-If one now studies the local energy expressions for one particle in 1 dimension and $N$ particles in 3 dimensions, one can see a pattern and it is easy to imagine that there exists a general expression for the local energy. At least for 1, 2, and 3 dimensions (probably all), it can be shown that
+If one now studies the local energy expressions for one particle in one dimension and $N$ particles in three dimensions, one can see a pattern and it is easy to imagine that there exists a general expression for the local energy. At least for 1, 2, and 3 dimensions (probably all), it can be shown that
 \begin{equation}
 E_L(\alpha)=dim\cdot N\cdot \alpha+\Big(\frac{1}{2}-2\alpha^2\Big)\sum_jr_j^2
 \end{equation}
 
-\subsection{Appendix B}
+\subsection{With repulsive interaction}
+As mention in the theory section, the calculations get more complicated when adding the interaction, and we are in fact not able to find the local energy analytical. However, we can simplify the local energy expression and hopefully gain some speed up compared to when we do all the calculations numerically. 
+
+We start with defining the onebody part of the wavefunction as $\Phi$ and the Jastrow factor as $\exp\big(u(r_{ij})\big)$ such that the total trial wavefunction becomes
+\begin{equation}
+\Psi_T(\vec{r}_1,\hdots\vec{r}_N)=\Big[\prod_i\Phi(\vec{r}_i)\Big]\exp\Big(\sum_{i<j}u(r_{ij})\Big)
+\end{equation}
+
+Thereafter we calculate the term connected to the kinetic part of the Hamiltonian,
+\begin{equation}
+\frac{\nabla_k^2\Psi_T(\vec{r})}{\Psi_T(\vec{r})},
+\label{eq:ham_kin}
+\end{equation}
+which is the most difficult part. We apply the product rule and obtain the following expression for the first derivative
+\begin{align}
+\nabla_k\Psi_T(\vec{r})&=\nabla_k\Phi(\vec{r}_k)\Big[\prod_{i\neq k}\Phi(\vec{r}_i)\Big]\exp\Big(\sum_{i<j}u(r_{ij})\Big)\notag\\
+&\phantom{=}+\prod_i\Phi(\vec{r}_i)\exp\Big(\sum_{i<j}r(r_{ij})\Big)
+\sum_{j\neq k}\nabla_k u(r_{ij})
+\end{align}
+
+For the second derivative we get five terms in total where two of them are cross terms and therefore equal. 
+\begin{align}
+\nabla_k^2\Psi_T(\vec{r})&=\nabla_k^2\Phi(\vec{r}_k)\Big[\prod_{i \neq k}\Phi(\vec{r}_i)\Big]\exp\Big(\sum_{i<j}u(r_{ij})\Big)\notag\\
+&\phantom{=}+\nabla_k\Phi(\vec{r}_k)\Big[\prod_{i \neq k}\Phi(\vec{r}_i)\Big]\exp\Big(\sum_{i<j}u(r_{ij})\Big)\sum_{j\neq k}\nabla_ku(r_{ij})\notag\\
+&\phantom{=}+\nabla_k\Phi(\vec{r}_k)\Big[\prod_{i \neq k}\Phi(\vec{r}_i)\Big]\exp\Big(\sum_{i<j}u(r_{ij})\Big)\sum_{j\neq k}\nabla_ku(r_{ij})\\
+&\phantom{=}+\prod_i\Phi(\vec{r}_i)\exp\Big(\sum_{i<j}u(r_{ij})\Big)\sum_{i\neq k}\nabla_ku(r_{ij})\sum_{j\neq k}\nabla_ku(r_{ij})\notag\\
+&\phantom{=}+\prod_i\Phi(\vec{r}_i)\exp\Big(\sum_{i<j}u(r_{ij})\Big)\sum_{j\neq k}\nabla_k^2u(r_{ij})\notag
+\end{align}
+
+To simplify this, we do a change of variables
+\begin{equation}
+\frac{\partial}{\partial \vec{r}_k}=\frac{\partial}{\partial \vec{r}_k}\frac{\partial r_{kj}}{\partial r_{kj}}=\frac{\partial r_{kj}}{\partial \vec{r}_k}\frac{\partial}{\partial r_{kj}}=\frac{(\vec{r}_k-\vec{r}_j)}{r_{kj}}\frac{\partial}{\partial r_{kj}}
+\end{equation}
+where we have used that
+\begin{equation}
+\frac{\partial r_{kj}}{\partial \vec{r}_k}=\frac{\vec{r}_k - \vec{r}_j}{|\vec{r}_k - \vec{r}_j|}=\frac{\vec{r}_k - \vec{r}_j}{r_{kj}}.
+\end{equation}
+This leads to
+\begin{equation}
+\nabla_ku(r_{ij})=\frac{\partial r_{kj}}{\partial \vec{r}_k}\frac{\partial}{\partial r_{kj}}\big(u(r_{ij})\big)=\frac{\vec{r}_k - \vec{r}_j}{|\vec{r}_k - \vec{r}_j|}u'(r_{kj})
+\end{equation}
+and
+\begin{align*}
+\nabla_k^2u(r_{ij})&=\nabla_k\bigg(\frac{\vec{r}_k - \vec{r}_j}{|\vec{r}_k - \vec{r}_j|}u'(r_{kj})\bigg)\\
+&=\frac{1}{|\vec{r}_k-\vec{r}_j|}\frac{\partial}{\partial r_{kj}}\big(u(r_{kj})\big)+\frac{\partial^2}{\partial r_{kj}^2}\big(u(r_{kj})\big)\\
+&\phantom{=}+\frac{(\vec{r}_k-\vec{r}_j)(\vec{r}_k-\vec{r}_j)}{|\vec{r}_k-\vec{r}_j|^3}\frac{\partial}{\partial r_{kj}}\big(u(r_{kj})\big)
+\end{align*}
+where we can simplify the last term
+\begin{equation}
+\frac{(\vec{r}_k-\vec{r}_j)(\vec{r}_k-\vec{r}_j)}{|\vec{r}_k-\vec{r}_j|^3}=\frac{(\vec{r}_k - \vec{r}_j)(\vec{r}_k - \vec{r}_j)}{(\vec{r}_k - \vec{r}_j)(\vec{r}_k - \vec{r}_j)|\vec{r}_k - \vec{r}_j|}=\frac{1}{|\vec{r}_k - \vec{r}_j|}.
+\end{equation}
+Finally we can write out the expression from equation (\ref{eq:ham_kin}) 
+\begin{align}
+\frac{\nabla_k^2\Psi_T}{\Psi_T}&=\frac{\nabla_k^2\Phi(\vec{r}_k)}{\Phi(\vec{r}_k)} + 2\frac{\nabla_k\Phi(\vec{r}_k)}{\Phi(\vec{r}_k)}\bigg(\sum_{j\neq k}\frac{(\vec{r}_k-\vec{r}_j)}{r_{kj}}u'(r_{kj})\bigg)\notag\\
+&\phantom{=}+\sum_{ij\neq k}\frac{(\vec{r}_k-\vec{r}_j)(\vec{r}_k-\vec{r}_j)}{r_{kj}r_{ki}}u'(r_{kj})u'(r_{ki})\\
+&\phantom{=}+\sum_{j\neq k}\bigg(\frac{(\vec{r}_k-\vec{r}_j)}{r_{kj}}u''(r_{kj})+\frac{2}{r_{kj}}u'(r_{kj})\bigg)\notag
+\end{align}
+Now we can easily find a local energy expression using the general expression for the local energy:
+\begin{align}
+E_L&=\frac{1}{\Psi_T}\bigg(\sum_i\Big(-\frac{1}{2}\nabla_i^2+V_{ext}(\vec{r}_i)\Big) + \sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)\bigg)\Psi_T\notag\\
+&=\sum_i\Big(-\frac{\nabla_i^2\Psi_T}{2\Psi_T}+V_{ext}(\vec{r}_i)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
+\end{align}
+
+\section*{Appendix B} \label{sec:appendix_b}
+
+This section shows the analytical calculations for the drift force $F$, as given by equation \ref{eq:drift_force} for the non-interaction case.
+
+\subsubsection{$N$ particles, 1 dimention}
+
+\subsubsection{$N$ particles, 3 dimentions}
+
+\section*{Appendix C} \label{sec:appendix_c}
 In the theory part we claimed that the Hamiltonian could be written as
 \begin{equation}
 H=\sum_i\bigg(\frac{1}{2}\Big(-\nabla^2 + x_i^2 + y_i^2 + \gamma^2z_i^2\Big)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
@@ -742,13 +813,5 @@ and we finally obtain
 H'=\sum_i\frac{1}{2}\bigg(-\nabla_i^2+(x_i')^2+(y_i')^2+\frac{\omega_z^2}{\omega_{HO}^2}(z_i')^2\bigg)+\sum_{i<j}V_{int}(\vec{r}_i, \vec{r}_j)
 \end{equation}
 which is the Hamiltonian that we were hunting. We know how the z-component is affected by $\beta$, so $\beta$ has to be equal to $\omega_z/\omega_{HO}$.
-
-\subsection{Appendix C}
-
-This section shows the analytical calculations for the drift force $F$, as given by equation \ref{eq:drift_force} for the non-interaction case.
-
-\subsubsection{$N$ particles, 1 dimention}
-
-\subsubsection{$N$ particles, 3 dimentions}
 
 \end{document}
