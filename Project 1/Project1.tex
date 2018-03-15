@@ -430,36 +430,28 @@ As described in section \ref{Error_estimation}, we need a method to give a prope
 \par 
 \vspace{3mm}
 
-One method that can be used, is the blocking method, which is quite fast and can handle large data sets. Say that we have a data set ${x_1, ...,x_i,..., x_n}$ from a experiment, which in our case will be the estimations of the local energies for each Monte Carlo sycle. The mean of this data set is $m$, and we want to estimate the variance of this data set, $\sigma^2 (m)$.  By defining a function $\gamma_{i,j}$ as 
+One method that can be used, is the blocking method, which is quite fast and can handle large data sets. Say that we have a data set ${x_1, ...,x_i,..., x_n}$ from a experiment, which in our case will be the estimations of the local energies for each Monte Carlo sycle. The mean of this data set is $m$, and we want to estimate the variance of this data set, $\sigma^2 (m)$, including the covariace.
+
+The variance is defined as 
 
 \begin{equation}
-	\gamma_{i,j} = \langle x_i x_j \rangle - \langle x_i \rangle \langle x_j \rangle
+	\sigma^2 = \frac{1}{n-1} \sum_i (x_i - m)
 \end{equation}
 
-we see that $\sigma^2 (m)$ can be written in terms of $\gamma_{i,j}$ 
-
-\begin{equation}
-	\sigma^2(m) = \frac{1}{n^2}\sum_{i,j = 1}^{n} \gamma_{i,j}
-\end{equation}
-
+However, this does not include the covariance, as the points $x_i$ are correlated.
 
 If we transform the data set ${x_1, ...,x_i,..., x_n}$ by taking the mean of two neigbouring points in the following way
 \begin{equation}
 	x'_i = \frac{1}{2}(x_{2i} + x_{2i+1})
 \end{equation}
 
- the number of points in the transformed data set $n' = \frac{1}{2} n$, while the mean $m'$ is preseverd, such that $m' = m$, and therefore the variance is also the same for the transformed data set, $\sigma^2(m') = \sigma^2(m)$. Using the three point formula and after $l$ transformations, the $\gamma_h$, $h= |i-j|$ can be estimated with $\hat{\gamma}$ (??) written as 
+ the number of points in the transformed data set $n' = \frac{1}{2} n$. Each pair of points $x'_i$ is referred to as a block, and using the variance formula above, the variance within each block is calculated. An estimate of the total variance $\hat{\sigma}$ is then
  
  \begin{equation}
- 	\gamma^{l+1}(h) = \frac{1}{4} \gamma^{l}(2h-1) + \frac{1}{2}\gamma^{l}(2h) + \frac{1}{4} \gamma^{l}(2h+1) 
+ \hat{\sigma} = \frac{\sigma_1 + .. \sigma_{n'}}{n'}
  \end{equation}
-
-Using the estimated  $\hat{\gamma}$ the estimated variance $ \hat{\sigma^2}$ can thus be calculated for the transformed data set.
-
- The transformation of data set  is continues, for each new data set $\hat{\gamma}^l(h=1)$ and $\hat{\sigma}^{(2),l}$ until the number of points $n'$ in the transformed data is $\leq 2$. 
  
- Using the set of $\hat{\gamma}^l(h=1)$ and $\hat{\sigma}^{(2),l}$, the chi-squared distribution is calcualted, and the value of $l$ where the chi-square drops below a tolerance. For this value of $l$, $\sigma^2 = \hat{\sigma^2}$.
-
+By repeating this procedure several times, and each time using more measurements for each block, the estimated standard deviation $\hat{\sigma}$ will grow, until it flats out. When it flats out, it means that the blocks are no longer correlated, and thus the covariance which bugged us in equation \ref{eq:sample_var_all_exp}, is now 0, and thus the covariance is acoounted for.
 
 \section{Results} \label{Results}
 
@@ -597,11 +589,11 @@ When comparing the results from the brute force Monte Carlo calculation with sph
 \par 
 \vspace{3mm}
 
-When comparing the results from the brute force and Hastings Metropolis algorithms, shown in tables \ref{tab:BFmet} and \ref{tab:ISmet}, the reader can oberve that the Hastings algorithm reprocuces the exact energies, as the brute force algorithm does, but that Hastings is slightly slower. This sligt time decrease is due to the fact that while the brute force algorithm picks a proposed new step at random, the Hasting algorithm makes a more educaded move by calculating the drift force $F$ on the particle, and decide what direction the particle is most likely to move in, as described in section \ref{Importance_sampling}. While this calculation spends slightly more CPU time, it is rewarded by the Hastings algorithm having a higher acceptance rate of the proposed moves compared to the brute force metropolis. This can be seen from figures \ref{fig:acceptance_BF_stepsize} and \ref{fig:acceptance_IS_timestep}. The acceptance ratio of the Hastings algorithm ifor a timestep $\Delta t =1$ is much higher than the acceptance ratio for brute force with a stepsize $r=1$. \textcolor{red}{This results in the Hastings algorithm moving faster towards the minima compared to the brute force method. This effect, however, is not that visible in our project, but makes a vital difference for larger Monte Carlo simulations}.
+When comparing the results from the brute force and Hastings Metropolis algorithms, shown in tables \ref{tab:BFmet} and \ref{tab:ISmet}, the reader can oberve that the Hastings algorithm reprocuces the exact energies, as the brute force algorithm does, but that Hastings is slightly slower. This sligt time decrease is due to the fact that while the brute force algorithm picks a proposed new step at random, the Hasting algorithm makes a more educaded move by calculating the drift force $F$ on the particle, and decide what direction the particle is most likely to move in, as described in section \ref{Importance_sampling}. While this calculation spends slightly more CPU time, it is rewarded by the Hastings algorithm having a higher acceptance rate of the proposed moves compared to the brute force metropolis. This can be seen from figures \ref{fig:acceptance_BF_stepsize} and \ref{fig:acceptance_IS_timestep}. The acceptance ratio of the Hastings algorithm ifor a timestep $\Delta t =1$ is much higher than the acceptance ratio for brute force with a stepsize $r=1$. This results in the Hastings algorithm moving faster towards the minima compared to the brute force method. This effect, however, is not that visible in our project, but makes a vital difference for larger Monte Carlo simulations.
 \par 
 \vspace{3mm}
 
-Sill studying figure \ref{fig:acceptance_IS_timestep} and \ref{fig:acceptance_BF_stepsize}, we observe that the importance sampling algorithm has a high accseptance rate for intermediate timesteps $\Delta t$, but the acceptance rate drops seemingly exponentially for higher timesteps. Comparing this to the brute force acceptance rate, the drop in the acceptance rate is more like a lineary decreasing curve. \textcolor{red}{This is because the acceptance probability for brute force to do a step in the "wrong direction" is still present, while moving in the wrong direction with importance sampling is much less probable, and therefore the acceptance rate decreases rapidly with increased timestep }.
+Sill studying figure \ref{fig:acceptance_IS_timestep} and \ref{fig:acceptance_BF_stepsize}, we observe that the importance sampling algorithm has a high accseptance rate for intermediate timesteps $\Delta t$, but the acceptance rate drops seemingly exponentially for higher timesteps. Comparing this to the brute force acceptance rate, the drop in the acceptance rate is more like a lineary decreasing curve. This is because the acceptance probability for brute force to do a step in the "wrong direction" is still present, while moving in the wrong direction with importance sampling is much less probable, and therefore the acceptance rate decreases rapidly with increased timestep.
 \par 
 \vspace{3mm}
 
@@ -614,7 +606,10 @@ Must benchmark results from e and f!
 
 \section{Conclusion}
 
-In this project, we have fou
+In this project, we have found that the Variational Monte Carlo method reproduces analytical calculations for the spherical harmonic oscillator without interparticle interaction. Both the brute force method with an analytically calculated for $E_L$ and the Hastings algorithm were quick and accurate, while the brute force method with a numerically calculated $E_L$ was much slower, and also less accurate. \par 
+The Hastings algorithm had a higher acceptance rate for the proposed moves in the Monte Carlo iterations compared to the brute force method. This should result in the Hastings method converging faster, although we did not observe that in this report. We also saw that the Hastings algorithm was more dependent on the timestep compared to the brute force method's dependence om stepsize, as the acceptance rate dropped faster for increasing timestep for the Hastings algorithm. This is as we would expect from theory.  \par
+When including a proper eva
+
 
 
 \newpage
