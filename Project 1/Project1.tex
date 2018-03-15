@@ -42,7 +42,9 @@
 
 \maketitle
 \begin{abstract}
-Write the abstract here
+This project aims to simulate a trapped Bose gas using Variational Monte Carlo (VMC) with both the  brute force Metropolis and the Metropolis-Hastings algorithms. Using a trial wave function with spherical and elliptical harmonic oscillator (HO) potential, with and without a hard sphere potential, we calcuate the ground state energy and onebody density for different numbers of particles. Furthermore, the results are benchmarked with earlier publications. \par 
+Using the spherical HO with no interaction, both the brute force and the Hastings Metropolis methods reproduces analytical calculations. Though the Hastings algorithm is slightly slower, it has a higher acceptance rate for the proposed moves in the VMC simulation. The onebody density drops when introducing the hard sphere potential. The system behaves as expected, and our results reproduces the benchmarks.
+
 \par 
 
 \end{abstract}
@@ -585,7 +587,7 @@ In section \ref{sec:OB_theory} we presented a couple of ways computing the onebo
 \begin{figure} [H]
     \centering
     \includegraphics[scale=0.65]{images/ob.png}
-    \caption{The one body density of the bosonic system, with $a=0$ and the optimal variational parameter $\alpha = 0.5$. As lenght is dimentionless, both the density $\rho$ and the length $r$ are dimentionless}
+    \caption{The one body density of the bosonic system. $a=0$ is run with the optimal variational parameter $\alpha = 0.5$, while the $a=0.0043$ is run with $\alpha = 0.3450$. As lenght is dimentionless, both the density $\rho$ and the length $r$ are dimentionless}
     \label{fig:ob0}
 \end{figure}
 
