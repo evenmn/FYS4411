@@ -54,9 +54,15 @@ Write the abstract here
 
 
 \section{Introduction}
-Introduction
 
-\section{Theory}
+In this project, we study the  phenomen Bose-Einstein condensation, a highly relevant subject in modern physics.  Bose-Einstein condensation occurs when atoms are cooled towards absolute zero, as they start occupying the same quatum states \cite{JE2016}. Even though the effect was predicted in 1924, the effect was first demonstrated decades later \cite{SP}.
+
+Our goal in this project is to simulate a trapped, hard sphere Bose gas for different numbers of particles for a given trial wave function, and to evaluate the ground state energy of this system. The system is evaluated both for a sperical and elliptical harmonic oscillator trap. The model is descriped in section \ref{Theory}. \par
+
+Using Variational Monte Carlo method with two different Metropolis algorithms, presented in section \ref{Method}, we use the trial wave function to calculate the ground state energy and the onebody density of the system. The results are presented in section \ref{Results}. In section \ref{Discussion} we discuss our results, and compare them to results obtained from the article found at (s \cite{Nilsen} and) \cite{DuBois}.
+
+
+\section{Theory} \label{Theory}
 
 \subsection{Presentation of potential and trial wavefunction} 
 
@@ -274,7 +280,7 @@ This equation, however, does not take into account the covariance term from equa
 
 A direct implementation of equation \ref{eq:sample_var_all_exp} including the covariance term is not suitable, as the expresion for the covariance includes a double sum, and for a large number of iterations, this will turn into an extremely time-consuming process for a large number of Monte Carlo iterations. Luckily, there are methods for calculating an accurate estimation of the variance without including a double loop in the Monte Carlo program. One of these methods is the blocking method, which is presented in section \ref{Blocking}.
 
-\section{Methods}
+\section{Method} \label{Method}
 \subsection{Variational Monte Carlo}\label{VMC}
 Variational Monte Carlo (VMC) is a widely used method for approximating the ground state of a quantum system. The method is based on Markov chains, and move a particle (or a set of particles) one step for each cycle, i.e.
 \begin{equation}
@@ -452,7 +458,7 @@ Using the estimated  $\hat{\gamma}$ the estimated variance $ \hat{\sigma^2}$ can
  Using the set of $\hat{\gamma}^l(h=1)$ and $\hat{\sigma}^{(2),l}$, the chi-squared distribution is calcualted, and the value of $l$ where the chi-square drops below a tolerance. For this value of $l$, $\sigma^2 = \hat{\sigma^2}$.
 
 
-\section{Results}
+\section{Results} \label{Results}
 
 \subsection{$E_L$ calculation and CPU-time}\label{CPU}
 For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the local energy. In table (\ref{tab:BFmet}) we present the results from these calculations and the performance. The results from the calculations with the Metropolis-Hastings algorithm are presentet in table \ref{tab:ISmet}. All the measurements are done in three dimensions with $1e6$ Monte Carlo cycles. $a$ is fixed to zero.
@@ -596,7 +602,7 @@ In section \ref{sec:OB_theory} we presented a couple of ways computing the onebo
     \label{fig:ob1}
 \end{figure} 
 
-\section{Discussion}
+\section{Discussion} \label{Discussion}
 
 When comparing the results from the brute force Monte Carlo calculation with spherical harmonic oscillator and no interaction, as shown in table \ref{tab:BFmet}, we observe that in the case when we use an analytical expression for $E_L$, the simulation results yields the exact energy, as obtained from equation \ref{eq:Energy_exact}. When using the numerically calculated $E_L$, as described in section \ref{Numerical_calc_E_L}, the calculated results deviate slightly from the exact answer. Also when comparing the CPU time difference between these two calculations, the numerically calculated $E_L$ spends vastly more time on the calculations compared to the analytically calculated $E_L$-case. The time difference is as large as a factor of $10^3$ for the 500 particles, thee dimentions case. This makes it preferable in both the aspect of time and accuracy to use the analytically calculated $E_L$ in our calculations. However, not all trial wave functions $\psi_T$ or Hamiltonians H will yield an $E_L$ which is analytically possible to calculate, and in this case, one should have a functioning algorithm for numerical calculation of $E_L$ as well.
 \par 
@@ -633,6 +639,14 @@ Must benchmark results from e and f!
 	J. L. DuBois and H. R. Glyde, H. R., \emph{Bose-Einstein condensation in trapped bosons: A variational Monte Carlo analysis}, Phys. Rev. A \textbf{63}, 023602 (2001).
 	\bibitem{Nilsen}
 	J. K. Nilsen,  J. Mur-Petit, M. Guilleumas, M. Hjorth-Jensen, and A. Polls, \emph{Vortices in atomic Bose-Einstein condensates in the large-gas-parameter region}, Phys. Rev. A \textbf{71}, 053610 (2005).
+	\bibitem{JE2016}
+	Jesse Emspak, \emph{States of Matter: Bose-Einstein Condensate}, LiveScience (2016)
+	\url{https://www.livescience.com/54667-bose-einstein-condensate.html}
+	Downloaded March 15th 2018
+	\bibitem{SP}
+	Sidney Perkowitz \emph{Bose-Einstein condensate} Encyclopaedia Britannica 
+	\url{https://www.britannica.com/science/Bose-Einstein-condensate}
+	Downloaded March 15th 2018
 \end{thebibliography}
 \endgroup
 
