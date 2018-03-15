@@ -206,7 +206,7 @@ H=\frac{1}{2}\sum_i\Big(-\nabla^2 + \vec{r}_i^2\Big)+\sum_{i<j}V_{int}(\vec{r}_i
 \end{equation}
 A watchful eye will see that this corresponds to setting $\hbar=\omega_{HO}=m=1$, which is the natural units. 
 
-For the spherical trap situation we are left with the variational parameters $\alpha$ and $\beta$ only, but when we study an elliptical trap we still want to get rid of $\omega_z$. Since $\beta^2$ should be the factor in front of the z-coordinate when the Hamiltonian is dimensionless, it can be proven that $\beta=\omega_z/\omega_{HO}$, see Appendix B. We end up with the Hamiltonian
+For the spherical trap situation we are left with the variational parameters $\alpha$ and $\beta$ only, but when we study an elliptical trap we still want to get rid of $\omega_z$. Since $\beta^2$ should be the factor in front of the z-coordinate when the Hamiltonian is dimensionless, it can be proven that $\beta=\omega_z/\omega_{HO}$, see appendix C. We end up with the Hamiltonian
 \begin{equation}
 H=\sum_i\bigg(\frac{1}{2}\Big(-\nabla^2 + x_i^2 + y_i^2 + \beta^2z_i^2\Big)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
 \end{equation} 
@@ -325,7 +325,7 @@ The importance sampling technique is often refered to as Metropolis-Hastings alg
 \begin{equation}
 \frac{\partial P(R,t)}{\partial t} = D\frac{\partial}{\partial R}\bigg(\frac{\partial}{\partial R} - F\bigg)P(R,t).
 \end{equation}
-where $F$ is the drift force given by equation \ref{eq:drift_force} and $D$ is the diffusion coefficient, in this case equal $0.5$. Calculations of the analytical expression of the drift force $F$ for a shperical harmonic oscillator and $a=0$ can be found in appendix C.
+where $F$ is the drift force given by equation \ref{eq:drift_force} and $D$ is the diffusion coefficient, in this case equal $0.5$. Calculations of the analytical expression of the drift force $F$ for a shperical harmonic oscillator and $a=0$ can be found in appendix B.
 
 \begin{equation}
 	\label{eq:drift_force}
@@ -445,7 +445,7 @@ If we transform the data set ${x_1, ...,x_i,..., x_n}$ by taking the mean of two
  	\gamma^{l+1}(h) = \frac{1}{4} \gamma^{l}(2h-1) + \frac{1}{2}\gamma^{l}(2h) + \frac{1}{4} \gamma^{l}(2h+1) 
  \end{equation}
 
-Using the estimated  $\hat{\gamma}$and the estimated variance $ \hat{\sigma^2}$ can thus be calculated for the transformed data set.
+Using the estimated  $\hat{\gamma}$ the estimated variance $ \hat{\sigma^2}$ can thus be calculated for the transformed data set.
 
  The transformation of data set  is continues, for each new data set $\hat{\gamma}^l(h=1)$ and $\hat{\sigma}^{(2),l}$ until the number of points $n'$ in the transformed data is $\leq 2$. 
  
@@ -656,6 +656,7 @@ We now want to calculate the analytical expressions for $E_L$ for one particle a
 From \ref{eq:WF_nointeract}, the trial wave function for one particle and one dimention is as follows:
 
 \begin{equation}
+	\label{eq:WF_1dim_1N}
 	\Psi_T(x) = e^{-\alpha x^2} 
 \end{equation}
 
@@ -825,7 +826,44 @@ This section shows the analytical calculations for the drift force $F$, as given
 
 \subsubsection{$N$ particles, 1 dimention}
 
+The no interaction, N particle trial wave function $\psi_T$ is given by
+
+\begin{equation}
+	\prod_i e^{-\alpha x_i^2}
+\end{equation}
+
+ The drift force F is then
+
+\begin{align}
+	F = \frac{2 \nabla ( \prod_i e^{-\alpha x_i^2} )}{ \prod_i e^{-\alpha x^2} }
+\end{align}
+
+The differentiation $\nabla \rightarrow \frac{d }{d x}$, as we operate in one dimention. The differentiation of $\psi_T$ yields
+
+\begin{equation}
+	\label{eq:differentiation_WF}
+	\frac{d}{d x} ( \prod_i e^{-\alpha x_i^2}) =  \prod_i e^{-\alpha x_i^2} \sum_i (-2\alpha x_i)
+\end{equation}
+
+This yields the drift force $F$
+
+\begin{equation}
+	F =  2* \prod_i e^{\alpha x_i^2}   \prod_i e^{-\alpha x_i^2} \sum_i (-2\alpha x_i) = - 4 \alpha \sum_i x_i
+\end{equation}
+
 \subsubsection{$N$ particles, 3 dimentions}
+
+In the $N$ particles, $3$ dimentions case, the trial wave function $\psi_T$ takes the following form
+
+\begin{equation}
+	\psi_T = \prod_i e^{- \alpha (x_i^2 + y_i^2 + \beta z_i^2)} 
+\end{equation}
+
+As we operate in three dimentions, $\nabla = (\frac{d}{dx}, \frac{d}{dy}, \frac{d}{dy})$. The differentiation in one dimention of $\psi$ is shown in equation \ref{eq:differentiation_WF}, and the results are similar for the differentiation with respect to $y$ and $z$, the only difference being an extra factor $\beta$ in the expression for $\frac{d \psi_T}{d z}$, due to the $\beta$ in the expression for $\psi_T$. Thus the drift force F for $N$ particles in three dimentions is 
+
+\begin{equation}
+	F = -4 \alpha (\sum_i xi, \sum_i y_i, \sum_i \beta z_i)
+\end{equation}
 
 \section*{Appendix C} \label{sec:appendix_c}
 In the theory part we claimed that the Hamiltonian could be written as
