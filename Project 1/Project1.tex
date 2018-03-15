@@ -343,7 +343,6 @@ where $F$ is the drift force given by equation \ref{eq:drift_force} and $D$ is t
 	\label{eq:drift_force}
 	F(R) = \frac{2 \nabla \psi_T}{\psi_T}
 \end{equation}
-
 Even though the probability density function can give a lot of useful information, an equation describing the motion of a such particle would be more appropriate for our purposes. Fortunately this equation exists, and satisfies the Fokker-Planck equation. The Langevin equation can be written as
 \begin{equation}
 \frac{\partial R(t)}{\partial t}=DF(R(t)) + \eta
@@ -367,12 +366,12 @@ r<\frac{G(R,R_{new},\Delta t)|\Psi_T(R_{new})|^2}{G(R_{new},R,\Delta t)|\Psi_T(R
 
 
 \subsection{Minimization methods}
-When the interaction term is excluded, we know which $\alpha$ that corresponds to the energy minima, and it is in principle no need to try different $\alpha$'s. However, sometimes we have no idea where to search for the minimum point, and we need to try various $\alpha$ values to determine the lowest energy. If we do not know where to start searching, this can be a time consuming activity. Would it not be nice if the program could do this for us?
+When the interaction term is excluded, we know which $\alpha$ that corresponds to the energy minimum, and it is in principle no need to try different $\alpha$'s. However, sometimes we have no idea where to search for the minimum point, and we need to try various $\alpha$ values to determine the lowest energy. If we do not know where to start searching, this can be a time consuming activity. Would it not be nice if the program could do this for us?
 
 In fact there are multiple techniques for doing this, where the most complicated ones obviously also are the best. Anyway, in this project we will have good initial guesses, and are therefore not in need for the most fancy algorithms. 
 
 \subsubsection{Gradient descent}
-Perhaps the simplest and most intuitive method for finding the minima is the gradient descent method, which reads
+Perhaps the simplest and most intuitive method for finding the minimum is the gradient descent method, which reads
 \begin{equation}
 \label{eq:GD}
 \alpha^+=\alpha - \eta\cdot\frac{d\langle E_L(\alpha)\rangle}{d\alpha}.
@@ -385,27 +384,24 @@ To implement equation \ref{eq:GD}, we need an expression for the derivative of $
 
 \begin{equation}
 	\label{eq:E_L_der_wrt_alpha}
-	\bar{E_{\alpha}} = \frac{d \langle E_L (\alpha) \rangle}{d \alpha}
+	\bar{E_{\alpha}} = \frac{d \langle E_L (\alpha) \rangle}{d \alpha}.
 \end{equation}
-
-By using the expression for the exprectation value for the local energy $ \langle E_L (\alpha) \rangle$ in equation \ref{eq:exp_EL} 
+By using the expression for the expectation value for the local energy $ \langle E_L (\alpha) \rangle$ in equation \ref{eq:exp_EL} 
 
 \begin{equation}
 	\label{eq:exp_EL}
 	\langle E_L (\alpha) \rangle = \frac{ \langle \psi_T(\alpha) | H | \psi_T(\alpha)  \rangle}{ \langle \psi_T(\alpha)  |  \psi_T(\alpha)  \rangle }
 \end{equation}
-
 and applying the chain rule of differentiation, it can be shown that equation \ref{eq:E_L_der_wrt_alpha} reduces to equation \ref{eq:E_L_der_wrt_alpha_expression}
 
 \begin{equation}
 	\label{eq:E_L_der_wrt_alpha_expression}
 	\bar{E_{\alpha}} = 2 [\langle E_L (\alpha)  \frac{ \bar{\psi_{\alpha}}}{\psi_{\alpha}}\rangle - \langle E_L (\alpha) \rangle \langle \frac{\bar{\psi_{\alpha}}}{\psi_{\alpha}} \rangle ]
 \end{equation}
-
 where
 
 \begin{equation}
-	\bar{\psi_{\alpha}} = \frac{d \psi (\alpha)}{d \alpha}
+	\bar{\psi_{\alpha}} = \frac{d \psi (\alpha)}{d \alpha}.
 \end{equation}
 
 The algorithm of this minimization method is thus as follows:
@@ -427,14 +423,13 @@ for(number max number of iterations with minimizing)
 
 \end{lstlisting}
 
-\subsection{Blocking method}
-\label{Blocking}
+\subsection{Blocking method} \label{Blocking}
 
 As described in section \ref{Error_estimation}, we need a method to give a proper estimation of the variance $\sigma^2$ of the points in our experiment, preferably without calculating the double loop from the expression of the covariance in equation \ref{eq:covariance}. 
 \par 
 \vspace{3mm}
 
-One method that can be used, is the blocking method, which is quite fast and can handle large data sets. Say that we have a data set ${x_1, ...,x_i,..., x_n}$ from a experiment, which in our case will be the estimations of the local energies for each Monte Carlo sycle. The mean of this data set is $m$, and we want to estimate the variance of this data set, $\sigma^2 (m)$.  By defining a function $\gamma_{i,j}$ as 
+One method that can be used, is the blocking method, which is quite fast and can handle large data sets. Say that we have a data set ${x_1, ...,x_i,..., x_n}$ from an experiment, which in our case will be the estimations of the local energies for each Monte Carlo sycle. The mean of this data set is $m$, and we want to estimate the variance of this data set, $\sigma^2 (m)$.  By defining a function $\gamma_{i,j}$ as 
 
 \begin{equation}
 	\gamma_{i,j} = \langle x_i x_j \rangle - \langle x_i \rangle \langle x_j \rangle

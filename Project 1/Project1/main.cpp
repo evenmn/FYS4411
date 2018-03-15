@@ -7,10 +7,15 @@ using namespace std;
 int main(int argc, char* argv[])
 {
     //variables chosen by user
+<<<<<<< HEAD
     int    M          = 100000; //number of MC cycles
     int    N          = 10;      //number of particles
+=======
+    int    M          = 10000000; //number of MC cycles
+    int    N          = 1;      //number of particles
+>>>>>>> 4ebdd2cddf0edc58e515c34794a470e1796080d8
     int    dim        = 3;       //number of dimensions concidered
-    double beta       = 1;       //weight parameter along z-axis
+    double beta       = 2.82843;       //weight parameter along z-axis
     double steplength = 1.0;     //steplength when changing position
     double h          = 0.01;    //Step length for numerical double differentiation
     double timestep   = 1;     //Timestep, to be used in Metropolis-Hastings
@@ -23,6 +28,12 @@ int main(int argc, char* argv[])
     int    num_or_an  = 0;       //if calculation is to be based on analytical(0) or numerical(1) E_L
 
 
+<<<<<<< HEAD
+=======
+    double alpha[]    = { 0.3, 0.35, 0.4, 0.5};           //variational parameter
+    int    len_alpha  = sizeof(alpha)/sizeof(*alpha);    //length of alpha
+
+>>>>>>> 4ebdd2cddf0edc58e515c34794a470e1796080d8
     cout << "Running with the following paramteres:" << endl;
     cout << "Number of particles: " << N << endl;
     cout << "Number of dimensions: " << dim << endl;
