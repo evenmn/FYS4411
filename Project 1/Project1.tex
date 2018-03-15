@@ -66,13 +66,22 @@ We study a system of $N$ bosons trapped in a harmonic oscillator with the Hamilt
 \label{eq:Hamilton}
 \end{equation}
 with $V_{ext}$ as the external potential, which is the harmonic oscillator potential,
-and $V_{int}$ as the interaction term. The interaction will in the first place be ignored, and is specified later. We will consider a harmonic oscillator which can either be spherical (all dimensions have the same scales) or elliptical (the vertical dimension has a different frequency from the horizontals),
+and $V_{int}$ as the interaction term, defined in equation \ref{eq:V_int}, which ensures the particles to be separated by a distance $a$ . We will consider a harmonic oscillator which can either be spherical (all dimensions have the same scales) or elliptical (the vertical dimension has a different frequency from the horizontals),
 \begin{equation}
 \label{eq:V_ext}
 V_{ext}(\vec{r})=
 \begin{cases} 
    \frac{1}{2}m\omega_{HO}^2\vec{r}^2 & \text{(Spherical)} \\
    \frac{1}{2}m[\omega_{HO}^2(x^2 + y^2) + \omega_z^2z^2] & \text{(Elliptical)}.
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\label{eq:V_int}
+V_{int}(\vec{r}_i, \vec{r}_j)=
+\begin{cases} 
+0 & \text{if}\quad |\vec{r}_i-\vec{r}_j| \geq a \\
+\infty & \text{if}\quad |\vec{r}_i-\vec{r}_j| < a
 \end{cases}
 \end{equation}
 
@@ -126,15 +135,7 @@ E = \frac{1}{2}N\cdot dim\cdot\hbar\omega_{HO}.
 \end{equation}
 
 
-For $a\neq0$ it gets rather more complicated, because the correlation term from equation \ref{eq:WF_interaction_part} is now different from 1. We also need to add the interaction term, set to a so-called hard-sphere potential
-\begin{equation}
-V_{int}(\vec{r}_i, \vec{r}_j)=
-\begin{cases} 
-   0 & \text{if}\quad |\vec{r}_i-\vec{r}_j| \geq a \\
-   \infty & \text{if}\quad |\vec{r}_i-\vec{r}_j| < a
-\end{cases}
-\end{equation}
-which ensures the particles to be separated by a distance $a$. We are now ready to find a general expression for the local energy. By defining
+For $a\neq0$ it gets rather more complicated, because the correlation term from equation \ref{eq:WF_interaction_part} is now different from 1. We also need to add the interaction term, set to a so-called hard-sphere potential from equation \ref{eq:V_int}. We are now ready to find a general expression for the local energy. By defining
 \begin{equation}
 f(a, r_{ij})=\exp{\bigg(\sum_{i<j}u(r_{ij})\bigg)}
 \end{equation}
