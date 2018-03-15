@@ -212,7 +212,7 @@ H=\sum_i\bigg(\frac{1}{2}\Big(-\nabla^2 + x_i^2 + y_i^2 + \beta^2z_i^2\Big)\bigg
 \end{equation} 
 where $\beta$ is chosen to be 2.82843 due to experimental results.
 
-\subsection{Error estimation}
+\subsection{Error estimation} \label{Error_estimation}
 When presenting data from an experiment, one should always know the errors in the answer. Experimental data, including data from numerical experiments, are never determined beyond any doubt, and an estimate of this error should therefore be presented alongside the data. 
 There are two kinds of errors. Statistical errors originate from how much statistics one has; when $10^6$ measured points give approximately the same answer, one can be more sure that the actual value is close to those points, more than if one only has 1 point of statistical data. Estimating the statistical error is easily done. The systematic error, however, is harder to handle. It arises for example from calculations being based on faulty theory, or defect measurement devices. Here, we will present how to get an estimate of the statistical error in a numerical experiment.
 \par 
@@ -259,6 +259,7 @@ where $\sigma$ is the sample variance over all the experiments, defined as
 and the covariance is the linear correlation between the measured points. The definition of the covariance is shown in equation \ref{eq:covariance}.
 
 \begin{equation}
+\label{eq:covariance}
 cov(x,y) = \frac{1}{n^2} \sum_i \sum_{j >i} (x_i - x_j) (y_i - y_j)
 \end{equation}
 
@@ -339,7 +340,9 @@ where $\eta$ can be considered as a random variable. This differential equation 
 \begin{equation}
 R_{new} = R + DF(R)\Delta t + \xi\sqrt{\Delta t}
 \end{equation}
-which will be used to update the position. Moreover we also need to update the acceptance criteria since we no longer ignore the transition probabilities. With the Fokker-Planck equation as base, the transition probabilities are given by Green's function
+which will be used to update the position. This is an improved way of choosing the direction in which the particle is moved compared to the brute force algorithm, as the drift force $F(R)$ says something about which direction the particle is pushed in, and the choice of the new position is thus dependent on this.
+
+Moreover we also need to update the acceptance criteria since we no longer ignore the transition probabilities. With the Fokker-Planck equation as base, the transition probabilities are given by Green's function
 \begin{align}
 T_{R\rightarrow R_{new}}&=G(R_{new},R,\Delta t)\notag\\
 &=\frac{1}{(4\pi D\Delta t)^{3N/2}}\exp[-(R_{new} - R - D\Delta tF(R))^2/4D\Delta t] 
@@ -348,6 +351,8 @@ and the acceptance criteria becomes
 \begin{equation}
 r<\frac{G(R,R_{new},\Delta t)|\Psi_T(R_{new})|^2}{G(R_{new},R,\Delta t)|\Psi_T(R)|^2}.
 \end{equation}
+
+
 
 \subsection{Minimization methods}
 When the interaction term is excluded, we know which $\alpha$ that corresponds to the energy minima, and it is in principle no need to try different $\alpha$'s. However, sometimes we have no idea where to search for the minimum point, and we need to try various $\alpha$ values to determine the lowest energy. If we do not know where to start searching, this can be a time consuming activity. Would it not be nice if the program could do this for us?
@@ -411,6 +416,41 @@ for(number max number of iterations with minimizing)
 
 \subsection{Blocking method}
 \label{Blocking}
+
+As described in section \ref{Error_estimation}, we need a method to give a proper estimation of the variance $\sigma^2$ of the points in our experiment, preferably without calculating the double loop from the expression of the covariance in equation \ref{eq:covariance}. 
+\par 
+\vspace{3mm}
+
+One method that can be used, is the blocking method, which is quite fast and can handle large data sets. Say that we have a data set ${x_1, ...,x_i,..., x_n}$ from a experiment, which in our case will be the estimations of the local energies for each Monte Carlo sycle. The mean of this data set is $m$, and we want to estimate the variance of this data set, $\sigma^2 (m)$.  By defining a function $\gamma_{i,j}$ as 
+
+\begin{equation}
+	\gamma_{i,j} = \langle x_i x_j \rangle - \langle x_i \rangle \langle x_j \rangle
+\end{equation}
+
+we see that $\sigma^2 (m)$ can be written in terms of $\gamma_{i,j}$ 
+
+\begin{equation}
+	\sigma^2(m) = \frac{1}{n^2}\sum_{i,j = 1}^{n} \gamma_{i,j}
+\end{equation}
+
+
+If we transform the data set ${x_1, ...,x_i,..., x_n}$ by taking the mean of two neigbouring points in the following way
+\begin{equation}
+	x'_i = \frac{1}{2}(x_{2i} + x_{2i+1})
+\end{equation}
+
+ the number of points in the transformed data set $n' = \frac{1}{2} n$, while the mean $m'$ is preseverd, such that $m' = m$, and therefore the variance is also the same for the transformed data set, $\sigma^2(m') = \sigma^2(m)$. Using the three point formula and after $l$ transformations, the $\gamma_h$, $h= |i-j|$ can be estimated with $\hat{\gamma}$ (??) written as 
+ 
+ \begin{equation}
+ 	\gamma^{l+1}(h) = \frac{1}{4} \gamma^{l}(2h-1) + \frac{1}{2}\gamma^{l}(2h) + \frac{1}{4} \gamma^{l}(2h+1) 
+ \end{equation}
+
+Using the estimated  $\hat{\gamma}$and the estimated variance $ \hat{\sigma^2}$ can thus be calculated for the transformed data set.
+
+ The transformation of data set  is continues, for each new data set $\hat{\gamma}^l(h=1)$ and $\hat{\sigma}^{(2),l}$ until the number of points $n'$ in the transformed data is $\leq 2$. 
+ 
+ Using the set of $\hat{\gamma}^l(h=1)$ and $\hat{\sigma}^{(2),l}$, the chi-squared distribution is calcualted, and the value of $l$ where the chi-square drops below a tolerance. For this value of $l$, $\sigma^2 = \hat{\sigma^2}$.
+
 
 \section{Results}
 
