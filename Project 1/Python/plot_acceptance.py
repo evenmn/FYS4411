@@ -17,11 +17,11 @@ sns.set()
 label_size = {"size":"14"}
 
 plt.plot(dt, acceptance, label="Numerical")
-plt.title("Acceptance rate Importance sampling", **label_size)
+#plt.title("Acceptance rate Importance sampling", **label_size)
 plt.xlabel("Timestep $\delta t$", **label_size)
 plt.ylabel("Acceptance rate", **label_size)
-plt.legend(loc="best")
-plt.savefig("%s/images/acceptance_IS.png" % dirpath)
+#plt.legend(loc="best")
+plt.savefig("%s/../images/acceptance_IS.png" % dirpath)
 plt.show()
 
 # --- Standard Metropolis ---
@@ -35,9 +35,9 @@ sns.set()
 label_size = {"size":"14"}
 
 plt.plot(dt, acceptance, label="Numerical")
-plt.title("Acceptance rate brute force Metropolis", **label_size)
+#plt.title("Acceptance rate brute force Metropolis", **label_size)
 plt.xlabel("Step length $r$", **label_size)
 plt.ylabel("Acceptance rate", **label_size)
-plt.legend(loc="best")
-plt.savefig("%s/images/acceptance_BF.png" % dirpath)
+#plt.legend(loc="best")
+plt.savefig("%s/../images/acceptance_BF.png" % dirpath)
 plt.show()
