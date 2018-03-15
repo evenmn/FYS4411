@@ -16,7 +16,7 @@ double Random_position(){
     return diss(seed);
 }
 
-void GradientDecent(int N, int dim, int M, double a, double steplength, bool HO, \
+double GradientDecent(int N, int dim, int M, double a, double steplength, bool HO, \
                     double beta, double h, int num_or_an, int BF_H, double timestep)
 {
     //Marsenne Twister Random Number Generator
@@ -176,4 +176,5 @@ void GradientDecent(int N, int dim, int M, double a, double steplength, bool HO,
         alpha = alpha - eta0 * E_L_der;//sqrt(iter + 1.0);
 
     }
+    return alpha;
 }

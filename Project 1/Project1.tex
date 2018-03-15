@@ -42,9 +42,9 @@
 
 \maketitle
 \begin{abstract}
-This project aims to simulate a trapped Bose gas using Variational Monte Carlo (VMC) with both the  brute force Metropolis and the Metropolis-Hastings algorithms. Using a trial wave function with spherical and elliptical harmonic oscillator (HO) potential, with and without a hard sphere potential, we calcuate the ground state energy and onebody density for different numbers of particles. Furthermore, the results are benchmarked with earlier publications. \par 
+This project aims to simulate a trapped Bose gas using Variational Monte Carlo (VMC) with both the  brute force Metropolis and the Metropolis-Hastings algorithms. Using a trial wave function with spherical and elliptical harmonic oscillator (HO) potential, with and without a hard sphere potential, we calculate the ground state energy and onebody density for different numbers of particles. Furthermore, the results are benchmarked with earlier publications. \par 
 
-Using the spherical HO with no interaction, both the brute force and the Hastings Metropolis methods reproduces analytical calculations. Though the Hastings algorithm is slightly slower, it has a higher acceptance rate for the proposed moves in the VMC simulation. The onebody density drops when introducing the hard sphere potential. The system behaves as expected, and our results reproduces the benchmarks.
+Using the spherical HO with no interaction, both the brute force and the Metropolis-Hastings methods reproduces analytical calculations. Though the Hastings algorithm is slightly slower, it has a higher acceptance rate for the proposed moves in the VMC simulation. The onebody density drops when introducing the hard sphere potential. The system behaves as expected, and our results reproduces the benchmarks.
 \par 
 
 \end{abstract}
@@ -57,9 +57,9 @@ Using the spherical HO with no interaction, both the brute force and the Hasting
 
 \section{Introduction}
 
-In this project, we study the  phenomen Bose-Einstein condensation, a highly relevant subject in modern physics.  Bose-Einstein condensation occurs when atoms are cooled towards absolute zero, as they start occupying the same quatum states \cite{JE2016}. Even though the effect was predicted in 1924, the effect was first demonstrated decades later \cite{SP}.
+In this project, we study the  phenomen Bose-Einstein condensation, a highly relevant subject in modern physics.  Bose-Einstein condensation occurs when atoms are cooled towards absolute zero, as they start occupying the same quantum states \cite{JE2016}. Even though the effect was predicted in 1924, the effect was first demonstrated decades later \cite{SP}.
 
-Our goal in this project is to simulate a trapped, hard sphere Bose gas for different numbers of particles for a given trial wave function, and to evaluate the ground state energy of this system. The system is evaluated both for a sperical and elliptical harmonic oscillator trap. The model is descriped in section \ref{Theory}. \par
+Our goal in this project is to simulate a trapped, hard sphere Bose gas for different numbers of particles for a given trial wave function, and to evaluate the ground state energy of this system. The system is evaluated both for a spherical and elliptical harmonic oscillator trap. The model is descriped in section \ref{Theory}. \par
 
 Using Variational Monte Carlo method with two different Metropolis algorithms, presented in section \ref{Method}, we use the trial wave function to calculate the ground state energy and the onebody density of the system. The results are presented in section \ref{Results}. In section \ref{Discussion} we discuss our results, and compare them to results obtained from the article found at (s \cite{Nilsen} and) \cite{DuBois}.
 
@@ -92,7 +92,6 @@ V_{int}(\vec{r}_i, \vec{r}_j)=
 \infty & \text{if}\quad |\vec{r}_i-\vec{r}_j| < a
 \end{cases}
 \end{equation}
-
 The trial wavefunction is on the form 
 \begin{equation}
 \Psi_T(\vec{r}_1, \vec{r}_2, ..., \vec{r}_N, \alpha, \beta)=\prod_i^Ng(\alpha, \beta, \vec{r}_i)\prod_{i<j}f(a,r_{ij})
@@ -115,27 +114,25 @@ f(a,r_{ij})=
    \left(1-\frac{a}{r_{ij}}\right) & r_{ij} > a.
 \end{cases}
 \end{equation}
-
 where $a$ is a parameter describing the minimum distance allowed between particles in the trap.
 
 \subsection{Local energy $E_L$ calculation}
 
 We want to calculate the local energy as a function of $\alpha$ for the trial wave function given in equation \ref{eq:WF}, and then use Variational Monte Carlo (VMC) described in section \ref{VMC}. 
 
-We obtain the general  expression for $E_L$ by rewriting Schr\"{o}dinger's equation, as shown in \ref{eq:Local_energy}.
+The general expression for $E_L$ is obtained by rewriting Schr\"{o}dinger's equation, as shown in \ref{eq:Local_energy}.
 
 \begin{equation}
 E_L(\vec{r})=\frac{1}{\Psi_T(\vec{r})}\hat{H}\Psi_T(\vec{r}).
 \label{eq:Local_energy}
 \end{equation}
-
 When the repulsive interaction is ignored ($a=0$), it can be shown that the local energy for a system of $N$ particles and $dim$ free dimensions is given by
 \begin{equation}
 E_L=dim\cdot N\cdot \alpha + \Big(\frac{1}{2}-2\alpha^2\Big)\sum_i\vec{r}_i^2,
 \end{equation}
-which is proven in Appendix A. This is only true for the a spherical harmonic oscillator trap, for the elliptical trap we need to add $\beta$ in front of the z-component. You may also notice that this equation is scaled, more about that in section \ref{sec:scaling}.
+which is proven in appendix A. This is only true for the a spherical harmonic oscillator trap, for the elliptical trap we need to add $\beta$ in front of the z-component. You may also notice that this equation is scaled, more about that in section \ref{sec:scaling}.
 
-For the a spherical harmonic oscillator where particle interactions are ignored, the analytical expression for one particle in a harmonic oscillator is well-known and reads $E = \hbar\omega(n + dim/2)$ where $n$ is the energy level and $dim$ is number of dimensions. In this project we will study the ground state only, such that $n=0$, and for $N$ particles and $dim$ free dimensions we therefore obtain the expression for the ground state $E_L$ shown in equation \ref{eq:Energy_exact}.
+For the a spherical harmonic oscillator where particle interactions are ignored, the analytical expression for one particle in a harmonic oscillator is well-known and reads $E = \hbar\omega(n + dim/2)$ where $n$ is the energy level and $dim$ is number of spatial dimensions. In this project we will study the ground state only, such that $n=0$, and for $N$ particles and $dim$ spatial dimensions we therefore obtain the expression for the ground state $E_L$ shown in equation \ref{eq:Energy_exact}.
 
 \begin{equation}
 E = \frac{1}{2}N\cdot dim\cdot\hbar\omega_{HO}.
@@ -143,7 +140,7 @@ E = \frac{1}{2}N\cdot dim\cdot\hbar\omega_{HO}.
 \end{equation}
 
 
-For $a\neq0$ it gets rather more complicated, because the correlation term from equation \ref{eq:WF_interaction_part} is now different from 1. We also need to add the interaction term, set to a so-called hard-sphere potential from equation \ref{eq:V_int}. We are now ready to find a general expression for the local energy. By defining
+For $a\neq0$ it gets rather more complicated, because the Jastrow factor from equation \ref{eq:WF_interaction_part} is now different from 1. We also need to add the interaction term, set to a so-called hard-sphere potential from equation \ref{eq:V_int}. We are now ready to find a general expression for the local energy. By defining
 \begin{equation}
 f(a, r_{ij})=\exp{\bigg(\sum_{i<j}u(r_{ij})\bigg)}
 \end{equation}
@@ -159,13 +156,13 @@ E_L=\sum_k\Bigg(-\frac{1}{2}\bigg(4\alpha^2\Big(x_k^2+y_k^2+\beta^2z_k^2-\frac{1
 +\sum_{j\neq k}\Big(u''(r_{kj})+\frac{2}{r_{kj}}u'(r_{kj})\Big)\bigg)+V_{ext}(\vec{r}_k)\Bigg) + V_{int}.\notag
 \label{EL_total}
 \end{align}
-This is not a pretty expression, but hopefully it will give us the correct answers. 
+which is also shown in appendix A. This is not a pretty expression, but hopefully it will give us the correct answers. 
 
 
 
 \subsubsection{Numerical calculation of $E_L$} \label{Numerical_calc_E_L}
 
-Another approach when calculating $E_L$ is to split up the local energy expression as shown in equation \ref{eq:EL_num}, and calculate the local energy with a numerical approach where the second derivative can be approximated by the three-point formula, shown in equation \ref{eq:num_derv}
+Another approach when calculating $E_L$ is to split up the local energy expression as shown in equation \ref{eq:EL_num}, and calculate the local energy with a numerical approach where the second derivative can be approximated by the three-point formula, see equation \ref{eq:num_derv}
 \begin{equation}
 \label{eq:EL_num}
 E_{L,i}=-\frac{\hbar^2}{2m}\frac{\nabla_i^2\Psi_T}{\Psi_T}+V_{ext}(\vec{r}_i)=E_{k,i}+E_{p,i}
@@ -179,32 +176,38 @@ In our case the position is a three dimensional vector, so we need to handle eac
 
 
 \subsection{Onebody density} \label{sec:OB_theory}
-In many cases it is convenient to know the positions of the particles, but when the number of particles increases, the set of positions turns into a messy collection of numbers which is not really informative (and in fact the exact positions cannot be revealed according to the uncertainity principle). Instead of presenting the positions, the density of particles can give us a good overview of where the particles can be found. With $N$ particles, the one-body density with respect to a particle $i$ is an integral over all particles but particle $i$
+In many cases it is convenient to know the positions of the particles, but when the number of particles increases, the set of positions turns into a messy collection of numbers which is not really informative (and in fact the exact positions can hardly be revealed according to the uncertainity principle). Instead of presenting the positions, the density of particles can give us a good overview of where the particles are located. With $N$ particles, the one-body density with respect to a particle $i$ is an integral over all particles but particle $i$
 \begin{equation}
 \rho_i=\int_{-\infty}^{\infty}d\vec{r}_1\hdots d\vec{r}_{i-1}d\vec{r}_{i+1}\hdots d\vec{r}_N |\Psi(\vec{r}_1,\hdots \vec{r}_N)|^2.
 \end{equation}
-For the non-interacting case this integral can be solved analytically, or we can use Monte Carlo integration to solve it for any case. Anyhow, the interesting part is the radial density, so we either have to solve the integral in spherical coordinates or convert to spherical coordinates afterwards. 
+For the non-interacting case this integral can be solved analytically (see equation (\ref{eq:onebody})), or we can use Monte Carlo integration to solve it for any case. Anyhow, the interesting part is the radial density, so we either have to solve the integral in spherical coordinates or convert to spherical coordinates afterwards. 
 
 Alternatively, the onebody radial density can be found in a more intuitive way. Imagine we divide the volume around particle $i$ into bins, where bin $j$ is located at a distance $j\cdot r_1$ (the radii are quantized). By counting the number of particles in a bin and dividing on the surface area, we find the average density of the bin. If we further decrease the initial radius $r_1$ (radius of the innermost bin) such that we have a large number of bins, this method can be used to find the onebody density. 
 \begin{figure}[H]
 	\centering
 	\begin{tikzpicture}[scale=0.50, thick, dot/.style={shape=circle,inner sep=+0pt, minimum size=+2pt, fill, label={#1}}]
-       \coordinate[dot=r] (r) at (1,4);
+       \coordinate[dot=ri] (ri) at (1,4);
        \coordinate[dot=rj] (rj) at (1,7);
 
        \foreach \cnt[count=\Cnt] in {.5, 1, 1.5, 2}
-         \node[draw, color=red!\Cnt 0!blue, label={[inner sep=+1pt, red!\Cnt 0!blue]below:$ r_{\Cnt} = \Cnt\cdot r_1$}] at (r) [circle through=($(r)!\cnt!(rj)$)] {};
+         \node[draw, color=red!\Cnt 0!blue, label={[inner sep=+1pt, red!\Cnt 0!blue]below:$ r_{\Cnt} = \Cnt\cdot r_1$}] at (ri) [circle through=($(ri)!\cnt!(rj)$)] {};
 	\end{tikzpicture}
-	\caption{One can find the onebody densiy by dividing the volume around a particle with coordinates $\vec{r}_i$ into bins and then count the number of particles, here illustrated in two dimensions.}
+	\caption{One can find the onebody density by dividing the volume around a particle with coordinates $\vec{r}_i$ into bins and then count the number of particles, here illustrated in two dimensions.}
 \end{figure}
 
+The analytical expression without the Jastrow factor is found from \cite{DuBois}, and can be modified for our particular system, presented for the three dimensional case in equation (\ref{eq:onebody}).
+\begin{equation}
+\rho_i=\frac{N\alpha\beta^{1/2}}{8\pi^{3/2}}e^{-r_i^2}.
+\label{eq:onebody}
+\end{equation}
+Since the particles are equal, we will have the same onebody density for every particle. 
 
 \subsection{Scaling} \label{sec:scaling}
 For big numerical projects, working with dimensionless quantities is a great advantage. Not only does it improve the code structure and performance, but it also avoids truncation errors due to small constants. For this project a natural scaling parameter for the energy is $\hbar\omega_{HO}$, which appears in the analytical energy expression in equation (\ref{eq:Energy_exact}). The equivalent dimensionless equation can then be written as
 \begin{equation}
 E'=\frac{N\cdot dim}{2}
 \end{equation}
-where $E'=E/\hbar\omega_{HO}$. Additionally we can scale the position with respect to the length of the spherical trap, $a_{HO}$, such that 
+where $E'=E/\hbar\omega_{HO}$. Additionally, we can scale the position with respect to the length of the spherical trap, $a_{HO}$, such that 
 \begin{equation}
 r_i'=\frac{r_i}{a_{HO}}=r_i\cdot\sqrt{\frac{m\omega_{HO}}{\hbar}},
 \end{equation}
@@ -218,7 +221,7 @@ For the spherical trap situation we are left with the variational parameters $\a
 \begin{equation}
 H=\sum_i\bigg(\frac{1}{2}\Big(-\nabla^2 + x_i^2 + y_i^2 + \beta^2z_i^2\Big)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
 \end{equation} 
-where $\beta$ is chosen to be 2.82843 due to experimental results.
+where $\beta$ is chosen to be $\sqrt{8}\cong2.82843$.
 
 \subsection{Error estimation} \label{Error_estimation}
 When presenting data from an experiment, one should always know the errors in the answer. Experimental data, including data from numerical experiments, are never determined beyond any doubt, and an estimate of this error should therefore be presented alongside the data. 
@@ -242,20 +245,20 @@ This gives us the error in the given experiment $\alpha$. If we repeat this expe
 
 \begin{equation}
 \label{eq:mean}
-\langle x_{m} \rangle = \frac{1}{n} \sum_{k=1}^n  \langle x_{\alpha} \rangle
+\langle x_{m} \rangle = \frac{1}{n} \sum_{k=1}^n  \langle x_{\alpha} \rangle.
 \end{equation}
 
 The total variance is then
 
 \begin{equation}
-\sigma_m^2 = \frac{1}{m} \sum_{\alpha=1}^m ( \langle x_{\alpha} \rangle - \langle x_{m} \rangle )^2
+\sigma_m^2 = \frac{1}{m} \sum_{\alpha=1}^m ( \langle x_{\alpha} \rangle - \langle x_{m} \rangle )^2.
 \end{equation}
 
 This can be reduced to 
 
 \begin{equation}
 \label{eq:sample_var_all_exp}
-\sigma_m^2 = \frac{\sigma^2}{n} + covariance term
+\sigma_m^2 = \frac{\sigma^2}{n} + \text{covariance term},
 \end{equation}
 
 where $\sigma$ is the sample variance over all the experiments, defined as 
@@ -268,7 +271,7 @@ and the covariance is the linear correlation between the measured points. The de
 
 \begin{equation}
 \label{eq:covariance}
-cov(x,y) = \frac{1}{n^2} \sum_i \sum_{j >i} (x_i - x_j) (y_i - y_j)
+cov(x,y) = \frac{1}{n^2} \sum_i \sum_{j >i} (x_i - x_j) (y_i - y_j).
 \end{equation}
 
 A common simplification is to reduce equation \ref{eq:sample_var_all_exp} to the following:
@@ -280,7 +283,7 @@ A common simplification is to reduce equation \ref{eq:sample_var_all_exp} to the
 
 This equation, however, does not take into account the covariance term from equation \ref{eq:sample_var_all_exp}, and as the covariance term is added to the expression for the variance, \ref{eq:variance_simplified} will underestimate the uncertainty $\sigma$ for positive covariances.
 
-A direct implementation of equation \ref{eq:sample_var_all_exp} including the covariance term is not suitable, as the expresion for the covariance includes a double sum, and for a large number of iterations, this will turn into an extremely time-consuming process for a large number of Monte Carlo iterations. Luckily, there are methods for calculating an accurate estimation of the variance without including a double loop in the Monte Carlo program. One of these methods is the blocking method, which is presented in section \ref{Blocking}.
+A direct implementation of equation \ref{eq:sample_var_all_exp} including the covariance term is not suitable, as the expression for the covariance includes a double sum, and for a large number of iterations, this will turn into an extremely time consuming process for a large number of Monte Carlo iterations. Luckily, there are methods for calculating an accurate estimation of the variance without including a double loop in the Monte Carlo program. One of these methods is the blocking method, which is presented in section \ref{Blocking}.
 
 \section{Method} \label{Method}
 \subsection{Variational Monte Carlo}\label{VMC}
@@ -305,7 +308,7 @@ since this can happen in two different ways. One can start in this state $i$ at 
 \begin{equation}
 P_i^{(n)} = P_i^{(n-1)} + \sum_j\bigg[P_j^{(n-1)}T_{j \rightarrow i}A_{j \rightarrow i} - P_i^{(n-1)}T_{i \rightarrow j}A_{i \rightarrow j}\bigg].
 \end{equation}
-When the times goes to infinity, the system will approach the most likely state and we will have $P_i^{(n)} = p_i$, which requires
+When the times goes to infinity, the system approaches the most likely state and we will have $P_i^{(n)} = p_i$, which requires
 \begin{equation}
 \sum_j\bigg[p_jT_{j \rightarrow i}A_{j \rightarrow i} - p_iT_{i \rightarrow j}A_{i \rightarrow j}\bigg]=0.
 \end{equation}
@@ -313,6 +316,7 @@ Rearranging, we obtain a quite useful result
 \begin{equation}
 \frac{A_{j\rightarrow i}}{A_{i\rightarrow j}}=\frac{p_iT_{i\rightarrow j}}{p_jT_{j\rightarrow i}}
 \end{equation}
+which will be used in the acceptance criteria.
 
 \subsubsection{Brute force}
 In the brute force Metropolis algorithm we want to check if the new position is more likely than the current position, and for that we calculate the probabilities $P(\vec{R})=|\Psi_T(\vec{R})|^2$ for both positions. We get rid off the transition probabilities setting $T_{i\rightarrow j}=T_{j\rightarrow i}$, and then end up with the plain ratio
@@ -333,7 +337,7 @@ The importance sampling technique is often refered to as Metropolis-Hastings alg
 \begin{equation}
 \frac{\partial P(R,t)}{\partial t} = D\frac{\partial}{\partial R}\bigg(\frac{\partial}{\partial R} - F\bigg)P(R,t).
 \end{equation}
-where $F$ is the drift force given by equation \ref{eq:drift_force} and $D$ is the diffusion coefficient, in this case equal $0.5$. Calculations of the analytical expression of the drift force $F$ for a shperical harmonic oscillator and $a=0$ can be found in appendix B.
+where $F$ is the drift force given by equation \ref{eq:drift_force} and $D$ is the diffusion coefficient, in this case equal $0.5$. Calculations of the analytical expression of the drift force $F$ for a spherical harmonic oscillator and $a=0$ can be found in appendix B.
 
 \begin{equation}
 	\label{eq:drift_force}
@@ -582,14 +586,15 @@ The gradient decent method was then used to find the minimum in the local energy
 
 
 \subsection{Onebody density}
-In section \ref{sec:OB_theory} we presented a couple of ways computing the onebody density. Because both should give the same result, we selected the simplest one, which is the method with the bins. We conduct the investigations in elliptic traps, with 10 particles, 3 dimensions and 1e6 Monte Carlo cycles. With the optimal parameter $\alpha$ for the ground state wave function and for three different choices of $a$, the onebody density plots are found in figure (\ref{fig:ob0}-\ref{fig:ob1}).
+In section \ref{sec:OB_theory} we presented a couple of ways computing the onebody density. Because both should give the same result, we selected the simplest one, which is the method with the bins. We conduct the investigations in elliptic traps, with 10 particles, 3 dimensions and 1e6 Monte Carlo cycles. With the optimal parameter $\alpha$ for the ground state wave function and for three different choices of $a$, the onebody density plots are found in figure (\ref{fig:ob0}).
 
 \begin{figure} [H]
     \centering
     \includegraphics[scale=0.65]{images/ob.png}
-    \caption{The one body density of the bosonic system. $a=0$ is run with the optimal variational parameter $\alpha = 0.5$, while the $a=0.0043$ is run with $\alpha = 0.3450$. As lenght is dimentionless, both the density $\rho$ and the length $r$ are dimentionless}
+    \caption{The onebody density of the bosonic system. $a=0$ is run with the optimal variational parameter $\alpha = 0.5$, while the $a=0.0043$ is run with $\alpha = 0.3450$. In addition the analytical onebody density without interaction ($a=0$) is plotted as a dashed line. As length is dimensionless, both the density $\rho$ and the length $r$ are dimensionless}
     \label{fig:ob0}
 \end{figure}
+We observe that the computed onebody density for the non-interacting case matches the analytical graph, but for small radii we get some noise. The onebody density for the interacting case has a lower peak, but seems broader than for $a=0$. The density approaches zero when the radius increases, and when $r\geq3$, both the densities are zero.
 
 \section{Discussion} \label{Discussion}
 
