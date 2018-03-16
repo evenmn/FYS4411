@@ -73,8 +73,7 @@ We study a system of $N$ bosons trapped in a harmonic oscillator with the Hamilt
 \hat{H}=\sum_i^N\bigg(-\frac{\hbar^2}{2m}\nabla_i^2+V_{ext}(\vec{r}_i)\bigg)+\sum_{i<j}^NV_{int}(\vec{r}_i,\vec{r}_j)
 \label{eq:Hamilton}
 \end{equation}
-with $V_{ext}$ as the external potential, which is the harmonic oscillator potential defined in equation \ref{eq:V_ext},
-and $V_{int}$ as the interaction term, defined in equation \ref{eq:V_int}, which ensures the particles to be separated by a distance $a$ . We will consider a harmonic oscillator which can either be spherical (all dimensions have the same scales) or elliptical (the vertical dimension has a different frequency from the horizontals).
+with $V_{ext}$ as the external potential, which is the harmonic oscillator potential defined in equation \ref{eq:V_ext}, and $V_{int}$ as the interaction term, defined in equation \ref{eq:V_int}, which ensures the particles to be separated by a distance $a$. $\hbar$ is the reduced Plancks constant and $m$ is the mass of the particles in question. In this project we study the gas of $^{87}$Rb alkali atom, which has a scattering length $a_{\text{Rb}}=0.0043$ given in units of a typical trap size $a_{HO}$. We will consider a harmonic oscillator which can either be spherical (all dimensions have the same scales) or elliptical (the vertical dimension has a different frequency from the horizontals).
 \begin{equation}
 \label{eq:V_ext}
 V_{ext}(\vec{r})=
@@ -83,7 +82,7 @@ V_{ext}(\vec{r})=
    \frac{1}{2}m[\omega_{HO}^2(x^2 + y^2) + \omega_z^2z^2] & \text{(Elliptical)}.
 \end{cases}
 \end{equation}
-
+where $\omega_{HO}$ is the frequency of the spherical harmonic oscillator and $\omega_z$ is the frequency of the elliptical trap in z-direction. 
 \begin{equation}
 \label{eq:V_int}
 V_{int}(\vec{r}_i, \vec{r}_j)=
@@ -105,7 +104,7 @@ which is practical since
 \begin{equation}
 \prod_i^Ng(\alpha, \beta, \vec{r}_i)=\exp\Big[-\alpha\sum_{i=1}^N(x_i^2+y_i^2+\beta z_i^2)\Big].
 \end{equation}
-$\alpha$ is a variational parameter that we later use to find the energy minimum, and $\beta$ is a constant. The trial wave function used is the exact ground state wave function for a spherical harmonic oscillator with no interaction, so by choosing the correct $\alpha$, we will find the exact ground state energy in this case. The $f$ presented above is the correlation wave function, which is 
+$\alpha$ is a variational parameter that we later use to find the energy minimum, and $\beta$ is a constant. The trial wave function used is the exact ground state wave function for a spherical harmonic oscillator with no interaction, so by choosing the correct $\alpha$, we will find the exact ground state energy. The $\alpha$ for the ground state wave function in this case is known to be $0.5$. The $f$ presented above is the correlation wave function, which is 
 \begin{equation}
 \label{eq:WF_interaction_part}
 f(a,r_{ij})=
@@ -465,10 +464,10 @@ For the brute force Metropolis algorithm we developed both an analytical and a n
 		\label{tab:BFmet}
 		& \multicolumn{2}{X}{\textbf{Analytical}} & \multicolumn{2}{X}{\textbf{Numerical}} & Exact \\
 		$N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s]& $\langle E_L\rangle$ [$\hbar\omega_{HO}$]\\ \hline
-		1 & 1.5000 & 0.15420 & 1.49999 & 0.65714 & 1.5000\\
-		10 & 15.000 & 0.54785 & 14.9999 & 9.9844 & 15.000\\
-		100 & 150.00 & 13.573 & 149.999 & 2743.4 & 150.00\\
-		500 & 750.00 & 282.79 & 749.996 & 2.8744e5 & 750.00\\ \hline
+		1 & 1.5000(15) & 0.15420 & 1.5000(15) & 0.65714 & 1.5000\\
+		10 & 15.000(15) & 0.54785 & 15.000(15) & 9.9844 & 15.000\\
+		100 & 150.00(15) & 13.573 & 150.00(15) & 2743.4 & 150.00\\
+		500 & 750.00(75) & 282.79 & 750.00(75) & 2.8744e5 & 750.00\\ \hline
 	\end{tabularx}
 \end{table}
 
@@ -504,7 +503,7 @@ For the brute force Metropolis algorithm we developed both an analytical and a n
 \end{figure} 
 
 \subsection{Acceptance ratios}
-We study the acceptance ratio for the brute force and importance sampling algorithms, with no interaction. These calculations are done with ten particles in three dimentions. The number of Monte Carlo cycles is fixed to $M=1e6$, and the variational parameter $\alpha$ is equal to $0.5$.
+We study the acceptance ratio for the brute force and importance sampling algorithms, with no interaction. These calculations are done with ten particles in three dimensions. The number of Monte Carlo cycles is fixed to $M=1e6$, and the variational parameter $\alpha$ is equal to $0.5$.
 
 \subsubsection{Importance sampling dependence on timestep }
 The acceptance ratio for the importance sampling algorithm as a function of the timestep $\delta t$ is shown in figure \ref{fig:acceptance_IS_timestep}. 
@@ -531,7 +530,7 @@ The acceptance ratio for the brute force algorithm as a function of the stepsize
 In table \ref{tab:variance_analysis}, we present the results of the local energy calculation with proper error evaluation of statistical error. The statistical error as found with the Blocking method is also compared to the simple way of approximating the variance with equation \ref{eq:variance_simplified}. 
 
 \begin{table} [H]
-	\caption{The local energy calculated for $a=0$  without hard-sphere interaction with the Metropolis-Hastings algorithm with analytical local energy calculation, this time with proper evaluation of the statistical error.  The calculations are run in three dimentions with $1e6$ Monte Carlo cycles, and the variational paramameter $\alpha=0.6$}
+	\caption{The local energy calculated for $a=0$  without hard-sphere interaction with the Metropolis-Hastings algorithm with analytical local energy calculation, this time with proper evaluation of the statistical error.  The calculations are run in three dimensions with $1e6$ Monte Carlo cycles, and the variational paramameter $\alpha=0.6$}
 	\begin{tabularx}{\textwidth}{X|XXXX} \hline
 		\label{tab:variance_analysis}
 		$N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & $\sigma^2$ Blocking & $\sigma^2 \approx \langle E_L^2 \rangle - \langle E_L \rangle^2$ \\ \hline
@@ -547,7 +546,7 @@ In table \ref{tab:EL_calc_repulsive_pot}, the results from the calculation of th
 
 \begin{table} [H]
 	\centering
-	\caption{The local energy $E_L$ calculated for different $\alpha$, with $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=2.82843$, with the brute force algorithm with analytical local energy calculation.  The calculations are run in three dimentions with $1e6$ Monte Carlo cycles}
+	\caption{The local energy $E_L$ calculated for different $\alpha$, with $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=2.82843$, with the brute force algorithm with analytical local energy calculation.  The calculations are run in three dimensions with $1e6$ Monte Carlo cycles}
 	\begin{tabularx}{\textwidth}{X|XXXXX} \hline
 		\label{tab:EL_calc_repulsive_pot}
 		$N$ & $\alpha$ = 0.2 & $\alpha$ = 0.3  & $\alpha$ = 0. 35 & $\alpha$ = 0. 4 & $\alpha$ = 0. 5   \\ \hline
@@ -562,7 +561,7 @@ The gradient decent method was then used to find the minimum in the local energy
 
 \begin{table} [H]
 	\centering
-	\caption{The local energy $E_L$ calculated with the gradient decenet method, with $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=2.82843$, with the brute force algorithm with analytical local energy calculation. The table shows the optimal $\alpha$ found by the method, and the resulting local energy. The calculations are run in for  three dimentions with $1e6$ Monte Carlo cycles.}
+	\caption{The local energy $E_L$ calculated with the gradient decenet method, with $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=2.82843$, with the brute force algorithm with analytical local energy calculation. The table shows the optimal $\alpha$ found by the method, and the resulting local energy. The calculations are run in for  three dimensions with $1e6$ Monte Carlo cycles.}
 	\begin{tabularx}{\textwidth}{X|XXX} \hline
 		\label{tab:EL_calc_gradientdecent}
 		$N$ & $\alpha $ & $E_L$  & $\frac{\partial E_L}{\partial \alpha}$   \\ \hline
@@ -585,8 +584,11 @@ In section \ref{sec:OB_theory} we presented a couple of ways computing the onebo
 From the onebody density plot, we observe that the experimental onebody density matches the exact without interacting, and the half peak value is $\sim 0.8$. For the case with interaction, the peak is obviously lower, and we observe a half peak value of 
 
 \section{Discussion} \label{Discussion}
+For the case without interaction and spherical harmonic oscillator we see from figure \ref{fig:EL_as_func_of_alpha} that the minimum of the local energy is found when the varitional parameter $\alpha=0.5$. We also observe that $\alpha=0.5$ gives the minimal variance, and seen from figure \ref{fig:variance_EL_as_func_of_alpha}. For small $\alpha$'s the energies and variances explode.  
+\par 
+\vspace{3mm}
 
-When comparing the results from the brute force Monte Carlo calculation with spherical harmonic oscillator and no interaction, as shown in table \ref{tab:BFmet}, we observe that in the case when we use an analytical expression for $E_L$, the simulation results yields the exact energy, as obtained from equation \ref{eq:Energy_exact}. When using the numerically calculated $E_L$, as described in section \ref{Numerical_calc_E_L}, the calculated results deviate slightly from the exact answer. Also when comparing the CPU time difference between these two calculations, the numerically calculated $E_L$ spends much more time on the calculations compared to the analytically calculated $E_L$-case. The time difference is as large as a factor of $10^3$ for the 500 particles, three dimentions case. This makes it preferable in both the aspect of time and accuracy to use the analytically calculated $E_L$ in our calculations. However, not all trial wave functions $\psi_T$ or Hamiltonians H will yield an $E_L$ which is analytically possible to calculate, and in this case, one should have a functioning algorithm for numerical calculation of $E_L$ as well.
+When comparing the results from the brute force Monte Carlo calculation with spherical harmonic oscillator and no interaction, as shown in table \ref{tab:BFmet}, we observe that in the case when we use an analytical expression for $E_L$, the simulation results yields the exact energy, as obtained from equation \ref{eq:Energy_exact}. When using the numerically calculated $E_L$, as described in section \ref{Numerical_calc_E_L}, the calculated results reproduces the exact answers. When comparing the CPU time difference between these two calculations, the numerically calculated $E_L$ spends much more time on the calculations compared to the analytically calculated $E_L$-case. The time difference is as large as a factor of $10^3$ for the 500 particles, three dimensions case. This makes it preferable to use the analytically calculated $E_L$ in our calculations. However, not all trial wave functions $\psi_T$ or Hamiltonians H will yield an $E_L$ which is analytically possible to calculate, and in this case, one should have a functioning algorithm for numerical calculation of $E_L$ as well.
 \par 
 \vspace{3mm}
 
@@ -607,7 +609,7 @@ Must benchmark results from e and f!
 
 \section{Conclusion}
 
-In this project, we have found that the Variational Monte Carlo method reproduces analytical calculations for the spherical harmonic oscillator without interparticle interaction. Both the brute force method with an analytically calculated for $E_L$ and the Hastings algorithm were quick and accurate, while the brute force method with a numerically calculated $E_L$ was much slower, and also less accurate. \par 
+In this project, we have found that the Variational Monte Carlo method reproduces analytical calculations for the spherical harmonic oscillator without interparticle interaction. The minimum in the energy was found for this case to be $\alpha=0.5$, which is as expected. Both the brute force method with an analytically calculated for $E_L$ and the Hastings algorithm were quick and accurate, while the brute force method with a numerically calculated $E_L$ was much slower, and also less accurate. \par 
 The Hastings algorithm had a higher acceptance rate for the proposed moves in the Monte Carlo iterations compared to the brute force method. This should result in the Hastings method converging faster, although we did not observe that in this report. We also saw that the Hastings algorithm was more dependent on the timestep compared to the brute force method's dependence om stepsize. This is as we would expect from theory.  \par
 When including a proper evaluation of the error by using the blocking method, we saw that the blocking method gave a slightly higher estimated variance, compared to the estimation from equation \ref{eq:variance_simplified}. This is as expected.
 
@@ -651,11 +653,11 @@ We calculated the analytical expression for the local energy $E_L$, as given by 
 	\Psi_T(\vec{r}) = \prod_i^N e^{-\alpha(x_i^2 + y_i^2 + \beta z_i^2)}
 \end{equation}
 
-We now want to calculate the analytical expressions for $E_L$ for one particle and one dimention, and $N$ particles and three dimentions.
+We now want to calculate the analytical expressions for $E_L$ for one particle and one dimension, and $N$ particles and three dimensions.
 
 \subsubsection{One particle, one dimension}
 
-From equation \ref{eq:WF_nointeract}, the trial wave function for one particle and one dimention is as follows:
+From equation \ref{eq:WF_nointeract}, the trial wave function for one particle and one dimension is as follows:
 
 \begin{equation}
 	\label{eq:WF_1dim_1N}
@@ -699,7 +701,7 @@ E_L(\alpha) = -\frac{\hbar^2}{m} \alpha (2x\alpha^2 -1) + \frac{1}{2} m\omega_{H
 
 \subsubsection{$N$ particles, three dimensions}
 
-When extending the non-interaction case to $N$ particles and three dimentions, the trial wave function will take the form listed in equation \ref{eq:WF_nointeract}, and the Hamiltonian will be as listed in equation \ref{eq:Hamilton} with the dimensionless spherical harmonic oscillator potential $\frac{1}{2}r_i^2$, as listed in \ref{eq:V_ext}.
+When extending the non-interaction case to $N$ particles and three dimensions, the trial wave function will take the form listed in equation \ref{eq:WF_nointeract}, and the Hamiltonian will be as listed in equation \ref{eq:Hamilton} with the dimensionless spherical harmonic oscillator potential $\frac{1}{2}r_i^2$, as listed in \ref{eq:V_ext}.
 
 \iffalse
 The local energy is then
@@ -826,7 +828,7 @@ E_L&=\frac{1}{\Psi_T}\bigg(\sum_i\Big(-\frac{1}{2}\nabla_i^2+V_{ext}(\vec{r}_i)\
 
 This section shows the analytical calculations for the drift force $F$, as given by equation \ref{eq:drift_force} for the non-interaction case.
 
-\subsubsection{$N$ particles, 1 dimention}
+\subsubsection{$N$ particles, 1 dimension}
 
 The no interaction, N particle trial wave function $\psi_T$ is given by
 
@@ -840,7 +842,7 @@ The no interaction, N particle trial wave function $\psi_T$ is given by
 	F = \frac{2 \nabla ( \prod_i e^{-\alpha x_i^2} )}{ \prod_i e^{-\alpha x_i^2} }
 \end{align}
 
-The differentiation $\nabla \rightarrow \frac{d }{d x}$, as we operate in one dimention. The differentiation of $\psi_T$ yields
+The differentiation $\nabla \rightarrow \frac{d }{d x}$, as we operate in one dimension. The differentiation of $\psi_T$ yields
 
 \begin{equation}
 	\label{eq:differentiation_WF}
@@ -853,15 +855,15 @@ This yields the drift force $F$
 	F =  2* \prod_i e^{\alpha x_i^2}   \prod_i e^{-\alpha x_i^2} \sum_i (-2\alpha x_i) = - 4 \alpha \sum_i x_i
 \end{equation}
 
-\subsubsection{$N$ particles, 3 dimentions}
+\subsubsection{$N$ particles, 3 dimensions}
 
-In the $N$ particles, $3$ dimentions case, the trial wave function $\psi_T$ takes the following form
+In the $N$ particles, $3$ dimensions case, the trial wave function $\psi_T$ takes the following form
 
 \begin{equation}
 	\psi_T = \prod_i e^{- \alpha (x_i^2 + y_i^2 + \beta z_i^2)} 
 \end{equation}
 
-As we operate in three dimentions, $\nabla = (\frac{d}{dx}, \frac{d}{dy}, \frac{d}{dy})$. The differentiation in one dimention of $\psi$ is shown in equation \ref{eq:differentiation_WF}, and the results are similar for the differentiation with respect to $y$ and $z$, the only difference being an extra factor $\beta$ in the expression for $\frac{d \psi_T}{d z}$, due to the $\beta$ in the expression for $\psi_T$. Thus the drift force F for $N$ particles in three dimentions is 
+As we operate in three dimensions, $\nabla = (\frac{d}{dx}, \frac{d}{dy}, \frac{d}{dy})$. The differentiation in one dimension of $\psi$ is shown in equation \ref{eq:differentiation_WF}, and the results are similar for the differentiation with respect to $y$ and $z$, the only difference being an extra factor $\beta$ in the expression for $\frac{d \psi_T}{d z}$, due to the $\beta$ in the expression for $\psi_T$. Thus the drift force F for $N$ particles in three dimensions is 
 
 \begin{equation}
 	F = -4 \alpha (\sum_i xi, \sum_i y_i, \sum_i \beta z_i)
@@ -884,7 +886,7 @@ where we can take $H'=H/\hbar\omega_{HO}$ as the dimensionless energy. Further w
 \begin{equation*}
 x_i^2=(x_i')^2\cdot a_{HO}^2=(x_i')^2\cdot\frac{\hbar}{m\omega_{HO}},
 \end{equation*}
-and we finally obtain
+where we have used the relation $a_{HO}\equiv (\hbar/m\omega_{HO})^{1/2}$, and we finally obtain
 \begin{equation}
 H'=\sum_i\frac{1}{2}\bigg(-\nabla_i^2+(x_i')^2+(y_i')^2+\frac{\omega_z^2}{\omega_{HO}^2}(z_i')^2\bigg)+\sum_{i<j}V_{int}(\vec{r}_i, \vec{r}_j)
 \end{equation}
