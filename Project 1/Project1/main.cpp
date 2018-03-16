@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
     int    num_or_an  = 0;       //if calculation is to be based on analytical(0) or numerical(1) E_L
 
 
-    double alpha[]    = {0.2};           //variational parameter
+    double alpha[]    = {0.350636};           //variational parameter
     int    len_alpha  = sizeof(alpha)/sizeof(*alpha);    //length of alpha
 
     cout << "Running with the following paramteres:" << endl;
