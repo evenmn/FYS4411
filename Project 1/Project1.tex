@@ -574,14 +574,15 @@ The gradient decent method was then used to find the minimum in the local energy
 
 
 \subsection{Onebody density}
-In section \ref{sec:OB_theory} we presented a couple of ways computing the onebody density. Because both should give the same result, we selected the simplest one, which is the method with the bins. We conduct the investigations in elliptic traps, with 10 particles, 3 dimensions and 1e6 Monte Carlo cycles. With the optimal parameter $\alpha$ for the ground state wave function and for three different choices of $a$, the onebody density plots are found in figure (\ref{fig:ob0}-\ref{fig:ob1}).
+In section \ref{sec:OB_theory} we presented a couple of ways computing the onebody density. Because both should give the same result, we selected the simplest one, which is the method with the bins. We conduct the investigations in elliptic traps, with 10 particles, 3 dimensions and 1e6 Monte Carlo cycles. With the optimal parameter $\alpha$ for the ground state wave function and for both the interacting and the non-interacting case, the onebody density plot is found in figure (\ref{fig:ob0}).
 
 \begin{figure} [H]
     \centering
     \includegraphics[scale=0.65]{images/ob.png}
-    \caption{The one body density of the bosonic system. $a=0$ is run with the optimal variational parameter $\alpha = 0.5$, while the $a=0.0043$ is run with $\alpha = 0.3450$. As lenght is dimentionless, both the density $\rho$ and the length $r$ are dimentionless}
+    \caption{The onebody density of the bosonic system, which is run with $\alpha=0.5$ for $a=0$ and compared with the analytical expression. The optimal $\alpha$ for the interacting case was found to be $\alpha = 0.3450$. As length is dimensionless, both the density $\rho$ and the length $r$ are dimensionless.}
     \label{fig:ob0}
 \end{figure}
+From the onebody density plot, we observe that the experimental onebody density matches the exact without interacting, and the half peak value is $\sim 0.8$. For the case with interaction, the peak is obviously lower, and we observe a half peak value of 
 
 \section{Discussion} \label{Discussion}
 
