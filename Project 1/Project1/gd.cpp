@@ -141,7 +141,7 @@ double GradientDecent(int N, int dim, int M, double a, double steplength, bool H
         double E_L_avg = E_tot/M;
         double E_L_avg_sqrd = E_tot_sqrd/M;
         double accept_ratio = accept/M; //too small for wrong alpha; can say 0, but is not exactly 0
-        double variance = E_L_avg_sqrd - E_L_avg*E_L_avg;
+        double variance = (E_L_avg_sqrd - E_L_avg*E_L_avg)/M;
 
         double psi_E_avg = psi_E_tot/M;
         double psi_avg = psi_tot/M;

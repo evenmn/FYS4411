@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 {
     //variables chosen by user
     int    M          = 1000000; //number of MC cycles
-    int    N          = 10;      //number of particles
+    int    N          = 1;      //number of particles
     int    dim        = 3;       //number of dimensions concidered
     double beta       = 2.82843;       //weight parameter along z-axis
     double steplength = 1.0;     //steplength when changing position
@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
     int    num_or_an  = 0;       //if calculation is to be based on analytical(0) or numerical(1) E_L
 
 
-    double alpha[]    = {0.2};           //variational parameter
+    double alpha[]    = {0.350636};           //variational parameter
     int    len_alpha  = sizeof(alpha)/sizeof(*alpha);    //length of alpha
 
     cout << "Running with the following paramteres:" << endl;
