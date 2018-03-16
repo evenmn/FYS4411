@@ -44,6 +44,7 @@ double WaveFunction::Psi_value(vector<vector<double>> &pos_mat, double alpha, do
     double sumsqrt = 0;         // x1^2 + y1^2 + B*z1^2 + ... + B*zn^2
     double prodf = 1;
     double norm = 0;
+    bool leave = false;
 
     for(int i=0; i<m_N; i++) {
         for(int k=0; k<m_dim; k++){
@@ -63,9 +64,11 @@ double WaveFunction::Psi_value(vector<vector<double>> &pos_mat, double alpha, do
             }
             else{
                 prodf = 0;
+                leave = true;
                 break;
             }
         }
+        if(leave)break;
     }
     return exp(-alpha*sumsqrt) * prodf;
 
@@ -77,6 +80,7 @@ double WaveFunction::Psi_value_sqrd(vector<vector<double>> &pos_mat, double alph
     double sumsqrt = 0;         // x1^2 + y1^2 + B*z1^2 + ... + B*zn^2
     double prodf = 1;
     double norm = 0;
+    bool leave = false;
 
     for(int i=0; i<m_N; i++) {
         for(int k=0; k<m_dim; k++){
@@ -97,8 +101,10 @@ double WaveFunction::Psi_value_sqrd(vector<vector<double>> &pos_mat, double alph
             else{
                 prodf = 0;
                 break;
+                leave = true;
             }
         }
+        if(leave)break;
     }
     return exp(-alpha*sumsqrt*2) * prodf * prodf;
 }
