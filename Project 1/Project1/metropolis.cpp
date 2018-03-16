@@ -65,6 +65,11 @@ void Met_algo(int N, int dim, int M, double a, double steplength, bool HO, doubl
             for(auto& coord : particle)
                 coord = random_position();
 
+
+
+
+
+
         //Initialize wave function
         WaveFunction Psi;
         Psi.setTrialWF(dim, N, a, num_or_an, HO);
