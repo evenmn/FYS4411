@@ -422,8 +422,7 @@ for(max number of iterations with minimizing)
 
 \end{lstlisting}
 
-\subsection{Blocking method}
-\label{Blocking}
+\subsection{Blocking method} \label{Blocking}
 
 As described in section \ref{Error_estimation}, we need a method to give a proper estimation of the variance $\sigma^2$ of the points in our experiment, preferably without calculating the double loop from the expression of the covariance in equation \ref{eq:covariance}. 
 \par 
@@ -436,15 +435,13 @@ The variance is defined as
 \begin{equation}
 	\sigma^2 = \frac{1}{n-1} \sum_i (x_i - m)
 \end{equation}
-
 However, this does not include the covariance, as the points $x_i$ are correlated.
 
-If we transform the data set $\{x_1, ...,x_i,..., x_n\}$ by taking the mean of two neigbouring points in the following way
+If we transform the data set $\{x_1, ...,x_i,..., x_n\}$ by taking the mean of two neighbouring points in the following way
 \begin{equation}
 	x'_i = \frac{1}{2}(x_{2i} + x_{2i+1})
 \end{equation}
-
- the number of points in the transformed data set $n' = \frac{1}{2} n$. Each pair of points $x'_i$ is referred to as a block, and using the variance formula above, the variance within each block is calculated. An estimate of the total variance $\hat{\sigma}$ is then
+the number of points in the transformed data set $n' = \frac{1}{2} n$. Each pair of points $x'_i$ is referred to as a block, and using the variance formula above, the variance within each block is calculated. An estimate of the total variance $\hat{\sigma}$ is then
  
  \begin{equation}
  \hat{\sigma} = \frac{\sigma_1 + ... + \sigma_{n'}}{n'}
@@ -454,12 +451,33 @@ By repeating this procedure several times, and each time using more measurements
 
 \section{Results} \label{Results}
 
+We will first present the results obtained without repulsive interaction, and thoughout this part we will consequently use $\alpha=0.5$ and run for $1e6$ Monte Carlo cycles and for three spatial dimensions. 
+
+Thereafter we will turn to the more realistic and interesting situation where the particles interact with each other. We will still study the behavior in three dimensions and for $1e6$ cycles, but we need to set the scattering distance to $a=0.0043$ and find the $\alpha$ which gives the minimum local energy. In this part we will also turn on the elliptical harmonic oscillator potential.
+
+\subsection{$E_L$ as a function of the variational parameter $\alpha$}
+In search of the energy minimum we tried various $\alpha$ values, and optimal $\alpha$ was 0.5, as one can see in figure \ref{fig:EL_as_func_of_alpha}. The variance associated with the energy measurement in figure \ref{fig:EL_as_func_of_alpha}, and we see that the energy minimum and the variance minimum share the same $\alpha$.
+
+\begin{figure} [H]
+	\centering
+	\includegraphics[scale=0.6]{images/energy.png}
+	\caption{The local energy $E_L$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$ in the interval $[0.1,0.9]$. for each $\alpha$ we used $1e6$ Monte Carlo cycles in three spatial dimensions.}
+	\label{fig:EL_as_func_of_alpha}
+\end{figure} 
+
+\begin{figure} [H]
+	\centering
+	\includegraphics[scale=0.6]{images/variance.png}
+	\caption{The variance of the local energy $E_L$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$ associated with the energy plot in figure \ref{fig:EL_as_func_of_alpha}. The variance is calculated with equation \ref{eq:variance_simplified}}.
+	\label{fig:variance_EL_as_func_of_alpha}
+\end{figure} 
+
 \subsection{$E_L$ calculation and CPU-time}\label{CPU}
-For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the local energy. In table \ref{tab:BFmet} we present the results from these calculations and the performance. The results from the calculations with the Metropolis-Hastings algorithm are presentet in table \ref{tab:ISmet}. All the measurements are done in three dimensions with $1e6$ Monte Carlo cycles. $a$ is fixed to zero, and $\alpha$ is equal $0.5$.
+For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the local energy. In table \ref{tab:BFmet} we present the results from these calculations and the performance. The results from the calculations with the Metropolis-Hastings algorithm are presented in table \ref{tab:ISmet}.
 
 \begin{table} [H]
 	\centering
-	\caption{The local energy calculated for $a=0$  without hard-sphere interaction with brute force Metropolis algorithm, for both the analytical and numerical local energy calculation. The variational parameter $\alpha$ is $0.5$. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}. The number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the local energies. }
+	\caption{The local energy calculated for $a=0$  without hard-sphere interaction with brute force Metropolis algorithm, for both the analytical and numerical local energy calculation. The variational parameter $\alpha$ is $0.5$. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}. The number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the calculated energies. }
 	\begin{tabularx}{\textwidth}{X|XX|XX|X} \hline
 		\label{tab:BFmet}
 		& \multicolumn{2}{X}{\textbf{Analytical}} & \multicolumn{2}{X}{\textbf{Numerical}} & Exact \\
@@ -473,47 +491,21 @@ For the brute force Metropolis algorithm we developed both an analytical and a n
 
 \begin{table} [H]
 	\centering
-	\caption{The local energy calculated for $a=0$  without hard-sphere interaction with the Metropolis-Hastings algorithm with analytical local energy calculation. The variational parameter $\alpha$ is $0.5$. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}. The number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the local energies.}
+	\caption{The local energy calculated for $a=0$  without hard-sphere interaction with the Metropolis-Hastings algorithm with analytical local energy calculation. The variational parameter $\alpha$ is $0.5$. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}. The number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the local energy calculations.}
 	\begin{tabularx}{\textwidth}{X|XX|X} \hline
 		\label{tab:ISmet}
 		& \textbf{Analytical}  & & \textbf{Exact}\\
 		$N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & CPU-time [s] & $\langle E_L\rangle$ [$\hbar\omega_{HO}$]\\ \hline
-		1 & 1.5000 & 0.26693  & 1.5000 \\
-		10 & 15.000 &  0.54930 & 15.000 \\
-		100 & 150.00 & 16.117 & 150.00 \\
-		500 & 750.00 & 292.10 & 750.00 \\ \hline
+		1 & 1.5000(15) & 0.26693  & 1.5000 \\
+		10 & 15.000(15) &  0.54930 & 15.000 \\
+		100 & 150.00(15) & 16.117 & 150.00 \\
+		500 & 750.00(75) & 292.10 & 750.00 \\ \hline
 	\end{tabularx}
 \end{table}
 
 
- \subsection{$E_L$ as function of the variational parameter $\alpha$}
-
-\begin{figure} [H]
-	\centering
-	\includegraphics[scale=0.65]{images/energy.png}
-	\caption{The local energy $E_L$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$}
-	\label{fig:EL_as_func_of_alpha}
-\end{figure} 
-
-\begin{figure} [H]
-	\centering
-	\includegraphics[scale=0.65]{images/variance.png}
-	\caption{The variance of the local energy $E_L$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$. The variance is calculated with equatin \ref{eq:variance_simplified}}
-	\label{fig:variance_EL_as_func_of_alpha}
-\end{figure} 
-
 \subsection{Acceptance ratios}
-We study the acceptance ratio for the brute force and importance sampling algorithms, with no interaction. These calculations are done with ten particles in three dimensions. The number of Monte Carlo cycles is fixed to $M=1e6$, and the variational parameter $\alpha$ is equal to $0.5$.
-
-\subsubsection{Importance sampling dependence on timestep }
-The acceptance ratio for the importance sampling algorithm as a function of the timestep $\delta t$ is shown in figure \ref{fig:acceptance_IS_timestep}. 
-
-\begin{figure} [H]
-	\centering
-	\includegraphics[scale=0.65]{images/acceptance_IS.png}
-	\caption{Acceptance ratio for different choices of the timestep $\delta t$  with the Metropolis-Hastings algorithm.}
-	\label{fig:acceptance_IS_timestep}
-\end{figure} 
+We study the acceptance ratio for the brute force and importance sampling algorithms, with no interaction. These calculations are done with ten particles in three dimensions.
 
 \subsubsection{Brute force dependence on stepsize}
 The acceptance ratio for the brute force algorithm as a function of the stepsize is shown in figure \ref{fig:acceptance_BF_stepsize}. 
@@ -525,12 +517,23 @@ The acceptance ratio for the brute force algorithm as a function of the stepsize
 	\label{fig:acceptance_BF_stepsize}
 \end{figure} 
 
- \subsection{Variance calculation}
+\subsubsection{Importance sampling dependence on timestep}
+The acceptance ratio for the importance sampling algorithm as a function of the timestep $\delta t$ is shown in figure \ref{fig:acceptance_IS_timestep}. 
+
+\begin{figure} [H]
+	\centering
+	\includegraphics[scale=0.65]{images/acceptance_IS.png}
+	\caption{Acceptance ratio for different choices of the timestep $\delta t$  with the Metropolis-Hastings algorithm.}
+	\label{fig:acceptance_IS_timestep}
+\end{figure} 
+
+
+\subsection{Variance calculation}
 
 In table \ref{tab:variance_analysis}, we present the results of the local energy calculation with proper error evaluation of statistical error. The statistical error as found with the Blocking method is also compared to the simple way of approximating the variance with equation \ref{eq:variance_simplified}. 
 
 \begin{table} [H]
-	\caption{The local energy calculated for $a=0$  without hard-sphere interaction with the Metropolis-Hastings algorithm with analytical local energy calculation, this time with proper evaluation of the statistical error.  The calculations are run in three dimensions with $1e6$ Monte Carlo cycles, and the variational paramameter $\alpha=0.6$}
+	\caption{The local energy calculated for $a=0$  without hard-sphere interaction with the Metropolis-Hastings algorithm with analytical local energy calculation, this time with proper evaluation of the statistical error.  The calculations are run in three dimensions with $1e6$ Monte Carlo cycles, and the variational paramameter $\alpha=0.5$}
 	\begin{tabularx}{\textwidth}{X|XXXX} \hline
 		\label{tab:variance_analysis}
 		$N$ & $\langle E_L\rangle$ [$\hbar\omega_{HO}$] & $\sigma^2$ Blocking & $\sigma^2 \approx \langle E_L^2 \rangle - \langle E_L \rangle^2$ \\ \hline
@@ -561,7 +564,7 @@ The gradient decent method was then used to find the minimum in the local energy
 
 \begin{table} [H]
 	\centering
-	\caption{The local energy $E_L$ calculated with the gradient decenet method, with $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=2.82843$, with the brute force algorithm with analytical local energy calculation. The table shows the optimal $\alpha$ found by the method, and the resulting local energy. The calculations are run in for  three dimensions with $1e6$ Monte Carlo cycles.}
+	\caption{The local energy $E_L$ calculated with the gradient decent method, with $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=2.82843$, with the brute force algorithm with analytical local energy calculation. The table shows the optimal $\alpha$ found by the method, and the resulting local energy. The calculations are run in for  three dimensions with $1e6$ Monte Carlo cycles.}
 	\begin{tabularx}{\textwidth}{X|XXX} \hline
 		\label{tab:EL_calc_gradientdecent}
 		$N$ & $\alpha $ & $E_L$  & $\frac{\partial E_L}{\partial \alpha}$   \\ \hline
@@ -577,41 +580,56 @@ In section \ref{sec:OB_theory} we presented a couple of ways computing the onebo
 
 \begin{figure} [H]
     \centering
-    \includegraphics[scale=0.65]{images/ob.png}
-    \caption{The onebody density of the bosonic system, which is run with $\alpha=0.5$ for $a=0$ and compared with the analytical expression. The optimal $\alpha$ for the interacting case was found to be $\alpha = 0.3450$. As length is dimensionless, both the density $\rho$ and the length $r$ are dimensionless.}
+    \includegraphics[scale=0.80]{images/ob.png}
+    \caption{The onebody density of the bosonic system, which is run with $\alpha=0.5$ for $a=0$ and compared with the analytical expression. The optimal $\alpha$ for the interacting case with $a=0.0043$ was found to be $\alpha = 0.3450$. As length is dimensionless, both the density $\rho$ and the length $r$ are dimensionless.}
     \label{fig:ob0}
 \end{figure}
-From the onebody density plot, we observe that the experimental onebody density matches the exact without interacting, and the half peak value is $\sim 0.8$. For the case with interaction, the peak is obviously lower, and we observe a half peak value of 
+From the onebody density plot, we observe that the experimental onebody density matches the exact without interacting, and the half peak value is $\sim 0.8$. For the case with interaction, the peak is obviously lower, and we observe a half peak value of $\sim 1.0$, which makes it broader.
 
 \section{Discussion} \label{Discussion}
 For the case without interaction and spherical harmonic oscillator we see from figure \ref{fig:EL_as_func_of_alpha} that the minimum of the local energy is found when the varitional parameter $\alpha=0.5$. We also observe that $\alpha=0.5$ gives the minimal variance, and seen from figure \ref{fig:variance_EL_as_func_of_alpha}. For small $\alpha$'s the energies and variances explode.  
 \par 
 \vspace{3mm}
 
-When comparing the results from the brute force Monte Carlo calculation with spherical harmonic oscillator and no interaction, as shown in table \ref{tab:BFmet}, we observe that in the case when we use an analytical expression for $E_L$, the simulation results yields the exact energy, as obtained from equation \ref{eq:Energy_exact}. When using the numerically calculated $E_L$, as described in section \ref{Numerical_calc_E_L}, the calculated results reproduces the exact answers. When comparing the CPU time difference between these two calculations, the numerically calculated $E_L$ spends much more time on the calculations compared to the analytically calculated $E_L$-case. The time difference is as large as a factor of $10^3$ for the 500 particles, three dimensions case. This makes it preferable to use the analytically calculated $E_L$ in our calculations. However, not all trial wave functions $\psi_T$ or Hamiltonians H will yield an $E_L$ which is analytically possible to calculate, and in this case, one should have a functioning algorithm for numerical calculation of $E_L$ as well.
+When comparing the results from the brute force Monte Carlo calculation with spherical harmonic oscillator and no interaction, as shown in table \ref{tab:BFmet}, we observe that in the case when we use an analytical expression for $E_L$, the simulation results yields the exact energy, as obtained from equation \ref{eq:Energy_exact}. Also the numerically calculated $E_L$, as described in section \ref{Numerical_calc_E_L}, reproduces the exact answers with the same presicion as the analytical. 
+
+Moreover, when comparing the CPU time difference between these two calculations, the numerically calculated $E_L$ spends much more time on the calculations compared to the analytically calculated $E_L$-case. The reason for this is probably the numerical differentiation mentioned in equation \ref{eq:num_derv}, which in addition will cause some minor errors. The time difference is as large as a factor of $10^3$ for the 500 particles, three dimensions case. which makes it preferable to use the analytically calculated $E_L$ in our calculations. However, not all trial wave functions $\Psi_T$ or Hamiltonians H will yield an $E_L$ which is analytically possible to calculate, and in this case, one should have a functioning algorithm for numerical calculation of $E_L$ as well.
 \par 
 \vspace{3mm}
 
-When comparing the results from the brute force and Hastings Metropolis algorithms, shown in tables \ref{tab:BFmet} and \ref{tab:ISmet}, the reader can oberve that the Hastings algorithm reprocuces the exact energies, as the brute force algorithm does, but that the Hastings algorithm is slightly slower. This sligt time increase is due to the fact that while the brute force algorithm picks a proposed new step at random, the Hasting algorithm makes a more educaded move by calculating the drift force $F$ on the particle, and decide what direction the particle is most likely to move in, as described in section \ref{Importance_sampling}. While this calculation spends slightly more CPU time, it is rewarded by the Hastings algorithm having a higher acceptance rate of the proposed moves compared to the brute force metropolis. This can be seen from figures \ref{fig:acceptance_BF_stepsize} and \ref{fig:acceptance_IS_timestep}. The acceptance ratio of the Hastings algorithm ifor a timestep $\Delta t =1$ is much higher than the acceptance ratio for brute force with a stepsize $r=1$. This results in the Hastings algorithm moving faster towards the minima compared to the brute force method. This effect, however, is not that visible in our project, but can make a vital difference for larger Monte Carlo simulations.
+When comparing the results from the brute force and Metropolis-Hastings algorithms, shown in tables \ref{tab:BFmet} and \ref{tab:ISmet}, the reader can observe that the Hastings algorithm reproduces the exact energies, as the brute force algorithm does, but that the Hastings algorithm is slightly slower. This slight time increase is due to the fact that while the brute force algorithm picks a proposed new step at random, the Hasting algorithm makes a more educated move by calculating the drift force $F$ on the particle, and decide what direction the particle is most likely to move in, as described in section \ref{Importance_sampling}. While this calculation spends slightly more CPU time, it is rewarded by the Hastings algorithm having a higher acceptance rate of the proposed moves compared to the brute force Metropolis. This can be seen from figures \ref{fig:acceptance_BF_stepsize} and \ref{fig:acceptance_IS_timestep}. The acceptance ratio of the Hastings algorithm for a timestep $\Delta t=1$ is much higher than the acceptance ratio for brute force with a stepsize $r=1$. This results in the Hastings algorithm moving faster towards the minima compared to the brute force method. This effect, however, is not that visible in our project, but can make a vital difference for larger Monte Carlo simulations.
 \par 
 \vspace{3mm}
 
-Sill studying figure \ref{fig:acceptance_IS_timestep} and \ref{fig:acceptance_BF_stepsize}, we observe that the importance sampling algorithm has a high accseptance rate for intermediate timesteps $\Delta t$, but the acceptance rate drops seemingly exponentially for higher timesteps. Comparing this to the brute force acceptance rate, the drop in the acceptance rate is more like a lineary decreasing curve. This is because the acceptance probability for brute force to do a step in the "wrong direction" is still present, while moving in the wrong direction with importance sampling is much less probable, and therefore the acceptance rate decreases rapidly with increased timestep.
+Still studying figure \ref{fig:acceptance_IS_timestep} and \ref{fig:acceptance_BF_stepsize}, we observe that the importance sampling algorithm has a high acceptance rate for intermediate timesteps $\Delta t$, but the acceptance rate drops seemingly exponentially for higher timesteps. Comparing this to the brute force acceptance rate, the drop in the acceptance rate is more like a lineary decreasing curve. This is because the acceptance probability for brute force to do a step in the "wrong direction" is still present, while moving in the wrong direction with importance sampling is much less probable, and therefore the acceptance rate decreases rapidly with increased timestep.
 \par 
 \vspace{3mm}
 
-In table \ref{tab:variance_analysis}, we repeated the calculation of the no interaction spherical potential with importance sampling, but this time we included a proper evaluation of the error. We compared the variances obtained from the simple, but incorrect way of calculating error, as shown in equation \ref{eq:variance_simplified} to a proper variance calculation using the Blocking method, by evaluation equation \ref{eq:sample_var_all_exp}. As expected, the simplified variance calculation underestimates the statistical error, as it does not include the covariance term in equation \ref{eq:sample_var_all_exp}. However, the deviation between the two is small for few number of particles. We would say that as blocking is a quick way of calculating the statistical error, it should be done when presenting results, but the simplified error calculation could still give a quick estimation of the magnitude of the variance in a simulation.
+In table \ref{tab:variance_analysis}, we repeated the calculation of the no interaction spherical potential with importance sampling, but this time we included a proper evaluation of the error. We compared the variances obtained from the simple, but incorrect way of calculating error, as shown in equation \ref{eq:variance_simplified} to a proper variance calculation using the blocking method, by evaluation equation \ref{eq:sample_var_all_exp}. As expected, the simplified variance calculation underestimates the statistical error, as it does not include the covariance term in equation \ref{eq:sample_var_all_exp}. However, the deviation between the two is small for few number of particles. We would say that as blocking is a quick way of calculating the statistical error, it should be done when presenting results, but the simplified error calculation could still give a quick estimation of the magnitude of the variance in a simulation.
+\par 
+\vspace{6mm}
+
+
+Further we have seen that the interaction causes some differences related to the.. WE REALLY NEED TO WRITE ABOUT THE INTERACTION CASE, INCLUDING GRADIENT DESCENT
 \par 
 \vspace{3mm}
+
+For the onebody density plots we saw that the densities had gaussian shapes, which come from the wave functions (matematically the wave functions are gaussian functions). The peak decreased when adding interacting because the bosons then are more spread out, which also is the reason why it gets broader. We also observed noise for small radii, which is caused by the dividing on sphere surfaces, which are small numbers for small radii. All particles are located within a distance $3a_{HO}$ from particle $i$, which makes sence since we only study 10 particles. 
+
 
 Must benchmark results from e and f!
 
 
 \section{Conclusion}
 
-In this project, we have found that the Variational Monte Carlo method reproduces analytical calculations for the spherical harmonic oscillator without interparticle interaction. The minimum in the energy was found for this case to be $\alpha=0.5$, which is as expected. Both the brute force method with an analytically calculated for $E_L$ and the Hastings algorithm were quick and accurate, while the brute force method with a numerically calculated $E_L$ was much slower, and also less accurate. \par 
+In this project, we have found that the Variational Monte Carlo method reproduces analytical calculations for the spherical harmonic oscillator without interparticle interaction. The minimum in the energy was found for this case to be $\alpha=0.5$, which is as expected. Both the brute force method with an analytically calculated for $E_L$ and the Hastings algorithm were quick and accurate, while the brute force method with a numerically calculated $E_L$ was much slower.
+
 The Hastings algorithm had a higher acceptance rate for the proposed moves in the Monte Carlo iterations compared to the brute force method. This should result in the Hastings method converging faster, although we did not observe that in this report. We also saw that the Hastings algorithm was more dependent on the timestep compared to the brute force method's dependence om stepsize. This is as we would expect from theory.  \par
 When including a proper evaluation of the error by using the blocking method, we saw that the blocking method gave a slightly higher estimated variance, compared to the estimation from equation \ref{eq:variance_simplified}. This is as expected.
+
+ALSO HERE WE NEED TO MENTION THE INTERACTING CASE
+
+Despite the noise seen for onebody density, the non-interacting calculation matched the exact expression pretty well. The particles also spread out when adding repulsive interaction, which is highly expected. 
 
 
 
@@ -625,7 +643,7 @@ When including a proper evaluation of the error by using the blocking method, we
 	Morten Hjorth-Jensen.
 	Computational Physics 2: Variational Monte Carlo methods, Lecture Notes Spring 2018.
 	Department of Physics, University of Oslo.
-	February 2015.
+	(2018).
 	\bibitem{DuBois}
 	J. L. DuBois and H. R. Glyde, H. R., \emph{Bose-Einstein condensation in trapped bosons: A variational Monte Carlo analysis}, Phys. Rev. A \textbf{63}, 023602 (2001).
 	\bibitem{Nilsen}
@@ -633,20 +651,23 @@ When including a proper evaluation of the error by using the blocking method, we
 	\bibitem{JE2016}
 	Jesse Emspak, \emph{States of Matter: Bose-Einstein Condensate}, LiveScience (2016)
 	\url{https://www.livescience.com/54667-bose-einstein-condensate.html}
-	Downloaded March 15th 2018
+	Downloaded March 15th 2018.
 	\bibitem{SP}
 	Sidney Perkowitz \emph{Bose-Einstein condensate} Encyclopaedia Britannica 
 	\url{https://www.britannica.com/science/Bose-Einstein-condensate}
-	Downloaded March 15th 2018
+	Downloaded March 15th 2018.
 \end{thebibliography}
 \endgroup
 
 \newpage
 
 \section*{Appendix A} \label{appendix_A}
+In the theory section we presented the analytical expressions for the local energy, and in this appendix we go though the derivations carefully for those of you who are curious. Firstly we present the local energies where we ignore the two-particle interaction, and we also focus on the spherical harmonic oscillator trap since we do not look at the elliptical trap without interaction, even though the expressions are similar.
+
+Secondly the general expression which can be used with and without interaction, with spherical or elliptical harmonic oscillator trap and with a various number of parameter values is derived. This can in principle be used for every case, but it is more complex than the special ones where we ignore interaction and we therefore expect it to be slower. 
 
 \subsection{Without repulsive interaction}
-We calculated the analytical expression for the local energy $E_L$, as given by \ref{eq:Local_energy}, for the non-interaction ($a=0$) case for the spherical harmonic oscillator. In this case, the wave trial function for only consists of the one body part, and is thus for $N$ particles given by:
+We calculated the analytical expression for the local energy $E_L$, as given by \ref{eq:Local_energy}, for the non-interaction ($a=0$) case for the spherical harmonic oscillator. In this case, the trial wave function only consists of the one body part, and is thus for $N$ particles given by:
 
 \begin{equation}
 	\label{eq:WF_nointeract}
@@ -663,7 +684,6 @@ From equation \ref{eq:WF_nointeract}, the trial wave function for one particle a
 	\label{eq:WF_1dim_1N}
 	\Psi_T(x) = e^{-\alpha x^2} 
 \end{equation}
-
 We start from the local energy equation in equation \ref{eq:Local_energy}, where we need to take the second derivative
 \begin{align}
 \frac{d\Psi_T}{dx}&=-2\alpha xe^{-\alpha x^2}\\
@@ -756,13 +776,13 @@ E_L(\alpha)&=\sum_j-\frac{1}{2}(-6\alpha+4\alpha^2r_j^2) + \frac{1}{2}r_j^2\nota
 \end{align}
 
 \subsubsection{General}
-If one now studies the local energy expressions for one particle in one dimension and $N$ particles in three dimensions, one can see a pattern and it is easy to imagine that there exists a general expression for the local energy. At least for 1, 2, and 3 dimensions (probably all), it can be shown that 
+If one now studies the local energy expressions for one particle in one dimension and $N$ particles in three dimensions, one can see a pattern and it is easy to imagine that there exists a general expression for the local energy, when interaction is ignored and for the spherical harmonic oscillator case. At least for 1, 2, and 3 dimensions, it can be shown that 
 \begin{equation}
 E_L(\alpha)=dim\cdot N\cdot \alpha+\Big(\frac{1}{2}-2\alpha^2\Big)\sum_jr_j^2
 \end{equation}
 
 \subsection{With repulsive interaction}
-As mention in the theory section, the calculations get more complicated when adding the interaction, and we are in fact not able to find the local energy analytically. However, we can simplify the local energy expression and hopefully gain some speed up compared to when we do all the calculations numerically. 
+As mentioned in the theory section, the calculations get more complicated when adding the interaction, and we are in fact not able to find the local energy analytically. However, we can simplify the local energy expression and hopefully gain some speed up compared to when we do all the calculations numerically. 
 
 We start with defining the onebody part of the wavefunction as $\Phi$ and the Jastrow factor as $\exp\big(u(r_{ij})\big)$ such that the total trial wavefunction becomes
 \begin{equation}
@@ -789,7 +809,6 @@ For the second derivative we get five terms in total where two of them are cross
 &\phantom{=}+\prod_i\Phi(\vec{r}_i)\exp\Big(\sum_{i<j}u(r_{ij})\Big)\sum_{i\neq k}\nabla_ku(r_{ij})\sum_{j\neq k}\nabla_ku(r_{ij})\notag\\
 &\phantom{=}+\prod_i\Phi(\vec{r}_i)\exp\Big(\sum_{i<j}u(r_{ij})\Big)\sum_{j\neq k}\nabla_k^2u(r_{ij})\notag
 \end{align}
-
 To simplify this, we do a change of variables
 \begin{equation}
 \frac{\partial}{\partial \vec{r}_k}=\frac{\partial}{\partial \vec{r}_k}\frac{\partial r_{kj}}{\partial r_{kj}}=\frac{\partial r_{kj}}{\partial \vec{r}_k}\frac{\partial}{\partial r_{kj}}=\frac{(\vec{r}_k-\vec{r}_j)}{r_{kj}}\frac{\partial}{\partial r_{kj}}
@@ -798,11 +817,10 @@ where we have used that
 \begin{equation}
 \frac{\partial r_{kj}}{\partial \vec{r}_k}=\frac{\vec{r}_k - \vec{r}_j}{|\vec{r}_k - \vec{r}_j|}=\frac{\vec{r}_k - \vec{r}_j}{r_{kj}}.
 \end{equation}
-This leads to
+In addition we need to differentiate $u(r_{ij})$ once and twice
 \begin{equation}
 \nabla_ku(r_{ij})=\frac{\partial r_{kj}}{\partial \vec{r}_k}\frac{\partial}{\partial r_{kj}}\big(u(r_{ij})\big)=\frac{\vec{r}_k - \vec{r}_j}{|\vec{r}_k - \vec{r}_j|}u'(r_{kj})
 \end{equation}
-and
 \begin{align*}
 \nabla_k^2u(r_{ij})&=\nabla_k\bigg(\frac{\vec{r}_k - \vec{r}_j}{|\vec{r}_k - \vec{r}_j|}u'(r_{kj})\bigg)\\
 &=\frac{1}{|\vec{r}_k-\vec{r}_j|}\frac{\partial}{\partial r_{kj}}\big(u(r_{kj})\big)+\frac{\partial^2}{\partial r_{kj}^2}\big(u(r_{kj})\big)\\
@@ -835,8 +853,7 @@ The no interaction, N particle trial wave function $\psi_T$ is given by
 \begin{equation}
 \psi_T =	\prod_i e^{-\alpha x_i^2}
 \end{equation}
-
- The drift force F is then
+The drift force F is then
 
 \begin{align}
 	F = \frac{2 \nabla ( \prod_i e^{-\alpha x_i^2} )}{ \prod_i e^{-\alpha x_i^2} }
