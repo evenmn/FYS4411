@@ -43,7 +43,7 @@
 \maketitle
 
 \begin{itemize}
-\item Github repository containing programs and results are in: \url{https://github.com/evenmn/FYS4411/tree/master/Project%201}
+\item Github repository containing programs and results: \\\url{https://github.com/evenmn/FYS4411/tree/master/Project%201}
 \end{itemize}
 
 \begin{abstract}
@@ -74,7 +74,7 @@ We study a system of $N$ bosons trapped in a harmonic oscillator with the Hamilt
 \hat{H}=\sum_i^N\bigg(-\frac{\hbar^2}{2m}\nabla_i^2+V_{ext}(\vec{r}_i)\bigg)+\sum_{i<j}^NV_{int}(\vec{r}_i,\vec{r}_j)
 \label{eq:Hamilton}
 \end{equation}
-with $V_{ext}$ as the external potential, which is the harmonic oscillator potential defined in equation \ref{eq:V_ext}, and $V_{int}$ as the interaction term, defined in equation \ref{eq:V_int}, which ensures the particles to be separated by a distance $a$. $\hbar$ is the reduced Plancks constant and $m$ is the mass of the particles in question. In this project we study the gas of $^{87}$Rb alkali atom, which has a scattering length $a_{\text{Rb}}=0.0043$ given in units of a typical trap size $a_{HO}$. We will consider a harmonic oscillator which can either be spherical (all dimensions have the same scales) or elliptical (the vertical dimension has a different frequency from the horizontals).
+with $V_{ext}$ as the external potential, which is the harmonic oscillator potential defined in equation \ref{eq:V_ext}, and $V_{int}$ as the interaction term, defined in equation \ref{eq:V_int}, which ensures the particles to be separated by a distance $a$. $\hbar$ is the reduced Plancks constant and $m$ is the mass of the particles in question. In this project we study the gas of $^{87}$Rb alkali atoms, which have a scattering length $a_{\text{Rb}}=0.0043$ given in units of a typical trap size $a_{HO}$. We will consider a harmonic oscillator which can either be spherical (all dimensions have the same scales) or elliptical (the vertical dimension has a different frequency from the horizontals).
 \begin{equation}
 \label{eq:V_ext}
 V_{ext}(\vec{r})=
@@ -97,7 +97,7 @@ The trial wavefunction is on the form
 \Psi_T(\vec{r}_1, \vec{r}_2, ..., \vec{r}_N, \alpha, \beta)=\prod_i^Ng(\alpha, \beta, \vec{r}_i)\prod_{i<j}f(a,r_{ij})
 \label{eq:WF}
 \end{equation}
-where $r_{ij}=|\vec{r}_i-\vec{r}_j|$ and $g$ is assumed to be an exponential function,
+where $r_{ij}=|\vec{r}_i-\vec{r}_j|$ and $g$ is assumed to be a gaussian function,
 \begin{equation}
 g(\alpha, \beta, \vec{r}_i)=\exp[-\alpha(x_i^2+y_i^2+\beta z_i^2)],
 \end{equation}
@@ -117,16 +117,20 @@ f(a,r_{ij})=
 where $a$ is a parameter describing the minimum distance allowed between particles in the trap.
 
 \subsection{Local energy $E_L$ calculation}
+In general we can find the energy of a system with a known wave function by solving the integral
+\begin{equation}
+E=\langle H\rangle = \frac{\int\psi^*(\vec{r})H\psi(\vec{r})d\vec{r}}{\int\psi^*(\vec{r})\psi(\vec{r})d\vec{r}}
+\label{eq:general_energy}
+\end{equation}
+which depends on $|\psi(\vec{r})|^2$ only. This implies that sampling points from the $|\psi|^2$ distribution corresponds to sampling from the integrand $\psi^*H\psi$. We are in a situation where we do not know the exact wavefunction, and need to sample from the trial wave function in equation \ref{eq:WF}, which will probably not give us the exact energy. However, as we move the wave function closer to the true ground state wave function using the Metropolis algorithm (see section \ref{sec:Metropolis}), the computed energy (denoted local energy) should approach the ground state energy \cite{JKNilsen}. The algorithm used to conduct the Monte Carlo integration is presented in section \ref{VMC}.
 
-We want to calculate the local energy as a function of $\alpha$ for the trial wave function given in equation \ref{eq:WF}, and then use Variational Monte Carlo (VMC) described in section \ref{VMC}. 
-
-The general expression for $E_L$ is obtained by rewriting Schr\"{o}dinger's equation, as shown in \ref{eq:Local_energy}.
+For simplicity we use an expression for $E_L$ obtained from Schr\"{o}dinger's equation that let us avoid calculating the denominator in equation \ref{eq:general_energy},
 
 \begin{equation}
 E_L(\vec{r})=\frac{1}{\Psi_T(\vec{r})}\hat{H}\Psi_T(\vec{r}).
 \label{eq:Local_energy}
 \end{equation}
-When the repulsive interaction is ignored ($a=0$), it can be shown that the local energy for a system of $N$ particles and $dim$ free dimensions is given by
+When the repulsive interaction is ignored ($a=0$), it can be shown that the local energy for a system of $N$ particles and $dim$ spatial dimensions is given by
 \begin{equation}
 E_L=dim\cdot N\cdot \alpha + \Big(\frac{1}{2}-2\alpha^2\Big)\sum_i\vec{r}_i^2,
 \end{equation}
@@ -293,7 +297,7 @@ Variational Monte Carlo (VMC) is a widely used method for approximating the grou
 \end{equation}
 Both the direction and particles moves are randomly chosen, so with a plain VMC implementation the particles will move randomly and independently of each other. We are going to use the Metropolis algorithm in addition to the VMC, where the Metropolis algorithm accepts or rejects moves based on the probability ratio between the old and the new position. This makes the system approach the most likely state, and the idea is that after a certain number of cycles the system will be in the most likely state. 
 
-\subsection{Metropolis Algorithm}
+\subsection{Metropolis Algorithm} \label{sec:Metropolis}
 As mentioned above the task of the Metropolis algorithm is to move the system against the most likely state. The standard algorithm, here named brute force, is the simplest one, and does not deal with the transition probabilities. The modified Metropolis-Hastings algorithm includes, on the other hand, the transition probabilities and will be slightly more time consuming per cycle. We expect the latter to converge faster to the most likely state. 
 
 The foundation of the Metropolis algorithm is that the probability for a system to undergo a transition from state $i$ to state $j$ is given by the transition probability multiplied by the acceptance probability
@@ -671,6 +675,8 @@ Despite the noise seen for onebody density, the non-interacting calculation matc
 	Downloaded March 15th 2018.
 	\bibitem{Anderson}
 	    M. H. Anderson, J. R. Ensher, M. R. Matthews, C. E. Wieman, E. A. Cornell, \emph{Observation of Bose-Einstein Condensation in a Dilute Atomic Vapor}, Science \textbf{269}, (1995).
+	\bibitem{JKNilsen}
+		J. K. Nilsen \emph{Bose-Einstein condensation in trapped bosons: A quantum Monte Carlo analysis}, Master thesis 2004, Department of Physics, University of Oslo, (2004). 
 
 	
 \end{thebibliography}
