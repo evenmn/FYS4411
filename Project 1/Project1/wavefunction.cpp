@@ -14,10 +14,10 @@ double u_secder(double dist, double a) {
     return -(a/(dist*dist*dist))*C*(2+(a/dist)*C);
 }
 
-double V_ext(vector<double> &pos, bool HO, double beta, int dim) {
+double V_ext(vector<double> &pos, double beta, int dim) {
     double VEXT = 0;
     for(int i=0;i<dim;i++){
-        if(i==2 && HO){
+        if(i==2){
             VEXT += beta*beta*pos[i]*pos[i];
         }
         else{
@@ -28,14 +28,13 @@ double V_ext(vector<double> &pos, bool HO, double beta, int dim) {
 }
 
 
-int WaveFunction::setTrialWF(int dim, int N, double a, int n_or_a, bool HO)
+int WaveFunction::setTrialWF(int dim, int N, double a, int n_or_a)
 {
 
     m_dim    = dim;     //number of dimensions
     m_N      = N;       //number of particles
     m_n_or_a = n_or_a;  //analytical (0) or numerical (1) E_L calculation
     m_a      = a;       //dimension of trap
-    m_HO     = HO;      //spherical (true) or elliptical (false) harmonic oscillator
 }
 
 double WaveFunction::Psi_value(vector<vector<double>> &pos_mat, double alpha, double beta)
@@ -119,14 +118,22 @@ double WaveFunction::E_L_ana(vector<vector<double>> &pos_mat, double alpha, doub
     double EL;
     double E_TOT = 0;
 
-    if(m_a==0 && m_HO){
+    if(m_a==0){
         double r_sqrt = 0;
+        double energy = 0;
         for(int i=0; i<m_N; i++){
             for(int j=0; j<m_dim; j++){
-                r_sqrt += pos_mat[i][j]*pos_mat[i][j];
+                if(j == 2) {
+                    r_sqrt += beta*beta*pos_mat[i][j]*pos_mat[i][j];
+                    energy += alpha*beta;
+                }
+                else{
+                    r_sqrt += pos_mat[i][j]*pos_mat[i][j];
+                    energy += alpha;
+                }
             }
         }
-        return (0.5 - 2*alpha*alpha)*r_sqrt + m_dim*m_N*alpha;
+        return (0.5 - 2*alpha*alpha)*r_sqrt + energy;
     }
 
     else{
@@ -178,7 +185,7 @@ double WaveFunction::E_L_ana(vector<vector<double>> &pos_mat, double alpha, doub
                 EL += u_secder(distij, m_a) + 2 * u_der_ij;
             }
 
-            E_TOT += -0.5*EL + V_ext(pos_mat[i], m_HO, beta, m_dim);
+            E_TOT += -0.5*EL + V_ext(pos_mat[i], beta, m_dim);
         }
     }
 
@@ -217,7 +224,7 @@ double WaveFunction::E_L_num(vector<vector<double>> &pos_mat, double alpha, doub
     // Potential energy
     double potentialEnergy = 0;
     for(int i=0; i<m_N; i++) {
-        potentialEnergy += V_ext(pos_mat[i], m_HO, beta, m_dim);
+        potentialEnergy += V_ext(pos_mat[i], beta, m_dim);
     }
     return kineticEnergy + potentialEnergy;
 }
@@ -235,11 +242,8 @@ double WaveFunction::Psi_der(vector<vector<double>> &pos_mat, double beta) {
                 psi_der_div_psi += pos_mat[i][j]*pos_mat[i][j];
             }
         }
-        //psi_der_div_psi += (pos_mat[i][0]*pos_mat[i][0]+pos_mat[i][1]*pos_mat[i][1] + beta*pos_mat[i][2]*pos_mat[i][2]);
     }
     return -psi_der_div_psi;
-    //return -(pos_mat[0][0]*pos_mat[0][0]+pos_mat[0][1]*pos_mat[0][1] + beta*pos_mat[0][2]*pos_mat[0][2]); //correct for 1 particle, 1 dim
-
 }
 
 

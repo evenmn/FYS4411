@@ -16,7 +16,7 @@ double Random_position(){
     return diss(seed);
 }
 
-double GradientDecent(int N, int dim, int M, double a, double steplength, bool HO, \
+double GradientDecent(int N, int dim, int M, double a, double steplength, \
                     double beta, double h, int num_or_an, int BF_H, double timestep)
 {
     //Marsenne Twister Random Number Generator
@@ -70,7 +70,7 @@ double GradientDecent(int N, int dim, int M, double a, double steplength, bool H
 
         //Initialize wave function
         WaveFunction Psi;
-        Psi.setTrialWF(dim, N, a, num_or_an, HO);
+        Psi.setTrialWF(dim, N, a, num_or_an);
 
         //Add initial energies to averages
         if(num_or_an == 0) {
