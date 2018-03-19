@@ -41,6 +41,11 @@
 \begin{document}
 
 \maketitle
+
+\begin{itemize}
+\item Github repository containing programs and results: \\\url{https://github.com/evenmn/FYS4411/tree/master/Project%201}
+\end{itemize}
+
 \begin{abstract}
 This project aims to simulate a trapped Bose gas using Variational Monte Carlo (VMC) with both the  brute force Metropolis and the Metropolis-Hastings algorithms. Using a trial wave function with either spherical or elliptical harmonic oscillator (HO) potential, with and without a hard sphere potential, we calculate the ground state energy and onebody density for different numbers of particles. \textcolor{red}{The results are benchmarked with earlier publications.} \par 
 
@@ -49,19 +54,15 @@ Using the spherical HO with no interaction, both the brute force and the Metropo
 
 \end{abstract}
 
-
-\begin{itemize}
-\item Github repository containing programs and results are in: \url{https://github.com/evenmn/FYS4411/tree/master/Project%201}
-\end{itemize}
-
+\newpage
 
 \section{Introduction}
 
-In this project, we study the  phenomen Bose-Einstein condensation, a highly relevant subject in modern physics.  Bose-Einstein condensation occurs when atoms are cooled towards absolute zero, as they start occupying the same quantum states \cite{JE2016}. Even though the effect was predicted in 1924, the effect was first demonstrated decades later \cite{SP}.
+In this project, we study the Bose-Einstein condensation (BEC) of a dilute gas of $^{87}$Rb atoms trapped in an elliptical harmonic oscillator. Bose-Einstein condensation occurs when atoms are cooled towards absolute zero, as they start occupying the same quantum state \cite{JE2016}. Even though the effect was predicted already in 1924, it was first observed by Anderson et.al. in 1995, which caused an immense interest in the subject \cite{SP}, \cite{Anderson}.
 
-Our goal in this project is to simulate a trapped, hard sphere Bose gas for different numbers of particles for a given trial wave function, and to evaluate the ground state energy of this system. The system is evaluated both for a spherical and elliptical harmonic oscillator trap. The model is descriped in section \ref{Theory}. \par
+Our goal is to find an upper bound limit of the ground state energy for a system of a various number of particles, using a Hartree-Fock wave function ansatz. The Gross-Pitaevskii equation is applied to obtain an analytical energy approximation, which works as a benchmark for the energy. The theoretical framework is presented in section \ref{Theory}. \par
 
-Using Variational Monte Carlo method with two different Metropolis algorithms, presented in section \ref{Method}, we use the trial wave function to calculate the ground state energy and the onebody density of the system. The results are presented in section \ref{Results}. In section \ref{Discussion} we discuss our results, and compare them to results obtained from the article found at \textcolor{red}{(s \cite{Nilsen} and)} \cite{DuBois}.
+The main technique we will use is the variational Monte Carlo (VMC) method with two different Metropolis algorithms, presented in section \ref{Method}. To achieve the optimal trial wave function we vary the variational parameter $\alpha$ using the gradient descent method. In section \ref{Results} the upper bound energy is presented with the optimal wave functions and the onebody density. In section \ref{Discussion} we discuss our results, and compare them to results obtained from the articles found at \cite{DuBois}, \cite{Nilsen} and \cite{Dalfovo}.
 
 
 \section{Theory} \label{Theory}
@@ -73,7 +74,7 @@ We study a system of $N$ bosons trapped in a harmonic oscillator with the Hamilt
 \hat{H}=\sum_i^N\bigg(-\frac{\hbar^2}{2m}\nabla_i^2+V_{ext}(\vec{r}_i)\bigg)+\sum_{i<j}^NV_{int}(\vec{r}_i,\vec{r}_j)
 \label{eq:Hamilton}
 \end{equation}
-with $V_{ext}$ as the external potential, which is the harmonic oscillator potential defined in equation \ref{eq:V_ext}, and $V_{int}$ as the interaction term, defined in equation \ref{eq:V_int}, which ensures the particles to be separated by a distance $a$. $\hbar$ is the reduced Plancks constant and $m$ is the mass of the particles in question. In this project we study the gas of $^{87}$Rb alkali atom, which has a scattering length $a_{\text{Rb}}=0.0043$ given in units of a typical trap size $a_{HO}$. We will consider a harmonic oscillator which can either be spherical (all dimensions have the same scales) or elliptical (the vertical dimension has a different frequency from the horizontals).
+with $V_{ext}$ as the external potential, which is the harmonic oscillator potential defined in equation \ref{eq:V_ext}, and $V_{int}$ as the interaction term, defined in equation \ref{eq:V_int}, which ensures the particles to be separated by a distance $a$. $\hbar$ is the reduced Plancks constant and $m$ is the mass of the particles in question. In this project we study the gas of $^{87}$Rb alkali atoms, which have a scattering length $a_{\text{Rb}}=0.0043$ given in units of a typical trap size $a_{HO}$. We will consider a harmonic oscillator which can either be spherical (all dimensions have the same scales) or elliptical (the vertical dimension has a different frequency from the horizontals).
 \begin{equation}
 \label{eq:V_ext}
 V_{ext}(\vec{r})=
@@ -96,7 +97,7 @@ The trial wavefunction is on the form
 \Psi_T(\vec{r}_1, \vec{r}_2, ..., \vec{r}_N, \alpha, \beta)=\prod_i^Ng(\alpha, \beta, \vec{r}_i)\prod_{i<j}f(a,r_{ij})
 \label{eq:WF}
 \end{equation}
-where $r_{ij}=|\vec{r}_i-\vec{r}_j|$ and $g$ is assumed to be an exponential function,
+where $r_{ij}=|\vec{r}_i-\vec{r}_j|$ and $g$ is assumed to be a gaussian function,
 \begin{equation}
 g(\alpha, \beta, \vec{r}_i)=\exp[-\alpha(x_i^2+y_i^2+\beta z_i^2)],
 \end{equation}
@@ -116,16 +117,20 @@ f(a,r_{ij})=
 where $a$ is a parameter describing the minimum distance allowed between particles in the trap.
 
 \subsection{Local energy $E_L$ calculation}
+In general we can find the energy of a system with a known wave function by solving the integral
+\begin{equation}
+E=\langle H\rangle = \frac{\int\psi^*(\vec{r})H\psi(\vec{r})d\vec{r}}{\int\psi^*(\vec{r})\psi(\vec{r})d\vec{r}}
+\label{eq:general_energy}
+\end{equation}
+which depends on $|\psi(\vec{r})|^2$ only. This implies that sampling points from the $|\psi|^2$ distribution corresponds to sampling from the integrand $\psi^*H\psi$. We are in a situation where we do not know the exact wavefunction, and need to sample from the trial wave function in equation \ref{eq:WF}, which will probably not give us the exact energy. However, as we move the wave function closer to the true ground state wave function using the Metropolis algorithm (see section \ref{sec:Metropolis}), the computed energy (denoted local energy) should approach the ground state energy \cite{JKNilsen}. The algorithm used to conduct the Monte Carlo integration is presented in section \ref{VMC}.
 
-We want to calculate the local energy as a function of $\alpha$ for the trial wave function given in equation \ref{eq:WF}, and then use Variational Monte Carlo (VMC) described in section \ref{VMC}. 
-
-The general expression for $E_L$ is obtained by rewriting Schr\"{o}dinger's equation, as shown in \ref{eq:Local_energy}.
+For simplicity we use an expression for $E_L$ obtained from Schr\"{o}dinger's equation that let us avoid calculating the denominator in equation \ref{eq:general_energy},
 
 \begin{equation}
 E_L(\vec{r})=\frac{1}{\Psi_T(\vec{r})}\hat{H}\Psi_T(\vec{r}).
 \label{eq:Local_energy}
 \end{equation}
-When the repulsive interaction is ignored ($a=0$), it can be shown that the local energy for a system of $N$ particles and $dim$ free dimensions is given by
+When the repulsive interaction is ignored ($a=0$), it can be shown that the local energy for a system of $N$ particles and $dim$ spatial dimensions is given by
 \begin{equation}
 E_L=dim\cdot N\cdot \alpha + \Big(\frac{1}{2}-2\alpha^2\Big)\sum_i\vec{r}_i^2,
 \end{equation}
@@ -292,7 +297,7 @@ Variational Monte Carlo (VMC) is a widely used method for approximating the grou
 \end{equation}
 Both the direction and particles moves are randomly chosen, so with a plain VMC implementation the particles will move randomly and independently of each other. We are going to use the Metropolis algorithm in addition to the VMC, where the Metropolis algorithm accepts or rejects moves based on the probability ratio between the old and the new position. This makes the system approach the most likely state, and the idea is that after a certain number of cycles the system will be in the most likely state. 
 
-\subsection{Metropolis Algorithm}
+\subsection{Metropolis Algorithm} \label{sec:Metropolis}
 As mentioned above the task of the Metropolis algorithm is to move the system against the most likely state. The standard algorithm, here named brute force, is the simplest one, and does not deal with the transition probabilities. The modified Metropolis-Hastings algorithm includes, on the other hand, the transition probabilities and will be slightly more time consuming per cycle. We expect the latter to converge faster to the most likely state. 
 
 The foundation of the Metropolis algorithm is that the probability for a system to undergo a transition from state $i$ to state $j$ is given by the transition probability multiplied by the acceptance probability
@@ -559,7 +564,7 @@ In table \ref{tab:EL_calc_repulsive_pot}, the results from the calculation of th
 	\end{tabularx}
 \end{table}
 
-\subsubsection{Gradient Decent}
+\subsubsection{Gradient Decent} \label{sec:gd}
 The gradient decent method was then used to find the minimum in the local energy in the interacting case. The results are presented in table \ref{tab:EL_calc_gradientdecent}.
 
 \begin{table} [H]
@@ -574,16 +579,26 @@ The gradient decent method was then used to find the minimum in the local energy
 \end{table}
 
 
-
-\subsection{Onebody density}
+\subsubsection{Wave function} \label{sec:wf}
+Now as we have found the optimal $\alpha$'s for 1, 10 and 100 particles in an elliptical trap, we can plot the respective wave functions. In figure \ref{fig:wf} the wave functions are plotted as a function of the spread in x-direction (dashed lines) in addition to the ideal wave function in a spherical trap (solid line). The results are comparable to earlier publications (see for instance Ref.\cite{Dalfovo}), and show that the wave functions get a broader shape when particles are added.
+\iffalse
+\begin{figure} [H]
+    \centering
+    \includegraphics[scale=0.80]{images/wavefunctions.png}
+    \caption{The single particle wave functions for a ideal bose gas (solid line) in a spherical harmonic oscillator and for 1, 10 and 100 particles in a elliptical harmonic oscillator (dashed lines). The normalization constant $A=(8\alpha^3/\pi^2\beta)^{1/4}$ is used such that the curvatures are normalized to 1.}
+    \label{fig:wf}
+\end{figure}
+\fi
+\subsubsection{Onebody density}
 In section \ref{sec:OB_theory} we presented a couple of ways computing the onebody density. Because both should give the same result, we selected the simplest one, which is the method with the bins. We conduct the investigations in elliptic traps, with 10 particles, 3 dimensions and 1e6 Monte Carlo cycles. With the optimal parameter $\alpha$ for the ground state wave function and for both the interacting and the non-interacting case, the onebody density plot is found in figure \ref{fig:ob0}.
 
 \begin{figure} [H]
     \centering
     \includegraphics[scale=0.80]{images/ob.png}
-    \caption{The onebody density of the bosonic system, which is run with $\alpha=0.5$ for $a=0$ and compared with the analytical expression. The optimal $\alpha$ for the interacting case with $a=0.0043$ was found to be $\alpha = 0.3450$. As length is dimensionless, both the density $\rho$ and the length $r$ are dimensionless.}
+    \caption{The onebody density of the bosonic system, which is run with $\alpha=0.5$ for $a=0$ and compared with the analytical expression. The optimal $\alpha$ for the interacting case with $a=0.0043$ was found to be $\alpha = 0.3450$. The radius is given in units of a$_{ho}$ along the x-axis, and the density is in units of a$_{ho}^{-3}$.}
     \label{fig:ob0}
 \end{figure}
+
 From the onebody density plot, we observe that the experimental onebody density matches the exact without interacting, and the half peak value is $\sim 0.8$. For the case with interaction, the peak is obviously lower, and we observe a half peak value of $\sim 1.0$, which makes it broader.
 
 \section{Discussion} \label{Discussion}
@@ -648,6 +663,8 @@ Despite the noise seen for onebody density, the non-interacting calculation matc
 	J. L. DuBois and H. R. Glyde, H. R., \emph{Bose-Einstein condensation in trapped bosons: A variational Monte Carlo analysis}, Phys. Rev. A \textbf{63}, 023602 (2001).
 	\bibitem{Nilsen}
 	J. K. Nilsen,  J. Mur-Petit, M. Guilleumas, M. Hjorth-Jensen, and A. Polls, \emph{Vortices in atomic Bose-Einstein condensates in the large-gas-parameter region}, Phys. Rev. A \textbf{71}, 053610 (2005).
+	\bibitem{Dalfovo}
+	F. Dalfovo, S. Giorgini, L.P.Pitaevskii, S.Stringari, \emph{Theory of Bose-Einstein condensation in trapped gases} Rev. Mod. Phys. \textbf{71}, 463 (1999).
 	\bibitem{JE2016}
 	Jesse Emspak, \emph{States of Matter: Bose-Einstein Condensate}, LiveScience (2016)
 	\url{https://www.livescience.com/54667-bose-einstein-condensate.html}
@@ -656,6 +673,12 @@ Despite the noise seen for onebody density, the non-interacting calculation matc
 	Sidney Perkowitz \emph{Bose-Einstein condensate} Encyclopaedia Britannica 
 	\url{https://www.britannica.com/science/Bose-Einstein-condensate}
 	Downloaded March 15th 2018.
+	\bibitem{Anderson}
+	    M. H. Anderson, J. R. Ensher, M. R. Matthews, C. E. Wieman, E. A. Cornell, \emph{Observation of Bose-Einstein Condensation in a Dilute Atomic Vapor}, Science \textbf{269}, (1995).
+	\bibitem{JKNilsen}
+		J. K. Nilsen \emph{Bose-Einstein condensation in trapped bosons: A quantum Monte Carlo analysis}, Master thesis 2004, Department of Physics, University of Oslo, (2004). 
+
+	
 \end{thebibliography}
 \endgroup
 

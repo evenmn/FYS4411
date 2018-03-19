@@ -35,6 +35,5 @@ int main(int argc, char* argv[])
 
     Met_algo(N, dim, M, a, steplength, alpha, len_alpha, beta, h, num_or_an, BF_H, timestep, one_body);
     //GradientDecent(N, dim, M, a, steplength, beta, h, num_or_an, BF_H, timestep);
-
     return 0;
 }
