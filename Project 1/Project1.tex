@@ -27,7 +27,7 @@
 \usepackage{titlesec}
 
 \setcounter{secnumdepth}{4}
-\usetikzlibrary{through,calc}
+\usetikzlibrary{through,calc,er,positioning}
 
 \titleformat{\paragraph}
 {\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
@@ -60,7 +60,7 @@ Using the spherical HO with no interaction, both the brute force and the Metropo
 
 In this project, we study the Bose-Einstein condensation (BEC) of a dilute gas of $^{87}$Rb atoms trapped in an elliptical harmonic oscillator. Bose-Einstein condensation occurs when atoms are cooled towards absolute zero, as they start occupying the same quantum state \cite{JE2016}. Even though the effect was predicted already in 1924, it was first observed by Anderson et.al. in 1995, which caused an immense interest in the subject \cite{SP}, \cite{Anderson}.
 
-Our goal is to find an upper bound limit of the ground state energy for a system of a various number of particles, using a Hartree-Fock wave function ansatz. The Gross-Pitaevskii equation is applied to obtain an analytical energy approximation, which works as a benchmark for the energy. The theoretical framework is presented in section \ref{Theory}. \par
+Our goal is to find an upper bound limit of the ground state energy for a system of a various number of particles, using an ansatz where the total wave function is a product of single particle wave functions. The Gross-Pitaevskii equation is applied to obtain an analytical energy approximation, which works as a benchmark for the energy. The theoretical framework is presented in section \ref{Theory}. \par
 
 The main technique we will use is the variational Monte Carlo (VMC) method with two different Metropolis algorithms, presented in section \ref{Method}. To achieve the optimal trial wave function we vary the variational parameter $\alpha$ using the gradient descent method. In section \ref{Results} the upper bound energy is presented with the optimal wave functions and the onebody density. In section \ref{Discussion} we discuss our results, and compare them to results obtained from the articles found at \cite{DuBois}, \cite{Nilsen} and \cite{Dalfovo}.
 
@@ -225,7 +225,7 @@ For the spherical trap situation we are left with the variational parameters $\a
 \begin{equation}
 H=\sum_i\bigg(\frac{1}{2}\Big(-\nabla^2 + x_i^2 + y_i^2 + \beta^2z_i^2\Big)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
 \end{equation} 
-where $\beta$ is chosen to be $\sqrt{8}\cong2.82843$.
+where $\beta$ is chosen to be $\sqrt{8}\cong2.82843$, which was used in the experiment of Anderson et.al. \cite{Anderson}.
 
 \subsection{Error estimation} \label{Error_estimation}
 When presenting data from an experiment, one should always know the errors in the answer. Experimental data, including data from numerical experiments, are never determined beyond any doubt, and an estimate of this error should therefore be presented alongside the data. \par
@@ -454,6 +454,52 @@ the number of points in the transformed data set $n' = \frac{1}{2} n$. Each pair
  
 By repeating this procedure several times, and each time using more measurements for each block, the estimated standard deviation $\hat{\sigma}$ will grow, and eventually reach a plateau. When the estimated standard deviation $\hat{\sigma}$ flats out, it means that the blocks are no longer correlated, and thus the covariance which bugged us in equation \ref{eq:sample_var_all_exp}, is now 0. The covariance is therefore accounted for, and the $\hat{\sigma}$ is now a good estimation of the error in the data set.
 
+
+\section{Code} \label{sec:code}
+This project is much about developing the code to make VMC run correctly, and in this section we will explain briefly how the code works and which implementation techniques we use.
+
+\subsection{Code structure}
+To keep the program neat, specific parts were placed in specific files. For instance, a file gd.cpp handle everything about the gradient descent method, and another file wavefunction.cpp (a little misleading) contains a class which both sets up the wave function and calculate the local energy given a wave function. We also collected the tools that are used by multiple scripts in its own file to maximize the reuse of the code, in particular Green's function and the quantum force calculations. In figure \ref{fig:code_structure} we give an overview of the implementation, where the lines indicate which scripts that communicate. 
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[auto,node distance=1.5cm]
+  % Create an entity with ID node1, label "Fancy Node 1".
+  % Default for children (ie. attributes) is to be a tree "growing up"
+  % and having a distance of 3cm.
+  %
+  % 2 of these attributes do so, the 3rd's positioning is overridden.
+  \node[entity] (node1) {VMC}
+    %[grow=down,sibling distance=4cm]
+    child {node[attribute] {Attribute 1}};
+  % Now place a relation (ID=rel1)
+  \node[entity] (node2) [below right = of node1] {WF};
+  \node[entity] (node3) [below left = of node1] {Main};
+  \node[entity] (node4) [below right = of node3] {GD};
+  \node[relationship] (rel1) [above = of node4, below = of node1] {Tools};
+  
+  \path (node1) edge node {} (node2)
+                edge node {} (node3)
+                edge node {} (rel1);
+  \path (node4) edge node {} (node2)
+                edge node {} (node3)
+                edge node {} (rel1);
+\end{tikzpicture}
+\caption{An overview of the code structure. metropolis.cpp is refered to as VMC, gd.cpp is GD, wavefunction.cpp is WF, tools.cpp is Tools and obviously main.cpp is Main. See text for furter description.}
+\label{fig:code_structure}
+\end{figure}
+The acronyms are not really accurate, VMC is of course much about the Metropolis algorithm, and GD contains both the VMC and the Metropolis algorithm. Anyway, it is hard to find acronyms that tells everything about the script. A standard VMC run goes as following: metropolis.cpp (VMC) is called from main.cpp (Main), which agains calls wavefunction.cpp (WF) to set up the wave function, calls tools.cpp (Tools) to get the value of Green's function and the quatum force and then again calls WF to obtain the local energy. At the end the local energy is printed out.
+
+\subsection{Implementation}
+\subsubsection{VMC and Metropolis}
+Present pseudo code of how VMC and Metropolis are implemented
+
+\subsubsection{GD}
+
+\subsubsection{Tests}
+
+
+
 \section{Results} \label{Results}
 
 We will first present the results obtained without repulsive interaction, and thoughout this part we will consequently use $\alpha=0.5$ and run for $1e6$ Monte Carlo cycles and for three spatial dimensions. 
@@ -555,12 +601,17 @@ In table \ref{tab:EL_calc_repulsive_pot}, the results from the calculation of th
 \begin{table} [H]
 	\centering
 	\caption{The local energy $E_L$ calculated for different $\alpha$, with $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=2.82843$, with the brute force algorithm with analytical local energy calculation.  The calculations are run in three dimensions with $1e6$ Monte Carlo cycles}
-	\begin{tabularx}{\textwidth}{X|XXXXX} \hline
+	\begin{tabularx}{\textwidth}{X|XXXXXX} \hline
 		\label{tab:EL_calc_repulsive_pot}
-		$N$ & $\alpha$ = 0.2 & $\alpha$ = 0.3  & $\alpha$ = 0. 35 & $\alpha$ = 0. 4 & $\alpha$ = 0. 5   \\ \hline
-		1 & 1.96397 & 1.70441  & 1.68752 & 1.70148 & 1.79225\\
-		10 & 19.6679 & 17.1322 & 16.9584 &17.1359 & 18.0973\\
-		100 & 255.34 & 253.248 & 262.777 & 275.639 & 307.241\\ \hline
+		& \multicolumn{2}{c}{\textbf{N=1}} & \multicolumn{2}{c}{\textbf{N=10}} & \multicolumn{2}{c}{\textbf{N=100}} \\
+		$\alpha$ & Comp. & Exact & Comp. & Exact & Comp. & Exact  \\ \hline
+		0.2 & 3.48489 && 35.0915 & 34.9 & &\\
+		0.3 & 2.73719 && 27.5577 & 27.4 & &\\
+		0.4 & 2.47403 && 24.8541 & 24.6 & &\\ 
+		0.5 & 2.41422 && 24.2644 & 24.2 & &\\ 
+		0.6 & 2.45456 && 24.6661 & 24.6 & &\\ 
+		0.7 & 2.55036 && 25.6275 & 25.6 & &\\ 
+		0.8 & 2.69082 && 26.8884 & 26.8 & &\\ \hline
 	\end{tabularx}
 \end{table}
 
