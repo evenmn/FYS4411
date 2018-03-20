@@ -629,8 +629,9 @@ The gradient decent method was then used to find the minimum of the local energy
 	\begin{tabularx}{\textwidth}{X|XXX} \hline
 		\label{tab:EL_calc_gradientdecent}
 		$N$ & $\alpha $ & $E_L$  & $\frac{\partial E_L}{\partial \alpha}$   \\ \hline
-		1 & 0.349923 & 1.68819 & 0.000853655 \\
-		10 &0.345019 & 16.9141 & -0.365277 \\ \hline
+		1   & 0.50000  & 2.4142  &  7.2134e-06 \\
+		10  & 0.50015  & 24.264  & -4.7969e-05 \\ 
+		100 & 0.00000  & 350     &  0.0\\ \hline
 	\end{tabularx}
 \end{table}
 
@@ -658,7 +659,7 @@ In section \ref{sec:OB_theory} we presented a couple of ways computing the onebo
 From the onebody density plot, we observe that the experimental onebody density matches the exact without interacting, and the half peak value is $\sim 0.8$. For the case with interaction, the peak is obviously lower, and we observe a half peak value of $\sim 1.0$, which makes it broader.
 
 \section{Discussion} \label{Discussion}
-For the case without interaction and spherical harmonic oscillator we see from figure \ref{fig:EL_as_func_of_alpha} that the minimum of the local energy is found when the varitional parameter $\alpha=0.5$. We also observe that $\alpha=0.5$ gives the minimal variance, and seen from figure \ref{fig:variance_EL_as_func_of_alpha}. For small $\alpha$'s the energies and variances explode.  
+For the case without interaction and spherical harmonic oscillator we see from figure \ref{fig:EL_as_func_of_alpha} that the minimum of the local energy is found when the varitional parameter $\alpha=0.5$. We also observe that $\alpha=0.5$ gives the minimal variance, and seen from figure \ref{fig:variance_EL_as_func_of_alpha}. The local energy and the variance explode when $\alpha$ is approaching zero.  
 \par 
 \vspace{3mm}
 
@@ -681,14 +682,11 @@ In table \ref{tab:variance_analysis}, we repeated the calculation of the no inte
 \vspace{6mm}
 
 
-Further we have seen that the interaction causes some differences related to the.. WE REALLY NEED TO WRITE ABOUT THE INTERACTION CASE, INCLUDING GRADIENT DESCENT
+Further we have seen that we get som differences between the variational Monte Carlo and the Gross-Pitaevskii calculations. Gross-Pitaevskii only holds for dilute bose gases, and since the gas gets less dilute the more particles we add, we will expect some deviations when the number of particles increase. Nonetheless, for the interacting case we study a maximum of 100 particles, so this should be a small effect.
 \par 
 \vspace{3mm}
 
-For the onebody density plots we saw that the densities had gaussian shapes, which come from the wave functions (matematically the wave functions are gaussian functions). The peak decreased when adding interacting because the bosons then are more spread out, which also is the reason why it gets broader. We also observed noise for small radii, which is caused by the dividing on sphere surfaces, which are small numbers for small radii. All particles are located within a distance $3a_{HO}$ from particle $i$, which makes sence since we only study 10 particles. 
-
-
-Must benchmark results from e and f!
+For the onebody density plots we saw that the densities had gaussian shapes, which come from the wave functions. The peak decreased when adding interacting because the bosons then are more spread out, which also is the reason why it gets broader. We observed noise for small radii, which is caused by the dividing on sphere surfaces, which are small numbers for small radii. All particles are located within a distance $3a_{HO}$ from particle $i$, which makes sence since we only study 10 particles. 
 
 
 \section{Conclusion}

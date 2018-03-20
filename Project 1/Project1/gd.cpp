@@ -25,7 +25,7 @@ double GradientDecent(int N, int dim, int M, double a, double steplength, \
     uniform_int_distribution<> dimrand(0, dim-1);     //Random number between 0 and dim
 
     //Parameters
-    double alpha        = 0.5;          //Initial guess
+    double alpha        = 0.55;          //Initial guess
     double eps          = 0.001;        //Tolerance
     double eta0         = 0.001;         //Learning rate
     double D            = 0.5;          //Diffusion coeff, to be used in Hastings met.algo
@@ -160,7 +160,7 @@ double GradientDecent(int N, int dim, int M, double a, double steplength, \
 
 
 
-        if(abs(E_L_der)<eps||abs(alpha-alpha_old[1])/alpha_old[1] < eps) {
+        if(abs(E_L_der)<eps){ //||abs(alpha-alpha_old[1])/alpha_old[1] < eps) {
             cout <<"FINAL VALUES" << endl;
             if(abs(E_L_der)<eps){
                 cout << "small E_L" << endl;
