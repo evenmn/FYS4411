@@ -178,6 +178,16 @@ f''(x)\simeq\frac{f(x+h)-2f(x)+f(x-h)}{h^2}.
 \end{equation}
 In our case the position is a three dimensional vector, so we need to handle each dimension separately. Both the analytical and the numerical local energy are implemented, and in section \ref{CPU}, the CPU time for the analytical and numerical approach are compared for various number of particles. 
 
+\subsubsection{Gross-Pitaevskii}
+Since we study a dilute bose gas, we can use the Gross-Pitaevskii equation to estimate the energy density, also with interaction \cite{Gross}, \cite{Pitaevskii}. The energy is then given by an integral over all the positions (Ref.\cite{Nilsen}), 
+\begin{equation}
+E_{\text{GP}}[\Psi]=\int d\vec{r}\bigg[\frac{\hbar^2}{2m}|\nabla\Psi(\vec{r})|^2+V_{ext}(\vec{r})|\Psi|^2+\frac{2\pi\hbar^2a}{m}|\Psi|^4\bigg]
+\end{equation}
+which in this project can be simplified to
+\begin{equation}
+E_{\text{GP}}(\alpha, \beta, a, N)=N\cdot\beta^{5/6}\bigg(\frac{1}{4\alpha}+\alpha\bigg)+2\pi a\bigg(\frac{\alpha^3\beta}{\pi^3}\bigg)^{N/2},
+\end{equation}
+see appendix D.
 
 \subsection{Onebody density} \label{sec:OB_theory}
 In many cases it is convenient to know the positions of the particles, but when the number of particles increases, the set of positions turns into a messy collection of numbers which is not really informative ( in fact the exact positions can hardly be revealed according to Heisenberg's uncertainity principle). Instead of presenting the positions, the density of particles can give us a good overview of where the particles are located. With $N$ particles, the one-body density with respect to a particle $i$ is an integral over all particles but particle $i$:
@@ -400,7 +410,7 @@ and applying the chain rule of differentiation, it can be shown that equation \r
 
 \begin{equation}
 	\label{eq:E_L_der_wrt_alpha_expression}
-	\bar{E_{\alpha}} = 2 [\langle E_L (\alpha)  \frac{ \bar{\psi_{\alpha}}}{\psi_{\alpha}}\rangle - \langle E_L (\alpha) \rangle \langle \frac{\bar{\psi_{\alpha}}}{\psi_{\alpha}} \rangle ]
+	\bar{E_{\alpha}} = 2 \bigg[\langle E_L (\alpha)  \frac{ \bar{\psi_{\alpha}}}{\psi_{\alpha}}\rangle - \langle E_L (\alpha) \rangle \langle \frac{\bar{\psi_{\alpha}}}{\psi_{\alpha}} \rangle\bigg]
 \end{equation}
 where
 
@@ -464,20 +474,13 @@ To keep the program neat, specific parts were placed in specific files. For inst
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[auto,node distance=1.5cm]
-  % Create an entity with ID node1, label "Fancy Node 1".
-  % Default for children (ie. attributes) is to be a tree "growing up"
-  % and having a distance of 3cm.
-  %
-  % 2 of these attributes do so, the 3rd's positioning is overridden.
   \node[entity] (node1) {VMC}
-    %[grow=down,sibling distance=4cm]
-    child {node[attribute] {Attribute 1}};
-  % Now place a relation (ID=rel1)
+    child {};
   \node[entity] (node2) [below right = of node1] {WF};
   \node[entity] (node3) [below left = of node1] {Main};
   \node[entity] (node4) [below right = of node3] {GD};
-  \node[relationship] (rel1) [above = of node4, below = of node1] {Tools};
-  
+  \node[relationship] (rel1) [below=1cm of node1] {Tools};
+
   \path (node1) edge node {} (node2)
                 edge node {} (node3)
                 edge node {} (rel1);
@@ -602,23 +605,23 @@ In table \ref{tab:EL_calc_repulsive_pot}, the results from the calculation of th
 
 \begin{table} [H]
 	\centering
-	\caption{The local energy $E_L$ calculated for different $\alpha$, with $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=2.82843$, with the brute force algorithm with analytical local energy calculation.  The calculations are run in three dimensions with $1e6$ Monte Carlo cycles}
+	\caption{The local energy $E_L$ calculated for different $\alpha$, with $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=2.82843$, with the brute force algorithm with analytical local energy calculation. We compare the VMC results to the results found by the Gross-Pitaevskii equation (GP) for 1, 10 and 100 particles. The calculations are run in three dimensions with $1e6$ Monte Carlo cycles}
 	\begin{tabularx}{\textwidth}{X|XXXXXX} \hline
 		\label{tab:EL_calc_repulsive_pot}
 		& \multicolumn{2}{c}{\textbf{N=1}} & \multicolumn{2}{c}{\textbf{N=10}} & \multicolumn{2}{c}{\textbf{N=100}} \\
-		$\alpha$ & Comp. & GP & Comp. & GP & Comp. & GP  \\ \hline
-		0.2 & 3.48489 & 3.44943 & 35.0915 & 34.9 & 413.853 &\\
-		0.3 & 2.73719 & 2.69688 & 27.5577 & 27.4 & 359.313 &\\
-		0.4 & 2.47403 & 2.43994 & 24.8541 & 24.6 & 354.602 &\\ 
-		0.5 & 2.41422 & 2.38130 & 24.2644 & 24.2 & 371.025 &\\ 
-		0.6 & 2.45456 & 2.42185 & 24.6661 & 24.6 & 395.560 &\\ 
-		0.7 & 2.55036 & 2.51910 & 25.6275 & 25.6 & 425.227 &\\ 
-		0.8 & 2.69082 & 2.65182 & 26.8884 & 26.8 & 457.480 &\\ \hline
+		$\alpha$ & VMC & GP & VMC & GP & VMC & GP  \\ \hline
+		0.2 & 3.48489 & 3.44943 & 35.0915 & 34.4870 & 413.853 & 344.870\\
+		0.3 & 2.73719 & 2.69688 & 27.5577 & 26.9554 & 359.313 & 269.554\\
+		0.4 & 2.47403 & 2.43994 & 24.8541 & 24.3788 & 354.602 & 243.787\\ 
+		0.5 & 2.41422 & 2.38130 & 24.2644 & 23.7841 & 371.025 & 237.841\\ 
+		0.6 & 2.45456 & 2.42185 & 24.6661 & 24.1805 & 395.560 & 241.805\\ 
+		0.7 & 2.55036 & 2.51910 & 25.6275 & 25.1432 & 425.227 & 251.432\\ 
+		0.8 & 2.69082 & 2.65182 & 26.8884 & 26.4599 & 457.480 & 264.599\\ \hline
 	\end{tabularx}
 \end{table}
 
 \subsubsection{Gradient Decent} \label{sec:gd}
-The gradient decent method was then used to find the minimum in the local energy in the interacting case. The results are presented in table \ref{tab:EL_calc_gradientdecent}.
+The gradient decent method was then used to find the minimum of the local energy in the interacting case. The results are presented in table \ref{tab:EL_calc_gradientdecent}.
 
 \begin{table} [H]
 	\centering
@@ -631,10 +634,9 @@ The gradient decent method was then used to find the minimum in the local energy
 	\end{tabularx}
 \end{table}
 
-
+\iffalse
 \subsubsection{Wave function} \label{sec:wf}
 Now as we have found the optimal $\alpha$'s for 1, 10 and 100 particles in an elliptical trap, we can plot the respective wave functions. In figure \ref{fig:wf} the wave functions are plotted as a function of the spread in x-direction (dashed lines) in addition to the ideal wave function in a spherical trap (solid line). The results are comparable to earlier publications (see for instance Ref.\cite{Dalfovo}), and show that the wave functions get a broader shape when particles are added.
-\iffalse
 \begin{figure} [H]
     \centering
     \includegraphics[scale=0.80]{images/wavefunctions.png}
@@ -642,6 +644,7 @@ Now as we have found the optimal $\alpha$'s for 1, 10 and 100 particles in an el
     \label{fig:wf}
 \end{figure}
 \fi
+
 \subsubsection{Onebody density}
 In section \ref{sec:OB_theory} we presented a couple of ways computing the onebody density. Because both should give the same result, we selected the simplest one, which is the method with the bins. We conduct the investigations in elliptic traps, with 10 particles, 3 dimensions and 1e6 Monte Carlo cycles. With the optimal parameter $\alpha$ for the ground state wave function and for both the interacting and the non-interacting case, the onebody density plot is found in figure \ref{fig:ob0}.
 
@@ -710,26 +713,30 @@ Despite the noise seen for onebody density, the non-interacting calculation matc
 	\bibitem{MHJ15}
 	Morten Hjorth-Jensen.
 	Computational Physics 2: Variational Monte Carlo methods, Lecture Notes Spring 2018.
-	Department of Physics, University of Oslo.
+	Department of Physics, University of Oslo,
 	(2018).
 	\bibitem{DuBois}
 	J. L. DuBois and H. R. Glyde, H. R., \emph{Bose-Einstein condensation in trapped bosons: A variational Monte Carlo analysis}, Phys. Rev. A \textbf{63}, 023602 (2001).
 	\bibitem{Nilsen}
-	J. K. Nilsen,  J. Mur-Petit, M. Guilleumas, M. Hjorth-Jensen, and A. Polls, \emph{Vortices in atomic Bose-Einstein condensates in the large-gas-parameter region}, Phys. Rev. A \textbf{71}, 053610 (2005).
+	J. K. Nilsen,  J. Mur-Petit, M. Guilleumas, M. Hjorth-Jensen, and A. Polls, \emph{Vortices in atomic Bose-Einstein condensates in the large-gas-parameter region}, Phys. Rev. A \textbf{71}, 053610, (2005).
 	\bibitem{Dalfovo}
-	F. Dalfovo, S. Giorgini, L.P.Pitaevskii, S.Stringari, \emph{Theory of Bose-Einstein condensation in trapped gases} Rev. Mod. Phys. \textbf{71}, 463 (1999).
+	F. Dalfovo, S. Giorgini, L. P. Pitaevskii, S. Stringari, \emph{Theory of Bose-Einstein condensation in trapped gases} Rev. Mod. Phys. \textbf{71}, 463, (1999).
 	\bibitem{JE2016}
-	Jesse Emspak, \emph{States of Matter: Bose-Einstein Condensate}, LiveScience (2016)
+	J. Emspak, \emph{States of Matter: Bose-Einstein Condensate}, LiveScience, (2016).
 	\url{https://www.livescience.com/54667-bose-einstein-condensate.html}
 	Downloaded March 15th 2018.
 	\bibitem{SP}
-	Sidney Perkowitz \emph{Bose-Einstein condensate} Encyclopaedia Britannica 
+	S. Perkowitz \emph{Bose-Einstein condensate} Encyclopaedia Britannica 
 	\url{https://www.britannica.com/science/Bose-Einstein-condensate}
 	Downloaded March 15th 2018.
 	\bibitem{Anderson}
 	    M. H. Anderson, J. R. Ensher, M. R. Matthews, C. E. Wieman, E. A. Cornell, \emph{Observation of Bose-Einstein Condensation in a Dilute Atomic Vapor}, Science \textbf{269}, (1995).
 	\bibitem{JKNilsen}
 		J. K. Nilsen \emph{Bose-Einstein condensation in trapped bosons: A quantum Monte Carlo analysis}, Master thesis 2004, Department of Physics, University of Oslo, (2004). 
+	\bibitem{Gross}
+		E. P. Gross, \emph{Structure of a quantized vortex in boson systems}, Il Nuovo Cimento, \textbf{20} (3): 454–457, (1961).
+	\bibitem{Pitaevskii}
+		 L. P. Pitaevskii, \emph{Vortex lines in an imperfect Bose gas}, Sov. Phys. JETP. \textbf{13} (2): 451–454, (1961).
 
 	
 \end{thebibliography}

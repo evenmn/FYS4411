@@ -201,7 +201,6 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double alpha[]
 
         cout << "--- ALPHA: " << alpha[k] << " ---" << endl;
         cout << "E_L_avg: " << E_L_avg << endl;
-        cout << "E_L_avg_tot: " << E_L_avg_sqrd << endl;
         cout << "Acceptance ratio: " << accept_ratio << endl;
         cout << "Variance: " << variance << endl;
         cout << "CPU time: " << CPU_time << "\n" << endl;
