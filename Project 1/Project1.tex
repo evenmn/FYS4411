@@ -456,7 +456,7 @@ By repeating this procedure several times, and each time using more measurements
 
 
 \section{Code} \label{sec:code}
-This project is much about developing the code to make VMC run correctly, and in this section we will explain briefly how the code works and which implementation techniques we use.
+This project is much about developing the code to make VMC run correctly, and in this section we will explain briefly how the code works and which implementation techniques we use. The implementation is dimensionless, such that the variational parameters are the only quantities. 
 
 \subsection{Code structure}
 To keep the program neat, specific parts were placed in specific files. For instance, a file gd.cpp handle everything about the gradient descent method, and another file wavefunction.cpp (a little misleading) contains a class which both sets up the wave function and calculate the local energy given a wave function. We also collected the tools that are used by multiple scripts in its own file to maximize the reuse of the code, in particular Green's function and the quantum force calculations. In figure \ref{fig:code_structure} we give an overview of the implementation, where the lines indicate which scripts that communicate. 
@@ -488,9 +488,11 @@ To keep the program neat, specific parts were placed in specific files. For inst
 \caption{An overview of the code structure. metropolis.cpp is refered to as VMC, gd.cpp is GD, wavefunction.cpp is WF, tools.cpp is Tools and obviously main.cpp is Main. See text for furter description.}
 \label{fig:code_structure}
 \end{figure}
-The acronyms are not really accurate, VMC is of course much about the Metropolis algorithm, and GD contains both the VMC and the Metropolis algorithm. Anyway, it is hard to find acronyms that tells everything about the script. A standard VMC run goes as following: metropolis.cpp (VMC) is called from main.cpp (Main), which agains calls wavefunction.cpp (WF) to set up the wave function, calls tools.cpp (Tools) to get the value of Green's function and the quatum force and then again calls WF to obtain the local energy. At the end the local energy is printed out.
+The acronyms are not really accurate, VMC is of course much about the Metropolis algorithm, and GD contains both the VMC and the Metropolis algorithm. Anyway, it is hard to find acronyms that tells everything about the script. A standard VMC run goes as following: metropolis.cpp (VMC) is called from main.cpp (Main), which agains calls wavefunction.cpp (WF) to set up the wave function, calls tools.cpp (Tools) to get the value of Green's function and the quantum force and then again calls WF to obtain the local energy. At the end the local energy is printed out.
 
 \subsection{Implementation}
+We use the vector package to create a 2D-array where the positions are stored. For the exact implementation, see the github repository linked on page one. We always struggle for better performance, and to achieve that we try to avoid heavy loops and repetition of calculations. A second priority is to make the code as general as possible, such that the code can be reused for other purposes. As an example we always loop over an arbitrary given number of dimensions, and similar operations are done throughout the programs. 
+
 \subsubsection{VMC and Metropolis}
 Present pseudo code of how VMC and Metropolis are implemented
 
