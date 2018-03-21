@@ -90,7 +90,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double alpha[]
 
         //Define bins for the one body density measure
         int number_of_bins = 500;
-        double max_radius = 5;
+        double max_radius = 3;
         double radius_step = max_radius/number_of_bins;
         double bin_array[number_of_bins];
         double bin_dist[number_of_bins];

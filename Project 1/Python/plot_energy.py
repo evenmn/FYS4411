@@ -15,7 +15,7 @@ label_size = {"size":"14"}
 alpha = np.linspace(0.1, 0.9, 1000)
 
 sns.set()
-plt.plot(alpha, EGP(alpha, 1, 10), label="GP")
+plt.plot(alpha, EGP(alpha, 1, 10), '--', label="GP")
 plt.plot(data[:,0], data[:,1], label="VMC")
 #plt.title("Local energy", **label_size)
 plt.xlabel(r"$\alpha$", **label_size)
