@@ -180,7 +180,7 @@ In our case the position is a three dimensional vector, so we need to handle eac
  
 
 \subsubsection{Gross-Pitaevskii}
-Since we study a dilute bose gas, we can use the Gross-Pitaevskii equation to estimate the energy density, also with interaction \cite{Gross}, \cite{Pitaevskii}. The energy is then given by an integral over all the positions (Ref.\cite{Nilsen}), 
+Since we study a dilute bose gas, we can use the Gross-Pitaevskii (GP) equation to estimate the energy density, also with interaction \cite{Gross}, \cite{Pitaevskii}. The energy is then given by an integral over all the positions (Ref.\cite{Nilsen}), 
 \begin{equation}
 E_{\text{GP}}[\Psi]=\int d\vec{r}\bigg[\frac{\hbar^2}{2m}|\nabla\Psi(\vec{r})|^2+V_{ext}(\vec{r})|\Psi|^2+\frac{2\pi\hbar^2a}{m}|\Psi|^4\bigg].
 \label{eq:GP_integral}
@@ -189,9 +189,9 @@ This integral can easily be solved analytically when we ignore the interaction (
 \begin{equation}
 E_{\text{GP}}(\alpha, \beta, N)=N\cdot\bigg(1+\frac{\beta}{2}\bigg)\bigg(\frac{1}{4\alpha}+\alpha\bigg)
 \end{equation}
-in three dimensions. 
+in three dimensions, which is derived in appendix D.
 
-This is quite good for few particles and small hard-sphere diameter also with interaction, but since the average energy per particle should increase as we increase N, this will be more and more off. For the interacting case, we can solve the integral using a numerical method, for instance Monte Carlo integration. We will not implement this, but rather benchmark against the articles about the same topic.
+This is quite good for few particles and small hard-sphere diameter also with interaction, but since the average energy per particle should increase as we increase N, this will be more and more off. For the interacting case, we can solve the integral using a numerical method, for instance Monte Carlo integration. We will not implement this, but rather benchmark our results against the solution of GP when ignoring interaction.
 
 
 \subsection{Onebody density} \label{sec:OB_theory}
@@ -615,13 +615,13 @@ In table \ref{tab:EL_calc_repulsive_pot}, the results from the calculation of th
 		\label{tab:EL_calc_repulsive_pot}
 		& \multicolumn{2}{c}{\textbf{N=1}} & \multicolumn{2}{c}{\textbf{N=10}} & \multicolumn{2}{c}{\textbf{N=100}} \\
 		$\alpha$ & VMC & GP & VMC & GP & VMC & GP  \\ \hline
-		0.2 & 3.48489 & 3.44943 & 35.0915 & 34.4870 & 413.853 & 344.870\\
-		0.3 & 2.73719 & 2.69688 & 27.5577 & 26.9554 & 359.313 & 269.554\\
-		0.4 & 2.47403 & 2.43994 & 24.8541 & 24.3788 & 354.602 & 243.787\\ 
-		0.5 & 2.41422 & 2.38130 & 24.2644 & 23.7841 & 371.025 & 237.841\\ 
-		0.6 & 2.45456 & 2.42185 & 24.6661 & 24.1805 & 395.560 & 241.805\\ 
-		0.7 & 2.55036 & 2.51910 & 25.6275 & 25.1432 & 425.227 & 251.432\\ 
-		0.8 & 2.69082 & 2.65182 & 26.8884 & 26.4599 & 457.480 & 264.599\\ \hline
+		0.2 & 3.48489 & 3.50060 & 35.0915 & 35.0060 & 413.853 & 350.060\\
+		0.3 & 2.73719 & 2.73611 & 27.5577 & 27.3611 & 359.313 & 273.611\\
+		0.4 & 2.47403 & 2.47457 & 24.8541 & 24.7457 & 354.602 & 247.457\\ 
+		0.5 & 2.41422 & 2.41421 & 24.2644 & 24.1421 & 371.025 & 241.421\\ 
+		0.6 & 2.45456 & 2.45445 & 24.6661 & 24.5445 & 395.560 & 245.445\\ 
+		0.7 & 2.55036 & 2.55217 & 25.6275 & 25.5217 & 425.227 & 255.217\\ 
+		0.8 & 2.69082 & 2.68581 & 26.8884 & 26.8581 & 457.480 & 268.581\\ \hline
 	\end{tabularx}
 \end{table}
 
@@ -633,10 +633,10 @@ The gradient decent method was then used to find the minimum of the local energy
 	\caption{The local energy $E_L$ calculated with the gradient decent method, with $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=2.82843$, with the brute force algorithm with analytical local energy calculation. The table shows the optimal $\alpha$ found by the method, and the resulting local energy. The calculations are run in for  three dimensions with $1e6$ Monte Carlo cycles.}
 	\begin{tabularx}{\textwidth}{X|XXX} \hline
 		\label{tab:EL_calc_gradientdecent}
-		$N$ & $\alpha $ & $E_L$  & $\frac{\partial E_L}{\partial \alpha}$   \\ \hline
+		$N$ & $\alpha $ & $E_L$  & $|\partial E_L/\partial \alpha|$   \\ \hline
 		1   & 0.50000  & 2.4142  &  7.2134e-06 \\
-		10  & 0.50015  & 24.264  & -4.7969e-05 \\ 
-		100 & 0.00000  & 350     &  0.0\\ \hline
+		10  & 0.50015  & 24.264  &  4.7969e-05 \\ 
+		100 & 0.53379  & 379.39  &  4.1789e-03 \\ \hline
 	\end{tabularx}
 \end{table}
 
@@ -687,11 +687,17 @@ In table \ref{tab:variance_analysis}, we repeated the calculation of the no inte
 \vspace{6mm}
 
 
-Further we have seen that we get som differences between the variational Monte Carlo and the Gross-Pitaevskii calculations. Gross-Pitaevskii only holds for dilute bose gases, and since the gas gets less dilute the more particles we add, we will expect some deviations when the number of particles increase. Nonetheless, for the interacting case we study a maximum of 100 particles, so this should be a small effect.
+Further we have seen that we get som differences between the variational Monte Carlo and the Gross-Pitaevskii calculations. Gross-Pitaevskii (GP) only holds for dilute bose gases, and since the gas gets less dilute the more particles we add, we will expect some deviations when the number of particles increase. Nonetheless, for the interacting case we study a maximum of 100 particles, so this should be a small effect, and we expect the exact GP equation to be accurate for our case. Anyway, we have not solved GP for the interacting case, so the GP benchmark should underestimate the obtained energy, which is also the case.
+
+We can also compare the results to Ref.\cite{DuBois}, where they have plotted energy per particle as a function of number of particles. According to that plot, the energy per particle should increase rapidly when particles are added to a small number of particles, something that we also observe when going from 10 to 100 particles and partly when going from 1 to 10 particles. The exact energy difference is though hard to read from the graph, but our energies are possibly a bit larger than they should be.
+\par
+\vspace{3mm}
+
+We find the optimal $\alpha$ using gradient descent, and the results match the results obtained when running for various $\alpha$'s, see table \ref{tab:EL_calc_repulsive_pot} and \ref{tab:EL_calc_gradientdecent}. The optimal $\alpha$ tends to increase when adding particles, which complements the observation in \cite{Nilsen}. This is not surprising, since the optimal wave function should change when adding particles with interaction. What value one obtains as the optimal $\alpha$ will be dependent on whether if one starts with an overestimated or an underestimated guess, and we have therefore tried both and decreased the step length $\eta$ to achieve an accurate optimal $\alpha$ with a flat slope. 
 \par 
 \vspace{3mm}
 
-For the onebody density plots we saw that the densities had gaussian shapes, which come from the wave functions. The peak decreased when adding interacting because the bosons then are more spread out, which also is the reason why it gets broader. We observed noise for small radii, which is caused by the dividing on sphere surfaces, which are small numbers for small radii. All particles are located within a distance $3a_{HO}$ from particle $i$, which makes sence since we only study 10 particles. 
+For the onebody density plots we saw that the densities had gaussian shapes, which come from the wave functions. The peak decreased when adding interaction because the bosons then are more spread out, which also is the reason why it gets broader. We observed noise for small radii, which is caused by the dividing on sphere surfaces, which are small numbers for small radii. All particles are located within a distance $3a_{HO}$ from particle $i$, which makes sence since we only study 10 particles. 
 
 
 \section{Conclusion}
@@ -864,8 +870,13 @@ E_L(\alpha)&=\sum_j-\frac{1}{2}(-6\alpha+4\alpha^2r_j^2) + \frac{1}{2}r_j^2\nota
 \subsubsection{General}
 If one now studies the local energy expressions for one particle in one dimension and $N$ particles in three dimensions, one can see a pattern and it is easy to imagine that there exists a general expression for the local energy, when interaction is ignored and for the spherical harmonic oscillator case. At least for 1, 2, and 3 dimensions, it can be shown that 
 \begin{equation}
-E_L(\alpha)=dim\cdot N\cdot \alpha+\Big(\frac{1}{2}-2\alpha^2\Big)\sum_jr_j^2
+E_L(\alpha)=dim\cdot N\cdot \alpha+\Big(\frac{1}{2}-2\alpha^2\Big)\sum_{j=1}^Nr_j^2.
 \end{equation}
+A similar expression for the elliptical trap can be found to be
+\begin{equation}
+E_L(\alpha)=2\alpha+\alpha\beta+\Big(\frac{1}{2}-2\alpha^2\Big)\sum_{j=1}^Nr_j^2.
+\end{equation}
+in three dimensions.
 
 \subsection{With repulsive interaction}
 As mentioned in the theory section, the calculations get more complicated when adding the interaction, and we are in fact not able to find the local energy analytically. However, we can simplify the local energy expression and hopefully gain some speed up compared to when we do all the calculations numerically. 
@@ -994,5 +1005,38 @@ where we have used the relation $a_{HO}\equiv (\hbar/m\omega_{HO})^{1/2}$, and w
 H'=\sum_i\frac{1}{2}\bigg(-\nabla_i^2+(x_i')^2+(y_i')^2+\frac{\omega_z^2}{\omega_{HO}^2}(z_i')^2\bigg)+\sum_{i<j}V_{int}(\vec{r}_i, \vec{r}_j)
 \end{equation}
 which is the Hamiltonian that we were hunting. We know how the factor in front of the $z^2$ factor is $\beta^2 = \gamma^2$, so $\beta = \gamma$ has to be equal to $\omega_z/\omega_{HO}$.
+
+\section*{Appendix D} \label{sec:appendix_d}
+To check if the VMC results are correct, we need a benchmark, and for a dilute bose gas the Gross-Pitaevskii equation is a natural choice. We could have solved the equation for the interacting case using numerical methods, but it would require significantly more effort and we take care of the non-interacting case instead. We start with the dimensionless brother of equation \ref{eq:GP_integral},
+\begin{equation}
+E_{\text{GP}}[\Psi]=\int d\vec{r}\bigg[\frac{1}{2}|\nabla\Psi(\vec{r})|^2+V_{ext}(\vec{r})|\Psi|^2+2\pi a|\Psi|^4\bigg].
+\end{equation}
+where 
+\begin{equation}
+V_{ext}(\vec{r})=\frac{1}{2}(x_1^2+y_1^2+\beta z_1^2 + \hdots + x_N^2+y_N^2+\beta z_N^2)
+\end{equation}
+for N particles in an 3D elliptical trap. The normalized wave function without the Jastow factor reads
+\begin{equation}
+\Psi(\vec{r})=\bigg(\frac{2\alpha}{\pi}\bigg)^{3N/4}\cdot\beta^{N/4}\exp\big(-\alpha(x_1^2+y_1^2+\beta z_1^2 + \hdots + x_N^2+y_N^2+\beta z_N^2)\big).
+\end{equation}
+This gives us the following expression for the gradient of the wave function squared
+\begin{equation}
+|\nabla\Psi(\vec{r})|^2=4\alpha^2(x_1^2+y_1^2+\beta^2 z_1^2 + \hdots + x_N^2+y_N^2+\beta^2 z_N^2)|\Psi(\vec{r})|^2.
+\end{equation}
+
+Since we ignore the interaction, $a=0$ and we do not need to take the last term into account. The intergral to solve is then
+\begin{equation*}
+E_{\text{GP}}=\Big(\frac{1}{2}+2\alpha^2\Big)\int_{-\infty}^{\infty}(x_1^2+y_1^2+\beta^2 z_1^2 + \hdots + x_N^2+y_N^2+\beta^2 z_N^2)|\Psi|^2d\vec{r}
+\end{equation*}
+which is gaussian and can be found in a collection of integrals:
+\begin{equation}
+\int_{-\infty}^{\infty}e^{-(ax^2+b)}dx=\frac{1}{2a}\sqrt{\frac{\pi}{a}}e^{-b}.
+\end{equation}
+With some straightforward computations one will find
+\begin{align}
+E_{\text{GP}}(\alpha,\beta,N)&=\Big(\frac{1}{2}+2\alpha^2\Big)\Big(\frac{2\alpha}{\pi}\Big)^{3N/2}\beta^{N/2}\frac{1}{4\alpha}\sqrt{\frac{\pi}{2\alpha}}^{3N}(2+\beta)\cdot N\cdot \beta^{-N/2}\notag\\
+&=N\cdot\Big(\frac{1}{4\alpha}+\alpha\Big)\cdot\Big(1+\frac{\beta}{2}\Big).
+\end{align}
+This gives the correct analytical results for the non-interacting case both in the spherical trap ($E_L=0.5N\cdot dim$ for $\alpha=0.5$) and the elliptical trap ($E_L=N(1+\beta/2)$\footnote{We start from the exact energy formula for a harmonic oscillator, $E_n=\hbar\omega(n+1/2)$, and study how the ground state energy changes if the z-component has different frequency $\omega_z$ from the other components, $E_0=\hbar(\omega_{ho}+\omega{z}/2)$. If we then scale with respect to $\hbar\omega_z$ as done before, we get $E'=1+\beta/2$ for one particle. For our particular project, we have $\beta=\sqrt{8}$, and get an ground state energy $1+\sqrt{2}$ per particle.} for $\alpha=0.5$ in 3D).
 
 \end{document}
