@@ -114,7 +114,7 @@ f(a,r_{ij})=
    \left(1-\frac{a}{r_{ij}}\right) & r_{ij} > a.
 \end{cases}
 \end{equation}
-where $a$ is a parameter describing the minimum distance allowed between particles in the trap.
+where $a$ is a parameter describing the minimum distance allowed between particles in the trap. This is also denoted as the Jastrow factor, and sets the wave function to zero when the distance between to particles are smaller than $a$, which that they will not contribute to the energy. 
 
 \subsection{Local energy $E_L$ calculation}
 In general we can find the energy of a system with a known wave function by solving the integral
@@ -176,18 +176,23 @@ E_{L,i}=-\frac{\hbar^2}{2m}\frac{\nabla_i^2\Psi_T}{\Psi_T}+V_{ext}(\vec{r}_i)=E_
 \label{eq:num_derv}
 f''(x)\simeq\frac{f(x+h)-2f(x)+f(x-h)}{h^2}.
 \end{equation}
-In our case the position is a three dimensional vector, so we need to handle each dimension separately. Both the analytical and the numerical local energy are implemented, and in section \ref{CPU}, the CPU time for the analytical and numerical approach are compared for various number of particles. 
+In our case the position is a three dimensional vector, so we need to handle each dimension separately. Both the analytical and the numerical local energy are implemented, and in section \ref{CPU}, the CPU time for the analytical and numerical approach are compared for various number of particles.
+ 
 
 \subsubsection{Gross-Pitaevskii}
 Since we study a dilute bose gas, we can use the Gross-Pitaevskii equation to estimate the energy density, also with interaction \cite{Gross}, \cite{Pitaevskii}. The energy is then given by an integral over all the positions (Ref.\cite{Nilsen}), 
 \begin{equation}
-E_{\text{GP}}[\Psi]=\int d\vec{r}\bigg[\frac{\hbar^2}{2m}|\nabla\Psi(\vec{r})|^2+V_{ext}(\vec{r})|\Psi|^2+\frac{2\pi\hbar^2a}{m}|\Psi|^4\bigg]
+E_{\text{GP}}[\Psi]=\int d\vec{r}\bigg[\frac{\hbar^2}{2m}|\nabla\Psi(\vec{r})|^2+V_{ext}(\vec{r})|\Psi|^2+\frac{2\pi\hbar^2a}{m}|\Psi|^4\bigg].
+\label{eq:GP_integral}
 \end{equation}
-which in this project can be simplified to
+This integral can easily be solved analytically when we ignore the interaction (such that the Jastrow factor is one), and we get
 \begin{equation}
-E_{\text{GP}}(\alpha, \beta, a, N)=N\cdot\beta^{5/6}\bigg(\frac{1}{4\alpha}+\alpha\bigg)+2\pi a\bigg(\frac{\alpha^3\beta}{\pi^3}\bigg)^{N/2},
+E_{\text{GP}}(\alpha, \beta, N)=N\cdot\bigg(1+\frac{\beta}{2}\bigg)\bigg(\frac{1}{4\alpha}+\alpha\bigg)
 \end{equation}
-see appendix D.
+in three dimensions. 
+
+This is quite good for few particles and small hard-sphere diameter also with interaction, but since the average energy per particle should increase as we increase N, this will be more and more off. For the interacting case, we can solve the integral using a numerical method, for instance Monte Carlo integration. We will not implement this, but rather benchmark against the articles about the same topic.
+
 
 \subsection{Onebody density} \label{sec:OB_theory}
 In many cases it is convenient to know the positions of the particles, but when the number of particles increases, the set of positions turns into a messy collection of numbers which is not really informative ( in fact the exact positions can hardly be revealed according to Heisenberg's uncertainity principle). Instead of presenting the positions, the density of particles can give us a good overview of where the particles are located. With $N$ particles, the one-body density with respect to a particle $i$ is an integral over all particles but particle $i$:
