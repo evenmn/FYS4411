@@ -407,7 +407,7 @@ When the interaction term is excluded, we know which $\alpha$ that corresponds t
 In fact there are multiple techniques for doing this, where the most complicated ones obviously also are the best. Anyway, in this project we will have good initial guesses, and are therefore not in need for the most fancy algorithms. 
 
 \subsubsection{Gradient descent}
-Perhaps the simplest and most intuitive method for finding the minimum is the gradient descent method, which reads
+Perhaps the simplest and most intuitive method for finding the minimum is the gradient descent method (GD), which reads
 \begin{equation}
 \label{eq:GD}
 \alpha^+=\alpha - \eta\cdot\frac{d\langle E(\alpha)\rangle}{d\alpha}.
@@ -700,7 +700,7 @@ In section \ref{sec:OB_theory} we presented a couple of ways computing the onebo
 
 \begin{figure} [H]
     \centering
-    \includegraphics[scale=0.80]{images/ob.png}
+    \includegraphics[scale=0.50]{images/ob.png}
     \caption{The onebody density of the bosonic system, which is run with $\alpha=0.5$ for $a=0$, $a=a_{Rb}=0.0043$ and $a=10\cdot a_{Rb}=0.043$. The radius is given in units of a$_{ho}$ along the x-axis, and the density is in units of a$_{ho}^{-3}$. We conduct the investigations in elliptic traps, with 10 particles, 3 dimensions and 1e6 Monte Carlo cycles.}
     \label{fig:ob0}
 \end{figure}
@@ -718,7 +718,7 @@ Moreover, when comparing the CPU time difference between these two calculations,
 \par 
 \vspace{3mm}
 
-When comparing the results from the brute force and Metropolis-Hastings algorithms, shown in tables \ref{tab:BFmet} and \ref{tab:ISmet}, the reader can observe that the Hastings algorithm reproduces the exact energies, as the brute force algorithm does, but that the Hastings algorithm is slightly slower. This slight time increase is due to the fact that while the brute force algorithm picks a proposed new step at random, the Hasting algorithm makes a more educated move by calculating the drift force $F$ on the particle, and decide what direction the particle is most likely to move in, as described in section \ref{Importance_sampling}. While this calculation spends slightly more CPU time, it is rewarded by the Hastings algorithm having a higher acceptance rate of the proposed moves compared to the brute force Metropolis. This can be seen from figures \ref{fig:acceptance_BF_stepsize} and \ref{fig:acceptance_IS_timestep}. The acceptance ratio of the Hastings algorithm for a timestep $\Delta t=1$ is much higher than the acceptance ratio for brute force with a stepsize $r=1$. This results in the Hastings algorithm moving faster towards the minima compared to the brute force method. This effect, however, is not that visible in our project, but can make a vital difference for larger Monte Carlo simulations.
+When comparing the results from the brute force and Metropolis-Hastings algorithms, shown in tables \ref{tab:BFmet} and \ref{tab:ISmet}, the reader can observe that the Hastings algorithm reproduces the exact energies, as the brute force algorithm does, but that the Hastings algorithm is slightly slower. This slight time increase is due to the fact that while the brute force algorithm picks a proposed new step at random, the Hasting algorithm makes a more educated move by calculating the drift force $F$ on the particle, and decide what direction the particle is most likely to move in, as described in section \ref{Importance_sampling}. The transition probability $T_{i\rightarrow j}$ and $T_{j\rightarrow i}$ are also calculated, as they are no longer assumed to be identical, as they are for brute force. While these calculations spends slightly more CPU time, it is rewarded by the Hastings algorithm having a higher acceptance rate of the proposed moves compared to the brute force Metropolis. This can be seen from figures \ref{fig:acceptance_BF_stepsize} and \ref{fig:acceptance_IS_timestep}. The acceptance ratio of the Hastings algorithm for a timestep $\Delta t=1$ is much higher than the acceptance ratio for brute force with a stepsize $r=1$. This results in the Hastings algorithm moving faster towards the minima compared to the brute force method. This effect, however, is not that visible in our project, but can make a vital difference for larger Monte Carlo simulations.
 \par 
 \vspace{3mm}
 
@@ -730,19 +730,21 @@ In table \ref{tab:variance_analysis}, we repeated the calculation of the no inte
 \par 
 \vspace{6mm}
 
-
 Further we have seen that we get som differences between the variational Monte Carlo and the Gross-Pitaevskii calculations. Gross-Pitaevskii (GP) only holds for dilute bose gases, and since the gas gets less dilute the more particles we add, we will expect some deviations when the number of particles increase. Nonetheless, for the interacting case we study a maximum of 100 particles, so this should be a small effect, and we expect the exact GP equation to be accurate for our case. Anyway, we have not solved GP for the interacting case, so the GP benchmark should underestimate the obtained energy, which is also the case.
 
-We can also compare the results to Ref.\cite{DuBois}, where they have plotted energy per particle as a function of number of particles. According to that plot, the energy per particle should increase rapidly when particles are added to a small number of particles, something that we also observe when going from 10 to 100 particles and partly when going from 1 to 10 particles. The exact energy difference is though hard to read from the graph, but our energies are possibly a bit larger than they should be. We also see that the lowest energy appears when $\alpha=0.4$. This differs from the case without interaction, but we also expect another optimal wave function when interaction is added such that this effect is kind of expected. 
+We can also compare the results to Ref.\cite{DuBois}, where they have plotted energy per particle as a function of number of particles. According to that plot, the energy per particle should increase rapidly when particles are added to a small number of particles, something that we also observe when going from 10 to 100 particles and partly when going from 1 to 10 particles. The exact energy difference is though hard to read from the graph, but our energies are possibly a bit larger than they should be. We also see that the lowest energy for 100 particles is when $\alpha=0.4$.  This differs from the case without interaction, where the optimal $\alpha$ is $0.5$. 
 \par
 \vspace{3mm}
 
-We find the optimal $\alpha$ using gradient descent, and for one and ten particles the results match the results obtained when running for various $\alpha$'s, see table \ref{tab:EL_calc_repulsive_pot} and \ref{tab:EL_calc_gradientdecent}. For 100 particles the $\alpha$ obtained is not the same as found in \ref{tab:EL_calc_repulsive_pot}, and indicates that the gradient descent implementation gives wrong answers for many particles. The optimal $\alpha$ tends to increase when adding particles, which complements the observation in \cite{Nilsen}. This is not surprising, since the optimal wave function should change when adding particles with interaction. What value one obtains as the optimal $\alpha$ will be dependent on whether if one starts with an overestimated or an underestimated guess, and we have therefore tried both and decreased the step length $\eta$ to achieve an accurate optimal $\alpha$.
+We find the optimal $\alpha$ using the gradient descent method, and for one and ten particles the results match the results obtained when running VMC for various $\alpha$'s, see table \ref{tab:EL_calc_repulsive_pot} and \ref{tab:EL_calc_gradientdecent}. For 100 particles the $\alpha$ obtained is not the same as found in \ref{tab:EL_calc_repulsive_pot}, and indicates that the gradient descent implementation gives wrong answers for many particles. According to the gradient decent method, the optimal $\alpha$ tends to increase when adding particles. The fact that $\alpha$ changes is not surprising, as the optimal wave function should change when adding particles with interaction. What value one obtains as the optimal $\alpha$ with GD will be dependent on whether if one starts with an overestimated or an underestimated guess, and we have therefore tried both and decreased the step length $\eta$ to achieve an accurate optimal $\alpha$.
+\par 
+\vspace{3mm}
+
+We observe from table \ref{tab:EL_calc_repulsive_pot} and \ref{tab:EL_calc_gradientdecent} that VMC and GD do not yield the same optimal $\alpha$, even though they yield about the same energy for the same $\alpha$. This might be because we chose the wrong starting $\alpha$-value for the gradient decent method. As described in section \ref{Method}, GD is not an accurate method, and is heavily dependent on the initial $\alpha$-guess. Another reason for this might be that the test in GD checking if we have reached the optimal $\alpha$, is too innaccurate, and thus returned the wrong value of $\alpha$. The error might also be in the VMC calculation, as we have no proper benchmark to check these, but results presenten in \cite{DuBois} suggest that our energy per particle is too large, as mentioned above.
 \par 
 \vspace{3mm}
 
 For the onebody density plots we saw that the densities had gaussian shapes, which come from the wave functions. The peak decreased when adding interaction because the bosons then are more spread out. We observed noise for small radii, which is caused by the dividing on sphere surfaces, which are small numbers for small radii. All particles are located within a distance $3a_{HO}$ from particle $i$, which makes sence since we only study 10 particles. 
-
 
 \section{Conclusion}
 
@@ -751,9 +753,9 @@ In this project, we have found that the Variational Monte Carlo method reproduce
 The Hastings algorithm had a higher acceptance rate for the proposed moves in the Monte Carlo iterations compared to the brute force method. This should result in the Hastings method converging faster, although we did not observe that in this report. We also saw that the Hastings algorithm was more dependent on the timestep compared to the brute force method's dependence om stepsize. This is as we would expect from theory.  \par
 When including a proper evaluation of the error by using the blocking method, we saw that the blocking method gave a slightly higher estimated variance, compared to the estimation from equation \ref{eq:variance_simplified}. This is as expected.
 
-With interaction we got reasonable results for one and ten particles, but for 100 particles the energies were probably higher than they should be. The optimal variational parameter $\alpha$ did not match the optimal $alpha$ gotten from gradient descent, and perhaps we have a bug in the code which appears for a large number of particles. 
+With interaction we got reasonable results for one and ten particles compared to calculations based on the Gross-Pitaevskii equation. For 100 particles the energies were probably higher than they should be. The optimal variational parameter $\alpha$ obtained from VMC did not match the optimal $\alpha$ gotten from GD, and perhaps we have a bug in the code which appears for a large number of particles. 
 
-Despite the noise seen for onebody density, the graphs look like the wave functions as expected.
+The graphs look like the wave functions as expected.
 
 \newpage
 
