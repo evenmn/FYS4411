@@ -6,6 +6,7 @@
 #include <fstream>
 #include <tools.h>
 #include <test.h>
+#include <cmath>
 
 using namespace std;
 
@@ -18,6 +19,12 @@ double random_position(){
     return dis(gen);
 }
 
+void volume(double* buffer, double* bin_dist, int N_bins) {
+    buffer[0] = (4*M_PI/3)*pow(bin_dist[0],3);
+    for(int j = 1; j<N_bins; j++) {
+        buffer[j] = (4*M_PI/3)*pow((bin_dist[j]), 3) - buffer[j-1];
+    }
+}
 
 void Met_algo(int N, int dim, int M, double a, double steplength, double alpha[], \
               int length_alpha_1, double beta, double h, int num_or_an, int BF_H, double timestep, int one_body)
@@ -47,7 +54,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double alpha[]
         int    N_rand;                  //randomly chosen N
         int    dim_rand;                //randomly chosen dimension
 
-        //Initialize position matrix for N particles in dim dimentions
+        //Initialize position matrix for N particles in dim dimensions
         vector<vector<double>> pos_mat;
         vector<vector<double>> pos_mat_new;
         pos_mat.resize(N);
@@ -62,7 +69,6 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double alpha[]
         for(auto& i : pos_mat_new)
             i.resize(dim);
 
-        // Initialize the position matrix
         for(int i=0; i<N; i++) {
             LOOP:
             for(int j=0; j<dim; j++) {
@@ -105,18 +111,20 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double alpha[]
         double radius_step = max_radius/number_of_bins;
         double bin_array[number_of_bins];
         double bin_dist[number_of_bins];
+        double bins_particles[number_of_bins];
 
         ofstream ob_file;
 
         if(one_body == 1) {
             for(int i=0; i<number_of_bins; i++){
-                bin_array[i] = i * radius_step;
-                bin_dist[i] = 0;
+                bin_dist[i] = i * radius_step;
+                bins_particles[i] = 0;
             }
 
             //Open file for writing (will write for a specific alpha)
-            ob_file.open ("../data/ob_density.dat");
+            ob_file.open ("../data/ob_density_a_0.dat");
         }
+        volume(bin_array, bin_dist, number_of_bins);
 
         double accept = 0;
 
@@ -177,7 +185,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double alpha[]
                             bin_nr = j;
                         }
                     }
-                    bin_dist[bin_nr] += 1;
+                    bins_particles[bin_nr] += 1;
                 }
             }
 
@@ -193,7 +201,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double alpha[]
         if(one_body == 1){
             //Write to file
             for(int j=0; j<number_of_bins; j++) {
-               ob_file << bin_dist[j]/(bin_array[j]*bin_array[j]*M) << "\n";
+               ob_file << bins_particles[j]/(bin_array[j]*M) << "\n";
             }
             //Close myfile
             ob_file.close();
@@ -210,7 +218,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double alpha[]
         double variance = E_L_avg_sqrd - E_L_avg*E_L_avg;
 
         //Tests
-        if(a==0) test_EL(E_L_avg, N, alpha[k], beta);
+        if(a==0) test_energy(E_L_avg, N, alpha[k], beta);
 
 
         cout << "--- ALPHA: " << alpha[k] << " ---" << endl;

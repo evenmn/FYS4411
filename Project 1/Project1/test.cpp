@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
 
-void test_EL(double EL, int N, double alpha, double beta) {
+void test_energy(double EL, int N, double alpha, double beta) {
     double tol = 0.1;
     double exact = N*(1 + beta/2)*(1/(4*alpha) + alpha);
     //std::cout << EL << " " << exact << std::endl;

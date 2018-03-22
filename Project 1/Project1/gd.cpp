@@ -160,7 +160,7 @@ double GradientDecent(int N, int dim, int M, double a, double steplength, \
         double E_L_der = 2*(psi_E_avg - psi_avg*E_L_avg);
 
         //Tests
-        if(a==0) test_EL(E_L_avg, N, alpha, beta);
+        if(a==0) test_energy(E_L_avg, N, alpha, beta);
 
         cout << "--- ALPHA: " << alpha << " ---" << endl;
         cout << "E_L_der: " << E_L_der << endl;

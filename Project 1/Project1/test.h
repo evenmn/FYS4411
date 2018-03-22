@@ -1,3 +1,3 @@
 #pragma once
 
-void test_EL(double EL, int N, double alpha, double beta);
+void test_energy(double EL, int N, double alpha, double beta);
