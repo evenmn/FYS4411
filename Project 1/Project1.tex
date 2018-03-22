@@ -593,11 +593,11 @@ For the brute force Metropolis algorithm we developed both an analytical and a n
 
 \begin{table} [H]
 	\centering
-	\caption{The energy calculated without hard-sphere interaction with brute force Metropolis algorithm, for both the analytical and numerical energy calculation. The variational parameter $\alpha$ is $0.5$, we study three dimensions, the step length is 1.0, the number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the calculated energies. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}.}
-	\begin{tabularx}{\textwidth}{X|XX|XX|X} \hline
+	\caption{The energy calculated without hard-sphere interaction with brute force Metropolis algorithm, for both the analytical and numerical energy calculation. The variational parameter $\alpha$ is $0.5$, we study three dimensions, the step length is 1.0, the number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the calculated energies. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}.\vspace{2mm}}
+	\begin{tabularx}{\textwidth}{c|XX|XX|c} \hline\hline
 		\label{tab:BFmet}
-		& \multicolumn{2}{X}{\textbf{Analytical}} & \multicolumn{2}{X}{\textbf{Numerical}} & Exact \\
-		$N$ & $\langle E\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s] & $\langle E\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s]& $\langle E\rangle$ [$\hbar\omega_{ho}$]\\ \hline
+		& \multicolumn{2}{c}{\textbf{Analytical}} & \multicolumn{2}{c}{\textbf{Numerical}} & \multicolumn{1}{c}{\textbf{Exact}} \\
+		$N$ & $\langle E\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s] & $\langle E\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s]& $E$ [$\hbar\omega_{ho}$]\\ \hline
 		1 & 1.5000(15) & 0.15420 & 1.5000(15) & 0.65714 & 1.5000\\
 		10 & 15.000(15) & 0.54785 & 15.000(15) & 9.9844 & 15.000\\
 		100 & 150.00(15) & 13.573 & 150.00(15) & 2743.4 & 150.00\\
@@ -607,11 +607,11 @@ For the brute force Metropolis algorithm we developed both an analytical and a n
 
 \begin{table} [H]
 	\centering
-	\caption{The energy calculated without hard-sphere interaction with Metropolis-Hastings algorithm. The variational parameter $\alpha$ is $0.5$, we study three dimensions, the time step is 1.0 and the number of Monte Carlo cycles is fixed to $M=1e6$. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}.}
-	\begin{tabularx}{\textwidth}{X|XX|X} \hline
+	\caption{The energy calculated without hard-sphere interaction with Metropolis-Hastings algorithm. The variational parameter $\alpha$ is $0.5$, we study three dimensions, the time step is 1.0 and the number of Monte Carlo cycles is fixed to $M=1e6$. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}.\vspace{2mm}}
+	\begin{tabularx}{\textwidth}{X|XX|X} \hline\hline
 		\label{tab:ISmet}
-		& \textbf{Analytical}  & & \textbf{Exact}\\
-		$N$ & $\langle E\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s] & $\langle E\rangle$ [$\hbar\omega_{ho}$]\\ \hline
+		& \multicolumn{2}{c}{\textbf{Analytical}} & \multicolumn{1}{c}{\textbf{Exact}}\\
+		$N$ & $\langle E\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s] & $E$ [$\hbar\omega_{ho}$]\\ \hline
 		1 & 1.5000(15) & 0.26693  & 1.5000 \\
 		10 & 15.000(15) &  0.54930 & 15.000 \\
 		100 & 150.00(15) & 16.117 & 150.00 \\
@@ -650,8 +650,8 @@ We observe that the acceptance rate for the brute force Metropolis algorithm dec
 In table \ref{tab:variance_analysis}, we present the results of the energy calculation with proper error evaluation of statistical error. The statistical error as found with the blocking method is also compared to the simple way of approximating the variance with equation \ref{eq:variance_simplified}. 
 
 \begin{table} [H]
-	\caption{The energy calculated without hard-sphere interaction with the Metropolis-Hastings algorithm, this time with proper evaluation of the statistical error. The calculations are run in three dimensions with $1e6$ Monte Carlo cycles, the variational parameter $\alpha=0.5$ and a step length of 1.0.}
-	\begin{tabularx}{\textwidth}{X|XXXX} \hline
+	\caption{The energy calculated without hard-sphere interaction with the Metropolis-Hastings algorithm, this time with proper evaluation of the statistical error. The calculations are run in three dimensions with $1e6$ Monte Carlo cycles, the variational parameter $\alpha=0.5$ and a step length of 1.0.\vspace{2mm}}
+	\begin{tabularx}{\textwidth}{X|XXXX} \hline\hline
 		\label{tab:variance_analysis}
 		$N$ & $\langle E\rangle$ [$\hbar\omega_{ho}$] & $\sigma^2$ Blocking & $\sigma^2 \approx \langle E^2 \rangle - \langle E \rangle^2$ \\ \hline
 				1 & 1.5000 & 5.0102e-2  & 5.0100e-2 \\
@@ -666,8 +666,8 @@ We now turn on the interaction and the elliptical trap (setting $a=0.0043$ and $
 
 \begin{table} [H]
 	\centering
-	\caption{The energy $E$ calculated for different $\alpha$'s in the interval [0.2,0.8], with $a=0.0043$ (interaction), $\beta=\sqrt{8}$ (elliptical trap) and with the brute force algorithm. The calculations are run in three dimensions with $1e6$ Monte Carlo cycles and a step length of 1.0. We compare the VMC results to the results found by the Gross-Pitaevskii equation (GP) for 1, 10 and 100 particles. The variances are calculated using \ref{eq:variance_simplified}}
-	\begin{tabularx}{\textwidth}{c|XcXcXc} \hline
+	\caption{The energy $E$ calculated for different $\alpha$'s in the interval [0.2,0.8], with $a=0.0043$ (interaction), $\beta=\sqrt{8}$ (elliptical trap) and with the brute force algorithm. The calculations are run in three dimensions with $1e6$ Monte Carlo cycles and a step length of 1.0. We compare the VMC results to the results found by the Gross-Pitaevskii equation (GP) for 1, 10 and 100 particles. The variances are calculated using \ref{eq:variance_simplified}.\vspace{2mm}}
+	\begin{tabularx}{\textwidth}{c|XXXXXX} \hline\hline
 		\label{tab:EL_calc_repulsive_pot}
 		& \multicolumn{2}{c}{\textbf{N=1}} & \multicolumn{2}{c}{\textbf{N=10}} & \multicolumn{2}{c}{\textbf{N=100}} \\
 		$\alpha$ & VMC & GP & VMC & GP & VMC & GP  \\ \hline
@@ -684,8 +684,8 @@ The gradient decent method was then used to find the minimum of the energy in th
 
 \begin{table} [H]
 	\centering
-	\caption{The optimal variation parameter $\alpha$ for 1, 10 and 100 particles. The local energies and the "energy slope" is also presented in the table. We used $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=\sqrt{8}$, with the brute force algorithm. The calculations are run in for three dimensions with $1e6$ Monte Carlo cycles with a step length of 1.0. The variances are calculated using \ref{eq:variance_simplified}}
-	\begin{tabularx}{\textwidth}{X|XXX} \hline
+	\caption{The optimal variation parameter $\alpha$ for 1, 10 and 100 particles. The local energies and the "energy slope" is also presented in the table. We used $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=\sqrt{8}$, with the brute force algorithm. The calculations are run in for three dimensions with $1e6$ Monte Carlo cycles with a step length of 1.0. The variances are calculated using \ref{eq:variance_simplified}. \vspace{2mm}}
+	\begin{tabularx}{\textwidth}{X|XXX} \hline\hline
 		\label{tab:EL_calc_gradientdecent}
 		$N$ & $\alpha $ & $E$  & $|\partial E/\partial \alpha|$   \\ \hline
 		1   & 0.50000  & $2.4142(73)$  &  7.2134e-06 \\
