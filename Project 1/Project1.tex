@@ -700,7 +700,7 @@ In section \ref{sec:OB_theory} we presented a couple of ways computing the onebo
 
 \begin{figure} [H]
     \centering
-    \includegraphics[scale=0.50]{images/ob.png}
+    \includegraphics[scale=0.80]{images/ob.png}
     \caption{The onebody density of the bosonic system, which is run with $\alpha=0.5$ for $a=0$, $a=a_{Rb}=0.0043$ and $a=10\cdot a_{Rb}=0.043$. The radius is given in units of a$_{ho}$ along the x-axis, and the density is in units of a$_{ho}^{-3}$. We conduct the investigations in elliptic traps, with 10 particles, 3 dimensions and 1e6 Monte Carlo cycles.}
     \label{fig:ob0}
 \end{figure}
@@ -744,7 +744,7 @@ We observe from table \ref{tab:EL_calc_repulsive_pot} and \ref{tab:EL_calc_gradi
 \par 
 \vspace{3mm}
 
-For the onebody density plots we saw that the densities had gaussian shapes, which come from the wave functions. The peak decreased when adding interaction because the bosons then are more spread out. We observed noise for small radii, which is caused by the dividing on sphere surfaces, which are small numbers for small radii. All particles are located within a distance $3a_{HO}$ from particle $i$, which makes sence since we only study 10 particles. 
+In the onebody density plot we see that the densities has gaussian shapes, which come from the wave functions. The peak is moved to slightly higher energies when increasing a. This is as expected, as the bosons for higher a are forced further apart, though we would have expected a larger difference.  
 
 \section{Conclusion}
 
@@ -755,7 +755,7 @@ When including a proper evaluation of the error by using the blocking method, we
 
 With interaction we got reasonable results for one and ten particles compared to calculations based on the Gross-Pitaevskii equation. For 100 particles the energies were probably higher than they should be. The optimal variational parameter $\alpha$ obtained from VMC did not match the optimal $\alpha$ gotten from GD, and perhaps we have a bug in the code which appears for a large number of particles. 
 
-The graphs look like the wave functions as expected.
+The one body density behaves as expected for different choices of a.
 
 \newpage
 
