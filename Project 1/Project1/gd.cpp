@@ -4,6 +4,7 @@
 #include <vector>
 #include <random>
 #include <tools.h>
+#include <test.h>
 
 using namespace std;
 
@@ -64,9 +65,23 @@ double GradientDecent(int N, int dim, int M, double a, double steplength, \
         for(auto& i : pos_mat_new)
             i.resize(dim);
 
-        for(auto& particle : pos_mat)
-            for(auto& coord : particle)
-                coord = Random_position();
+        // Initialize the position matrix
+        for(int i=0; i<N; i++) {
+            LOOP:
+            for(int j=0; j<dim; j++) {
+                pos_mat[i][j] = Random_position();
+            }
+            // Ensure that the particles are separated by a
+            for(int j=0; j<i; j++) {
+                double distij = 0;
+                for(int d=0; d<dim; d++) {
+                    distij += (pos_mat[i][d] - pos_mat[j][d])*(pos_mat[i][d] - pos_mat[j][d]);
+                }
+                if(sqrt(distij) < a) {
+                    goto LOOP;
+                }
+            }
+        }
 
         //Initialize wave function
         WaveFunction Psi;
@@ -146,6 +161,9 @@ double GradientDecent(int N, int dim, int M, double a, double steplength, \
         double psi_E_avg = psi_E_tot/M;
         double psi_avg = psi_tot/M;
         double E_L_der = 2*(psi_E_avg - psi_avg*E_L_avg);
+
+        //Tests
+        if(a==0) test_EL(E_L_avg, N, alpha, beta);
 
         cout << "--- ALPHA: " << alpha << " ---" << endl;
         cout << "E_L_der: " << E_L_der << endl;
