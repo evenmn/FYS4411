@@ -219,7 +219,7 @@ Alternatively, the onebody radial density can be found in a more intuitive way. 
 
 The analytical expression without the Jastrow factor is found from \cite{DuBois}, and can be modified for our particular system, presented for the three dimensional case in equation \ref{eq:onebody}.
 \begin{equation}
-\rho_i=\frac{N\alpha\beta^{1/2}}{8\pi^{3/2}}e^{-r_i^2}.
+\rho_i(x_i, y_i, z_i)=\bigg(\frac{2\alpha}{\pi}\bigg)^{3/2}\beta^{1/2}e^{-2\alpha(x_i^2+y_i^2+\beta z_i^2)}.
 \label{eq:onebody}
 \end{equation}
 Since the particles are identical the choice of the particle $i$ is of no consequence. 
@@ -729,15 +729,15 @@ In table \ref{tab:variance_analysis}, we repeated the calculation of the no inte
 
 Further we have seen that we get som differences between the variational Monte Carlo and the Gross-Pitaevskii calculations. Gross-Pitaevskii (GP) only holds for dilute bose gases, and since the gas gets less dilute the more particles we add, we will expect some deviations when the number of particles increase. Nonetheless, for the interacting case we study a maximum of 100 particles, so this should be a small effect, and we expect the exact GP equation to be accurate for our case. Anyway, we have not solved GP for the interacting case, so the GP benchmark should underestimate the obtained energy, which is also the case.
 
-We can also compare the results to Ref.\cite{DuBois}, where they have plotted energy per particle as a function of number of particles. According to that plot, the energy per particle should increase rapidly when particles are added to a small number of particles, something that we also observe when going from 10 to 100 particles and partly when going from 1 to 10 particles. The exact energy difference is though hard to read from the graph, but our energies are possibly a bit larger than they should be.
+We can also compare the results to Ref.\cite{DuBois}, where they have plotted energy per particle as a function of number of particles. According to that plot, the energy per particle should increase rapidly when particles are added to a small number of particles, something that we also observe when going from 10 to 100 particles and partly when going from 1 to 10 particles. The exact energy difference is though hard to read from the graph, but our energies are possibly a bit larger than they should be. We also see that the lowest local energy appears when $\alpha=0.4$. This differs from the case without interaction, but we also expect another optimal wave function when interaction is added such that this effect is kind of expected. 
 \par
 \vspace{3mm}
 
-We find the optimal $\alpha$ using gradient descent, and the results match the results obtained when running for various $\alpha$'s, see table \ref{tab:EL_calc_repulsive_pot} and \ref{tab:EL_calc_gradientdecent}. The optimal $\alpha$ tends to increase when adding particles, which complements the observation in \cite{Nilsen}. This is not surprising, since the optimal wave function should change when adding particles with interaction. What value one obtains as the optimal $\alpha$ will be dependent on whether if one starts with an overestimated or an underestimated guess, and we have therefore tried both and decreased the step length $\eta$ to achieve an accurate optimal $\alpha$ with a flat slope. 
+We find the optimal $\alpha$ using gradient descent, and for one and ten particles the results match the results obtained when running for various $\alpha$'s, see table \ref{tab:EL_calc_repulsive_pot} and \ref{tab:EL_calc_gradientdecent}. For 100 particles the $\alpha$ obtained is not the same as found in \ref{tab:EL_calc_repulsive_pot}, and indicates that the gradient descent implementation gives wrong answers for many particles. The optimal $\alpha$ tends to increase when adding particles, which complements the observation in \cite{Nilsen}. This is not surprising, since the optimal wave function should change when adding particles with interaction. What value one obtains as the optimal $\alpha$ will be dependent on whether if one starts with an overestimated or an underestimated guess, and we have therefore tried both and decreased the step length $\eta$ to achieve an accurate optimal $\alpha$.
 \par 
 \vspace{3mm}
 
-For the onebody density plots we saw that the densities had gaussian shapes, which come from the wave functions. The peak decreased when adding interaction because the bosons then are more spread out, which also is the reason why it gets broader. We observed noise for small radii, which is caused by the dividing on sphere surfaces, which are small numbers for small radii. All particles are located within a distance $3a_{HO}$ from particle $i$, which makes sence since we only study 10 particles. 
+For the onebody density plots we saw that the densities had gaussian shapes, which come from the wave functions. The peak decreased when adding interaction because the bosons then are more spread out. We observed noise for small radii, which is caused by the dividing on sphere surfaces, which are small numbers for small radii. All particles are located within a distance $3a_{HO}$ from particle $i$, which makes sence since we only study 10 particles. 
 
 
 \section{Conclusion}
@@ -747,9 +747,9 @@ In this project, we have found that the Variational Monte Carlo method reproduce
 The Hastings algorithm had a higher acceptance rate for the proposed moves in the Monte Carlo iterations compared to the brute force method. This should result in the Hastings method converging faster, although we did not observe that in this report. We also saw that the Hastings algorithm was more dependent on the timestep compared to the brute force method's dependence om stepsize. This is as we would expect from theory.  \par
 When including a proper evaluation of the error by using the blocking method, we saw that the blocking method gave a slightly higher estimated variance, compared to the estimation from equation \ref{eq:variance_simplified}. This is as expected.
 
-ALSO HERE WE NEED TO MENTION THE INTERACTING CASE
+With interaction we got reasonable results for one and ten particles, but for 100 particles the energies was probably higher than they should. The optimal variational parameter $\alpha$ did not match the optimal $alpha$ gotten from gradient descent, and perhaps we have a bug in the code which appears for a large number of particles. 
 
-Despite the noise seen for onebody density, the non-interacting calculation matched the exact expression pretty well. The particles also spread out when adding repulsive interaction, which is highly expected. 
+Despite the noise seen for onebody density, the graphs look like the wave functions as expected.
 
 
 
