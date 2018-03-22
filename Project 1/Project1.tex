@@ -652,16 +652,16 @@ We now turn on the interaction and the elliptical trap (setting a=0.0043 and $\b
 
 \begin{table} [H]
 	\centering
-	\caption{The local energy $E_L$ calculated for different $\alpha$'s in the interval [0.2,0.8], with $a=0.0043$ (interaction), $\beta=\sqrt{8}$ (elliptical trap) and with the brute force algorithm. The calculations are run in three dimensions with $1e6$ Monte Carlo cycles and a step length of 1.0. We compare the VMC results to the results found by the Gross-Pitaevskii equation (GP) for 1, 10 and 100 particles.}
-	\begin{tabularx}{\textwidth}{X|XXXXXX} \hline
+	\caption{The local energy $E_L$ calculated for different $\alpha$'s in the interval [0.2,0.8], with $a=0.0043$ (interaction), $\beta=\sqrt{8}$ (elliptical trap) and with the brute force algorithm. The calculations are run in three dimensions with $1e6$ Monte Carlo cycles and a step length of 1.0. We compare the VMC results to the results found by the Gross-Pitaevskii equation (GP) for 1, 10 and 100 particles. The variances are calculated using \ref{eq:variance_simplified}}
+	\begin{tabularx}{\textwidth}{c|XcXcXc} \hline
 		\label{tab:EL_calc_repulsive_pot}
 		& \multicolumn{2}{c}{\textbf{N=1}} & \multicolumn{2}{c}{\textbf{N=10}} & \multicolumn{2}{c}{\textbf{N=100}} \\
 		$\alpha$ & VMC & GP & VMC & GP & VMC & GP  \\ \hline
-		0.3 & 2.73719 & 2.73611 & 27.5577 & 27.3611 & 359.313 & 273.611\\
-		0.4 & 2.47403 & 2.47457 & 24.8541 & 24.7457 & 354.602 & 247.457\\ 
-		0.5 & 2.41422 & 2.41421 & 24.2644 & 24.1421 & 371.025 & 241.421\\ 
-		0.6 & 2.45456 & 2.45445 & 24.6661 & 24.5445 & 395.560 & 245.445\\ 
-		0.7 & 2.55036 & 2.55217 & 25.6275 & 25.5217 & 425.227 & 255.217\\  \hline
+		0.3 & $2.7 \pm 1.2$ & 2.7361 & $27.6 \pm 3.8$  & 27.361 & $359 \pm 14$ & 273.61\\
+		0.4 & $2.47 \pm 0.50$ & 2.4746 & $24.9 \pm 1.5$ & 24.746 & $354.6 \pm 8.7$ & 247.46\\ 
+		0.5 & $2.4142 \pm 0.0024$ & 2.4142 & $24.264 \pm 0.032 $ & 24.142 & $371.0 \pm 7.4$ & 241.42\\ 
+		0.6 & $2.45 \pm 0.40 $  & 2.4545 & $24.7 \pm 1.3$ & 24.545 & $395.6 \pm 7.9$ & 245.45\\ 
+		0.7 & $2.55 \pm 0.77 $ & 2.5522 & $25.6 \pm 2.4$ & 25.522 & $425 \pm 10$ & 255.22\\  \hline
 	\end{tabularx}
 \end{table}
 
@@ -670,13 +670,13 @@ The gradient decent method was then used to find the minimum of the local energy
 
 \begin{table} [H]
 	\centering
-	\caption{The optimal variation parameter $\alpha$ for 1, 10 and 100 particles. The local energies and the "energy slope" is also presented in the table. We used $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=2.82843$, with the brute force algorithm. The calculations are run in for three dimensions with $1e6$ Monte Carlo cycles with a step length of 1.0.}
+	\caption{The optimal variation parameter $\alpha$ for 1, 10 and 100 particles. The local energies and the "energy slope" is also presented in the table. We used $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=2.82843$, with the brute force algorithm. The calculations are run in for three dimensions with $1e6$ Monte Carlo cycles with a step length of 1.0. The variances are calculated using \ref{eq:variance_simplified}}
 	\begin{tabularx}{\textwidth}{X|XXX} \hline
 		\label{tab:EL_calc_gradientdecent}
 		$N$ & $\alpha $ & $E_L$  & $|\partial E_L/\partial \alpha|$   \\ \hline
-		1   & 0.50000  & 2.4142  &  7.2134e-06 \\
-		10  & 0.50015  & 24.264  &  4.7969e-05 \\ 
-		100 & 0.53379  & 379.39  &  4.1789e-03 \\ \hline
+		1   & 0.50000  & $2.4142 \pm 0.0073$  &  7.2134e-06 \\
+		10  & 0.50015  & $24.264 \pm 0.022$  &  4.7969e-05 \\ 
+		100 & 0.53379  & $379.4 \pm 9.9 $  &  4.1789e-03 \\ \hline
 	\end{tabularx}
 \end{table}
 

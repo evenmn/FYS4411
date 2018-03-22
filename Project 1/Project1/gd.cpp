@@ -26,11 +26,11 @@ double GradientDecent(int N, int dim, int M, double a, double steplength, \
     uniform_int_distribution<> dimrand(0, dim-1);     //Random number between 0 and dim
 
     //Parameters
-    double alpha        = 0.4;          //Initial guess
+    double alpha        = 0.55;          //Initial guess
     double eps          = 0.0001;        //Tolerance
-    double eta0         = 0.0001;        //Learning rate
+    double eta0         = 0.001;        //Learning rate
     double D            = 0.5;           //Diffusion coeff, to be used in Hastings met.algo
-    int T               = 2;          //Number of iterations (alphas)
+    int T               = 1000;          //Number of iterations (alphas)
 
     //Check how the alpha develops
     double alpha_old[5];
