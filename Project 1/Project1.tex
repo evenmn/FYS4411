@@ -47,12 +47,16 @@
 \end{itemize}
 
 \begin{abstract}
-This project aims to simulate a trapped Bose gas using Variational Monte Carlo (VMC) with both the  brute force Metropolis and the Metropolis-Hastings algorithms. Using a trial wave function with either spherical or elliptical harmonic oscillator (HO) potential, with and without a hard sphere potential, we calculate the ground state energy and onebody density for different numbers of particles. \textcolor{red}{The results are benchmarked with analytical results obtained from the Gross-Pitaevskii equation.} \par 
+This project aims to simulate a trapped Bose gas using Variational Monte Carlo (VMC) with both the  brute force Metropolis and the Metropolis-Hastings algorithms. Using a trial wave function with either spherical or elliptical harmonic oscillator (HO) potential, with and without a hard sphere potential, we calculate the ground state energy and onebody density for different numbers of particles. The results are benchmarked with analytical results obtained from the Gross-Pitaevskii equation. \par 
 
-Using the spherical HO with no interaction, both the brute force and the Metropolis-Hastings methods reproduces analytical calculations. Though the Hastings algorithm is slightly slower, it has a higher acceptance rate for the proposed moves in the VMC simulation. The onebody density distribution changes shape when introducing the hard sphere potential. \textcolor{red}{The system behaves as expected, and our results reproduces the analytical calculations where they are valid.}
+Using the spherical HO with no interaction, both the brute force and the Metropolis-Hastings methods reproduces analytical calculations. Though the Hastings algorithm is slightly slower, it has a higher acceptance rate for the proposed moves in the VMC simulation. The onebody density distribution changes shape when introducing the hard sphere potential. The system behaves mostly as expected, and our results reproduces the analytical calculations where they are valid. However, for a larger number of particles, we are unable to reproduce the mean energy per praticle as seen in the benchmarks.
 \par 
 
 \end{abstract}
+
+\newpage
+
+\tableofcontents
 
 \newpage
 
@@ -751,49 +755,9 @@ With interaction we got reasonable results for one and ten particles, but for 10
 
 Despite the noise seen for onebody density, the graphs look like the wave functions as expected.
 
-
-
-
-\newpage
-\section{References}
-\begingroup
-\renewcommand{\section}[2]{}
-\begin{thebibliography}{}
-	\bibitem{MHJ15}
-	Morten Hjorth-Jensen.
-	Computational Physics 2: Variational Monte Carlo methods, Lecture Notes Spring 2018.
-	Department of Physics, University of Oslo,
-	(2018).
-	\bibitem{DuBois}
-	J. L. DuBois and H. R. Glyde, H. R., \emph{Bose-Einstein condensation in trapped bosons: A variational Monte Carlo analysis}, Phys. Rev. A \textbf{63}, 023602 (2001).
-	\bibitem{Nilsen}
-	J. K. Nilsen,  J. Mur-Petit, M. Guilleumas, M. Hjorth-Jensen, and A. Polls, \emph{Vortices in atomic Bose-Einstein condensates in the large-gas-parameter region}, Phys. Rev. A \textbf{71}, 053610, (2005).
-	\bibitem{Dalfovo}
-	F. Dalfovo, S. Giorgini, L. P. Pitaevskii, S. Stringari, \emph{Theory of Bose-Einstein condensation in trapped gases} Rev. Mod. Phys. \textbf{71}, 463, (1999).
-	\bibitem{JE2016}
-	J. Emspak, \emph{States of Matter: Bose-Einstein Condensate}, LiveScience, (2016).
-	\url{https://www.livescience.com/54667-bose-einstein-condensate.html}
-	Downloaded March 15th 2018.
-	\bibitem{SP}
-	S. Perkowitz \emph{Bose-Einstein condensate} Encyclopaedia Britannica 
-	\url{https://www.britannica.com/science/Bose-Einstein-condensate}
-	Downloaded March 15th 2018.
-	\bibitem{Anderson}
-	    M. H. Anderson, J. R. Ensher, M. R. Matthews, C. E. Wieman, E. A. Cornell, \emph{Observation of Bose-Einstein Condensation in a Dilute Atomic Vapor}, Science \textbf{269}, (1995).
-	\bibitem{JKNilsen}
-		J. K. Nilsen \emph{Bose-Einstein condensation in trapped bosons: A quantum Monte Carlo analysis}, Master thesis 2004, Department of Physics, University of Oslo, (2004). 
-	\bibitem{Gross}
-		E. P. Gross, \emph{Structure of a quantized vortex in boson systems}, Il Nuovo Cimento, \textbf{20} (3): 454–457, (1961).
-	\bibitem{Pitaevskii}
-		 L. P. Pitaevskii, \emph{Vortex lines in an imperfect Bose gas}, Sov. Phys. JETP. \textbf{13} (2): 451–454, (1961).
-
-	
-\end{thebibliography}
-\endgroup
-
 \newpage
 
-\section*{Appendix A} \label{appendix_A}
+\section{Appendix A} \label{appendix_A}
 In the theory section we presented the analytical expressions for the local energy, and in this appendix we go though the derivations carefully for those of you who are curious. Firstly we present the local energies where we ignore the two-particle interaction, and we also focus on the spherical harmonic oscillator trap since we do not look at the elliptical trap without interaction, even though the expressions are similar.
 
 Secondly the general expression which can be used with and without interaction, with spherical or elliptical harmonic oscillator trap and with a various number of parameter values is derived. This can in principle be used for every case, but it is more complex than the special ones where we ignore interaction and we therefore expect it to be slower. 
@@ -979,7 +943,7 @@ E_L&=\frac{1}{\Psi_T}\bigg(\sum_i\Big(-\frac{1}{2}\nabla_i^2+V_{ext}(\vec{r}_i)\
 &=\sum_i\Big(-\frac{\nabla_i^2\Psi_T}{2\Psi_T}+V_{ext}(\vec{r}_i)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
 \end{align}
 
-\section*{Appendix B} \label{sec:appendix_b}
+\section{Appendix B} \label{sec:appendix_b}
 
 This section shows the analytical calculations for the drift force $F$, as given by equation \ref{eq:drift_force} for the non-interaction case.
 
@@ -1023,7 +987,7 @@ As we operate in three dimensions, $\nabla = (\frac{d}{dx}, \frac{d}{dy}, \frac{
 	F = -4 \alpha \Big(\sum_i x_i, \sum_i y_i, \sum_i \beta z_i \Big)
 \end{equation}
 
-\section*{Appendix C} \label{sec:appendix_c}
+\section{Appendix C} \label{sec:appendix_c}
 In the theory part we claimed that the Hamiltonian could be written as
 \begin{equation}
 H=\sum_i\bigg(\frac{1}{2}\Big(-\nabla^2 + x_i^2 + y_i^2 + \gamma^2z_i^2\Big)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
@@ -1046,7 +1010,7 @@ H'=\sum_i\frac{1}{2}\bigg(-\nabla_i^2+(x_i')^2+(y_i')^2+\frac{\omega_z^2}{\omega
 \end{equation}
 which is the Hamiltonian that we were hunting. We know how the factor in front of the $z^2$ factor is $\beta^2 = \gamma^2$, so $\beta = \gamma$ has to be equal to $\omega_z/\omega_{HO}$.
 
-\section*{Appendix D} \label{sec:appendix_d}
+\section{Appendix D} \label{sec:appendix_d}
 To check if the VMC results are correct, we need a benchmark, and for a dilute bose gas the Gross-Pitaevskii equation is a natural choice. We could have solved the equation for the interacting case using numerical methods, but it would require significantly more effort and we take care of the non-interacting case instead. We start with the dimensionless brother of equation \ref{eq:GP_integral},
 \begin{equation}
 E_{\text{GP}}[\Psi]=\int d\vec{r}\bigg[\frac{1}{2}|\nabla\Psi(\vec{r})|^2+V_{ext}(\vec{r})|\Psi|^2+2\pi a|\Psi|^4\bigg].
@@ -1078,5 +1042,42 @@ E_{\text{GP}}(\alpha,\beta,N)&=\Big(\frac{1}{2}+2\alpha^2\Big)\Big(\frac{2\alpha
 &=N\cdot\Big(\frac{1}{4\alpha}+\alpha\Big)\cdot\Big(1+\frac{\beta}{2}\Big).
 \end{align}
 This gives the correct analytical results for the non-interacting case both in the spherical trap ($E_L=0.5N\cdot dim$ for $\alpha=0.5$) and the elliptical trap ($E_L=N(1+\beta/2)$\footnote{We start from the exact energy formula for a harmonic oscillator, $E_n=\hbar\omega(n+1/2)$, and study how the ground state energy changes if the z-component has different frequency $\omega_z$ from the other components, $E_0=\hbar(\omega_{ho}+\omega{z}/2)$. If we then scale with respect to $\hbar\omega_{ho}$ as done before, we get $E'=1+\beta/2$ for one particle. For our particular project, we have $\beta=\sqrt{8}$, and get an ground state energy $1+\sqrt{2}$ per particle.} for $\alpha=0.5$ in 3D).
+
+\newpage
+\section{References}
+\begingroup
+\renewcommand{\section}[2]{}
+\begin{thebibliography}{}
+	\bibitem{MHJ15}
+	Morten Hjorth-Jensen.
+	Computational Physics 2: Variational Monte Carlo methods, Lecture Notes Spring 2018.
+	Department of Physics, University of Oslo,
+	(2018).
+	\bibitem{DuBois}
+	J. L. DuBois and H. R. Glyde, H. R., \emph{Bose-Einstein condensation in trapped bosons: A variational Monte Carlo analysis}, Phys. Rev. A \textbf{63}, 023602 (2001).
+	\bibitem{Nilsen}
+	J. K. Nilsen,  J. Mur-Petit, M. Guilleumas, M. Hjorth-Jensen, and A. Polls, \emph{Vortices in atomic Bose-Einstein condensates in the large-gas-parameter region}, Phys. Rev. A \textbf{71}, 053610, (2005).
+	\bibitem{Dalfovo}
+	F. Dalfovo, S. Giorgini, L. P. Pitaevskii, S. Stringari, \emph{Theory of Bose-Einstein condensation in trapped gases} Rev. Mod. Phys. \textbf{71}, 463, (1999).
+	\bibitem{JE2016}
+	J. Emspak, \emph{States of Matter: Bose-Einstein Condensate}, LiveScience, (2016).
+	\url{https://www.livescience.com/54667-bose-einstein-condensate.html}
+	Downloaded March 15th 2018.
+	\bibitem{SP}
+	S. Perkowitz \emph{Bose-Einstein condensate} Encyclopaedia Britannica 
+	\url{https://www.britannica.com/science/Bose-Einstein-condensate}
+	Downloaded March 15th 2018.
+	\bibitem{Anderson}
+	M. H. Anderson, J. R. Ensher, M. R. Matthews, C. E. Wieman, E. A. Cornell, \emph{Observation of Bose-Einstein Condensation in a Dilute Atomic Vapor}, Science \textbf{269}, (1995).
+	\bibitem{JKNilsen}
+	J. K. Nilsen \emph{Bose-Einstein condensation in trapped bosons: A quantum Monte Carlo analysis}, Master thesis 2004, Department of Physics, University of Oslo, (2004). 
+	\bibitem{Gross}
+	E. P. Gross, \emph{Structure of a quantized vortex in boson systems}, Il Nuovo Cimento, \textbf{20} (3): 454–457, (1961).
+	\bibitem{Pitaevskii}
+	L. P. Pitaevskii, \emph{Vortex lines in an imperfect Bose gas}, Sov. Phys. JETP. \textbf{13} (2): 451–454, (1961).
+	
+	
+\end{thebibliography}
+\endgroup
 
 \end{document}
