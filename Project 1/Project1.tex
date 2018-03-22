@@ -498,13 +498,28 @@ To keep the program neat, specific parts were placed in specific files. For inst
 \caption{An overview of the code structure. metropolis.cpp is refered to as VMC, gd.cpp is GD, wavefunction.cpp is WF, tools.cpp is Tools and obviously main.cpp is Main. See text for furter description.}
 \label{fig:code_structure}
 \end{figure}
- A standard VMC run goes as follows: the desired simulation case is set up in main.cpp (Main) by specifying the given variables. metropolis.cpp (VMC) is called from Main, which calls wavefunction.cpp (WF) to set up the class WaveFunction. The Monte Carlo loop begins, where move of one random particle is proposed for each iteration. Depending of wheter brute force or importance sampling have been chosen, either WF or tools.cpp (Tools) is called to obtain the transition probability, and the move is either accepted or rejected. VMC calls WF to obtain the local energy of the new position. After M iterations, the estimation of the local energy is printed.
+ A standard VMC run goes as follows: the desired simulation case is set up in main.cpp (Main) by specifying the given variables. metropolis.cpp (VMC) is called from Main, which calls wavefunction.cpp (WF) to set up the class WaveFunction. The Monte Carlo loop begins, where the move of one random particle is proposed for each iteration. Depending of wheter brute force or importance sampling have been chosen, either WF or tools.cpp (Tools) is called to obtain the transition probability, and the move is either accepted or rejected. VMC calls WF to obtain the local energy of the new position. After M iterations, the estimation of the local energy is printed. \par
+ When running the gradient decent method, then Main calls gd.cpp (GD). A start value for $\alpha$ is given in the program, and the Monte Carlo loop is conducted as described above. After the loop, the estimated $E_L$-value is printed. Based on the parameter $\frac{d E_l}{d \alpha}$, a new value for $\alpha$ is chosen. After several MC loops for different $\alpha$, the optimal $\alpha$ is chosen. 
+ 
 
 \subsection{Implementation}
-We use the vector package to create a 3D-array where the positions are stored. For the exact implementation, see the github repository linked on page one. We always struggle for better performance, and to achieve that we try to avoid heavy loops and repetition of calculations. A second priority is to make the code as general as possible, such that the code can be reused for other purposes. As an example we always loop over an arbitrary given number of dimensions, and similar operations are done throughout the programs. 
+We use the vector package to create a 2D-array where the positions are stored. For the exact implementation, see the github repository linked on page one. We always struggle for better performance, and to achieve that we try to avoid heavy loops and repetition of calculations. A second priority is to make the code as general as possible, such that the code can be reused for other purposes. As an example we always loop over an arbitrary given number of dimensions, and similar operations are done throughout the programs. 
 
-\subsubsection{VMC and Metropolis}
-Present pseudo code of how VMC and Metropolis are implemented
+\subsubsection{VMC}
+
+\lstset{basicstyle=\scriptsize}
+\begin{lstlisting}
+	Set up position matrix of N paricles in dim dimentions
+	Initialize class WaveFunction
+	
+	for M Monte Carlo iterations
+		move random particle
+		accept or reject move based on 
+		
+	
+	
+\end{lstlisting}
+
 
 \subsubsection{GD}
 
