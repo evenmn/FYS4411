@@ -54,12 +54,14 @@ SOURCES       = ../Project1/main.cpp \
 		../Project1/wavefunction.cpp \
 		../Project1/metropolis.cpp \
 		../Project1/gd.cpp \
-		../Project1/tools.cpp 
+		../Project1/tools.cpp \
+		../Project1/test.cpp 
 OBJECTS       = main.o \
 		wavefunction.o \
 		metropolis.o \
 		gd.o \
-		tools.o
+		tools.o \
+		test.o
 DIST          = ../../../../QT/5.10.0/clang_64/mkspecs/features/spec_pre.prf \
 		../../../../QT/5.10.0/clang_64/mkspecs/qdevice.pri \
 		../../../../QT/5.10.0/clang_64/mkspecs/features/device_config.prf \
@@ -219,11 +221,13 @@ DIST          = ../../../../QT/5.10.0/clang_64/mkspecs/features/spec_pre.prf \
 		../Project1/Project1.pro wavefunction.h \
 		metropolis.h \
 		gd.h \
-		tools.h ../Project1/main.cpp \
+		tools.h \
+		test.h ../Project1/main.cpp \
 		../Project1/wavefunction.cpp \
 		../Project1/metropolis.cpp \
 		../Project1/gd.cpp \
-		../Project1/tools.cpp
+		../Project1/tools.cpp \
+		../Project1/test.cpp
 QMAKE_TARGET  = Project1
 DESTDIR       = 
 TARGET        = Project1
@@ -608,15 +612,20 @@ wavefunction.o: ../Project1/wavefunction.cpp ../Project1/wavefunction.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o wavefunction.o ../Project1/wavefunction.cpp
 
 metropolis.o: ../Project1/metropolis.cpp ../Project1/wavefunction.h \
-		../Project1/tools.h
+		../Project1/tools.h \
+		../Project1/test.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o metropolis.o ../Project1/metropolis.cpp
 
 gd.o: ../Project1/gd.cpp ../Project1/wavefunction.h \
-		../Project1/tools.h
+		../Project1/tools.h \
+		../Project1/test.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o gd.o ../Project1/gd.cpp
 
 tools.o: ../Project1/tools.cpp ../Project1/tools.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tools.o ../Project1/tools.cpp
+
+test.o: ../Project1/test.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o test.o ../Project1/test.cpp
 
 ####### Install
 
