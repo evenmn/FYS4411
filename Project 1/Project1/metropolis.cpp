@@ -5,6 +5,7 @@
 #include <random>
 #include <fstream>
 #include <tools.h>
+#include <test.h>
 
 using namespace std;
 
@@ -198,12 +199,16 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double alpha[]
         double CPU_time = (double)(end_time - start_time)/CLOCKS_PER_SEC;
         double variance = E_L_avg_sqrd - E_L_avg*E_L_avg;
 
+        //Tests
+        if(a==0) test_EL(E_L_avg, N, alpha[k], beta);
+
 
         cout << "--- ALPHA: " << alpha[k] << " ---" << endl;
         cout << "E_L_avg: " << E_L_avg << endl;
         cout << "Acceptance ratio: " << accept_ratio << endl;
         cout << "Variance: " << variance << endl;
         cout << "CPU time: " << CPU_time << "\n" << endl;
+
 
         //Write to file
         //energy_file << alpha << " " << E_L_avg << " " << variance << "\n";

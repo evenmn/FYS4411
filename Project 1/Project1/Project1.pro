@@ -7,13 +7,15 @@ SOURCES += main.cpp \
     wavefunction.cpp \
     metropolis.cpp \
     gd.cpp \
-    tools.cpp
+    tools.cpp \
+    test.cpp
 
 HEADERS += \
     wavefunction.h \
     metropolis.h \
     gd.h \
-    tools.h
+    tools.h \
+    test.h
 
 # remove possible other optimization flags
 QMAKE_CXXFLAGS_RELEASE -= -O
