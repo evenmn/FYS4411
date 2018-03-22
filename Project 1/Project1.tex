@@ -189,6 +189,7 @@ E_{\text{GP}}[\Psi]=\int d\vec{r}\bigg[\frac{\hbar^2}{2m}|\nabla\Psi(\vec{r})|^2
 \end{equation}
 This integral can easily be solved analytically when we ignore the interaction (such that the Jastrow factor is one), and we get
 \begin{equation}
+\label{eq:GP}
 E_{\text{GP}}(\alpha, \beta, N)=N\cdot\bigg(1+\frac{\beta}{2}\bigg)\bigg(\frac{1}{4\alpha}+\alpha\bigg)
 \end{equation}
 in three dimensions, which is derived in appendix D.
@@ -476,7 +477,7 @@ By repeating this procedure several times, and each time using more measurements
 The focus of this project is developing a code to make VMC run correctly, and in this section we will explain briefly how the code works and which implementation techniques we have used. All quantities used in the impelemtation are dimentionless. 
 
 \subsection{Code structure}
-To keep the program neat, specific parts were placed in specific files. For instance, a file gd.cpp handle everything about the gradient descent method, and another file wavefunction.cpp contains the class Wavefunction, which both sets up the wave function and calculate the local energy given a wave function. We also collected the tools that are used by multiple scripts in its own file to maximize the reuse of the code, in particular Green's function and the quantum force calculations. In figure \ref{fig:code_structure} we give an overview of the structure, where the lines indicate which scripts that communicate. 
+To keep the program neat, specific parts were placed in specific files. The file wavefunction.cpp contains the class Wavefunction, which both sets up the wave function and calculate the local energy given a wave function. The file metropolis.cpp contains the Variational Monte Carlo loop, and the file gd.cpp handles the calculation of the optimal variational parameter $\alpha$. We also collected the tools that are used by multiple scripts in its own file to maximize the reuse of the code, in particular Green's function and the quantum force calculations. The user only has to deal with main.cpp, as all choices of parameters are to be specified here.  In figure \ref{fig:code_structure} we give an overview of the structure, where the lines indicate which scripts that communicate. 
 
 \begin{figure}[H]
 \centering
@@ -501,6 +502,10 @@ To keep the program neat, specific parts were placed in specific files. For inst
  A standard VMC run goes as follows: the desired simulation case is set up in main.cpp (Main) by specifying the given variables. metropolis.cpp (VMC) is called from Main, which calls wavefunction.cpp (WF) to set up the class WaveFunction. The Monte Carlo loop begins, where the move of one random particle is proposed for each iteration. Depending of wheter brute force or importance sampling have been chosen, either WF or tools.cpp (Tools) is called to obtain the transition probability, and the move is either accepted or rejected. VMC calls WF to obtain the local energy of the new position. After M iterations, the estimation of the local energy is printed. \par
  When running the gradient decent method, then Main calls gd.cpp (GD). A start value for $\alpha$ is given in the program, and the Monte Carlo loop is conducted as described above. After the loop, the estimated $E_L$-value is printed. Based on the parameter $\frac{d E_l}{d \alpha}$, a new value for $\alpha$ is chosen. After several MC loops for different $\alpha$, the optimal $\alpha$ is chosen. 
  
+ \subsubsection{Test}
+To make sure the program behaves as expected, we have implemented tests. All tests are functions, and can be found in the test.cpp file.
+
+The test "test EL" checks the output estimated local energy after the Monte Carlo loops for a given $\alpha$ in the no interaction case, and compares it to the analytical energy obtrained from the Gross-Pitaevskii equation from equation \ref{eq:GP}. If the difference between the two are larer than a given tolerance, an error is raised.
 
 \subsection{Implementation}
 We use the vector package to create a 2D-array where the positions are stored. For the exact implementation, see the github repository linked on page one. We always struggle for better performance, and to achieve that we try to avoid heavy loops and repetition of calculations. A second priority is to make the code as general as possible, such that the code can be reused for other purposes. As an example we always loop over an arbitrary given number of dimensions, and similar operations are done throughout the programs. 
@@ -509,21 +514,40 @@ We use the vector package to create a 2D-array where the positions are stored. F
 
 \lstset{basicstyle=\scriptsize}
 \begin{lstlisting}
-	Set up position matrix of N paricles in dim dimentions
-	Initialize class WaveFunction
+Set up position matrix of N paricles in dim dimentions
+Initialize class WaveFunction
 	
-	for M Monte Carlo iterations
-		move random particle
-		accept or reject move based on 
-		
-	
+for M Monte Carlo iterations
+	move random particle
+	accept or reject move based on transition probability
+	calculate energy of new position
+	update estimator of E_L
+
+print estimated E_L 
 	
 \end{lstlisting}
 
-
 \subsubsection{GD}
 
-\subsubsection{Tests}
+\lstset{basicstyle=\scriptsize}
+\begin{lstlisting}
+
+first choice of alpha, number of gradientdecent-iteartions T and tolerance is specified
+
+for T iterations 
+	for M Monte Carlo cycles
+		move random particle
+		accept or reject move based on transition probability
+		calculate energy of new position
+		update estimator of E_L and dE_L/dalpha 
+		
+	print E_L and dE_L/dalpha
+	
+	test if optimal alpha -> if optimal, break loop and print optimal alpha
+	
+	based on dE_L/d alpha, suggest new alpha	
+
+\end{lstlisting}
 
 
 
