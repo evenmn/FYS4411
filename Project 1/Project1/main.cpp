@@ -14,7 +14,7 @@ int main()
     double steplength = 1.0;     //steplength when changing position
     double h          = 0.01;    //Step length for numerical double differentiation
     double timestep   = 1;     //Timestep, to be used in Metropolis-Hastings
-    double a          = 0;     //distance parameter
+    double a          = 0.4;     //distance parameter
 
     //Choices of simulation types
     int    BF_H       = 0;       //brute force (0) or hastings(1) metropolis algorithm
