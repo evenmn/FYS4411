@@ -66,7 +66,7 @@ In this project, we study the Bose-Einstein condensation (BEC) of a dilute gas o
 
 Our goal is to find an upper bound limit of the ground state energy for a system of a various number of particles, using an ansatz where the total wave function is a product of single particle wave functions. The system is evaluated both for a spherical and elliptical harmonic oscillator trap. The Gross-Pitaevskii equation is applied to obtain an analytical energy approximation, which works as a benchmark for the energy. The theoretical framework is presented in section \ref{Theory}. \par
 
-The main technique we will use is the variational Monte Carlo (VMC) method with two different Metropolis algorithms, presented in section \ref{Method}. To achieve the optimal trial wave function we vary the variational parameter $\alpha$ using the gradient descent method. In section \ref{Results}, the upper bound energy is presented with the onebody density. In section \ref{Discussion} we discuss our results, and compare them to results from articles \cite{DuBois}, \cite{Nilsen} and \cite{Dalfovo}.
+Using variational Monte Carlo (VMC) method with two different Metropolis algorithms, presented in section \ref{Method}, and $\alpha$ as variational parameter, we find the onebody density and an limit on the ground state energy of the system. The optimal $\alpha$ is found using the gradient descent method. In section \ref{Results}, the upper bound energy is presented along with the onebody density. In section \ref{Discussion} we discuss our results, and compare them to results from articles \cite{DuBois}, \cite{Nilsen} and \cite{Dalfovo}.
 
 
 \section{Theory} \label{Theory}
@@ -78,7 +78,8 @@ We study a system of $N$ bosons trapped in a harmonic oscillator with the Hamilt
 \hat{H}=\sum_i^N\bigg(-\frac{\hbar^2}{2m}\nabla_i^2+V_{ext}(\vec{r}_i)\bigg)+\sum_{i<j}^NV_{int}(\vec{r}_i,\vec{r}_j)
 \label{eq:Hamilton}
 \end{equation}
-with $V_{ext}$ as the external potential, which is the harmonic oscillator potential defined in equation \ref{eq:V_ext}, and $V_{int}$ as the interaction term, defined in equation \ref{eq:V_int}, which ensures the particles to be separated by a distance $a$. $\hbar$ is the reduced Plancks constant and $m$ is the mass of the particles in question. In this project we study the gas of $^{87}$Rb alkali atoms, which have a scattering length $a_{\text{Rb}}=0.0043$ given in units of a typical trap size $a_{ho}$. We will consider a harmonic oscillator which can either be spherical (all dimensions have the same scales) or elliptical (one dimension has a different frequency from the others).
+with $V_{ext}$ as the external potential, which is the harmonic oscillator potential defined in equation \ref{eq:V_ext}, and $V_{int}$ as the interaction term, defined in equation \ref{eq:V_int}, which ensures the particles to be separated by a distance $a$. $\hbar$ is the reduced Plancks constant and $m$ is the mass of the particles in question. In this project we study the gas of $^{87}$Rb alkali atoms, which have a scattering length $a_{\text{Rb}}=0.0043$ given in units of a typical trap size $a_{ho}$. We will consider a harmonic oscillator which can either be spherical, where all dimensions have the same scales and the harmonic oscillator frequency is $\omega_{ho}$, or elliptical, where the z dimension has a different frequency $\omega_z$.
+
 \begin{equation}
 \label{eq:V_ext}
 V_{ext}(\vec{r})=
@@ -87,7 +88,7 @@ V_{ext}(\vec{r})=
    \frac{1}{2}m[\omega_{ho}^2(x^2 + y^2) + \omega_z^2z^2] & \text{(Elliptical)}.
 \end{cases}
 \end{equation}
-where $\omega_{ho}$ is the frequency of the spherical harmonic oscillator and $\omega_z$ is the frequency of the elliptical trap in z-direction. 
+
 \begin{equation}
 \label{eq:V_int}
 V_{int}(\vec{r}_i, \vec{r}_j)=
@@ -120,22 +121,36 @@ f(a,r_{ij})=
    \left(1-\frac{a}{r_{ij}}\right) & r_{ij} > a.
 \end{cases}
 \end{equation}
-where $a$ is a parameter describing the minimum distance allowed between particles in the trap. This is also denoted as the Jastrow factor, and sets the wave function to zero when the distance between to particles is smaller than $a$, such that they will not contribute to the energy. 
+where $a$ is a parameter describing the minimum distance allowed between particles in the trap. This is also denoted as the Jastrow factor, and it sets the wave function to zero when the distance between two particles is smaller than $a$, such that we get a hard-sphere repulsive potential. 
 
-\subsection{Local energy $E_L$ calculation}
-In general we can find the energy of a system with a known wave function by solving the integral
+\subsection{Energy calculation}
+
+We want to find the ground state energy of our system for a given wave function $\Psi_T$. The energy is given as the expectation value of the Hamiltonian, given by equation \ref{eq:general_energy}. 
+
 \begin{equation}
-E=\langle H\rangle = \frac{\int\psi^*(\vec{r})H\psi(\vec{r})d\vec{r}}{\int\psi^*(\vec{r})\psi(\vec{r})d\vec{r}}
+E=\langle H\rangle = \frac{\int\Psi^*(\vec{r})H\Psi(\vec{r})d\vec{r}}{\int\Psi^*(\vec{r})\Psi(\vec{r})d\vec{r}}
 \label{eq:general_energy}
 \end{equation}
-which depends on $|\psi(\vec{r})|^2$ only. This implies that sampling points from the $|\psi|^2$ distribution corresponds to sampling from the integrand $\psi^*H\psi$. We are in a situation where we do not know the exact wavefunction, and need to sample from the trial wave function in equation \ref{eq:WF}, which will probably not give us the exact energy. However, as we move the system closer to the most likely state using the Metropolis algorithm (see section \ref{sec:Metropolis}), the computed energy should approach the ground state energy \cite{JKNilsen}. The algorithm used to conduct the Monte Carlo integration is presented in section \ref{VMC}.
-
-Since the Hamiltonian is an off-diagonal operator, we can introduce a local energy given by
+By defining a quantity called the local energy $E_L$ given by equation \ref{eq:Local_energy}
 
 \begin{equation}
 E_L(\vec{r})=\frac{1}{\Psi_T(\vec{r})}\hat{H}\Psi_T(\vec{r}).
 \label{eq:Local_energy}
 \end{equation}
+the energy can be written as
+
+\begin{equation}
+	E = \int | \Psi_T^2| E_L d\vec{r}
+\end{equation}
+
+This equation can be solved by calculating the local energy $E_{L,i}$ for each iteration in the Monte Carlo loop, summing them, and then divide by the number of Monte Carlo cycles:
+
+\begin{equation}
+	E = \frac{\sum_i^M E_{L,i}}{M}
+\end{equation}
+
+ We want to calculate the energy E as a function of $\alpha$ for the trial wave function given in equation \ref{eq:WF} by using Variational Monte Carlo (VMC) described in section \ref{VMC}. 
+
 When the repulsive interaction is ignored ($a=0$), it can be shown that the local energy for a system of $N$ particles and $dim$ spatial dimensions is given by
 \begin{equation}
 E_L=dim\cdot N\cdot \alpha + \Big(\frac{1}{2}-2\alpha^2\Big)\sum_i\vec{r}_i^2,
@@ -191,18 +206,18 @@ Since we study a dilute bose gas, we can use the Gross-Pitaevskii (GP) equation 
 E_{\text{GP}}[\Psi]=\int d\vec{r}\bigg[\frac{\hbar^2}{2m}|\nabla\Psi(\vec{r})|^2+V_{ext}(\vec{r})|\Psi|^2+\frac{2\pi\hbar^2a}{m}|\Psi|^4\bigg].
 \label{eq:GP_integral}
 \end{equation}
-This integral can easily be solved analytically when we ignore the interaction (such that the Jastrow factor is one), and we get
+This integral can easily be solved analytically when we ignore the interaction, and for three dimentions we get
 \begin{equation}
 \label{eq:GP}
 E_{\text{GP}}(\alpha, \beta, N)=N\cdot\bigg(1+\frac{\beta}{2}\bigg)\bigg(\frac{1}{4\alpha}+\alpha\bigg)
 \end{equation}
-in three dimensions, which is derived in appendix D.
+ which is derived in appendix D.
 
 This expression is valid for few particles and small hard-sphere diameter. As the average energy per particle  increases as we increase N, the expression is no longer valid for a higher number of particles. For the interacting case, we could solve the integral using a numerical method, for instance Monte Carlo integration. We will not implement this, but rather benchmark our results against the solution of GP when ignoring interaction.
 
 
 \subsection{Onebody density} \label{sec:OB_theory}
-In many cases it is convenient to know the positions of the particles, but when the number of particles increases, the set of positions turns into a messy collection of numbers which is not really informative. In fact the exact positions cannot be revealed, according to Heisenberg's uncertainity principle. Instead of presenting the positions, the density of particles can give us a good overview of where the particles are located. With $N$ particles, the one-body density with respect to a particle $i$ is an integral over all particles but particle $i$:
+In many cases it is convenient to know the positions of the particles, but when the number of particles increases, the set of positions turns into a messy collection of numbers which is not really informative. Instead of presenting the positions, the density of particles can give us a good overview of where the particles are located. With $N$ particles, the one-body density with respect to a particle $i$ is an integral over all particles but particle $i$:
 \begin{equation}
 \rho_i=\int_{-\infty}^{\infty}d\vec{r}_1\hdots d\vec{r}_{i-1}d\vec{r}_{i+1}\hdots d\vec{r}_N |\Psi(\vec{r}_1,\hdots \vec{r}_N)|^2.
 \end{equation}
@@ -252,30 +267,30 @@ where $\beta$ is chosen to be $\sqrt{8}\cong2.82843$, which was used in the expe
 
 \subsection{Error estimation} \label{Error_estimation}
 When presenting data from an experiment, one should always know the errors in the answer. Experimental data, including data from numerical experiments, are never determined beyond any doubt, and an estimate of this error should therefore be presented alongside the data. \par
-There are two kinds of errors. Statistical errors originate from how much statistics one has; when $10^6$ measured points give approximately the same answer, one can be more sure that the actual value is close to those points, more so than if one only has 1 point of statistical data. Estimating the statistical error is easily done. The systematic error, however, is harder to handle. It arises for example from calculations being based on faulty theory, or defect measurement devices. Here, we will present how to get an estimate of the statistical error in a numerical experiment.
+There are two kinds of errors. Statistical errors originate from how much statistics one has; when $10^6$ measured points give approximately the same answer, one can be more sure that the actual value is close to those points, more so than if one only has 1 data point. Estimating the statistical error is easily done. The systematic error, however, is harder to handle. It arises for example from calculations being based on faulty theory, or defect measurement devices. Here, we will present how to get an estimate of the statistical error in a numerical experiment.
 \par 
 \vspace{3mm}
-When conducting an experiment $\alpha$ with $n$ measured points, $ \{x_1, ..., x_n \}$, the sample mean $ \langle x_{\alpha} \rangle$ of the experiment  is defined as shown in equation \ref{eq:sample_mean}.
+When conducting an experiment $\theta$ with $n$ measured points, $ \{x_1, ..., x_n \}$, the sample mean $ \langle x_{\theta} \rangle$ of the experiment  is defined as shown in equation \ref{eq:sample_mean}.
 
 \begin{equation}
 \label{eq:sample_mean}
-\langle x_{\alpha} \rangle = \frac{1}{n} \sum_{k=1}^n x_{\alpha,k}
+\langle x_{\theta} \rangle = \frac{1}{n} \sum_{k=1}^n x_{\theta,k}
 \end{equation}
-The corresponding sample variance $\sigma_{\alpha}$ is then defined as
+The corresponding sample variance $\sigma_{\theta}$ is then defined as
 
 \begin{equation}
-\sigma_{\alpha}^2 = \frac{1}{n} \sum_{k=1}^n (x_{\alpha,k} - \langle x_{\alpha} \rangle )^2
+\sigma_{\theta}^2 = \frac{1}{n} \sum_{k=1}^n (x_{\theta,k} - \langle x_{\theta} \rangle )^2
 \end{equation}
-This gives us the error in the given experiment $\alpha$. If we repeat this experiment $m$ times, the mean after all the experiments are
+This gives us the error in the given experiment $\theta$. If we repeat this experiment $m$ times, the mean after all the experiments are
 
 \begin{equation}
 \label{eq:mean}
-\langle x_{m} \rangle = \frac{1}{n} \sum_{k=1}^n  \langle x_{\alpha} \rangle.
+\langle x_{m} \rangle = \frac{1}{n} \sum_{k=1}^n  \langle x_{\theta} \rangle.
 \end{equation}
 The total variance is then
 
 \begin{equation}
-\sigma_m^2 = \frac{1}{m} \sum_{\alpha=1}^m ( \langle x_{\alpha} \rangle - \langle x_{m} \rangle )^2.
+\sigma_m^2 = \frac{1}{m} \sum_{\theta=1}^m ( \langle x_{\theta} \rangle - \langle x_{m} \rangle )^2.
 \end{equation}
 This can be reduced to 
 
@@ -286,7 +301,7 @@ This can be reduced to
 where $\sigma$ is the sample variance over all the experiments, defined as 
 
 \begin{equation}
-\sigma^2 = \frac{1}{mn} \sum_{\alpha=1}^m \sum_{k=1}^n (x_{\alpha, k} - \langle x_m \rangle )^2
+\sigma^2 = \frac{1}{mn} \sum_{\theta=1}^m \sum_{k=1}^n (x_{\theta, k} - \langle x_m \rangle )^2
 \end{equation}
 and the covariance is the linear correlation between the measured points. The definition of the covariance is shown in equation \ref{eq:covariance}.
 
@@ -312,10 +327,10 @@ Variational Monte Carlo (VMC) is a widely used method for approximating the grou
 \begin{equation}
 \vec{R}_{new} = \vec{R} + r\cdot \text{step}.
 \end{equation}
-Both the direction and particles moves are randomly chosen, so with a plain VMC implementation the particles will move randomly and independently of each other. We are going to use the Metropolis algorithm in addition to the VMC, where the Metropolis algorithm accepts or rejects moves based on the probability ratio between the old and the new position. This makes the system approach the most likely state, and the idea is that after a certain number of cycles the system will be in the most likely state. 
+Both the direction and particles moves are randomly chosen, so with a plain VMC implementation the particles will move at random, independent from each other. We are going to use the Metropolis algorithm in addition to the VMC, where the Metropolis algorithm accepts or rejects moves based on the probability ratio between the old and the new position. This makes the system approach the most likely state, and the idea is that after a certain number of cycles the system will be in the most likely state. 
 
 \subsection{Metropolis Algorithm} \label{sec:Metropolis}
-As mentioned above the task of the Metropolis algorithm is to move the system against the most likely state. The standard algorithm, here named brute force, is the simplest one, and does not deal with the transition probabilities. The modified Metropolis-Hastings algorithm includes, on the other hand, the transition probabilities and will be slightly more time consuming per cycle. We expect the latter to converge faster to the most likely state. 
+As mentioned above, the task of the Metropolis algorithm is to move the system towards the most likely state. The standard algorithm, here named brute force, is the simplest one, and does not deal with the transition probabilities. The modified Metropolis-Hastings algorithm includes, on the other hand, the transition probabilities and will be slightly more time consuming per cycle. We expect the latter to converge faster to the most likely state. 
 
 The foundation of the Metropolis algorithm is that the probability for a system to undergo a transition from state $i$ to state $j$ is given by the transition probability multiplied by the acceptance probability
 \begin{equation}
@@ -395,23 +410,23 @@ In fact there are multiple techniques for doing this, where the most complicated
 Perhaps the simplest and most intuitive method for finding the minimum is the gradient descent method, which reads
 \begin{equation}
 \label{eq:GD}
-\alpha^+=\alpha - \eta\cdot\frac{d\langle E_L(\alpha)\rangle}{d\alpha}.
+\alpha^+=\alpha - \eta\cdot\frac{d\langle E(\alpha)\rangle}{d\alpha}.
 \end{equation}
-where $\alpha^+$ is the updated $\alpha$ and $\eta$ is a step size. The idea is that one finds the gradient of the energy with respect to a certain $\alpha$, and moves in the direction which minimizes the energy. This is repeated until one has found an energy minimum, where the energy minimum is defined as either where $\frac{d\langle E_L(\alpha)\rangle}{d\alpha}$ is smaller than a given tolerance, or the energy fluctuates around a value are smaller than a tolerance, and thus changes minimally.
+where $\alpha^+$ is the updated $\alpha$ and $\eta$ is a step size. The idea is that one finds the gradient of the energy with respect to a certain $\alpha$, and moves in the direction which minimizes the energy. This is repeated until one has found an energy minimum, where the energy minimum is defined as either where $\frac{d\langle E(\alpha)\rangle}{d\alpha}$ is smaller than a given tolerance, or the energy fluctuates around a value are smaller than a tolerance, and thus changes minimally.
 \par 
 \vspace{3mm}
 
-To implement equation \ref{eq:GD}, we need an expression for the derivative of $E_L$ with respect to alpha:
+To implement equation \ref{eq:GD}, we need an expression for the derivative of $E$ with respect to alpha:
 
 \begin{equation}
 	\label{eq:E_L_der_wrt_alpha}
-	\bar{E_{\alpha}} = \frac{d \langle E_L (\alpha) \rangle}{d \alpha}.
+	\bar{E_{\alpha}} = \frac{d \langle E (\alpha) \rangle}{d \alpha}.
 \end{equation}
-By using the expression for the expectation value for the local energy $ \langle E_L (\alpha) \rangle$ in equation \ref{eq:exp_EL} 
+By using the expression for the expectation value for the energy $ \langle E (\alpha) \rangle$ in equation \ref{eq:exp_EL} 
 
 \begin{equation}
 	\label{eq:exp_EL}
-	\langle E_L (\alpha) \rangle = \frac{ \langle \psi_T(\alpha) | H | \psi_T(\alpha)  \rangle}{ \langle \psi_T(\alpha)  |  \psi_T(\alpha)  \rangle }
+	\langle E (\alpha) \rangle = \frac{ \langle \psi_T(\alpha) | H | \psi_T(\alpha)  \rangle}{ \langle \psi_T(\alpha)  |  \psi_T(\alpha)  \rangle }
 \end{equation}
 and applying the chain rule of differentiation, it can be shown that equation \ref{eq:E_L_der_wrt_alpha} is equal to equation \ref{eq:E_L_der_wrt_alpha_expression}
 
@@ -433,9 +448,9 @@ The algorithm of this minimization method is thus as follows:
 for(max number of iterations with minimizing)
 	
 	do M Monte Carlo cycles
-	calculate E_L and dE_L/dalpha 
+	calculate E and dE/dalpha 
 	
-	Check if dE_L/dalpha < eps or alpha fluctuation over the last 5 steps is < eps
+	Check if dE/dalpha < eps or alpha fluctuation over the last 5 steps is < eps
 	
 	
 		if yes, print optimal alpha and break loop
@@ -498,13 +513,13 @@ To keep the program neat, specific parts were placed in specific files. The file
 \caption{An overview of the code structure. metropolis.cpp is refered to as VMC, gd.cpp is GD, wavefunction.cpp is WF, tools.cpp is Tools and obviously main.cpp is Main. See text for furter description.}
 \label{fig:code_structure}
 \end{figure}
- A standard VMC run goes as follows: the desired simulation case is set up in main.cpp (Main) by specifying the given variables. metropolis.cpp (VMC) is called from Main, which calls wavefunction.cpp (WF) to set up the class WaveFunction. The Monte Carlo loop begins, where the move of one random particle is proposed for each iteration. Depending of whether brute force or importance sampling have been chosen, either WF or tools.cpp (Tools) is called to obtain the transition probability, and the move is either accepted or rejected. VMC calls WF to obtain the local energy of the new position. After M iterations, the estimation of the local energy is printed. \par
- When running the gradient decent method, then Main calls gd.cpp (GD). A start value for $\alpha$ is given in the program, and the Monte Carlo loop is conducted as described above. After the loop, the estimated $E_L$-value is printed. Based on the parameter $\frac{d E_L}{d \alpha}$, a new value for $\alpha$ is chosen. After several MC loops for different $\alpha$, the optimal $\alpha$ is chosen. 
+ A standard VMC run goes as follows: the desired simulation case is set up in main.cpp (Main) by specifying the given variables. metropolis.cpp (VMC) is called from Main, which calls wavefunction.cpp (WF) to set up the class WaveFunction. The Monte Carlo loop begins, where the move of one random particle is proposed for each iteration. Depending of whether brute force or importance sampling have been chosen, either WF or tools.cpp (Tools) is called to obtain the transition probability, and the move is either accepted or rejected. VMC calls WF to obtain the local energy of the new position. After M iterations, the estimation of the energy is printed. \par
+ When running the gradient decent method, then Main calls gd.cpp (GD). A start value for $\alpha$ is given in the program, and the Monte Carlo loop is conducted as described above. After the loop, the estimated $E$-value is printed. Based on the parameter $\frac{d E}{d \alpha}$, a new value for $\alpha$ is chosen. After several MC loops for different $\alpha$, the optimal $\alpha$ is chosen. 
  
  \subsubsection{Test}
 To make sure the program behaves as expected, we have implemented tests. All tests are functions, and can be found in the test.cpp file.
 
-The test "test EL" checks the output estimated local energy after the Monte Carlo loops for a given $\alpha$ in the no interaction case, and compares it to the analytical energy obtrained from the Gross-Pitaevskii equation from equation \ref{eq:GP}. If the difference between the two are larger than a given tolerance, an error is raised.
+The test "test EL" checks the output estimated energy after the Monte Carlo loops for a given $\alpha$ in the no interaction case, and compares it to the analytical energy obtrained from the Gross-Pitaevskii equation from equation \ref{eq:GP}. If the difference between the two are larger than a given tolerance, an error is raised.
 
 \subsection{Implementation}
 We use the vector package to create a 2D-array where the positions are stored. For the exact implementation, see the github repository linked on page one. We always struggle for better performance, and to achieve that we try to avoid heavy loops and repetition of calculations. A second priority is to make the code as general as possible, such that the code can be reused for other purposes. As an example we always loop over an arbitrary given number of dimensions, and similar operations are done throughout the programs. 
@@ -520,9 +535,9 @@ for M Monte Carlo iterations
 	move random particle
 	accept or reject move based on transition probability
 	calculate energy of new position
-	update estimator of E_L
+	update sum of E_L
 
-print estimated E_L 
+print estimated E 
 	
 \end{lstlisting}
 
@@ -538,13 +553,13 @@ for T iterations
 		move random particle
 		accept or reject move based on transition probability
 		calculate energy of new position
-		update estimator of E_L and dE_L/dalpha 
+		update sum of E_L and dE/dalpha 
 		
-	print E_L and dE_L/dalpha
+	print E and dE/dalpha
 	
 	test if optimal alpha -> if optimal, break loop and print optimal alpha
 	
-	based on dE_L/d alpha, suggest new alpha	
+	based on dE/d alpha, suggest new alpha	
 
 \end{lstlisting}
 
@@ -554,35 +569,35 @@ for T iterations
 
 We will first present the results obtained without repulsive interaction, and thoughout this part we will consequently use $\alpha=0.5$ and run for $1e6$ Monte Carlo cycles and for three spatial dimensions. 
 
-Thereafter we will turn to the more realistic and interesting situation where the particles interact with each other. We will still study the behavior in three dimensions and for $1e6$ cycles, but we need to set the scattering distance to $a=0.0043$ and find the $\alpha$ which gives the minimum local energy. In this part we will also turn on the elliptical harmonic oscillator potential, using $\beta=\sqrt{8}$ is mentioned above.
+Thereafter we will turn to the more realistic and interesting situation where the particles interact with each other. We will still study the behavior in three dimensions and for $1e6$ cycles, but we need to set the scattering distance to $a=0.0043$ and find the $\alpha$ which gives the minimum energy. In this part we will also turn on the elliptical harmonic oscillator potential, using $\beta=\sqrt{8}$ is mentioned above.
 
-\subsection{$E_L$ as a function of the variational parameter $\alpha$}
+\subsection{$E$ as a function of the variational parameter $\alpha$}
 In search for the energy minimum we tried various $\alpha$ values, and optimal $\alpha$ was 0.5, as one can see in figure \ref{fig:EL_as_func_of_alpha}. The variance associated with the energy measurement in figure \ref{fig:EL_as_func_of_alpha} i presented in figure \ref{fig:variance_EL_as_func_of_alpha}, and we see that the energy minimum and the variance minimum share the same $\alpha$.
 
 \begin{figure} [H]
 	\centering
 	\includegraphics[scale=0.6]{images/energy.png}
-	\caption{The local energy $E_L$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$ in the interval $[0.1,0.9]$ (continuous line). For each $\alpha$ we used $1e6$ Monte Carlo cycles in three spatial dimensions with a step length of 1.0. We have also added the analytical results found from the Gross-Pitaevskii equation, which is the dashed line.}
+	\caption{The energy $E$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$ in the interval $[0.1,0.9]$ (continuous line). For each $\alpha$ we used $1e6$ Monte Carlo cycles in three spatial dimensions with a step length of 1.0. We have also added the analytical results found from the Gross-Pitaevskii equation, which is the dashed line.}
 	\label{fig:EL_as_func_of_alpha}
 \end{figure} 
 
 \begin{figure} [H]
 	\centering
 	\includegraphics[scale=0.6]{images/variance.png}
-	\caption{The variance of the local energy $E_L$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$ associated with the energy plot in figure \ref{fig:EL_as_func_of_alpha}. The variance is calculated with equation \ref{eq:variance_simplified}.}.
+	\caption{The variance of the energy $E$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$ associated with the energy plot in figure \ref{fig:EL_as_func_of_alpha}. The variance is calculated with equation \ref{eq:variance_simplified}.}.
 	\label{fig:variance_EL_as_func_of_alpha}
 \end{figure} 
 
-\subsection{$E_L$ calculation and CPU-time}\label{CPU}
-For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the local energy. In table \ref{tab:BFmet} we present the results from these calculations and the performance. The results from the calculations with the Metropolis-Hastings algorithm are presented in table \ref{tab:ISmet}.
+\subsection{$E$ calculation and CPU-time}\label{CPU}
+For the brute force Metropolis algorithm we developed both an analytical and a numerical method to calculate the energy. In table \ref{tab:BFmet} we present the results from these calculations and the performance. The results from the calculations with the Metropolis-Hastings algorithm are presented in table \ref{tab:ISmet}.
 
 \begin{table} [H]
 	\centering
-	\caption{The local energy calculated without hard-sphere interaction with brute force Metropolis algorithm, for both the analytical and numerical local energy calculation. The variational parameter $\alpha$ is $0.5$, we study three dimensions, the step length is 1.0, the number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the calculated energies. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}.}
+	\caption{The energy calculated without hard-sphere interaction with brute force Metropolis algorithm, for both the analytical and numerical energy calculation. The variational parameter $\alpha$ is $0.5$, we study three dimensions, the step length is 1.0, the number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the calculated energies. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}.}
 	\begin{tabularx}{\textwidth}{X|XX|XX|X} \hline
 		\label{tab:BFmet}
 		& \multicolumn{2}{X}{\textbf{Analytical}} & \multicolumn{2}{X}{\textbf{Numerical}} & Exact \\
-		$N$ & $\langle E_L\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s] & $\langle E_L\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s]& $\langle E_L\rangle$ [$\hbar\omega_{ho}$]\\ \hline
+		$N$ & $\langle E\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s] & $\langle E\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s]& $\langle E\rangle$ [$\hbar\omega_{ho}$]\\ \hline
 		1 & 1.5000(15) & 0.15420 & 1.5000(15) & 0.65714 & 1.5000\\
 		10 & 15.000(15) & 0.54785 & 15.000(15) & 9.9844 & 15.000\\
 		100 & 150.00(15) & 13.573 & 150.00(15) & 2743.4 & 150.00\\
@@ -592,11 +607,11 @@ For the brute force Metropolis algorithm we developed both an analytical and a n
 
 \begin{table} [H]
 	\centering
-	\caption{The local energy calculated without hard-sphere interaction with Metropolis-Hastings algorithm. The variational parameter $\alpha$ is $0.5$, we study three dimensions, the time step is 1.0 and the number of Monte Carlo cycles is fixed to $M=1e6$. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}.}
+	\caption{The energy calculated without hard-sphere interaction with Metropolis-Hastings algorithm. The variational parameter $\alpha$ is $0.5$, we study three dimensions, the time step is 1.0 and the number of Monte Carlo cycles is fixed to $M=1e6$. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}.}
 	\begin{tabularx}{\textwidth}{X|XX|X} \hline
 		\label{tab:ISmet}
 		& \textbf{Analytical}  & & \textbf{Exact}\\
-		$N$ & $\langle E_L\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s] & $\langle E_L\rangle$ [$\hbar\omega_{ho}$]\\ \hline
+		$N$ & $\langle E\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s] & $\langle E\rangle$ [$\hbar\omega_{ho}$]\\ \hline
 		1 & 1.5000(15) & 0.26693  & 1.5000 \\
 		10 & 15.000(15) &  0.54930 & 15.000 \\
 		100 & 150.00(15) & 16.117 & 150.00 \\
@@ -632,13 +647,13 @@ We observe that the acceptance rate for the brute force Metropolis algorithm dec
 
 \subsection{Variance calculation}
 
-In table \ref{tab:variance_analysis}, we present the results of the local energy calculation with proper error evaluation of statistical error. The statistical error as found with the blocking method is also compared to the simple way of approximating the variance with equation \ref{eq:variance_simplified}. 
+In table \ref{tab:variance_analysis}, we present the results of the energy calculation with proper error evaluation of statistical error. The statistical error as found with the blocking method is also compared to the simple way of approximating the variance with equation \ref{eq:variance_simplified}. 
 
 \begin{table} [H]
-	\caption{The local energy calculated without hard-sphere interaction with the Metropolis-Hastings algorithm, this time with proper evaluation of the statistical error. The calculations are run in three dimensions with $1e6$ Monte Carlo cycles, the variational parameter $\alpha=0.5$ and a step length of 1.0.}
+	\caption{The energy calculated without hard-sphere interaction with the Metropolis-Hastings algorithm, this time with proper evaluation of the statistical error. The calculations are run in three dimensions with $1e6$ Monte Carlo cycles, the variational parameter $\alpha=0.5$ and a step length of 1.0.}
 	\begin{tabularx}{\textwidth}{X|XXXX} \hline
 		\label{tab:variance_analysis}
-		$N$ & $\langle E_L\rangle$ [$\hbar\omega_{ho}$] & $\sigma^2$ Blocking & $\sigma^2 \approx \langle E_L^2 \rangle - \langle E_L \rangle^2$ \\ \hline
+		$N$ & $\langle E\rangle$ [$\hbar\omega_{ho}$] & $\sigma^2$ Blocking & $\sigma^2 \approx \langle E^2 \rangle - \langle E \rangle^2$ \\ \hline
 				1 & 1.5000 & 5.0102e-2  & 5.0100e-2 \\
 				10 & 15.000 & 4.9701e-1 & 4.9678e-1  \\
 				100 & 150.00 & 5.2417 & 5.2184\\
@@ -647,11 +662,11 @@ In table \ref{tab:variance_analysis}, we present the results of the local energy
 \end{table}
 
 \subsection{VMC with repulsive interaction}
-We now turn on the interaction and the elliptical trap (setting $a=0.0043$ and $\beta=\sqrt{8}$. In table \ref{tab:EL_calc_repulsive_pot}, the results from the calculation of the elliptical trap are presented. The variational parameter $\alpha$ was varied manually to find the minimum of the local energy $E_L$.
+We now turn on the interaction and the elliptical trap (setting $a=0.0043$ and $\beta=\sqrt{8}$. In table \ref{tab:EL_calc_repulsive_pot}, the results from the calculation of the elliptical trap are presented. The variational parameter $\alpha$ was varied manually to find the minimum of the energy $E$.
 
 \begin{table} [H]
 	\centering
-	\caption{The local energy $E_L$ calculated for different $\alpha$'s in the interval [0.2,0.8], with $a=0.0043$ (interaction), $\beta=\sqrt{8}$ (elliptical trap) and with the brute force algorithm. The calculations are run in three dimensions with $1e6$ Monte Carlo cycles and a step length of 1.0. We compare the VMC results to the results found by the Gross-Pitaevskii equation (GP) for 1, 10 and 100 particles. The variances are calculated using \ref{eq:variance_simplified}}
+	\caption{The energy $E$ calculated for different $\alpha$'s in the interval [0.2,0.8], with $a=0.0043$ (interaction), $\beta=\sqrt{8}$ (elliptical trap) and with the brute force algorithm. The calculations are run in three dimensions with $1e6$ Monte Carlo cycles and a step length of 1.0. We compare the VMC results to the results found by the Gross-Pitaevskii equation (GP) for 1, 10 and 100 particles. The variances are calculated using \ref{eq:variance_simplified}}
 	\begin{tabularx}{\textwidth}{c|XcXcXc} \hline
 		\label{tab:EL_calc_repulsive_pot}
 		& \multicolumn{2}{c}{\textbf{N=1}} & \multicolumn{2}{c}{\textbf{N=10}} & \multicolumn{2}{c}{\textbf{N=100}} \\
@@ -665,14 +680,14 @@ We now turn on the interaction and the elliptical trap (setting $a=0.0043$ and $
 \end{table}
 
 \subsubsection{Gradient Decent} \label{sec:gd}
-The gradient decent method was then used to find the minimum of the local energy in the interacting case. The results are presented in table \ref{tab:EL_calc_gradientdecent}.
+The gradient decent method was then used to find the minimum of the energy in the interacting case. The results are presented in table \ref{tab:EL_calc_gradientdecent}.
 
 \begin{table} [H]
 	\centering
 	\caption{The optimal variation parameter $\alpha$ for 1, 10 and 100 particles. The local energies and the "energy slope" is also presented in the table. We used $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=\sqrt{8}$, with the brute force algorithm. The calculations are run in for three dimensions with $1e6$ Monte Carlo cycles with a step length of 1.0. The variances are calculated using \ref{eq:variance_simplified}}
 	\begin{tabularx}{\textwidth}{X|XXX} \hline
 		\label{tab:EL_calc_gradientdecent}
-		$N$ & $\alpha $ & $E_L$  & $|\partial E_L/\partial \alpha|$   \\ \hline
+		$N$ & $\alpha $ & $E$  & $|\partial E/\partial \alpha|$   \\ \hline
 		1   & 0.50000  & $2.4142(73)$  &  7.2134e-06 \\
 		10  & 0.50015  & $24.264(22)$  &  4.7969e-05 \\ 
 		100 & 0.53379  & $379.4(9.9)$  &  4.1789e-03 \\ \hline
@@ -693,7 +708,7 @@ In section \ref{sec:OB_theory} we presented a couple of ways computing the onebo
 From the onebody density plot, the only difference between the graphs is the amplitude, which seems lower the larger scattering length we add. The graphs have the same shape as the wave function. 
 
 \section{Discussion} \label{Discussion}
-For the case without interaction and spherical harmonic oscillator we see from figure \ref{fig:EL_as_func_of_alpha} that the minimum of the local energy is found when the variational parameter $\alpha=0.5$. We also observe that $\alpha=0.5$ gives the minimal variance, and seen from figure \ref{fig:variance_EL_as_func_of_alpha}. The local energy and the variance explode when $\alpha$ is approaching zero.  
+For the case without interaction and spherical harmonic oscillator we see from figure \ref{fig:EL_as_func_of_alpha} that the minimum of the energy is found when the variational parameter $\alpha=0.5$. We also observe that $\alpha=0.5$ gives the minimal variance, and seen from figure \ref{fig:variance_EL_as_func_of_alpha}. The energy and the variance explode when $\alpha$ is approaching zero.  
 \par 
 \vspace{3mm}
 
@@ -718,7 +733,7 @@ In table \ref{tab:variance_analysis}, we repeated the calculation of the no inte
 
 Further we have seen that we get som differences between the variational Monte Carlo and the Gross-Pitaevskii calculations. Gross-Pitaevskii (GP) only holds for dilute bose gases, and since the gas gets less dilute the more particles we add, we will expect some deviations when the number of particles increase. Nonetheless, for the interacting case we study a maximum of 100 particles, so this should be a small effect, and we expect the exact GP equation to be accurate for our case. Anyway, we have not solved GP for the interacting case, so the GP benchmark should underestimate the obtained energy, which is also the case.
 
-We can also compare the results to Ref.\cite{DuBois}, where they have plotted energy per particle as a function of number of particles. According to that plot, the energy per particle should increase rapidly when particles are added to a small number of particles, something that we also observe when going from 10 to 100 particles and partly when going from 1 to 10 particles. The exact energy difference is though hard to read from the graph, but our energies are possibly a bit larger than they should be. We also see that the lowest local energy appears when $\alpha=0.4$. This differs from the case without interaction, but we also expect another optimal wave function when interaction is added such that this effect is kind of expected. 
+We can also compare the results to Ref.\cite{DuBois}, where they have plotted energy per particle as a function of number of particles. According to that plot, the energy per particle should increase rapidly when particles are added to a small number of particles, something that we also observe when going from 10 to 100 particles and partly when going from 1 to 10 particles. The exact energy difference is though hard to read from the graph, but our energies are possibly a bit larger than they should be. We also see that the lowest energy appears when $\alpha=0.4$. This differs from the case without interaction, but we also expect another optimal wave function when interaction is added such that this effect is kind of expected. 
 \par
 \vspace{3mm}
 
@@ -974,7 +989,7 @@ With some straightforward computations one will find
 E_{\text{GP}}(\alpha,\beta,N)&=\Big(\frac{1}{2}+2\alpha^2\Big)\Big(\frac{2\alpha}{\pi}\Big)^{3N/2}\beta^{N/2}\frac{1}{4\alpha}\sqrt{\frac{\pi}{2\alpha}}^{3N}(2+\beta)\cdot N\cdot \beta^{-N/2}\notag\\
 &=N\cdot\Big(\frac{1}{4\alpha}+\alpha\Big)\cdot\Big(1+\frac{\beta}{2}\Big).
 \end{align}
-This gives the correct analytical results for the non-interacting case both in the spherical trap ($E_L=0.5N\cdot dim$ for $\alpha=0.5$) and the elliptical trap ($E_L=N(1+\beta/2)$\footnote{We start from the exact energy formula for a harmonic oscillator, $E_n=\hbar\omega(n+1/2)$, and study how the ground state energy changes if the z-component has different frequency $\omega_z$ from the other components, $E_0=\hbar(\omega_{ho}+\omega{z}/2)$. If we then scale with respect to $\hbar\omega_{ho}$ as done before, we get $E'=1+\beta/2$ for one particle. For our particular project, we have $\beta=\sqrt{8}$, and get an ground state energy $1+\sqrt{2}$ per particle.} for $\alpha=0.5$ in 3D).
+This gives the correct analytical results for the non-interacting case both in the spherical trap ($E=0.5N\cdot dim$ for $\alpha=0.5$) and the elliptical trap ($E=N(1+\beta/2)$\footnote{We start from the exact energy formula for a harmonic oscillator, $E_n=\hbar\omega(n+1/2)$, and study how the ground state energy changes if the z-component has different frequency $\omega_z$ from the other components, $E_0=\hbar(\omega_{ho}+\omega{z}/2)$. If we then scale with respect to $\hbar\omega_{ho}$ as done before, we get $E'=1+\beta/2$ for one particle. For our particular project, we have $\beta=\sqrt{8}$, and get an ground state energy $1+\sqrt{2}$ per particle.} for $\alpha=0.5$ in 3D).
 
 \newpage
 \section{References}
