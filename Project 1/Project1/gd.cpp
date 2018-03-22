@@ -28,10 +28,11 @@ double GradientDecent(int N, int dim, int M, double a, double steplength, \
     //Parameters
     double alpha        = 0.55;          //Initial guess
     double eps          = 0.0001;        //Tolerance
-    double eta0         = 0.0001;         //Learning rate
-    double D            = 0.5;          //Diffusion coeff, to be used in Hastings met.algo
+    double eta0         = 0.0001;        //Learning rate
+    double D            = 0.5;           //Diffusion coeff, to be used in Hastings met.algo
     int T               = 1000;          //Number of iterations (alphas)
 
+    //Check how the alpha develops
     double alpha_old[5];
     for(int i=0;i<5;i++){
         alpha_old[i] = 0;
@@ -39,7 +40,7 @@ double GradientDecent(int N, int dim, int M, double a, double steplength, \
 
     for(int iter=0; iter<T; iter++){
 
-        //averages and energies
+        //Averages and energies
         double E_tot       = 0;          //sum of energies of all states
         double E_tot_sqrd  = 0;          //sum of energies of all states squared
         double E           = 0;          //energy after change in position
@@ -65,7 +66,6 @@ double GradientDecent(int N, int dim, int M, double a, double steplength, \
         for(auto& i : pos_mat_new)
             i.resize(dim);
 
-        // Initialize the position matrix
         for(int i=0; i<N; i++) {
             LOOP:
             for(int j=0; j<dim; j++) {
@@ -94,9 +94,6 @@ double GradientDecent(int N, int dim, int M, double a, double steplength, \
         else if(num_or_an == 1) {
             E = Psi.E_L_num(pos_mat, alpha, beta, h);
 
-        }
-        else {
-            cout << "num_or_an is out of range" << endl;
         }
 
         E_tot += E;
@@ -178,7 +175,7 @@ double GradientDecent(int N, int dim, int M, double a, double steplength, \
 
 
 
-        if(abs(E_L_der)<eps){ //||abs(alpha-alpha_old[1])/alpha_old[1] < eps) {
+        if(abs(E_L_der)<eps||abs(alpha-alpha_old[1])/alpha_old[1] < eps) {
             cout <<"FINAL VALUES" << endl;
             if(abs(E_L_der)<eps){
                 cout << "small E_L" << endl;
