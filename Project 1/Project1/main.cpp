@@ -7,14 +7,14 @@ using namespace std;
 int main()
 {
     //variables chosen by user
-    int    M          = 10000000; //number of MC cycles
+    int    M          = 1000000; //number of MC cycles
     int    N          = 10;      //number of particles
     int    dim        = 3;       //number of dimensions concidered
     double beta       = 2.82843;       //weight parameter along z-axis
     double steplength = 1.0;     //steplength when changing position
     double h          = 0.01;    //Step length for numerical double differentiation
     double timestep   = 0.001;     //Timestep, to be used in Metropolis-Hastings
-    double a          = 0;     //distance parameter
+    double a          = 1.0;     //distance parameter
 
     //Choices of simulation types
     int    BF_H       = 1;       //brute force (0) or hastings(1) metropolis algorithm
