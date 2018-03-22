@@ -47,9 +47,9 @@
 \end{itemize}
 
 \begin{abstract}
-This project aims to simulate a trapped Bose gas using Variational Monte Carlo (VMC) with both the  brute force Metropolis and the Metropolis-Hastings algorithms. Using a trial wave function with either spherical or elliptical harmonic oscillator (HO) potential, with and without a hard sphere potential, we calculate the ground state energy and onebody density for different numbers of particles. \textcolor{red}{The results are benchmarked with earlier publications.} \par 
+This project aims to simulate a trapped Bose gas using Variational Monte Carlo (VMC) with both the  brute force Metropolis and the Metropolis-Hastings algorithms. Using a trial wave function with either spherical or elliptical harmonic oscillator (HO) potential, with and without a hard sphere potential, we calculate the ground state energy and onebody density for different numbers of particles. \textcolor{red}{The results are benchmarked with analytical results obtained from the Gross-Pitaevskii equation.} \par 
 
-Using the spherical HO with no interaction, both the brute force and the Metropolis-Hastings methods reproduces analytical calculations. Though the Hastings algorithm is slightly slower, it has a higher acceptance rate for the proposed moves in the VMC simulation. The onebody density distribution changes shape when introducing the hard sphere potential. \textcolor{red}{The system behaves as expected, and our results reproduces the benchmarks.}
+Using the spherical HO with no interaction, both the brute force and the Metropolis-Hastings methods reproduces analytical calculations. Though the Hastings algorithm is slightly slower, it has a higher acceptance rate for the proposed moves in the VMC simulation. The onebody density distribution changes shape when introducing the hard sphere potential. \textcolor{red}{The system behaves as expected, and our results reproduces the analytical calculations where they are valid.}
 \par 
 
 \end{abstract}
@@ -58,11 +58,11 @@ Using the spherical HO with no interaction, both the brute force and the Metropo
 
 \section{Introduction}
 
-In this project, we study the Bose-Einstein condensation (BEC) of a dilute gas of $^{87}$Rb atoms trapped in an elliptical harmonic oscillator. Bose-Einstein condensation occurs when atoms are cooled towards absolute zero, as they start occupying the same quantum state \cite{JE2016}. Even though the effect was predicted already in 1924, it was first observed by Anderson et.al. in 1995, which caused an immense interest in the subject \cite{SP}, \cite{Anderson}.
+In this project, we study the Bose-Einstein condensation (BEC) of a dilute gas of $^{87}$Rb atoms trapped in an harmonic oscillator. Bose-Einstein condensation occurs when atoms are cooled towards absolute zero, as they start occupying the same quantum state \cite{JE2016}. Even though the effect was predicted already in 1924, it was first observed by Anderson et.al. in 1995, which caused an immense interest in the subject \cite{SP}, \cite{Anderson}.
 
-Our goal is to find an upper bound limit of the ground state energy for a system of a various number of particles, using an ansatz where the total wave function is a product of single particle wave functions. The Gross-Pitaevskii equation is applied to obtain an analytical energy approximation, which works as a benchmark for the energy. The theoretical framework is presented in section \ref{Theory}. \par
+Our goal is to find an upper bound limit of the ground state energy for a system of a various number of particles, using an ansatz where the total wave function is a product of single particle wave functions. The system is evaluated both for a spherical and elliptical harmonic oscillator trap. The Gross-Pitaevskii equation is applied to obtain an analytical energy approximation, which works as a benchmark for the energy. The theoretical framework is presented in section \ref{Theory}. \par
 
-The main technique we will use is the variational Monte Carlo (VMC) method with two different Metropolis algorithms, presented in section \ref{Method}. To achieve the optimal trial wave function we vary the variational parameter $\alpha$ using the gradient descent method. In section \ref{Results} the upper bound energy is presented with the optimal wave functions and the onebody density. In section \ref{Discussion} we discuss our results, and compare them to found in articles \cite{DuBois}, \cite{Nilsen} and \cite{Dalfovo}.
+The main technique we will use is the variational Monte Carlo (VMC) method with two different Metropolis algorithms, presented in section \ref{Method}. To achieve the optimal trial wave function we vary the variational parameter $\alpha$ using the gradient descent method. In section \ref{Results} the upper bound energy is presented with the optimal wave functions and the onebody density. In section \ref{Discussion} we discuss our results, and compare them to results from articles \cite{DuBois}, \cite{Nilsen} and \cite{Dalfovo}.
 
 
 \section{Theory} \label{Theory}
@@ -181,8 +181,8 @@ f''(x)\simeq\frac{f(x+h)-2f(x)+f(x-h)}{h^2}.
 In our case the position is a three dimensional vector, so we need to handle each dimension separately. Both the analytical and the numerical local energies are implemented, and in section \ref{CPU}, the CPU time for the analytical and numerical approach are compared for a various number of particles.
  
 
-\subsubsection{Gross-Pitaevskii}
-Since we study a dilute bose gas, we can use the Gross-Pitaevskii (GP) equation to estimate the energy density, also with interaction \cite{Gross}, \cite{Pitaevskii}. The energy is then given by an integral over all the positions (Ref.\cite{Nilsen}), 
+\subsubsection{Gross-Pitaevskii equation}
+Since we study a dilute bose gas, we can use the Gross-Pitaevskii (GP) equation to estimate the energy density, also when including particle-particle interaction \cite{Gross}, \cite{Pitaevskii}. The energy is then given by an integral over all the positions \cite{Nilsen} as follows:
 \begin{equation}
 E_{\text{GP}}[\Psi]=\int d\vec{r}\bigg[\frac{\hbar^2}{2m}|\nabla\Psi(\vec{r})|^2+V_{ext}(\vec{r})|\Psi|^2+\frac{2\pi\hbar^2a}{m}|\Psi|^4\bigg].
 \label{eq:GP_integral}
@@ -193,11 +193,11 @@ E_{\text{GP}}(\alpha, \beta, N)=N\cdot\bigg(1+\frac{\beta}{2}\bigg)\bigg(\frac{1
 \end{equation}
 in three dimensions, which is derived in appendix D.
 
-This is quite good for few particles and small hard-sphere diameter, also with interaction, but since the average energy per particle should increase as we increase N, this will be more and more off. For the interacting case, we can solve the integral using a numerical method, for instance Monte Carlo integration. We will not implement this, but rather benchmark our results against the solution of GP when ignoring interaction.
+This expression is valid for few particles and small hard-sphere diameter. As the average energy per particle  increases as we increase N, the expression is no longer valdig for a higher number of particles. For the interacting case, we could solve the integral using a numerical method, for instance Monte Carlo integration. We will not implement this, but rather benchmark our results against the solution of GP when ignoring interaction.
 
 
 \subsection{Onebody density} \label{sec:OB_theory}
-In many cases it is convenient to know the positions of the particles, but when the number of particles increases, the set of positions turns into a messy collection of numbers which is not really informative ( in fact the exact positions can hardly be revealed according to Heisenberg's uncertainity principle). Instead of presenting the positions, the density of particles can give us a good overview of where the particles are located. With $N$ particles, the one-body density with respect to a particle $i$ is an integral over all particles but particle $i$:
+In many cases it is convenient to know the positions of the particles, but when the number of particles increases, the set of positions turns into a messy collection of numbers which is not really informative. In fact the exact positions cannot be revealed, according to Heisenberg's uncertainity principle. Instead of presenting the positions, the density of particles can give us a good overview of where the particles are located. With $N$ particles, the one-body density with respect to a particle $i$ is an integral over all particles but particle $i$:
 \begin{equation}
 \rho_i=\int_{-\infty}^{\infty}d\vec{r}_1\hdots d\vec{r}_{i-1}d\vec{r}_{i+1}\hdots d\vec{r}_N |\Psi(\vec{r}_1,\hdots \vec{r}_N)|^2.
 \end{equation}
@@ -302,7 +302,7 @@ A common simplification is to reduce equation \ref{eq:sample_var_all_exp} to the
 \sigma^2 \approx \langle x^2 \rangle - \langle x \rangle^2
 \end{equation}
 
-This equation, however, does not take into account the covariance term from equation \ref{eq:sample_var_all_exp}, and as the covariance term is added to the expression for the variance, \ref{eq:variance_simplified} will underestimate the uncertainty $\sigma$ for positive covariances.
+This equation, however, does not take into account the covariance term from equation \ref{eq:sample_var_all_exp}, and as the covariance term is added to the expression for the variance, equation \ref{eq:variance_simplified} will underestimate the uncertainty $\sigma$ for positive covariances.
 
 A direct implementation of equation \ref{eq:sample_var_all_exp} including the covariance term is not suitable, as the expression for the covariance includes a double sum, and for a large number of iterations, this will turn into an extremely time consuming process for a large number of Monte Carlo iterations. Luckily, there are methods for calculating an accurate estimation of the variance without including a double loop in the Monte Carlo program. One of these methods is the blocking method, which is presented in section \ref{Blocking}.
 
@@ -473,10 +473,10 @@ By repeating this procedure several times, and each time using more measurements
 
 
 \section{Code} \label{sec:code}
-This project is much about developing the code to make VMC run correctly, and in this section we will explain briefly how the code works and which implementation techniques we use. The implementation is dimensionless, such that the variational parameters are the only quantities. 
+The focus of this project is developing a code to make VMC run correctly, and in this section we will explain briefly how the code works and which implementation techniques we have used. All quantities used in the impelemtation are dimentionless. 
 
 \subsection{Code structure}
-To keep the program neat, specific parts were placed in specific files. For instance, a file gd.cpp handle everything about the gradient descent method, and another file wavefunction.cpp (a little misleading) contains a class which both sets up the wave function and calculate the local energy given a wave function. We also collected the tools that are used by multiple scripts in its own file to maximize the reuse of the code, in particular Green's function and the quantum force calculations. In figure \ref{fig:code_structure} we give an overview of the structure, where the lines indicate which scripts that communicate. 
+To keep the program neat, specific parts were placed in specific files. For instance, a file gd.cpp handle everything about the gradient descent method, and another file wavefunction.cpp contains the class Wavefunction, which both sets up the wave function and calculate the local energy given a wave function. We also collected the tools that are used by multiple scripts in its own file to maximize the reuse of the code, in particular Green's function and the quantum force calculations. In figure \ref{fig:code_structure} we give an overview of the structure, where the lines indicate which scripts that communicate. 
 
 \begin{figure}[H]
 \centering
@@ -498,10 +498,10 @@ To keep the program neat, specific parts were placed in specific files. For inst
 \caption{An overview of the code structure. metropolis.cpp is refered to as VMC, gd.cpp is GD, wavefunction.cpp is WF, tools.cpp is Tools and obviously main.cpp is Main. See text for furter description.}
 \label{fig:code_structure}
 \end{figure}
-The acronyms are not really accurate, VMC is of course much about the Metropolis algorithm, and GD contains both the VMC and the Metropolis algorithm. Anyway, it is hard to find acronyms that tells everything about the script. A standard VMC run goes as following: metropolis.cpp (VMC) is called from main.cpp (Main), which agains calls wavefunction.cpp (WF) to set up the wave function, calls tools.cpp (Tools) to get the value of Green's function and the quantum force and then again calls WF to obtain the local energy. At the end the local energy is printed out.
+ A standard VMC run goes as follows: the desired simulation case is set up in main.cpp (Main) by specifying the given variables. metropolis.cpp (VMC) is called from Main, which calls wavefunction.cpp (WF) to set up the class WaveFunction. The Monte Carlo loop begins, where move of one random particle is proposed for each iteration. Depending of wheter brute force or importance sampling have been chosen, either WF or tools.cpp (Tools) is called to obtain the transition probability, and the move is either accepted or rejected. VMC calls WF to obtain the local energy of the new position. After M iterations, the estimation of the local energy is printed.
 
 \subsection{Implementation}
-We use the vector package to create a 2D-array where the positions are stored. For the exact implementation, see the github repository linked on page one. We always struggle for better performance, and to achieve that we try to avoid heavy loops and repetition of calculations. A second priority is to make the code as general as possible, such that the code can be reused for other purposes. As an example we always loop over an arbitrary given number of dimensions, and similar operations are done throughout the programs. 
+We use the vector package to create a 3D-array where the positions are stored. For the exact implementation, see the github repository linked on page one. We always struggle for better performance, and to achieve that we try to avoid heavy loops and repetition of calculations. A second priority is to make the code as general as possible, such that the code can be reused for other purposes. As an example we always loop over an arbitrary given number of dimensions, and similar operations are done throughout the programs. 
 
 \subsubsection{VMC and Metropolis}
 Present pseudo code of how VMC and Metropolis are implemented
@@ -524,7 +524,7 @@ In search of the energy minimum we tried various $\alpha$ values, and optimal $\
 \begin{figure} [H]
 	\centering
 	\includegraphics[scale=0.6]{images/energy.png}
-	\caption{The local energy $E_L$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$ in the interval $[0.1,0.9]$ (continuous line). For each $\alpha$ we used $1e6$ Monte Carlo cycles in three spatial dimensions with a step length of 1.0. We have also added the analytical expression found from the Gross-Pitaevskii equation, which is the dashed line.}
+	\caption{The local energy $E_L$ calculated with the brute force Metropolis algorithm, as a function of the variational parameter $\alpha$ in the interval $[0.1,0.9]$ (continuous line). For each $\alpha$ we used $1e6$ Monte Carlo cycles in three spatial dimensions with a step length of 1.0. We have also added the analytical results found from the Gross-Pitaevskii equation, which is the dashed line.}
 	\label{fig:EL_as_func_of_alpha}
 \end{figure} 
 
@@ -673,7 +673,7 @@ For the case without interaction and spherical harmonic oscillator we see from f
 
 When comparing the results from the brute force Monte Carlo calculation with spherical harmonic oscillator and no interaction, as shown in table \ref{tab:BFmet}, we observe that in the case when we use an analytical expression for $E_L$, the simulation results yields the exact energy, as obtained from equation \ref{eq:Energy_exact}. Also the numerically calculated $E_L$, as described in section \ref{Numerical_calc_E_L}, reproduces the exact answers with the same presicion as the analytical. 
 
-Moreover, when comparing the CPU time difference between these two calculations, the numerically calculated $E_L$ spends much more time on the calculations compared to the analytically calculated $E_L$-case. The reason for this is probably the numerical differentiation mentioned in equation \ref{eq:num_derv}, which in addition will cause some minor errors. The time difference is as large as a factor of $10^3$ for the 500 particles, three dimensions case. which makes it preferable to use the analytically calculated $E_L$ in our calculations. However, not all trial wave functions $\Psi_T$ or Hamiltonians H will yield an $E_L$ which is analytically possible to calculate, and in this case, one should have a functioning algorithm for numerical calculation of $E_L$ as well.
+Moreover, when comparing the CPU time difference between these two calculations, the numerically calculated $E_L$ spends much more time on the calculations compared to the analytically calculated $E_L$-case. The reason for this is probably the numerical differentiation mentioned in equation \ref{eq:num_derv}, which in addition will cause some minor errors. The time difference is as large as a factor of $10^3$ for the 500 particles, three dimensions case, which makes it preferable to use the analytically calculated $E_L$ in our calculations. However, not all trial wave functions $\Psi_T$ or Hamiltonians H will yield an $E_L$ which is analytically possible to calculate, and in this case, one should have a functioning algorithm for numerical calculation of $E_L$ as well.
 \par 
 \vspace{3mm}
 
