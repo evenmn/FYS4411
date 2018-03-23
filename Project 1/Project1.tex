@@ -47,9 +47,9 @@
 \end{itemize}
 
 \begin{abstract}
-This project aims to simulate a trapped Bose gas using Variational Monte Carlo (VMC) with both the  brute force Metropolis and the Metropolis-Hastings algorithms. Using a trial wave function with either spherical or elliptical harmonic oscillator (HO) potential, with and without a hard-sphere potential, we calculate the ground state energy and onebody density for different number of particles. The results are benchmarked with analytical results obtained from the Gross-Pitaevskii equation. \par 
+This project aims to simulate a trapped Bose gas using Variational Monte Carlo (VMC) with both the  brute force Metropolis and the Metropolis-Hastings algorithms. Using a trial wave function with either spherical or elliptical harmonic oscillator (HO) potential, with and without a hard-sphere potential, we calculate an upper bound limit of the ground state energy and onebody density for different number of particles. The results are benchmarked with analytical results obtained from the Gross-Pitaevskii (GP) equation and the articles in \cite{DuBois}, \cite{Nilsen} and \cite{Dalfovo}. \par 
 
-Using the spherical HO with no interaction, both the brute force and the Metropolis-Hastings methods reproduces analytical calculations. Though the Hastings algorithm is slightly slower, it has a higher acceptance rate for the proposed moves in the VMC simulation. The onebody density distribution changes shape when introducing the hard-sphere potential. The system behaves mostly as expected, and our results reproduce the analytical calculations where they are valid. However, for a larger number of particles, we are unable to reproduce the mean energy per particle as seen in the benchmarks.
+Using the spherical HO with no interaction, both the brute force and the Metropolis-Hastings methods reproduces analytical calculations. Though the Hastings algorithm is slightly slower, it has a higher acceptance rate for the proposed moves in the VMC simulation. The onebody density distribution changes when introducing the hard-sphere potential. The system behaves mostly as expected, and our results reproduce the analytical calculations from GP where they are valid. However, for a larger number of particles, we are unable to reproduce the mean energy per particle as seen in \cite{DuBois}.
 \par 
 
 \end{abstract}
@@ -62,7 +62,7 @@ Using the spherical HO with no interaction, both the brute force and the Metropo
 
 \section{Introduction}
 
-In this project, we study the Bose-Einstein condensation (BEC) of a dilute gas of $^{87}$Rb atoms trapped in a harmonic oscillator. Bose-Einstein condensation occurs when atoms are cooled towards absolute zero, as they start occupying the same quantum state \cite{JE2016}. Even though the effect was predicted already in 1924, it was first observed by Anderson et.al. in 1995, which caused an immense interest in the subject \cite{SP}, \cite{Anderson}.
+In this project, we study the Bose-Einstein condensation (BEC) of a dilute gas of $^{87}$Rb atoms trapped in a harmonic oscillator. Bose-Einstein condensation occurs when bosonic atoms are cooled towards absolute zero, as they start occupying the same quantum state \cite{JE2016}. Even though the effect was predicted already in 1924, it was first observed by Anderson et.al. in 1995, which caused an immense interest in the subject \cite{SP}, \cite{Anderson}.
 
 Our goal is to find an upper bound limit of the ground state energy for a system of a various number of particles, using an ansatz where the total wave function is a product of single particle wave functions. The system is evaluated both for a spherical and elliptical harmonic oscillator trap. The Gross-Pitaevskii equation is applied to obtain an analytical energy approximation, which works as a benchmark for the energy. The theoretical framework is presented in section \ref{Theory}. \par
 
@@ -732,7 +732,7 @@ In table \ref{tab:variance_analysis}, we repeated the calculation of the no inte
 
 Further we have seen that we get som differences between the variational Monte Carlo and the Gross-Pitaevskii calculations. Gross-Pitaevskii (GP) only holds for dilute bose gases, and since the gas gets less dilute the more particles we add, we will expect some deviations when the number of particles increase. Nonetheless, for the interacting case we study a maximum of 100 particles, so this should be a small effect, and we expect the exact GP equation to be accurate for our case. Anyway, we have not solved GP for the interacting case, so the GP benchmark should underestimate the obtained energy, which is also the case.
 
-We can also compare the results to Ref.\cite{DuBois}, where they have plotted energy per particle as a function of number of particles. According to that plot, the energy per particle should increase rapidly when particles are added to a small number of particles, something that we also observe when going from 10 to 100 particles and partly when going from 1 to 10 particles. The exact energy difference is though hard to read from the graph, but our energies are possibly a bit larger than they should be. We also see that the lowest energy for 100 particles is when $\alpha=0.4$.  This differs from the case without interaction, where the optimal $\alpha$ is $0.5$. 
+We can also compare the results to \cite{DuBois}, where they have plotted energy per particle as a function of number of particles. According to that plot, the energy per particle should increase rapidly when particles are added to a small number of particles, something that we also observe when going from 10 to 100 particles and partly when going from 1 to 10 particles. The exact energy difference is though hard to read from the graph, but our energies are possibly a bit larger than they should be. We also see that the lowest energy for 100 particles is when $\alpha=0.4$.  This differs from the case without interaction, where the optimal $\alpha$ is $0.5$. 
 \par
 \vspace{3mm}
 
@@ -759,7 +759,7 @@ The one body density behaves as expected for different choices of a.
 
 \newpage
 
-\section{Appendix A} \label{appendix_A}
+\section{Appendix A: $E_L$ calculation} \label{appendix_A}
 In the theory section we presented the analytical expressions for the local energy, and in this appendix we go through the derivations carefully for those of you who are curious. Firstly we present the local energies where we ignore the two-particle interaction, and we also focus on the spherical harmonic oscillator trap since we do not look at the elliptical trap without interaction, even though the expressions are similar.
 
 Secondly the general expression which can be used with and without interaction, with spherical or elliptical harmonic oscillator trap and with a various number of parameter values is derived. This can in principle be used for every case, but it is more complex than the special ones where we ignore interaction and we therefore expect it to be slower. 
@@ -893,7 +893,7 @@ E_L&=\frac{1}{\Psi_T}\bigg(\sum_i\Big(-\frac{1}{2}\nabla_i^2+V_{ext}(\vec{r}_i)\
 &=\sum_i\Big(-\frac{\nabla_i^2\Psi_T}{2\Psi_T}+V_{ext}(\vec{r}_i)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
 \end{align}
 
-\section{Appendix B} \label{sec:appendix_b}
+\section{Appendix B: Drift force $F$ calculation} \label{sec:appendix_b}
 
 This section shows the analytical calculations for the drift force $F$, as given by equation \ref{eq:drift_force} for the non-interaction case.
 
@@ -937,7 +937,7 @@ As we operate in three dimensions, $\nabla = (\frac{d}{dx}, \frac{d}{dy}, \frac{
 	F = -4 \alpha \sum_i(x_i,y_i,\beta z_i)
 \end{equation}
 
-\section{Appendix C} \label{sec:appendix_c}
+\section{Appendix C: Scaling and rewriting of $\hat{H}$} \label{sec:appendix_c}
 In the theory part we claimed that the Hamiltonian could be written as
 \begin{equation}
 H=\sum_i\bigg(\frac{1}{2}\Big(-\nabla^2 + x_i^2 + y_i^2 + \gamma^2z_i^2\Big)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
@@ -960,7 +960,7 @@ H'=\sum_i\frac{1}{2}\bigg(-\nabla_i^2+(x_i')^2+(y_i')^2+\frac{\omega_z^2}{\omega
 \end{equation}
 which is the Hamiltonian that we were hunting. We know how the factor in front of the $z^2$ factor is $\beta^2 = \gamma^2$, so $\beta = \gamma$ has to be equal to $\omega_z/\omega_{ho}$.
 
-\section{Appendix D} \label{sec:appendix_d}
+\section{Appendix D: Solving Gross-Pitaevskii} \label{sec:appendix_d}
 To check if the VMC results are correct, we need a benchmark, and for a dilute bose gas the Gross-Pitaevskii equation is a natural choice. We could have solved the equation for the interacting case using numerical methods, but it would require significantly more effort and we take care of the non-interacting case instead. We start with the dimensionless brother of equation \ref{eq:GP_integral},
 \begin{equation}
 E_{\text{GP}}[\Psi]=\int d\vec{r}\bigg[\frac{1}{2}|\nabla\Psi(\vec{r})|^2+V_{ext}(\vec{r})|\Psi|^2+2\pi a|\Psi|^4\bigg].
