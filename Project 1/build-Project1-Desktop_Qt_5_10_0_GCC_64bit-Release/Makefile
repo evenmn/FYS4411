@@ -670,7 +670,8 @@ metropolis.o: ../Project1/metropolis.cpp ../Project1/wavefunction.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o metropolis.o ../Project1/metropolis.cpp
 
 gd.o: ../Project1/gd.cpp ../Project1/wavefunction.h \
-		../Project1/tools.h
+		../Project1/tools.h \
+		../Project1/test.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o gd.o ../Project1/gd.cpp
 
 tools.o: ../Project1/tools.cpp ../Project1/tools.h
