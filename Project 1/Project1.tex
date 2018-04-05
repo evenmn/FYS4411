@@ -47,9 +47,9 @@
 \end{itemize}
 
 \begin{abstract}
-This project aims to simulate a trapped Bose gas using Variational Monte Carlo (VMC) with both the  brute force Metropolis and the Metropolis-Hastings algorithms. Using a trial wave function with either spherical or elliptical harmonic oscillator (HO) potential, with and without a hard-sphere potential, we calculate the ground state energy and onebody density for different number of particles. The results are benchmarked with analytical results obtained from the Gross-Pitaevskii equation. \par 
+This project aims to simulate a trapped Bose gas using Variational Monte Carlo (VMC) with both the  brute force Metropolis and the Metropolis-Hastings algorithms. Using a trial wave function with either spherical or elliptical harmonic oscillator (HO) potential, with and without a hard-sphere potential, we calculate an upper bound limit of the ground state energy and onebody density for different number of particles. The results are benchmarked with analytical results obtained from the Gross-Pitaevskii (GP) equation and the articles in \cite{DuBois} and \cite{Dalfovo}. \par 
 
-Using the spherical HO with no interaction, both the brute force and the Metropolis-Hastings methods reproduces analytical calculations. Though the Hastings algorithm is slightly slower, it has a higher acceptance rate for the proposed moves in the VMC simulation. The onebody density distribution changes shape when introducing the hard-sphere potential. The system behaves mostly as expected, and our results reproduce the analytical calculations where they are valid. However, for a larger number of particles, we are unable to reproduce the mean energy per particle as seen in the benchmarks.
+Using the spherical HO with no interaction, both the brute force and the Metropolis-Hastings methods reproduces analytical calculations. Though the Hastings algorithm is slightly slower, it has a higher acceptance rate for the proposed moves in the VMC simulation. The onebody density distribution does not change significantly when introducing the hard-sphere potential. The system behaves as expected for a low number of particles, and our results reproduce the analytical calculations from GP where they are valid. However, for a larger number of particles, we are unable to reproduce the mean energy per particle as seen in \cite{DuBois} and \cite{Dalfovo}.
 \par 
 
 \end{abstract}
@@ -62,11 +62,11 @@ Using the spherical HO with no interaction, both the brute force and the Metropo
 
 \section{Introduction}
 
-In this project, we study the Bose-Einstein condensation (BEC) of a dilute gas of $^{87}$Rb atoms trapped in a harmonic oscillator. Bose-Einstein condensation occurs when atoms are cooled towards absolute zero, as they start occupying the same quantum state \cite{JE2016}. Even though the effect was predicted already in 1924, it was first observed by Anderson et.al. in 1995, which caused an immense interest in the subject \cite{SP}, \cite{Anderson}.
+In this project, we study the Bose-Einstein condensation (BEC) of a dilute gas of $^{87}$Rb atoms trapped in a harmonic oscillator. Bose-Einstein condensation occurs when bosonic atoms are cooled towards absolute zero, as they start occupying the same quantum state \cite{JE2016}. Even though the effect was predicted already in 1924, it was first observed by Anderson et.al. in 1995, which caused an immense interest in the subject \cite{SP}, \cite{Anderson}.
 
 Our goal is to find an upper bound limit of the ground state energy for a system of a various number of particles, using an ansatz where the total wave function is a product of single particle wave functions. The system is evaluated both for a spherical and elliptical harmonic oscillator trap. The Gross-Pitaevskii equation is applied to obtain an analytical energy approximation, which works as a benchmark for the energy. The theoretical framework is presented in section \ref{Theory}. \par
 
-Using variational Monte Carlo (VMC) method with two different Metropolis algorithms, presented in section \ref{Method}, and $\alpha$ as variational parameter, we find the onebody density and an limit on the ground state energy of the system. The optimal $\alpha$ is found using the gradient descent method. In section \ref{Results}, the upper bound energy is presented along with the onebody density. In section \ref{Discussion} we discuss our results, and compare them to results from articles \cite{DuBois}, \cite{Nilsen} and \cite{Dalfovo}.
+Using variational Monte Carlo (VMC) method with two different Metropolis algorithms, presented in section \ref{Method}, and $\alpha$ as variational parameter, we find the onebody density and an limit on the ground state energy of the system. The optimal $\alpha$ is found using the gradient descent method. In section \ref{Results}, the upper bound energy is presented along with the onebody density. In section \ref{Discussion} we discuss our results, and compare them to results from articles \cite{DuBois} and \cite{Dalfovo}.
 
 
 \section{Theory} \label{Theory}
@@ -569,7 +569,7 @@ for T iterations
 
 We will first present the results obtained without repulsive interaction, and thoughout this part we will consequently use $\alpha=0.5$ and run for $1e6$ Monte Carlo cycles and for three spatial dimensions. 
 
-Thereafter we will turn to the more realistic and interesting situation where the particles interact with each other. We will still study the behavior in three dimensions and for $1e6$ cycles, but we need to set the scattering distance to $a=0.0043$ and find the $\alpha$ which gives the minimum energy. In this part we will also turn on the elliptical harmonic oscillator potential, using $\beta=\sqrt{8}$ is mentioned above.
+Thereafter we will turn to the more realistic and interesting situation where the particles interact with each other. We will still study the behavior in three dimensions and for $1e6$ cycles, but we need to set the scattering distance to $a=0.0043$ and find the $\alpha$ which gives the minimum energy. In this part we will also turn on the elliptical harmonic oscillator potential, using $\beta=\sqrt{8}\cong2.82843$ is mentioned above.
 
 \subsection{$E$ as a function of the variational parameter $\alpha$}
 In search for the energy minimum we tried various $\alpha$ values, and optimal $\alpha$ was 0.5, as one can see in figure \ref{fig:EL_as_func_of_alpha}. The variance associated with the energy measurement in figure \ref{fig:EL_as_func_of_alpha} i presented in figure \ref{fig:variance_EL_as_func_of_alpha}, and we see that the energy minimum and the variance minimum share the same $\alpha$.
@@ -593,11 +593,11 @@ For the brute force Metropolis algorithm we developed both an analytical and a n
 
 \begin{table} [H]
 	\centering
-	\caption{The energy calculated without hard-sphere interaction with brute force Metropolis algorithm, for both the analytical and numerical energy calculation. The variational parameter $\alpha$ is $0.5$, we study three dimensions, the step length is 1.0, the number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the calculated energies. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}.}
-	\begin{tabularx}{\textwidth}{X|XX|XX|X} \hline
+	\caption{The energy calculated without hard-sphere interaction with brute force Metropolis algorithm, for both the analytical and numerical energy calculation. The variational parameter $\alpha$ is $0.5$, we study three dimensions, the step length is 1.0, the number of Monte Carlo cycles is fixed to $M=1e6$, and the performance is presented along with the calculated energies. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}.\vspace{2mm}}
+	\begin{tabularx}{\textwidth}{c|XX|XX|c} \hline\hline
 		\label{tab:BFmet}
-		& \multicolumn{2}{X}{\textbf{Analytical}} & \multicolumn{2}{X}{\textbf{Numerical}} & Exact \\
-		$N$ & $\langle E\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s] & $\langle E\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s]& $\langle E\rangle$ [$\hbar\omega_{ho}$]\\ \hline
+		& \multicolumn{2}{c}{\textbf{Analytical}} & \multicolumn{2}{c}{\textbf{Numerical}} & \multicolumn{1}{c}{\textbf{Exact}} \\
+		$N$ & $\langle E\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s] & $\langle E\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s]& $E$ [$\hbar\omega_{ho}$]\\ \hline
 		1 & 1.5000(15) & 0.15420 & 1.5000(15) & 0.65714 & 1.5000\\
 		10 & 15.000(15) & 0.54785 & 15.000(15) & 9.9844 & 15.000\\
 		100 & 150.00(15) & 13.573 & 150.00(15) & 2743.4 & 150.00\\
@@ -607,11 +607,11 @@ For the brute force Metropolis algorithm we developed both an analytical and a n
 
 \begin{table} [H]
 	\centering
-	\caption{The energy calculated without hard-sphere interaction with Metropolis-Hastings algorithm. The variational parameter $\alpha$ is $0.5$, we study three dimensions, the time step is 1.0 and the number of Monte Carlo cycles is fixed to $M=1e6$. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}.}
-	\begin{tabularx}{\textwidth}{X|XX|X} \hline
+	\caption{The energy calculated without hard-sphere interaction with Metropolis-Hastings algorithm. The variational parameter $\alpha$ is $0.5$, we study three dimensions, the time step is 1.0 and the number of Monte Carlo cycles is fixed to $M=1e6$. The results are compared to the exact answer, obtained from equation \ref{eq:Energy_exact}.\vspace{2mm}}
+	\begin{tabularx}{\textwidth}{X|XX|X} \hline\hline
 		\label{tab:ISmet}
-		& \textbf{Analytical}  & & \textbf{Exact}\\
-		$N$ & $\langle E\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s] & $\langle E\rangle$ [$\hbar\omega_{ho}$]\\ \hline
+		& \multicolumn{2}{c}{\textbf{Analytical}} & \multicolumn{1}{c}{\textbf{Exact}}\\
+		$N$ & $\langle E\rangle$ [$\hbar\omega_{ho}$] & CPU-time [s] & $E$ [$\hbar\omega_{ho}$]\\ \hline
 		1 & 1.5000(15) & 0.26693  & 1.5000 \\
 		10 & 15.000(15) &  0.54930 & 15.000 \\
 		100 & 150.00(15) & 16.117 & 150.00 \\
@@ -650,8 +650,8 @@ We observe that the acceptance rate for the brute force Metropolis algorithm dec
 In table \ref{tab:variance_analysis}, we present the results of the energy calculation with proper error evaluation of statistical error. The statistical error as found with the blocking method is also compared to the simple way of approximating the variance with equation \ref{eq:variance_simplified}. 
 
 \begin{table} [H]
-	\caption{The energy calculated without hard-sphere interaction with the Metropolis-Hastings algorithm, this time with proper evaluation of the statistical error. The calculations are run in three dimensions with $1e6$ Monte Carlo cycles, the variational parameter $\alpha=0.5$ and a step length of 1.0.}
-	\begin{tabularx}{\textwidth}{X|XXXX} \hline
+	\caption{The energy calculated without hard-sphere interaction with the Metropolis-Hastings algorithm, this time with proper evaluation of the statistical error. The calculations are run in three dimensions with $1e6$ Monte Carlo cycles, the variational parameter $\alpha=0.5$ and a step length of 1.0.\vspace{2mm}}
+	\begin{tabularx}{\textwidth}{X|XXXX} \hline\hline
 		\label{tab:variance_analysis}
 		$N$ & $\langle E\rangle$ [$\hbar\omega_{ho}$] & $\sigma^2$ Blocking & $\sigma^2 \approx \langle E^2 \rangle - \langle E \rangle^2$ \\ \hline
 				1 & 1.5000 & 5.0102e-2  & 5.0100e-2 \\
@@ -662,12 +662,12 @@ In table \ref{tab:variance_analysis}, we present the results of the energy calcu
 \end{table}
 
 \subsection{VMC with repulsive interaction}
-We now turn on the interaction and the elliptical trap (setting $a=0.0043$ and $\beta=\sqrt{8}$. In table \ref{tab:EL_calc_repulsive_pot}, the results from the calculation of the elliptical trap are presented. The variational parameter $\alpha$ was varied manually to find the minimum of the energy $E$.
+We now turn on the interaction and the elliptical trap (setting $a=0.0043$ and $\beta=\sqrt{8}\cong2.82843$. In table \ref{tab:EL_calc_repulsive_pot}, the results from the calculation of the elliptical trap are presented. The variational parameter $\alpha$ was varied manually to find the minimum of the energy $E$.
 
 \begin{table} [H]
 	\centering
-	\caption{The energy $E$ calculated for different $\alpha$'s in the interval [0.2,0.8], with $a=0.0043$ (interaction), $\beta=\sqrt{8}$ (elliptical trap) and with the brute force algorithm. The calculations are run in three dimensions with $1e6$ Monte Carlo cycles and a step length of 1.0. We compare the VMC results to the results found by the Gross-Pitaevskii equation (GP) for 1, 10 and 100 particles. The variances are calculated using \ref{eq:variance_simplified}}
-	\begin{tabularx}{\textwidth}{c|XcXcXc} \hline
+	\caption{The energy $E$ calculated for different $\alpha$'s in the interval [0.2,0.8], with $a=0.0043$ (interaction), $\beta=\sqrt{8}\cong2.82843$ (elliptical trap) and with the brute force algorithm. The calculations are run in three dimensions with $1e6$ Monte Carlo cycles and a step length of 1.0. We compare the VMC results to the results found by the Gross-Pitaevskii equation (GP) for 1, 10 and 100 particles. The variances are calculated using \ref{eq:variance_simplified}.\vspace{2mm}}
+	\begin{tabularx}{\textwidth}{c|XXXXXX} \hline\hline
 		\label{tab:EL_calc_repulsive_pot}
 		& \multicolumn{2}{c}{\textbf{N=1}} & \multicolumn{2}{c}{\textbf{N=10}} & \multicolumn{2}{c}{\textbf{N=100}} \\
 		$\alpha$ & VMC & GP & VMC & GP & VMC & GP  \\ \hline
@@ -684,8 +684,8 @@ The gradient decent method was then used to find the minimum of the energy in th
 
 \begin{table} [H]
 	\centering
-	\caption{The optimal variation parameter $\alpha$ for 1, 10 and 100 particles. The local energies and the "energy slope" is also presented in the table. We used $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=\sqrt{8}$, with the brute force algorithm. The calculations are run in for three dimensions with $1e6$ Monte Carlo cycles with a step length of 1.0. The variances are calculated using \ref{eq:variance_simplified}}
-	\begin{tabularx}{\textwidth}{X|XXX} \hline
+	\caption{The optimal variation parameter $\alpha$ for 1, 10 and 100 particles. The energies and the energy gradient is also presented in the table. We used $a=0.0043$  with hard-sphere interaction,  elliptical trap and $\beta=\sqrt{8}\cong2.82843$, with the brute force algorithm. The calculations are run in for three dimensions with $1e6$ Monte Carlo cycles with a step length of 1.0. The variances are calculated using \ref{eq:variance_simplified}. \vspace{2mm}}
+	\begin{tabularx}{\textwidth}{X|XXX} \hline\hline
 		\label{tab:EL_calc_gradientdecent}
 		$N$ & $\alpha $ & $E$  & $|\partial E/\partial \alpha|$   \\ \hline
 		1   & 0.50000  & $2.4142(73)$  &  7.2134e-06 \\
@@ -700,25 +700,30 @@ In section \ref{sec:OB_theory} we presented a couple of ways computing the onebo
 
 \begin{figure} [H]
     \centering
-    \includegraphics[scale=0.50]{images/ob.png}
-    \caption{The onebody density of the bosonic system, which is run with $\alpha=0.5$ for $a=0$, $a=a_{Rb}=0.0043$ and $a=10\cdot a_{Rb}=0.043$. The radius is given in units of a$_{ho}$ along the x-axis, and the density is in units of a$_{ho}^{-3}$. We conduct the investigations in elliptic traps, with 10 particles, 3 dimensions and 1e6 Monte Carlo cycles.}
+    \includegraphics[scale=0.80]{images/ob.png}
+    \caption{The onebody density of the bosonic system, which is run with $\alpha=0.5$ for $a=0$, $a=a_{Rb}=0.0043$, $a=10\cdot a_{Rb}=0.043$ and $a=100\cdot a_{Rb}=0.43$. The radius is given in units of a$_{ho}$ along the x-axis, and the density is in units of a$_{ho}^{-3}$. We conduct the investigations in elliptic traps, with 10 particles, 3 dimensions and 1e6 Monte Carlo cycles.}
     \label{fig:ob0}
 \end{figure}
-
-From the onebody density plot, the only difference between the graphs is the amplitude, which seems lower the larger scattering length we add. The graphs have the same shape as the wave function. 
+\begin{figure} [H]
+    \centering
+    \includegraphics[scale=0.80]{images/ob_100.png}
+    \caption{The onebody density of the bosonic system, which is run with $\alpha=0.5$ for $a=0$, $a=a_{Rb}=0.0043$ and $a=10\cdot a_{Rb}=0.043$. The radius is given in units of a$_{ho}$ along the x-axis, and the density is in units of a$_{ho}^{-3}$. We conduct the investigations in elliptic traps, with 100 particles, 3 dimensions and 1e6 Monte Carlo cycles.}
+    \label{fig:ob1}
+\end{figure}
+ 
 
 \section{Discussion} \label{Discussion}
-For the case without interaction and spherical harmonic oscillator we see from figure \ref{fig:EL_as_func_of_alpha} that the minimum of the energy is found when the variational parameter $\alpha=0.5$. We also observe that $\alpha=0.5$ gives the minimal variance, and seen from figure \ref{fig:variance_EL_as_func_of_alpha}. The energy and the variance explode when $\alpha$ is approaching zero.  
+For the case without interaction and a spherical harmonic oscillator we see from figure \ref{fig:EL_as_func_of_alpha} that the minimum of the energy is found when the variational parameter $\alpha=0.5$, which yields the true ground state wave function. We also observe that $\alpha=0.5$ gives the minimal variance, and seen from figure \ref{fig:variance_EL_as_func_of_alpha}. The energy and the variance explode when $\alpha$ approaches zero.  
 \par 
 \vspace{3mm}
 
 When comparing the results from the brute force Monte Carlo calculation with spherical harmonic oscillator and no interaction, as shown in table \ref{tab:BFmet}, we observe that in the case when we use an analytical expression for $E_L$, the simulation results yields the exact energy, as obtained from equation \ref{eq:Energy_exact}. Also the numerically calculated $E_L$, as described in section \ref{Numerical_calc_E_L}, reproduces the exact answers with the same presicion as the analytical. 
 
-Moreover, when comparing the CPU time difference between these two calculations, the numerically calculated $E_L$ spends much more time on the calculations compared to the analytically calculated $E_L$-case. The reason for this is probably the numerical differentiation mentioned in equation \ref{eq:num_derv}, which in addition will cause some minor errors. The time difference is as large as a factor of $10^3$ for the 500 particles, three dimensions case, which makes it preferable to use the analytically calculated $E_L$ in our calculations. However, not all trial wave functions $\Psi_T$ or Hamiltonians H will yield an $E_L$ which is analytically possible to calculate, and in this case, one should have a functioning algorithm for numerical calculation of $E_L$ as well.
+Moreover, when comparing the CPU time difference between these two calculations, the numerically calculated $E_L$ spends much more time on the calculations compared to the analytically calculated $E_L$-case. The reason for this is probably the numerical differentiation mentioned in equation \ref{eq:num_derv}, which in addition will cause some minor errors, and due to lack of optimalization. The time difference is as large as a factor of $10^3$ for the 500 particles, three dimensions case, which makes it preferable to use the analytically calculated $E_L$ in our calculations. However, not all trial wave functions $\Psi_T$ or Hamiltonians H will yield an $E_L$ which is analytically possible to calculate, and in this case, one should have a functioning algorithm for numerical calculation of $E_L$ as well.
 \par 
 \vspace{3mm}
 
-When comparing the results from the brute force and Metropolis-Hastings algorithms, shown in tables \ref{tab:BFmet} and \ref{tab:ISmet}, the reader can observe that the Hastings algorithm reproduces the exact energies, as the brute force algorithm does, but that the Hastings algorithm is slightly slower. This slight time increase is due to the fact that while the brute force algorithm picks a proposed new step at random, the Hasting algorithm makes a more educated move by calculating the drift force $F$ on the particle, and decide what direction the particle is most likely to move in, as described in section \ref{Importance_sampling}. The transition probability $T_{i\rightarrow j}$ and $T_{j\rightarrow i}$ are also calculated, as they are no longer assumed to be identical, as they are for brute force. While these calculations spends slightly more CPU time, it is rewarded by the Hastings algorithm having a higher acceptance rate of the proposed moves compared to the brute force Metropolis. This can be seen from figures \ref{fig:acceptance_BF_stepsize} and \ref{fig:acceptance_IS_timestep}. The acceptance ratio of the Hastings algorithm for a timestep $\Delta t=1$ is much higher than the acceptance ratio for brute force with a stepsize $r=1$. This results in the Hastings algorithm moving faster towards the minima compared to the brute force method. This effect, however, is not that visible in our project, but can make a vital difference for larger Monte Carlo simulations.
+When comparing the results from the brute force and Metropolis-Hastings algorithms, shown in tables \ref{tab:BFmet} and \ref{tab:ISmet}, the reader can observe that the Hastings algorithm reproduces the exact energies, as the brute force algorithm does, but that the Hastings algorithm is slightly slower. This slight time increase is due to the fact that while the brute force algorithm picks a proposed new step at random, the Hasting algorithm makes a more educated move by calculating the drift force $F$ on the particle, and decide what direction the particle is most likely to move in, as described in section \ref{Importance_sampling}. The transition probability $T_{i\rightarrow j}$ and $T_{j\rightarrow i}$ are also calculated, as they are no longer assumed to be identical, as they are for brute force. While these calculations spends slightly more CPU time, it is rewarded by the Hastings algorithm having a higher acceptance rate of the proposed moves compared to the brute force Metropolis. This can be seen from figures \ref{fig:acceptance_BF_stepsize} and \ref{fig:acceptance_IS_timestep}. The acceptance ratio of the Hastings algorithm for a timestep $\Delta t=1$ is much higher than the acceptance ratio for brute force with a stepsize $r=1$. This results in the Hastings algorithm moving faster towards the minimum compared to the brute force method. This effect, however, is not that visible in our project, but can make a vital difference for larger Monte Carlo simulations.
 \par 
 \vspace{3mm}
 
@@ -730,9 +735,11 @@ In table \ref{tab:variance_analysis}, we repeated the calculation of the no inte
 \par 
 \vspace{6mm}
 
-Further we have seen that we get som differences between the variational Monte Carlo and the Gross-Pitaevskii calculations. Gross-Pitaevskii (GP) only holds for dilute bose gases, and since the gas gets less dilute the more particles we add, we will expect some deviations when the number of particles increase. Nonetheless, for the interacting case we study a maximum of 100 particles, so this should be a small effect, and we expect the exact GP equation to be accurate for our case. Anyway, we have not solved GP for the interacting case, so the GP benchmark should underestimate the obtained energy, which is also the case.
+When looking at the upper bound ground state energy calculations in the interacting case, we observe some differences between the variational Monte Carlo and the Gross-Pitaevskii calculations, as seen in table \ref{tab:EL_calc_repulsive_pot}. This is probably due to the fact that we have not solved GP for the interacting case, so the GP benchmark should underestimate the obtained energy, which is also the case. In addition, GP only holds for dilute Bose gases, and since the gas gets less dilute the more particles we add, we will expect some deviations when the number of particles increase. Nonetheless, for the interacting case we study a maximum of 100 particles, so this should be a small effect. Had we solved GP with interaction, we would expect the GP equation to be accurate. 
 
-We can also compare the results to Ref.\cite{DuBois}, where they have plotted energy per particle as a function of number of particles. According to that plot, the energy per particle should increase rapidly when particles are added to a small number of particles, something that we also observe when going from 10 to 100 particles and partly when going from 1 to 10 particles. The exact energy difference is though hard to read from the graph, but our energies are possibly a bit larger than they should be. We also see that the lowest energy for 100 particles is when $\alpha=0.4$.  This differs from the case without interaction, where the optimal $\alpha$ is $0.5$. 
+We can also compare the results in table \ref{tab:EL_calc_repulsive_pot} to \cite{DuBois}, where they have plotted energy per particle as a function of number of particles. According to that plot, the energy per particle should increase rapidly for few particles, something that we also observe when going from 10 to 100 particles. The exact energy per particle is though hard to read from the graph, but our energies seems larger than they should be, compared to \cite{DuBois}. In \cite{Dalfovo} they found that the upper bound ground state energy for 100 particles was 2.66 per particle, which confirms that our energies for a high number of particles are too high.
+
+From table \ref{tab:EL_calc_repulsive_pot}, we observe that the lowest upper bound limit of the ground state energy for 100 particles is when $\alpha=0.4$.  This differs from the case without interaction, where the optimal $\alpha$ is $0.5$. This is probably because the optimal wave function changes when adding interacting particles.
 \par
 \vspace{3mm}
 
@@ -744,7 +751,7 @@ We observe from table \ref{tab:EL_calc_repulsive_pot} and \ref{tab:EL_calc_gradi
 \par 
 \vspace{3mm}
 
-For the onebody density plots we saw that the densities had gaussian shapes, which come from the wave functions. The peak decreased when adding interaction because the bosons then are more spread out. We observed noise for small radii, which is caused by the dividing on sphere surfaces, which are small numbers for small radii. All particles are located within a distance $3a_{HO}$ from particle $i$, which makes sence since we only study 10 particles. 
+In the onebody density plots in figures \ref{fig:ob0} and \ref{fig:ob1} we see that the densities have gaussian shapes, which come from the wave functions. The peaks do not move noticeably to larger radii when increasing a, which we had expected as the bosons for higher a are forced further apart. This might be because the repulsive interaction has too short range a, or that the effect is not visible for the given number of particles. 
 
 \section{Conclusion}
 
@@ -753,13 +760,13 @@ In this project, we have found that the Variational Monte Carlo method reproduce
 The Hastings algorithm had a higher acceptance rate for the proposed moves in the Monte Carlo iterations compared to the brute force method. This should result in the Hastings method converging faster, although we did not observe that in this report. We also saw that the Hastings algorithm was more dependent on the timestep compared to the brute force method's dependence om stepsize. This is as we would expect from theory.  \par
 When including a proper evaluation of the error by using the blocking method, we saw that the blocking method gave a slightly higher estimated variance, compared to the estimation from equation \ref{eq:variance_simplified}. This is as expected.
 
-With interaction we got reasonable results for one and ten particles compared to calculations based on the Gross-Pitaevskii equation. For 100 particles the energies were probably higher than they should be. The optimal variational parameter $\alpha$ obtained from VMC did not match the optimal $\alpha$ gotten from GD, and perhaps we have a bug in the code which appears for a large number of particles. 
+With interaction we got reasonable upper bound ground state energies for one and ten particles, compared to calculations based on the Gross-Pitaevskii equation. For 100 particles the energies were higher than expected from the benchmarks. The optimal variational parameter $\alpha$ obtained from VMC did not match the optimal $\alpha$ gotten from GD. This might be due to a bug in the code which appears for a large number of particles. 
 
-The graphs look like the wave functions as expected.
+We found the shape of the onebody density to be as expected, but we did not see any replacement of the peaks to larger radii for higher a values.
 
 \newpage
 
-\section{Appendix A} \label{appendix_A}
+\section{Appendix A: $E_L$ calculation} \label{appendix_A}
 In the theory section we presented the analytical expressions for the local energy, and in this appendix we go through the derivations carefully for those of you who are curious. Firstly we present the local energies where we ignore the two-particle interaction, and we also focus on the spherical harmonic oscillator trap since we do not look at the elliptical trap without interaction, even though the expressions are similar.
 
 Secondly the general expression which can be used with and without interaction, with spherical or elliptical harmonic oscillator trap and with a various number of parameter values is derived. This can in principle be used for every case, but it is more complex than the special ones where we ignore interaction and we therefore expect it to be slower. 
@@ -893,7 +900,7 @@ E_L&=\frac{1}{\Psi_T}\bigg(\sum_i\Big(-\frac{1}{2}\nabla_i^2+V_{ext}(\vec{r}_i)\
 &=\sum_i\Big(-\frac{\nabla_i^2\Psi_T}{2\Psi_T}+V_{ext}(\vec{r}_i)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
 \end{align}
 
-\section{Appendix B} \label{sec:appendix_b}
+\section{Appendix B: Drift force $F$ calculation} \label{sec:appendix_b}
 
 This section shows the analytical calculations for the drift force $F$, as given by equation \ref{eq:drift_force} for the non-interaction case.
 
@@ -937,7 +944,7 @@ As we operate in three dimensions, $\nabla = (\frac{d}{dx}, \frac{d}{dy}, \frac{
 	F = -4 \alpha \sum_i(x_i,y_i,\beta z_i)
 \end{equation}
 
-\section{Appendix C} \label{sec:appendix_c}
+\section{Appendix C: Scaling and rewriting of $\hat{H}$} \label{sec:appendix_c}
 In the theory part we claimed that the Hamiltonian could be written as
 \begin{equation}
 H=\sum_i\bigg(\frac{1}{2}\Big(-\nabla^2 + x_i^2 + y_i^2 + \gamma^2z_i^2\Big)\bigg)+\sum_{i<j}V_{int}(\vec{r}_i,\vec{r}_j)
@@ -960,7 +967,7 @@ H'=\sum_i\frac{1}{2}\bigg(-\nabla_i^2+(x_i')^2+(y_i')^2+\frac{\omega_z^2}{\omega
 \end{equation}
 which is the Hamiltonian that we were hunting. We know how the factor in front of the $z^2$ factor is $\beta^2 = \gamma^2$, so $\beta = \gamma$ has to be equal to $\omega_z/\omega_{ho}$.
 
-\section{Appendix D} \label{sec:appendix_d}
+\section{Appendix D: Solving Gross-Pitaevskii} \label{sec:appendix_d}
 To check if the VMC results are correct, we need a benchmark, and for a dilute bose gas the Gross-Pitaevskii equation is a natural choice. We could have solved the equation for the interacting case using numerical methods, but it would require significantly more effort and we take care of the non-interacting case instead. We start with the dimensionless brother of equation \ref{eq:GP_integral},
 \begin{equation}
 E_{\text{GP}}[\Psi]=\int d\vec{r}\bigg[\frac{1}{2}|\nabla\Psi(\vec{r})|^2+V_{ext}(\vec{r})|\Psi|^2+2\pi a|\Psi|^4\bigg].
@@ -991,7 +998,7 @@ With some straightforward computations one will find
 E_{\text{GP}}(\alpha,\beta,N)&=\Big(\frac{1}{2}+2\alpha^2\Big)\Big(\frac{2\alpha}{\pi}\Big)^{3N/2}\beta^{N/2}\frac{1}{4\alpha}\sqrt{\frac{\pi}{2\alpha}}^{3N}(2+\beta)\cdot N\cdot \beta^{-N/2}\notag\\
 &=N\cdot\Big(\frac{1}{4\alpha}+\alpha\Big)\cdot\Big(1+\frac{\beta}{2}\Big).
 \end{align}
-This gives the correct analytical results for the non-interacting case both in the spherical trap ($E=0.5N\cdot dim$ for $\alpha=0.5$) and the elliptical trap ($E=N(1+\beta/2)$\footnote{We start from the exact energy formula for a harmonic oscillator, $E_n=\hbar\omega(n+1/2)$, and study how the ground state energy changes if the z-component has different frequency $\omega_z$ from the other components, $E_0=\hbar(\omega_{ho}+\omega{z}/2)$. If we then scale with respect to $\hbar\omega_{ho}$ as done before, we get $E'=1+\beta/2$ for one particle. For our particular project, we have $\beta=\sqrt{8}$, and get an ground state energy $1+\sqrt{2}$ per particle.} for $\alpha=0.5$ in 3D).
+This gives the correct analytical results for the non-interacting case both in the spherical trap ($E=0.5N\cdot dim$ for $\alpha=0.5$) and the elliptical trap ($E=N(1+\beta/2)$\footnote{We start from the exact energy formula for a harmonic oscillator, $E_n=\hbar\omega(n+1/2)$, and study how the ground state energy changes if the z-component has different frequency $\omega_z$ from the other components, $E_0=\hbar(\omega_{ho}+\omega{z}/2)$. If we then scale with respect to $\hbar\omega_{ho}$ as done before, we get $E'=1+\beta/2$ for one particle. For our particular project, we have $\beta=\sqrt{8}\cong2.82843$, and get an ground state energy $1+\sqrt{2}$ per particle.} for $\alpha=0.5$ in 3D).
 
 \newpage
 \section{References}
@@ -1008,7 +1015,7 @@ This gives the correct analytical results for the non-interacting case both in t
 	\bibitem{Nilsen}
 	J. K. Nilsen,  J. Mur-Petit, M. Guilleumas, M. Hjorth-Jensen, and A. Polls, \emph{Vortices in atomic Bose-Einstein condensates in the large-gas-parameter region}, Phys. Rev. A \textbf{71}, 053610, (2005).
 	\bibitem{Dalfovo}
-	F. Dalfovo, S. Giorgini, L. P. Pitaevskii, S. Stringari, \emph{Theory of Bose-Einstein condensation in trapped gases} Rev. Mod. Phys. \textbf{71}, 463, (1999).
+	F. Dalfovo, S. Stringari, \emph{Bosons in anisotropic traps: ground state and vortices} Phys. Rev. A \textbf{53}, 2477, (1996).
 	\bibitem{JE2016}
 	J. Emspak, \emph{States of Matter: Bose-Einstein Condensate}, LiveScience, (2016).
 	\url{https://www.livescience.com/54667-bose-einstein-condensate.html}
