@@ -20,8 +20,6 @@ void GradientDescent(int P, int D, int N, int MC, double sigma, double omega, do
 
     //Constants
     double psi_ratio;               //ratio of new and old wave function
-    int    N_rand;                  //randomly chosen N
-    int    dim_rand;                //randomly chosen dimension
     int M = P*D;
 
     int M_rand;
@@ -31,7 +29,7 @@ void GradientDescent(int P, int D, int N, int MC, double sigma, double omega, do
     normal_distribution<double> eps_gauss(0,1);       //Gaussian distr random number generator
     uniform_int_distribution<> mrand(0, M-1);         //Random number between 0 and N
 
-    for(int iter=0; iter<1000; iter++) {
+    for(int iter=0; iter<1; iter++) {
         //averages and energies
         double EL_tot      = 0;          //sum of energies of all states
         double EL_tot_sqrd = 0;          //sum of energies of all states squared
@@ -44,6 +42,8 @@ void GradientDescent(int P, int D, int N, int MC, double sigma, double omega, do
         VectorXd X = VectorXd::Random(M);       //Visible nodes (position coordinates)
         VectorXd X_new;
 
+        //cout << "a before " << a << '\n' << endl;
+
         VectorXd da_tot           = VectorXd::Zero(M);
         VectorXd daE_tot          = VectorXd::Zero(M);
         VectorXd db_tot           = VectorXd::Zero(N);
@@ -51,20 +51,20 @@ void GradientDescent(int P, int D, int N, int MC, double sigma, double omega, do
         MatrixXd dW_tot           = MatrixXd::Zero(M,N);
         MatrixXd dWE_tot          = MatrixXd::Zero(M,N);
 
-        //cout << W << endl;
-
         WaveFunction Psi;
         Psi.setTrialWF(N, M, sigma, omega);
 
-        double E = Psi.Psi_value_sqrd(a, b, X, W);
+        double E = Psi.EL_calc(X, a, b, W);
         EL += E;
         EL_sqrd += E*E;
+
+        //cout << "E before " << E << endl;
 
         double accept = 0;
         for(int i=0; i<MC; i++) {
             X_new = X;              //Setting new matrix equal to old one
 
-            M_rand = mrand(gen);    //Random particle
+            M_rand = mrand(gen);    //Random particle and dimension
 
             int sampling = 0;
             if(sampling == 0) {
@@ -74,8 +74,11 @@ void GradientDescent(int P, int D, int N, int MC, double sigma, double omega, do
             else if(sampling == 1) {
                 //Hastings
             }
+            double r = random_position();
 
-            if(psi_ratio >= random_position()) {
+            cout << psi_ratio << " " << r << endl;
+
+            if(psi_ratio >= r) {
                 //accept and update
                 X = X_new;
                 accept +=1;
@@ -83,6 +86,8 @@ void GradientDescent(int P, int D, int N, int MC, double sigma, double omega, do
                 E = Psi.EL_calc(X, a, b, W);
 
             }
+            cout << "E after " << E << endl;
+
             VectorXd da;
             VectorXd db;
             MatrixXd dW;
@@ -110,9 +115,11 @@ void GradientDescent(int P, int D, int N, int MC, double sigma, double omega, do
         a -= 2*eta*(daE_tot - EL_avg*da_tot)/MC;
         b -= 2*eta*(dbE_tot - EL_avg*db_tot)/MC;
         W -= 2*eta*(dWE_tot - EL_avg*dW_tot)/MC;
-        cout << a << '\n' << endl;
+        //cout << "a after " << a << '\n' << endl;
 
-        cout << EL_avg << endl;
+        cout << "\n--- Iteration " << iter << " ---" << endl;
+        cout << "E_L_avg: " << EL_avg << endl;
+        cout << "Acceptance ratio: " << accept/MC << endl;
 
     }
 }

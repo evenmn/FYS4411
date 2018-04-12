@@ -24,12 +24,12 @@ double WaveFunction::Psi_value_sqrd(VectorXd a, VectorXd b, VectorXd X, MatrixXd
 
     double prod = 1;
     for(int i=0; i<m_N; i++) {
-        prod *= 1 + exp(v(i));
+        prod *= (1 + exp(v(i)));
     }
 
-    double exp_ret = exp((Xa.transpose() * Xa));
+    double exp_ret = (Xa.transpose() * Xa);
 
-    return pow(1/(m_sigma_sqrd), exp_ret) * prod * prod;       //Weird pow
+    return exp(-(exp_ret)/(m_sigma_sqrd)) * prod * prod;
 }
 
 double WaveFunction::EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W) {
@@ -62,8 +62,8 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W) {
     E = E/(2 * m_sigma_sqrd * m_sigma_sqrd);
 
     // External potential
-    double weird_scalar = (X.transpose() * X);          //Remove weird scalar
-    E += weird_scalar * m_omega_sqrd/ 2;
+    //double weird_scalar = (X.transpose() * X);          //Remove weird scalar
+    E += (double)(X.transpose() * X) * m_omega_sqrd/ 2;
 
     // Interaction energy
     //MatrixXd norm;
