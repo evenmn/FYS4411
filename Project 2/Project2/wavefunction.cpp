@@ -29,7 +29,7 @@ double WaveFunction::Psi_value_sqrd(VectorXd a, VectorXd b, VectorXd X, MatrixXd
 
     double exp_ret = exp((Xa.transpose() * Xa));
 
-    return pow(1/(m_sigma_sqrd), exp_ret) * prod * prod;       //Ta vekk pow
+    return pow(1/(m_sigma_sqrd), exp_ret) * prod * prod;       //Weird pow
 }
 
 double WaveFunction::EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W) {
@@ -45,12 +45,11 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W) {
     }
 
     double E = 0;
-
     for(int i=0; i<m_N; i++) {
         double weird_E = (Xa.transpose() * W.col(i));// * e(i);
         E += weird_E * e(i); //(Xa.transpose() * W.col(i)) * e(i);
         double weird_E2 =((W.col(i)).transpose() * W.col(i));// * e(i) * e(i);
-        E += weird_E2 * e(i) * e(i); //((W.col(i)).tranpose() * W.col(i)) * e(i) * e(i);
+        E += weird_E2 * e(i) * e(i); //((W.col(i)).transpose() * W.col(i)) * e(i) * e(i);
         for(int j=0; j<m_N; j++) {
             double weird_E3 = ((W.col(i)).transpose() * W.col(j));// * e(i) * e(j);
             E += weird_E3 * e(i) * e(j);
@@ -73,4 +72,33 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W) {
     //E += sum(sum(norm));
 
     return E;
+}
+
+void WaveFunction::Gradient_a(VectorXd X, VectorXd a, VectorXd &da) {
+
+    VectorXd Xa = X - a;
+
+    da = Xa/m_sigma_sqrd;
+}
+
+void WaveFunction::Gradient_b(VectorXd b, VectorXd X, MatrixXd W, VectorXd &db) {
+
+    VectorXd v = b + (W.transpose()*X)/m_sigma_sqrd;
+
+    db.resize(m_N);
+    for(int i=0; i<m_N; i++) {
+        db(i) = 1/(1 + exp(-v(i)));
+    }
+}
+
+void WaveFunction::Gradient_W(VectorXd X, VectorXd b, MatrixXd W, MatrixXd &dW) {
+
+    VectorXd v = b + (W.transpose()*X)/m_sigma_sqrd;
+
+    dW.resize(m_M, m_N);
+    for(int i=0; i<m_N; i++) {
+        for(int j=0; j<m_N; j++) {
+            dW(i,j) = X(i)/(1 + exp(-v(j)));
+        }
+    }
 }

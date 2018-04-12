@@ -1,3 +1,3 @@
 #pragma once
 
-void GradientDescent(int P, int D, int N, double sigma, double omega);
+void GradientDescent(int P, int D, int N, int MC, double sigma, double omega, double steplength);
