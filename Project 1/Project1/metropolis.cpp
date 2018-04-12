@@ -122,11 +122,7 @@ void Met_algo(int N, int dim, int M, double a, double steplength, double alpha[]
             }
 
             //Open file for writing (will write for a specific alpha)
-<<<<<<< HEAD
             ob_file.open ("../data/ob_density_a_0_N_100.dat");
-=======
-            ob_file.open ("../data/ob_density_a_00043_N_100.dat");
->>>>>>> b98f56a3d43630364d77a1537a32000c6e1a00ed
         }
         volume(bin_array, bin_dist, number_of_bins);
 
