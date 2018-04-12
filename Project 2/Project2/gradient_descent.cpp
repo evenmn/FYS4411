@@ -35,6 +35,11 @@ void GradientDescent(int P, int D, int N, double sigma, double omega) {
         VectorXd X = VectorXd::Random(M);       //Visible nodes (position coordinates)
         VectorXd X_new;
 
-        cout << W << endl;
+        //cout << W << endl;
+
+        WaveFunction Psi;
+        Psi.setTrialWF(N, M, sigma, omega);
+
+        cout << Psi.Psi_value_sqrd(a, b, X, W) << endl;
     }
 }
