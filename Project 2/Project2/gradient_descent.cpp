@@ -20,16 +20,15 @@ void GradientDescent(int P, int D, int N, int MC, double sigma, double omega, do
 
     //Constants
     double psi_ratio;               //ratio of new and old wave function
+    double eta = 0.01;
     int M = P*D;
-
     int M_rand;
-    double eta = 0.001;
 
     //Marsenne Twister Random Number Generator
     normal_distribution<double> eps_gauss(0,1);       //Gaussian distr random number generator
     uniform_int_distribution<> mrand(0, M-1);         //Random number between 0 and N
 
-    for(int iter=0; iter<1; iter++) {
+    for(int iter=0; iter<10; iter++) {
         //averages and energies
         double EL_tot      = 0;          //sum of energies of all states
         double EL_tot_sqrd = 0;          //sum of energies of all states squared
@@ -41,8 +40,6 @@ void GradientDescent(int P, int D, int N, int MC, double sigma, double omega, do
         VectorXd b = VectorXd::Random(N);       //Hidden biases
         VectorXd X = VectorXd::Random(M);       //Visible nodes (position coordinates)
         VectorXd X_new;
-
-        //cout << "a before " << a << '\n' << endl;
 
         VectorXd da_tot           = VectorXd::Zero(M);
         VectorXd daE_tot          = VectorXd::Zero(M);
@@ -57,8 +54,6 @@ void GradientDescent(int P, int D, int N, int MC, double sigma, double omega, do
         double E = Psi.EL_calc(X, a, b, W);
         EL += E;
         EL_sqrd += E*E;
-
-        //cout << "E before " << E << endl;
 
         double accept = 0;
         for(int i=0; i<MC; i++) {
@@ -76,17 +71,16 @@ void GradientDescent(int P, int D, int N, int MC, double sigma, double omega, do
             }
             double r = random_position();
 
-            cout << psi_ratio << " " << r << endl;
+            //cout << psi_ratio << " " << r << endl;
 
             if(psi_ratio >= r) {
                 //accept and update
                 X = X_new;
-                accept +=1;
+                accept += 1;
 
                 E = Psi.EL_calc(X, a, b, W);
-
             }
-            cout << "E after " << E << endl;
+            //cout << "E after " << E << endl;
 
             VectorXd da;
             VectorXd db;
@@ -95,14 +89,14 @@ void GradientDescent(int P, int D, int N, int MC, double sigma, double omega, do
             Psi.Gradient_b(b, X, W, db);
             Psi.Gradient_W(X, b, W, dW);
 
-            da_tot += da;
-            daE_tot += E*da;
-            db_tot += db;
-            dbE_tot += E*db;
-            dW_tot += dW;
-            dWE_tot += E*dW;
+            da_tot   += da;
+            daE_tot  += E*da;
+            db_tot   += db;
+            dbE_tot  += E*db;
+            dW_tot   += dW;
+            dWE_tot  += E*dW;
 
-            EL_tot += E;
+            EL_tot      += E;
             EL_tot_sqrd += E*E;
 
         }
