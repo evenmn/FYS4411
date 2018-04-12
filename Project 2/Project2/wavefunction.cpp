@@ -65,15 +65,14 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W) {
     //rij(X, norm, D);        // Create distance matrix
 
     //E += sum(sum(norm));
-
     return E;
 }
 
 void WaveFunction::Gradient_a(VectorXd X, VectorXd a, VectorXd &da) {
 
     VectorXd Xa = X - a;
-
     da = Xa/m_sigma_sqrd;
+    cout << "da: " << da << endl;
 }
 
 void WaveFunction::Gradient_b(VectorXd b, VectorXd X, MatrixXd W, VectorXd &db) {
