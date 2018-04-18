@@ -26,9 +26,7 @@ double WaveFunction::Psi_value_sqrd(VectorXd a, VectorXd b, VectorXd X, MatrixXd
         prod *= (1 + exp(v(i)));
     }
 
-    double exp_ret = (Xa.transpose() * Xa);
-
-    return exp(-(exp_ret)/(m_sigma_sqrd)) * prod * prod;
+    return exp(-(double) (Xa.transpose() * Xa)/(m_sigma_sqrd)) * prod * prod;
 }
 
 double WaveFunction::EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W) {
@@ -52,7 +50,6 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W) {
         }
     }
 
-
     E -= m_N * m_sigma_sqrd;
     E += Xa.transpose() * Xa;
     E = E/(2 * m_sigma_sqrd * m_sigma_sqrd);
@@ -72,7 +69,6 @@ void WaveFunction::Gradient_a(VectorXd X, VectorXd a, VectorXd &da) {
 
     VectorXd Xa = X - a;
     da = Xa/m_sigma_sqrd;
-    cout << "da: " << da << endl;
 }
 
 void WaveFunction::Gradient_b(VectorXd b, VectorXd X, MatrixXd W, VectorXd &db) {

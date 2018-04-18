@@ -3,6 +3,7 @@
 #include <random>
 #include <eigen3/Eigen/Dense>
 #include <cmath>
+#include <fstream>
 
 using namespace Eigen;
 using namespace std;
@@ -27,7 +28,7 @@ void GradientDescent(int P, int D, int N, int MC, int iterations, double sigma, 
     normal_distribution<double> eps_gauss(0,1);       //Gaussian distr random number generator
     normal_distribution<double> eps_gauss_small(0,0.001);       //Gaussian distr random number generator
     uniform_int_distribution<> mrand(0, M-1);         //Random number between 0 and N
-
+    /*
     MatrixXd W = MatrixXd::Zero(M,N);     //Weights
     VectorXd a = VectorXd::Zero(M);       //Visible biases
     VectorXd b = VectorXd::Zero(N);       //Hidden biases
@@ -38,13 +39,23 @@ void GradientDescent(int P, int D, int N, int MC, int iterations, double sigma, 
             b(j) = eps_gauss_small(gen);
         }
     }
-
-
     VectorXd X = VectorXd::Random(M);       //Visible nodes (position coordinates)
+    */
+
+    MatrixXd W = MatrixXd::Random(M, N);
+    VectorXd a = VectorXd::Random(M);
+    VectorXd b = VectorXd::Random(N);
+    VectorXd X = VectorXd::Random(M);
+    VectorXd X_new;
+    VectorXd Xa = X - a;
+    VectorXd v = b + (W.transpose() * X)/(sigma * sigma);
 
     WaveFunction Psi;
     Psi.setTrialWF(N, M, sigma, omega);
-    VectorXd X_new;
+
+    //Open file for writing
+    ofstream myfile;
+    myfile.open("energy.txt");
 
     for(int iter=0; iter<iterations; iter++) {
         //averages and energies
@@ -118,16 +129,23 @@ void GradientDescent(int P, int D, int N, int MC, int iterations, double sigma, 
         cout << "E_L_avg: " << EL_avg << endl;
         cout << "Acceptance ratio: " << accept/MC << endl;
 
-        cout << "a before: " << a << endl;
+        //cout << "a before: " << a << endl;
         //Gradient descent
         a -= 2*eta*(daE_tot - EL_avg*da_tot)/MC;
         b -= 2*eta*(dbE_tot - EL_avg*db_tot)/MC;
         W -= 2*eta*(dWE_tot - EL_avg*dW_tot)/MC;
-        cout << "a after: " << a << endl;
-        cout << "Gradient: " << 2*eta*(daE_tot - EL_avg*da_tot)/MC << endl;
-        cout << "daE_tot: " << daE_tot << endl;
-        cout << "EL_avg: " << EL_avg << endl;
-        cout << "da_tot: " << da_tot << "\n" << endl;
+        //cout << "a after: " << a << endl;
+        //cout << "Gradient: " << 2*eta*(daE_tot - EL_avg*da_tot)/MC << endl;
+        //cout << "daE_tot: " << daE_tot << endl;
+        //cout << "EL_avg: " << EL_avg << endl;
+        //cout << "da_tot: " << da_tot << "\n" << endl;
+
+        //Write to file
+        myfile << EL_avg << "\n";
+
+        //if(EL_avg < 2.3) eta=eta/10;
 
     }
+    //Close myfile
+    myfile.close();
 }
