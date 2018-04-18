@@ -6,6 +6,21 @@
 using namespace std;
 using namespace Eigen;
 
+double rij(VectorXd X, int D) {
+    double Ep = 0;              // Sum 1/rij
+    int P = X.size()/D;
+    for(int i=0; i<P; i++) {
+        for(int j=0; j<i; j++) {
+            double dist = 0;
+            for(int d=0; d<D; d++) {
+                dist += (X(D*i+d)-X(D*j+d))*(X(D*i+d)-X(D*j+d));
+            }
+            Ep += 1/sqrt(dist);
+        }
+    }
+    return Ep;
+}
+
 int WaveFunction::setTrialWF(int N, int M, double sigma, double omega)
 {
     m_N = N;
@@ -29,7 +44,7 @@ double WaveFunction::Psi_value_sqrd(VectorXd a, VectorXd b, VectorXd X, MatrixXd
     return exp(-(double) (Xa.transpose() * Xa)/(m_sigma_sqrd)) * prod * prod;
 }
 
-double WaveFunction::EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W) {
+double WaveFunction::EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W, int D, int interaction) {
     // Local energy calculations
 
     VectorXd v = b + (X.transpose() * W).transpose()/m_sigma_sqrd;
@@ -55,13 +70,13 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W) {
     E = E/(2 * m_sigma_sqrd * m_sigma_sqrd);
 
     // External potential
-    E += (double)(X.transpose() * X) * m_omega_sqrd/ 2;
+    E += (double) (X.transpose() * X) * m_omega_sqrd/ 2;
 
     // Interaction energy
-    //MatrixXd norm;
-    //rij(X, norm, D);        // Create distance matrix
+    if(interaction) {
+        E += rij(X, D);        // Create distance matrix
+    }
 
-    //E += sum(sum(norm));
     return E;
 }
 

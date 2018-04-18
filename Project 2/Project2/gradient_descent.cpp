@@ -17,7 +17,7 @@ double random_position(){
     return dis(gen);
 }
 
-void GradientDescent(int P, int D, int N, int MC, int iterations, double sigma, double omega, double steplength, double eta) {
+void GradientDescent(int P, int D, int N, int MC, int iterations, double sigma, double omega, double steplength, double eta, bool interaction) {
 
     //Constants
     double psi_ratio;               //ratio of new and old wave function
@@ -55,13 +55,13 @@ void GradientDescent(int P, int D, int N, int MC, int iterations, double sigma, 
 
     //Open file for writing
     ofstream myfile;
-    myfile.open("energy.txt");
+    myfile.open("../data/energy.txt");
 
     for(int iter=0; iter<iterations; iter++) {
         //averages and energies
         double EL_tot      = 0;          //sum of energies of all states
         double EL_tot_sqrd = 0;          //sum of energies of all states squared
-        double E = Psi.EL_calc(X, a, b, W);
+        double E = Psi.EL_calc(X, a, b, W, D, interaction);
 
         VectorXd da_tot           = VectorXd::Zero(M);
         VectorXd daE_tot          = VectorXd::Zero(M);
@@ -93,7 +93,7 @@ void GradientDescent(int P, int D, int N, int MC, int iterations, double sigma, 
                 //accept and update
                 X = X_new;
                 accept += 1;
-                E = Psi.EL_calc(X, a, b, W);
+                E = Psi.EL_calc(X, a, b, W, D, interaction);
             }
 
 
@@ -129,21 +129,13 @@ void GradientDescent(int P, int D, int N, int MC, int iterations, double sigma, 
         cout << "E_L_avg: " << EL_avg << endl;
         cout << "Acceptance ratio: " << accept/MC << endl;
 
-        //cout << "a before: " << a << endl;
         //Gradient descent
         a -= 2*eta*(daE_tot - EL_avg*da_tot)/MC;
         b -= 2*eta*(dbE_tot - EL_avg*db_tot)/MC;
         W -= 2*eta*(dWE_tot - EL_avg*dW_tot)/MC;
-        //cout << "a after: " << a << endl;
-        //cout << "Gradient: " << 2*eta*(daE_tot - EL_avg*da_tot)/MC << endl;
-        //cout << "daE_tot: " << daE_tot << endl;
-        //cout << "EL_avg: " << EL_avg << endl;
-        //cout << "da_tot: " << da_tot << "\n" << endl;
 
         //Write to file
         myfile << EL_avg << "\n";
-
-        //if(EL_avg < 2.3) eta=eta/10;
 
     }
     //Close myfile

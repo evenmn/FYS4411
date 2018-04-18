@@ -15,7 +15,7 @@ public:
     WaveFunction() {}
     int setTrialWF              (int N, int M, double sigma, double omega);
     double Psi_value_sqrd(VectorXd a, VectorXd b, VectorXd X, MatrixXd W);
-    double EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W);
+    double EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W, int D, int interaction);
     void Gradient_a(VectorXd X, VectorXd a, VectorXd &da);
     void Gradient_b(VectorXd b, VectorXd X, MatrixXd W, VectorXd &db);
     void Gradient_W(VectorXd X, VectorXd b, MatrixXd W, MatrixXd &dW);
