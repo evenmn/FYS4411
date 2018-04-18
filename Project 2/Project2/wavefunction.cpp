@@ -73,9 +73,7 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W, int
     E += (double) (X.transpose() * X) * m_omega_sqrd/ 2;
 
     // Interaction energy
-    if(interaction) {
-        E += rij(X, D);        // Create distance matrix
-    }
+    if(interaction) E += rij(X, D);        // Create distance matrix
 
     return E;
 }

@@ -97,11 +97,6 @@ void GradientDescent(int P, int D, int N, int MC, int iterations, double sigma, 
             }
 
 
-            //if(iter==2){
-            //    cout << "X: " << X << endl;
-            //    cout << "E after " << E << "\n" << endl;
-            //}
-
             VectorXd da;
             VectorXd db;
             MatrixXd dW;
