@@ -69,11 +69,11 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W, int
     E += Xa.transpose() * Xa;
     E = E/(2 * m_sigma_sqrd * m_sigma_sqrd);
 
-    // External potential
+    // Harmonic oscillator potential
     E += (double) (X.transpose() * X) * m_omega_sqrd/ 2;
 
     // Interaction energy
-    if(interaction) E += rij(X, D);        // Create distance matrix
+    if(interaction) E += rij(X, D);
 
     return E;
 }

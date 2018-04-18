@@ -77,23 +77,23 @@ void GradientDescent(int P, int D, int N, int MC, int iterations, double sigma, 
             X_new = X;              //Setting new matrix equal to old one
 
             M_rand = mrand(gen);    //Random particle and dimension
-            //int sampling = 0;
-            //if(sampling == 0) {
-            X_new(M_rand) = X(M_rand) + (2*random_position() - 1.0)*steplength;
-            psi_ratio = Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W);
-            //}
-            //if(sampling == 1) {
-                //Hastings
-            //}
+            int sampling = 0;
+            if(sampling == 0) {
+                //Standard Metropolis
+                X_new(M_rand) = X(M_rand) + (2*random_position() - 1.0)*steplength;
+                psi_ratio = Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W);
+            }
+            else if(sampling == 1) {
+                //Metropolis-Hastings
+            }
 
-            double r = random_position();
-            //cout << psi_ratio << " " << r << endl;
-
-            if(psi_ratio >= r) {
+            if(psi_ratio >= random_position()) {
                 //accept and update
                 X = X_new;
                 accept += 1;
                 E = Psi.EL_calc(X, a, b, W, D, interaction);
+                VectorXd Xa = X - a;
+                VectorXd v = b + (W.transpose() * X)/(sigma * sigma);
             }
 
 
