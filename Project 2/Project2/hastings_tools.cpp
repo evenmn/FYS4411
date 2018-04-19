@@ -15,12 +15,17 @@ double QForce(VectorXd X, VectorXd a, VectorXd b, MatrixXd W, int N, double sigm
     VectorXd v = b + (X.transpose() * W).transpose()/(sigma_sqrd);
     VectorXd Xa = X - a;
 
+
     double QF = 0;
-    QF += Xa.sum();
+
+    QF -= Xa.sum();
     for(int i=0; i<N; i++) {
         QF += (W.col(i)).sum()/(1 + exp(v(i)));
     }
+    //cout << QF*(2/sigma_sqrd) << endl;
+
     return QF*(2/sigma_sqrd);
+
 }
 
 double GreenFuncSum(VectorXd X, VectorXd X_new, VectorXd a, VectorXd b, MatrixXd W, int N, double sigma, double timestep, int D, double Diff) {
@@ -35,8 +40,11 @@ double GreenFuncSum(VectorXd X, VectorXd X_new, VectorXd a, VectorXd b, MatrixXd
                         (X_new(D*i+j) - X(D*i+j) - Diff*timestep*QForce(X, a, b, W, N, sigma));
             GreenNew += (X(D*i+j) - X_new(D*i+j) - Diff*timestep*QForce(X_new, a, b, W, N, sigma)) * \
                         (X(D*i+j) - X_new(D*i+j) - Diff*timestep*QForce(X_new, a, b, W, N, sigma));
+            //cout << "GO " << GreenOld << endl;
+            //cout << "GN " << GreenNew << endl;
         }
-        GreenSum += exp(GreenOld/GreenNew);
+        GreenSum += exp((GreenOld-GreenNew)/4*Diff*timestep);
+        //cout << GreenSum << endl;
     }
     return GreenSum;
 }

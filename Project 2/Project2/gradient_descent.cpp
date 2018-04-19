@@ -18,7 +18,7 @@ double random_position(){
     return dis(gen);
 }
 
-void GradientDescent(int P, int Diff, int D, int N, int MC, int iterations, int sampling, double sigma, double omega, double steplength, double timestep, double eta, bool interaction) {
+void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, int sampling, double sigma, double omega, double steplength, double timestep, double eta, bool interaction) {
 
     //Constants
     double psi_ratio;               //ratio of new and old wave function
@@ -86,7 +86,11 @@ void GradientDescent(int P, int Diff, int D, int N, int MC, int iterations, int 
             else if(sampling == 1) {
                 //Metropolis-Hastings
                 X_new(M_rand) = X(M_rand) + Diff*QForce(X, a, b, W, N, sigma)*timestep + eps_gauss(gen)*sqrt(timestep);
+                //cout << X_new(M_rand) << " " << X(M_rand) << endl;
+                //X_new(M_rand) = X(M_rand) + (2*random_position() - 1.0)*steplength;
                 psi_ratio = GreenFuncSum(X, X_new, a, b, W, N, sigma, timestep, D, Diff)*(Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W));
+                //cout << GreenFuncSum(X, X_new, a, b, W, N, sigma, timestep, D, Diff) << endl;
+                //cout << (Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W)) << endl;
             }
 
             if(psi_ratio >= random_position()) {
@@ -97,6 +101,7 @@ void GradientDescent(int P, int Diff, int D, int N, int MC, int iterations, int 
                 VectorXd Xa = X - a;
                 VectorXd v = b + (W.transpose() * X)/(sigma * sigma);
             }
+            //cout << E << endl;
 
 
             VectorXd da;

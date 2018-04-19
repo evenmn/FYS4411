@@ -41,6 +41,7 @@ double WaveFunction::Psi_value_sqrd(VectorXd a, VectorXd b, VectorXd X, MatrixXd
         prod *= (1 + exp(v(i)));
     }
 
+    //cout << exp(-(double) (Xa.transpose() * Xa)/(m_sigma_sqrd)) * prod * prod << endl;
     return exp(-(double) (Xa.transpose() * Xa)/(m_sigma_sqrd)) * prod * prod;
 }
 
