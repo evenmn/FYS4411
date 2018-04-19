@@ -1,0 +1,3 @@
+#pragma once
+
+double x_sampling(const VectorXd &a, const VectorXd &h, const MatrixXd &W, double sigma, int i);

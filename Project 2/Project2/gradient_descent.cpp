@@ -5,6 +5,7 @@
 #include <cmath>
 #include <fstream>
 #include "hastings_tools.h"
+#include "gibbs_tools.h"
 
 using namespace Eigen;
 using namespace std;
@@ -13,6 +14,7 @@ using namespace std;
 random_device rd;                   //Will be used to obtain a seed for the random number engine
 mt19937 gen(rd());                  //Standard mersenne_twister_engine seeded with rd()
 uniform_real_distribution<> dis(0, 1);
+uniform_int_distribution<> hrand(0, 1);
 
 double random_position(){
     return dis(gen);
@@ -24,32 +26,26 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     double psi_ratio = 0;               //ratio of new and old wave function
     int M = P*D;
     int M_rand = 0;
+    int N_rand = 0;
 
     //Marsenne Twister Random Number Generator
     normal_distribution<double> eps_gauss(0,1);       //Gaussian distr random number generator
     normal_distribution<double> eps_gauss_small(0,0.001);       //Gaussian distr random number generator
-    uniform_int_distribution<> mrand(0, M-1);         //Random number between 0 and N
-    /*
-    MatrixXd W = MatrixXd::Zero(M,N);     //Weights
-    VectorXd a = VectorXd::Zero(M);       //Visible biases
-    VectorXd b = VectorXd::Zero(N);       //Hidden biases
-    for(int i =0; i<M; i++){
-        a(i) = eps_gauss_small(gen);
-        for(int j = 0; j<N; j++){
-            W(i,j) = eps_gauss_small(gen);
-            b(j) = eps_gauss_small(gen);
-        }
-    }
-    VectorXd X = VectorXd::Random(M);       //Visible nodes (position coordinates)
-    */
+    uniform_int_distribution<> mrand(0, M-1);         //Random number between 0 and M
+    uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
 
     MatrixXd W = MatrixXd::Random(M, N);
     VectorXd a = VectorXd::Random(M);
     VectorXd b = VectorXd::Random(N);
     VectorXd X = VectorXd::Random(M);
     VectorXd X_new = VectorXd::Zero(M);
+    VectorXd h = VectorXd::Zero(N);
     VectorXd Xa = X - a;
     VectorXd v = b + (W.transpose() * X)/(sigma * sigma);
+
+    for(int i=0; i<N; i++) {
+        h(i) = hrand(gen);
+    }
 
     WaveFunction Psi;
     Psi.setTrialWF(N, M, sigma, omega);
@@ -74,13 +70,13 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         MatrixXd dW_tot           = MatrixXd::Zero(M,N);
         MatrixXd dWE_tot          = MatrixXd::Zero(M,N);
 
-        //cout << "E: " << E << endl;
-
         double accept = 0;
         for(int i=0; i<MC; i++) {
             X_new = X;              //Setting new matrix equal to old one
 
             M_rand = mrand(gen);    //Random particle and dimension
+
+
             if(sampling == 0) {
                 //Standard Metropolis
                 X_new(M_rand) = X(M_rand) + (2*random_position() - 1.0)*steplength;
@@ -88,25 +84,27 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             }
             else if(sampling == 1) {
                 //Metropolis-Hastings
-                //X_new(M_rand) = X(M_rand) + (2*random_position() - 1.0)*steplength;
                 X_new(M_rand) = X(M_rand) + Diff*QForce(X, a, b, W, N, sigma, M_rand)*timestep + eps_gauss(gen)*sqrt(timestep);
                 psi_ratio = GreenFuncSum(X, X_new, a, b, W, N, sigma, timestep, D, Diff)*(Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W));
-                //cout << X_new(M_rand) << " " << X(M_rand) << endl;
-                //psi_ratio = Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W);
-                //cout << GreenFuncSum(X, X_new, a, b, W, N, sigma, timestep, D, Diff) << endl;
-                //cout << (Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W)) << endl;
+            }
+            else if(sampling == 2) {
+                //Gibbs' sampling
+                X(M_rand) = x_sampling(a, h, W, sigma, M_rand);
+                //Continue writing sampling function for h
+
             }
 
-            if(psi_ratio >= random_position()) {
+            if(psi_ratio >= random_position()&&sampling!=2) {
                 //accept and update
                 X = X_new;
                 accept += 1;
+                cout << "accept" << "\n" << endl;
                 E = Psi.EL_calc(X, a, b, W, D, interaction);
                 VectorXd Xa = X - a;
                 VectorXd v = b + (W.transpose() * X)/(sigma * sigma);
             }
             //cout << E << endl;
-            if(iter==99) myfile1 << E << endl;
+            if(iter==iterations-1) myfile1 << E << endl;
 
 
             VectorXd da = VectorXd::Zero(M);
@@ -148,6 +146,6 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
     }
     //Close myfile
-    myfile.close();
+    if(myfile.is_open())  myfile.close();
     if(myfile1.is_open()) myfile1.close();
 }

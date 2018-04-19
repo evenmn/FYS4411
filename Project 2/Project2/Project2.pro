@@ -6,9 +6,11 @@ CONFIG -= qt
 SOURCES += main.cpp \
     wavefunction.cpp \
     gradient_descent.cpp \
-    hastings_tools.cpp
+    hastings_tools.cpp \
+    gibbs_tools.cpp
 
 HEADERS += \
     wavefunction.h \
     gradient_descent.h \
-    hastings_tools.h
+    hastings_tools.h \
+    gibbs_tools.h
