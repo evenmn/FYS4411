@@ -5,10 +5,10 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     wavefunction.cpp \
-    monte_carlo.cpp \
-    gradient_descent.cpp
+    gradient_descent.cpp \
+    hastings_tools.cpp
 
 HEADERS += \
     wavefunction.h \
-    monte_carlo.h \
-    gradient_descent.h
+    gradient_descent.h \
+    hastings_tools.h

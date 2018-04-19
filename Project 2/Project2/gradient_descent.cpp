@@ -1,9 +1,10 @@
 #include <iostream>
-#include <wavefunction.h>
+#include "wavefunction.h"
 #include <random>
-#include <eigen3/Eigen/Dense>
+#include "eigen3/Eigen/Dense"
 #include <cmath>
 #include <fstream>
+#include "hastings_tools.h"
 
 using namespace Eigen;
 using namespace std;
@@ -17,7 +18,7 @@ double random_position(){
     return dis(gen);
 }
 
-void GradientDescent(int P, int D, int N, int MC, int iterations, double sigma, double omega, double steplength, double eta, bool interaction) {
+void GradientDescent(int P, int Diff, int D, int N, int MC, int iterations, int sampling, double sigma, double omega, double steplength, double timestep, double eta, bool interaction) {
 
     //Constants
     double psi_ratio;               //ratio of new and old wave function
@@ -77,7 +78,6 @@ void GradientDescent(int P, int D, int N, int MC, int iterations, double sigma, 
             X_new = X;              //Setting new matrix equal to old one
 
             M_rand = mrand(gen);    //Random particle and dimension
-            int sampling = 0;
             if(sampling == 0) {
                 //Standard Metropolis
                 X_new(M_rand) = X(M_rand) + (2*random_position() - 1.0)*steplength;
@@ -85,6 +85,8 @@ void GradientDescent(int P, int D, int N, int MC, int iterations, double sigma, 
             }
             else if(sampling == 1) {
                 //Metropolis-Hastings
+                X_new(M_rand) = X(M_rand) + Diff*QForce(X, a, b, W, N, sigma)*timestep + eps_gauss(gen)*sqrt(timestep);
+                psi_ratio = GreenFuncSum(X, X_new, a, b, W, N, sigma, timestep, D, Diff)*(Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W));
             }
 
             if(psi_ratio >= random_position()) {

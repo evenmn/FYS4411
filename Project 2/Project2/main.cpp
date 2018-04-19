@@ -1,7 +1,7 @@
 #include <iostream>
-#include "eigen3/Eigen/Dense"
 #include <random>
-#include <gradient_descent.h>
+#include "eigen3/Eigen/Dense"
+#include "gradient_descent.h"
 
 using namespace std;
 using namespace Eigen;
@@ -17,10 +17,13 @@ int main()
     double sigma = 1.0;      //Width of Gaussian distribution
     double omega = 1.0;      //Frequency
     double steplength = 1.0; //Steplength for Metropolis
+    double timestep = 0.01;  //Timestep used in Hastings algorithm
     double eta = 0.01;      //Learning rate for gradient decent
     bool interaction = 0;   //Interaction on if true
+    int Diff = 0.5;         //Diffusion constant
+    int sampling = 0;       //Brute force- (0), Hastings- (1) or Gibbs' sampling (2)
 
-    GradientDescent(P, D, N, MC, iterations, sigma, omega, steplength, eta, interaction);
+    GradientDescent(P, Diff, D, N, MC, iterations, sampling, sigma, omega, steplength, timestep, eta, interaction);
     return 0;
 }
 
