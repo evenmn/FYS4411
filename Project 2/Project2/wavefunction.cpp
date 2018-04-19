@@ -89,7 +89,7 @@ void WaveFunction::Gradient_b(VectorXd b, VectorXd X, MatrixXd W, VectorXd &db) 
 
     VectorXd v = b + (X.transpose() * W).transpose()/m_sigma_sqrd;
 
-    db.resize(m_N);
+    //db.resize(m_N);
     for(int i=0; i<m_N; i++) {
         db(i) = 1/(1 + exp(-v(i)));
     }
@@ -99,7 +99,7 @@ void WaveFunction::Gradient_W(VectorXd X, VectorXd b, MatrixXd W, MatrixXd &dW) 
 
     VectorXd v = b + (X.transpose() * W).transpose()/m_sigma_sqrd;
 
-    dW.resize(m_M, m_N);
+    //dW.resize(m_M, m_N);
     for(int i=0; i<m_N; i++) {
         for(int j=0; j<m_N; j++) {
             dW(i,j) = X(i)/(1 + exp(-v(j)));

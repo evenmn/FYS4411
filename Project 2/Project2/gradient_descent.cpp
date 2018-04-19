@@ -105,9 +105,9 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             //cout << E << endl;
 
 
-            VectorXd da;
-            VectorXd db;
-            MatrixXd dW;
+            VectorXd da = VectorXd::Zero(M);
+            VectorXd db = VectorXd::Zero(N);
+            MatrixXd dW = MatrixXd::Zero(M,N);
             Psi.Gradient_a(X, a, da);
             Psi.Gradient_b(b, X, W, db);
             Psi.Gradient_W(X, b, W, dW);

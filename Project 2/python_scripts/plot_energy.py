@@ -8,6 +8,8 @@ x = np.linspace(0, len(data) - 1, len(data))
 
 plt.plot(x, data)
 plt.axhline(asymptote, linestyle='--', color='r')
+plt.xlabel("Iteration")
+plt.ylabel("Energy")
 plt.grid()
 #plt.savefig('figure.png')
 plt.show()

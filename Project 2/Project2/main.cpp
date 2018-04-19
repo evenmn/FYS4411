@@ -13,15 +13,15 @@ int main()
     int D = 2;               //Number of dimensions
     int N = 2;               //Number of hidden nodes
     int MC = 100000;             //Number of Monte Carlo cycles
-    int iterations = 200;      //Number of gradient decent cycles
+    int iterations = 100;      //Number of gradient decent cycles
     double sigma = 1.0;      //Width of Gaussian distribution
     double omega = 1.0;      //Frequency
     double steplength = 1.0; //Steplength for Metropolis
     double timestep = 0.1;  //Timestep used in Hastings algorithm
-    double eta = 0.1;      //Learning rate for gradient decent
+    double eta = 0.01;      //Learning rate for gradient decent
     bool interaction = 0;   //Interaction on if true
     double Diff = 0.5;         //Diffusion constant
-    int sampling = 1;       //Brute force- (0), Hastings- (1) or Gibbs' sampling (2)
+    int sampling = 0;       //Brute force- (0), Hastings- (1) or Gibbs' sampling (2)
 
     GradientDescent(P, Diff, D, N, MC, iterations, sampling, sigma, omega, steplength, timestep, eta, interaction);
     return 0;
