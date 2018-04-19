@@ -9,7 +9,7 @@ def meanAndVariance(vec):
     var = sum([i ** 2 for i in vec])/len(vec) - mean*mean
     return mean, var
 
-data = [float( line.rstrip('\n')) for line in open('data/energy.txt')]
+data = [float( line.rstrip('\n')) for line in open('data/local_energies.txt')]
 
 n_blocks = 200
 block_size_min = 100
@@ -34,4 +34,4 @@ mean_vec.append(mean)
 var_vec.append(np.sqrt(  var/(len(data)/float(block_size) - 1.0)     ))
 
 mean, var = meanAndVariance(data)
-print var
+print(var)

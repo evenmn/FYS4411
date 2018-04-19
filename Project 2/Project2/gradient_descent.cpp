@@ -58,6 +58,9 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     ofstream myfile;
     myfile.open("../data/energy.txt");
 
+    ofstream myfile1;
+    myfile1.open("../data/local_energies_interaction_hastings.txt");
+
     for(int iter=0; iter<iterations; iter++) {
         //averages and energies
         double EL_tot      = 0;          //sum of energies of all states
@@ -86,7 +89,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             else if(sampling == 1) {
                 //Metropolis-Hastings
                 //X_new(M_rand) = X(M_rand) + (2*random_position() - 1.0)*steplength;
-                X_new(M_rand) = X(M_rand) + Diff*QForce(X, a, b, W, N, sigma)*timestep + eps_gauss(gen)*sqrt(timestep);
+                X_new(M_rand) = X(M_rand) + Diff*QForce(X, a, b, W, N, sigma, M_rand)*timestep + eps_gauss(gen)*sqrt(timestep);
                 psi_ratio = GreenFuncSum(X, X_new, a, b, W, N, sigma, timestep, D, Diff)*(Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W));
                 //cout << X_new(M_rand) << " " << X(M_rand) << endl;
                 //psi_ratio = Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W);
@@ -103,6 +106,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                 VectorXd v = b + (W.transpose() * X)/(sigma * sigma);
             }
             //cout << E << endl;
+            if(iter==99) myfile1 << E << endl;
 
 
             VectorXd da = VectorXd::Zero(M);
@@ -127,10 +131,12 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         //Calculate <EL> and <EL^2>
         double EL_avg = EL_tot/MC;
         double EL_avg_sqrd = EL_tot_sqrd/MC;
+        double variance = (EL_avg_sqrd - EL_avg*EL_avg)/MC;
 
         cout << "\n--- Iteration " << iter << " ---" << endl;
         cout << "E_L_avg: " << EL_avg << endl;
         cout << "Acceptance ratio: " << accept/MC << endl;
+        cout << "Variance " << variance << endl;
 
         //Gradient descent
         a -= 2*eta*(daE_tot - EL_avg*da_tot)/MC;
@@ -143,4 +149,5 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     }
     //Close myfile
     myfile.close();
+    if(myfile1.is_open()) myfile1.close();
 }
