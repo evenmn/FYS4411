@@ -21,9 +21,9 @@ double random_position(){
 void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, int sampling, double sigma, double omega, double steplength, double timestep, double eta, bool interaction) {
 
     //Constants
-    double psi_ratio;               //ratio of new and old wave function
+    double psi_ratio = 0;               //ratio of new and old wave function
     int M = P*D;
-    int M_rand;
+    int M_rand = 0;
 
     //Marsenne Twister Random Number Generator
     normal_distribution<double> eps_gauss(0,1);       //Gaussian distr random number generator
@@ -47,7 +47,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     VectorXd a = VectorXd::Random(M);
     VectorXd b = VectorXd::Random(N);
     VectorXd X = VectorXd::Random(M);
-    VectorXd X_new;
+    VectorXd X_new = VectorXd::Zero(M);
     VectorXd Xa = X - a;
     VectorXd v = b + (W.transpose() * X)/(sigma * sigma);
 
