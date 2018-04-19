@@ -85,10 +85,11 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             }
             else if(sampling == 1) {
                 //Metropolis-Hastings
-                X_new(M_rand) = X(M_rand) + Diff*QForce(X, a, b, W, N, sigma)*timestep + eps_gauss(gen)*sqrt(timestep);
-                //cout << X_new(M_rand) << " " << X(M_rand) << endl;
                 //X_new(M_rand) = X(M_rand) + (2*random_position() - 1.0)*steplength;
+                X_new(M_rand) = X(M_rand) + Diff*QForce(X, a, b, W, N, sigma)*timestep + eps_gauss(gen)*sqrt(timestep);
                 psi_ratio = GreenFuncSum(X, X_new, a, b, W, N, sigma, timestep, D, Diff)*(Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W));
+                //cout << X_new(M_rand) << " " << X(M_rand) << endl;
+                //psi_ratio = Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W);
                 //cout << GreenFuncSum(X, X_new, a, b, W, N, sigma, timestep, D, Diff) << endl;
                 //cout << (Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W)) << endl;
             }
