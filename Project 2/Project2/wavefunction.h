@@ -13,10 +13,11 @@ private:
     double m_omega_sqrd;
 public:
     WaveFunction() {}
-    int setTrialWF              (int N, int M, double sigma, double omega);
+    int setTrialWF              (int N, int M, double sigma_sqrd, double omega);
     double Psi_value_sqrd(VectorXd a, VectorXd b, VectorXd X, MatrixXd W);
-    double EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W, int D, int interaction);
-    void Gradient_a(VectorXd X, VectorXd a, VectorXd &da);
-    void Gradient_b(VectorXd b, VectorXd X, MatrixXd W, VectorXd &db);
-    void Gradient_W(VectorXd X, VectorXd b, MatrixXd W, MatrixXd &dW);
+    double Psi_value_sqrd_hastings(VectorXd Xa, VectorXd v);
+    double EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, int D, int interaction);
+    void Gradient_a(VectorXd a, VectorXd &da);
+    void Gradient_b(VectorXd b, VectorXd &db);
+    void Gradient_W(VectorXd X, VectorXd v, MatrixXd &dW);
 };

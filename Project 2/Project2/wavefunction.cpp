@@ -21,11 +21,11 @@ double rij(VectorXd X, int D) {
     return Ep;
 }
 
-int WaveFunction::setTrialWF(int N, int M, double sigma, double omega)
+int WaveFunction::setTrialWF(int N, int M, double sigma_sqrd, double omega)
 {
     m_N = N;
     m_M = M;
-    m_sigma_sqrd = sigma*sigma;
+    m_sigma_sqrd = sigma_sqrd;
     m_omega_sqrd = omega*omega;
 }
 
@@ -41,15 +41,23 @@ double WaveFunction::Psi_value_sqrd(VectorXd a, VectorXd b, VectorXd X, MatrixXd
         prod *= (1 + exp(v(i)));
     }
 
-    //cout << exp(-(double) (Xa.transpose() * Xa)/(m_sigma_sqrd)) * prod * prod << endl;
     return exp(-(double) (Xa.transpose() * Xa)/(m_sigma_sqrd)) * prod * prod;
 }
 
-double WaveFunction::EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W, int D, int interaction) {
-    // Local energy calculations
+double WaveFunction::Psi_value_sqrd_hastings(VectorXd Xa, VectorXd v)
+{
+    //Unnormalized wave function
 
-    VectorXd v = b + (X.transpose() * W).transpose()/m_sigma_sqrd;
-    VectorXd Xa = X - a;
+    double prod = 1;
+    for(int i=0; i<m_N; i++) {
+        prod *= (1 + exp(v(i)));
+    }
+
+    return exp(-(double) (Xa.transpose() * Xa)/(m_sigma_sqrd)) * prod * prod;
+}
+
+double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, int D, int interaction) {
+    // Local energy calculations
 
     // Kinetic energy
     VectorXd e = VectorXd::Zero(m_N);
@@ -79,24 +87,18 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd a, VectorXd b, MatrixXd W, int
     return E;
 }
 
-void WaveFunction::Gradient_a(VectorXd X, VectorXd a, VectorXd &da) {
+void WaveFunction::Gradient_a(VectorXd Xa, VectorXd &da) {
 
-    VectorXd Xa = X - a;
     da = Xa/m_sigma_sqrd;
 }
 
-void WaveFunction::Gradient_b(VectorXd b, VectorXd X, MatrixXd W, VectorXd &db) {
+void WaveFunction::Gradient_b(VectorXd v, VectorXd &db) {
 
-    VectorXd v = b + (X.transpose() * W).transpose()/m_sigma_sqrd;
-
-    for(int i=0; i<m_N; i++) {
+    for(int i=0; i<m_N; i++)
         db(i) = 1/(1 + exp(-v(i)));
-    }
 }
 
-void WaveFunction::Gradient_W(VectorXd X, VectorXd b, MatrixXd W, MatrixXd &dW) {
-
-    VectorXd v = b + (X.transpose() * W).transpose()/m_sigma_sqrd;
+void WaveFunction::Gradient_W(VectorXd X, VectorXd v, MatrixXd &dW) {
 
     for(int i=0; i<m_N; i++) {
         for(int j=0; j<m_N; j++) {
