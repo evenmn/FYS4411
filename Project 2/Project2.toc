@@ -1,0 +1,25 @@
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}
+\contentsline {section}{\numberline {2}Theory}{3}{section.2}
+\contentsline {subsection}{\numberline {2.1}Presentation of potential}{3}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Solving with machine learning}{3}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}Restricted Boltzmann Machines}{4}{subsubsection.2.2.1}
+\contentsline {subsection}{\numberline {2.3}Energy calculation}{4}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}Onebody density}{4}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.5}Scaling}{4}{subsection.2.5}
+\contentsline {subsection}{\numberline {2.6}Error estimation}{4}{subsection.2.6}
+\contentsline {section}{\numberline {3}Method}{4}{section.3}
+\contentsline {subsection}{\numberline {3.1}Variational Monte Carlo}{4}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Metropolis Algorithm}{4}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Brute force}{4}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Importance sampling}{4}{subsubsection.3.2.2}
+\contentsline {subsubsection}{\numberline {3.2.3}Gibbs sampling}{4}{subsubsection.3.2.3}
+\contentsline {subsection}{\numberline {3.3}Minimalization method}{4}{subsection.3.3}
+\contentsline {subsubsection}{\numberline {3.3.1}Gradient decent}{4}{subsubsection.3.3.1}
+\contentsline {section}{\numberline {4}Code}{4}{section.4}
+\contentsline {subsection}{\numberline {4.1}Structure}{4}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Implementation}{4}{subsection.4.2}
+\contentsline {section}{\numberline {5}Results}{4}{section.5}
+\contentsline {section}{\numberline {6}Discussion}{4}{section.6}
+\contentsline {section}{\numberline {7}Conclusion}{4}{section.7}
+\contentsline {section}{\numberline {8}Appendix A}{5}{section.8}
+\contentsline {section}{\numberline {9}References}{6}{section.9}
