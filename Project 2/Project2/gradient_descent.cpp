@@ -54,11 +54,11 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     Psi.setTrialWF(N, M, sigma_sqrd, omega);
 
     //Open file for writing
-    //ofstream myfile;
-    //myfile.open("../data/energy.txt");
+    ofstream myfile;
+    myfile.open("../data/energy.txt");
 
-    //ofstream myfile1;
-    //myfile1.open("../data/local_energies_interaction_hastings.txt");
+    ofstream myfile1;
+    myfile1.open("../data/local_energies_interaction_hastings.txt");
 
 
     for(int iter=0; iter<iterations; iter++) {
@@ -81,32 +81,39 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             X_new = X;              //Setting new matrix equal to old one
             M_rand = mrand(gen);    //Random particle and dimension
 
-            if(sampling == 0) {
-                //Standard Metropolis
-                X_new(M_rand) = X(M_rand) + (2*random_position() - 1.0)*steplength;
-                psi_ratio = Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W);
+            if(sampling==0||sampling==1){
+                if(sampling == 0) {
+                    //Standard Metropolis
+                    X_new(M_rand) = X(M_rand) + (2*random_position() - 1.0)*steplength;
+                    psi_ratio = Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W);
+                }
+
+                else if(sampling == 1) {
+                    //Metropolis-Hastings
+                    X_new(M_rand) = X(M_rand) + Diff*QForce(Xa, v, W, sigma_sqrd, M_rand)*timestep + eps_gauss(gen)*sqrt(timestep);
+                    VectorXd X_newa = X_new - a;
+                    psi_ratio = GreenFuncSum(X, X_new, X_newa, Xa, v, W, sigma_sqrd, timestep, D, Diff) * \
+                                (Psi.Psi_value_sqrd_hastings(X_newa, v)/Psi.Psi_value_sqrd_hastings(Xa, v));
+                }
+
+                if(psi_ratio >= random_position()&&sampling!=2) {
+                    //accept and update
+                    X = X_new;
+                    accept += 1;
+                    E = Psi.EL_calc(X, Xa, v, W, D, interaction);
+                    Xa = X - a;
+                    v = b + (W.transpose() * X)/(sigma_sqrd);
+                }
+
             }
-            else if(sampling == 1) {
-                //Metropolis-Hastings
-                X_new(M_rand) = X(M_rand) + Diff*QForce(Xa, v, W, sigma_sqrd, M_rand)*timestep + eps_gauss(gen)*sqrt(timestep);
-                VectorXd X_newa = X_new - a;
-                psi_ratio = GreenFuncSum(X, X_new, X_newa, Xa, v, W, sigma_sqrd, timestep, D, Diff) * \
-                            (Psi.Psi_value_sqrd_hastings(X_newa, v)/Psi.Psi_value_sqrd_hastings(Xa, v));
-            }
+
             else if(sampling == 2) {
                 //Gibbs' sampling
+                N_rand = nrand(gen);
+                //cout << h(N_rand) << endl;
                 X(M_rand) = x_sampling(a, h, W, sigma_sqrd, M_rand);
-                //Continue writing sampling function for h
-
-            }
-
-            if(psi_ratio >= random_position()&&sampling!=2) {
-                //accept and update
-                X = X_new;
-                accept += 1;
-                E = Psi.EL_calc(X, Xa, v, W, D, interaction);
-                Xa = X - a;
-                v = b + (W.transpose() * X)/(sigma_sqrd);
+                h(N_rand) = h_sampling(b, X, W, sigma_sqrd, N_rand);
+                //cout << h(N_rand) << "\n" << endl;
             }
 
             //if(iter==iterations-1) myfile1 << E << endl;
@@ -149,10 +156,10 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         W -= 2*eta*(dWE_tot - EL_avg*dW_tot)/MC;
 
         //Write to file
-        //myfile << EL_avg << "\n";
+        myfile << EL_avg << "\n";
 
     }
     //Close myfile
-    //if(myfile.is_open())  myfile.close();
-    //if(myfile1.is_open()) myfile1.close();
+    if(myfile.is_open())  myfile.close();
+    if(myfile1.is_open()) myfile1.close();
 }
