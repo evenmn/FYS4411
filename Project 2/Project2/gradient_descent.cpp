@@ -21,7 +21,15 @@ double random_position(){
     return dis(gen);
 }
 
-void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, int sampling, double sigma, double omega, double steplength, double timestep, double eta, bool interaction) {
+void volume(double* buffer, double* bin_dist, int N_bins) {
+    buffer[0] = (4*M_PI/3)*pow(bin_dist[0], 3);
+    for(int j = 1; j<N_bins; j++) {
+        buffer[j] = (4*M_PI/3)*pow((bin_dist[j]), 3) - buffer[j-1];
+    }
+}
+
+void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, int sampling, double sigma, \
+                     double omega, double steplength, double timestep, double eta, bool interaction, bool one_body) {
 
     //Constants
     double psi_ratio = 0;               //ratio of new and old wave function
@@ -52,6 +60,28 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
     WaveFunction Psi;
     Psi.setTrialWF(N, M, sigma_sqrd, omega);
+
+    //Define bins for the one body density measure
+    int number_of_bins = 500;
+    double max_radius = 3;
+    double radial_step = max_radius/number_of_bins;
+    double buffer[number_of_bins];
+    double bin_dist[number_of_bins];
+    double bins_particles[number_of_bins];
+
+    ofstream ob_file;
+
+    if(one_body) {
+        for(int i=0; i<number_of_bins; i++){
+            bin_dist[i] = i * radial_step;
+            bins_particles[i] = 0;
+        }
+
+        //Open file for writing (will write for a specific alpha)
+        ob_file.open ("../data/ob_density.dat");
+
+        volume(buffer, bin_dist, number_of_bins);
+    }
 
     //Open file for writing
     ofstream myfile;
@@ -118,6 +148,26 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
             //if(iter==iterations-1) myfile1 << E << endl;
 
+            if(one_body || iter == iterations-1) {
+                for(int j=0; j<P; j++) {
+                    double dist = 0;
+                    for(int d=0; d<D; d++) {
+                        dist += X(D*j+d)*X(D*j+d);
+                    }
+                    double r = sqrt(dist);      //Distance from particle to origin
+                    double err = 1000000;       //Initial error
+                    int bin_nr = 0;             //Which bin a particle is located at
+                    for(int k=0; k<number_of_bins; k++) {
+                        double e = fabs(buffer[k] - r);
+                        if(e < err) {
+                            err = e;
+                            bin_nr = k;
+                        }
+                    }
+                    bins_particles[bin_nr] += 1;
+                }
+            }
+
             VectorXd da = VectorXd::Zero(M);
             VectorXd db = VectorXd::Zero(N);
             MatrixXd dW = MatrixXd::Zero(M,N);
@@ -137,6 +187,16 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
         }
         clock_t end_time = clock();
+
+        //Printing onebody density to file
+        if(one_body || iter == iterations-1){
+            //Write to file
+            for(int j=0; j<number_of_bins; j++) {
+               ob_file << bins_particles[j]/(buffer[j]*MC) << "\n";
+            }
+            //Close myfile
+            ob_file.close();
+        }
 
         //Calculate <EL> and <EL^2>
         double EL_avg = EL_tot/MC;
