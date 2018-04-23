@@ -28,6 +28,11 @@ void volume(double* buffer, double* bin_dist, int N_bins) {
     }
 }
 
+int factorial(int n)
+{
+  return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
+}
+
 void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, int sampling, double sigma, \
                      double omega, double steplength, double timestep, double eta, bool interaction, bool one_body) {
 
@@ -105,6 +110,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         MatrixXd dWE_tot          = MatrixXd::Zero(M,N);
 
         double accept = 0;
+        double tot_dist = 0;
 
         clock_t start_time = clock();
         for(int i=0; i<MC; i++) {
@@ -155,6 +161,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                         dist += X(D*j+d)*X(D*j+d);
                     }
                     double r = sqrt(dist);      //Distance from particle to origin
+
                     double err = 1000000;       //Initial error
                     int bin_nr = 0;             //Which bin a particle is located at
                     for(int k=0; k<number_of_bins; k++) {
@@ -165,6 +172,17 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                         }
                     }
                     bins_particles[bin_nr] += 1;
+                }
+            }
+
+            if(iter == iterations - 1) {
+                for(int j=0; j<P; j++) {
+                    for(int k=0; k<j; k++) {
+                        double dist = 0;
+                        for(int d=0; d<D; d++)
+                            dist += (X(D*j+d) - X(D*k+d))*(X(D*j+d) - X(D*k+d));
+                        tot_dist += sqrt(dist);
+                    }
                 }
             }
 
@@ -188,16 +206,6 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         }
         clock_t end_time = clock();
 
-        //Printing onebody density to file
-        if(one_body || iter == iterations-1){
-            //Write to file
-            for(int j=0; j<number_of_bins; j++) {
-               ob_file << bins_particles[j]/(buffer[j]*MC) << "\n";
-            }
-            //Close myfile
-            ob_file.close();
-        }
-
         //Calculate <EL> and <EL^2>
         double EL_avg = EL_tot/MC;
         double EL_avg_sqrd = EL_tot_sqrd/MC;
@@ -209,6 +217,18 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         cout << "Acceptance ratio: " << accept/MC << endl;
         cout << "Variance " << variance << endl;
         cout << "CPU time: " << CPU_time << "\n" << endl;
+
+        //Printing onebody density to file
+        if(one_body || iter == iterations-1){
+            //Write to file
+            for(int j=0; j<number_of_bins; j++) {
+               ob_file << bins_particles[j]/(buffer[j]*MC) << "\n";
+            }
+            //Close myfile
+            ob_file.close();
+
+            cout << "Mean distance: " << tot_dist/(MC*factorial(P-1)) << endl;
+        }
 
         //Gradient descent
         a -= 2*eta*(daE_tot - EL_avg*da_tot)/MC;
