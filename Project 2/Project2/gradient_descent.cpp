@@ -28,8 +28,7 @@ void volume(double* buffer, double* bin_dist, int N_bins) {
     }
 }
 
-int factorial(int n)
-{
+int factorial(int n) {
   return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
 }
 
@@ -100,7 +99,10 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         //averages and energies
         double EL_tot      = 0;          //sum of energies of all states
         double EL_tot_sqrd = 0;          //sum of energies of all states squared
-        double E = Psi.EL_calc(X, Xa, v, W, D, interaction);
+        double E_k         = 0;
+        double E_ext       = 0;
+        double E_int       = 0;
+        double E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
 
         VectorXd da_tot           = VectorXd::Zero(M);
         VectorXd daE_tot          = VectorXd::Zero(M);
@@ -136,7 +138,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                     //accept and update
                     X = X_new;
                     accept += 1;
-                    E = Psi.EL_calc(X, Xa, v, W, D, interaction);
+                    E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
                     Xa = X - a;
                     v = b + (W.transpose() * X)/(sigma_sqrd);
                 }
@@ -214,6 +216,9 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
         cout << "\n--- Iteration " << iter << " ---" << endl;
         cout << "E_L_avg: " << EL_avg << endl;
+        cout << "<E_k>: " << E_k/MC << endl;
+        cout << "<E_ext>: " << E_ext/MC << endl;
+        cout << "<E_int>: " << E_int/MC << endl;
         cout << "Acceptance ratio: " << accept/MC << endl;
         cout << "Variance " << variance << endl;
         cout << "CPU time: " << CPU_time << "\n" << endl;

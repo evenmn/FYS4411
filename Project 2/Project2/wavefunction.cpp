@@ -56,7 +56,7 @@ double WaveFunction::Psi_value_sqrd_hastings(VectorXd Xa, VectorXd v)
     return exp(-(double) (Xa.transpose() * Xa)/(m_sigma_sqrd)) * prod * prod;
 }
 
-double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, int D, int interaction) {
+double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, int D, int interaction, double &E_k, double &E_ext, double &E_int) {
     // Local energy calculations
 
     // Kinetic energy
@@ -77,12 +77,18 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
     E -= m_N * m_sigma_sqrd;
     E += Xa.transpose() * Xa;
     E = E/(2 * m_sigma_sqrd * m_sigma_sqrd);
-
-    // Harmonic oscillator potential
-    E += (double) (X.transpose() * X) * m_omega_sqrd/ 2;
+    E_k += E;
 
     // Interaction energy
-    if(interaction) E += rij(X, D);
+    double E_p = 0;
+    if(interaction) E_p += rij(X, D);
+    E += E_p;
+    E_int += E_p;
+
+    // Harmonic oscillator potential
+    E_p = (double) (X.transpose() * X) * m_omega_sqrd/ 2;
+    E += E_p;
+    E_ext += E_p;
 
     return E;
 }
