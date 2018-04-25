@@ -62,7 +62,8 @@ Abstract
 
 
 \section{Theory} \label{sec:Theory}
-\subsection{Presentation of potential}
+\subsection{Presentation of potential} \label{sec:Presentation_of_potential}
+
 In this project, we simulate a system of $P$ electrons trapped in a harmonic oscillator potential, with a Hamiltonian given by
 
 \begin{equation}
@@ -73,11 +74,14 @@ In this project, we simulate a system of $P$ electrons trapped in a harmonic osc
 where $\omega$ is the harmonic oscillaor potential and  $r_i = \sqrt{x_i^2 + y_i^2}$ is the position of electron $i$. The term $\frac{1}{r_{ij}}$ is the interacting term, where $r_ij = |r_i - r_j|$ is the distance between a given pair of interacting electrons. Natural units have been used, such that $\hbar = c = m_e = e = 1$.
 \par 
 
-\subsection{Solving with machine learning}
+\subsection{Solving this with machine learning}
 Usually, when solving a system of particles as the one described in the previous system, we would need an anzats for the wave function, where we use our physical intuition to create the form of a wave function with different variational parameters, and then let it be up to the computer to find the optimal parameters through a minimization method. However, this method is only as good as the physical intuition; if the form of the wave function is unrealistic, the results will be the same, and there is no guarantee that we have actually found a ground state energy.
 \par 
-This challenge can be solved by using machine learning.
+\vspace{3mm}
+This challenge can be solved by using machine learning. There are several different types of machine learning systems, and the one we will present and utilize in this project has the ability to learn a probability distribution. This is perfect for quantum mechanical problems, as we know from quantum mechanics the wave function $/Psi$ is nothing more than a probability denisty, giving that $/Psi^2$ is a probability distribution that says something about where a given particle most probabliy can be found. As we are solely interested in the energy of the two-fermion system, and not the exact wave function, the fact that the machine learning program does not explicitly give the wave function is therefore of no consequence.
 
+\subsubsection{Machine Learning}
+With the goal of solving the quantum mechanical system presented in section \ref{sec:Presentation_of_potential} in mind, we should start by explaining what machine learning is. Inspired by neurons in the human brain, a neural network is a programmed network of variables, called nodes, that comminucate in a given manner.  
 
 \subsubsection{Restricted Boltzmann Machines}
 
