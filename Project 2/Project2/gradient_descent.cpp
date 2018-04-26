@@ -99,9 +99,9 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         //averages and energies
         double EL_tot      = 0;          //sum of energies of all states
         double EL_tot_sqrd = 0;          //sum of energies of all states squared
-        double E_k         = 0;
-        double E_ext       = 0;
-        double E_int       = 0;
+        double E_k         = 0;          //sum of kinetic energies
+        double E_ext       = 0;          //sum of potential energy from HO
+        double E_int       = 0;          //sum of potential energy from interaction
         double E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
 
         VectorXd da_tot           = VectorXd::Zero(M);
@@ -151,10 +151,9 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                 //cout << h(N_rand) << endl;
                 X(M_rand) = x_sampling(a, h, W, sigma_sqrd, M_rand);
                 h(N_rand) = h_sampling(b, X, W, sigma_sqrd, N_rand);
+                cout << h(N_rand) << endl;
                 //cout << h(N_rand) << "\n" << endl;
             }
-
-            //if(iter==iterations-1) myfile1 << E << endl;
 
             if(one_body || iter == iterations-1) {
                 for(int j=0; j<P; j++) {
@@ -178,6 +177,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             }
 
             if(iter == iterations - 1) {
+                myfile1 << E << endl;
                 for(int j=0; j<P; j++) {
                     for(int k=0; k<j; k++) {
                         double dist = 0;
@@ -224,7 +224,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         cout << "CPU time: " << CPU_time << "\n" << endl;
 
         //Printing onebody density to file
-        if(one_body || iter == iterations-1){
+        if(one_body && iter == iterations-1){
             //Write to file
             for(int j=0; j<number_of_bins; j++) {
                ob_file << bins_particles[j]/(buffer[j]*MC) << "\n";
@@ -239,6 +239,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         a -= 2*eta*(daE_tot - EL_avg*da_tot)/MC;
         b -= 2*eta*(dbE_tot - EL_avg*db_tot)/MC;
         W -= 2*eta*(dWE_tot - EL_avg*dW_tot)/MC;
+        cout << W << "\n" << endl;
 
         //Write to file
         myfile << EL_avg << "\n";
