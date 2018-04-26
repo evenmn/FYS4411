@@ -22,7 +22,7 @@ double x_sampling(const VectorXd &a, const VectorXd &h, const MatrixXd &W, doubl
     for(int j=0; j<N; j++) {
         mu += h(j)*W(i,j);
     }
-    normal_distribution<double> d(mu, sigma_sqrd);
+    normal_distribution<double> d(mu, sigma_sqrd/2);
     return d(Gen);
 
 }
@@ -32,21 +32,11 @@ double h_sampling(const VectorXd &b, const VectorXd &X, const MatrixXd &W, doubl
 
     VectorXd v = b + (X.transpose() * W).transpose()/sigma_sqrd;
 
-    //WASNT ALLOWED TO DIVIDE BY SIGMA_SQRD, MUST BE FIXED
-    double P_h1 = 1 + exp(-v(i));
+    double P_h1 = 1 + exp(-2*v(i));
     P_h1 = 1.0/P_h1;
 
-    /*
-    int M = X.size();
-    double P_h1 = 0;
-    for(int j=0;j<M;j++){
-        P_h1 += X(j)*W(j,i);
-    }
-    P_h1 = -b(i)-P_h1/sigma_sqrd;
-    P_h1 = 1.0/(1.0 + exp(P_h1));
-    */
 
-    double P_h0 = 1 + exp(v(i));
+    double P_h0 = 1 + exp(2*v(i));
     P_h0 = 1.0/P_h0;
 
     if(P_h1>= Random_position()){

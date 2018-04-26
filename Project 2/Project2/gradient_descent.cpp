@@ -48,10 +48,12 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     uniform_int_distribution<> mrand(0, M-1);         //Random number between 0 and M
     uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
 
-    MatrixXd W = MatrixXd::Random(M, N);
-    VectorXd a = VectorXd::Random(M);
-    VectorXd b = VectorXd::Random(N);
-    VectorXd X = VectorXd::Random(M);
+    double factor=0.01;
+
+    MatrixXd W = MatrixXd::Random(M, N)*factor;
+    VectorXd a = VectorXd::Random(M)*factor;
+    VectorXd b = VectorXd::Random(N)*factor;
+    VectorXd X = VectorXd::Random(M)*factor;
     VectorXd X_new = VectorXd::Zero(M);
     VectorXd h = VectorXd::Zero(N);
 
@@ -87,7 +89,15 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         volume(buffer, bin_dist, number_of_bins);
     }
     //Open file for writing
-    ofstream myfile;
+    ofstream myfile;    /*
+    int M = X.size();
+    double P_h1 = 0;
+    for(int j=0;j<M;j++){
+        P_h1 += X(j)*W(j,i);
+    }
+    P_h1 = -b(i)-P_h1/sigma_sqrd;
+    P_h1 = 1.0/(1.0 + exp(P_h1));
+    */
     myfile.open("../data/energy.txt");
 
     ofstream myfile1;
@@ -100,7 +110,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         double E_k         = 0;          //sum of kinetic energies
         double E_ext       = 0;          //sum of potential energy from HO
         double E_int       = 0;          //sum of potential energy from interaction
-        double E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
+        double E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int, sampling);
         VectorXd da_tot           = VectorXd::Zero(M);
         VectorXd daE_tot          = VectorXd::Zero(M);
         VectorXd db_tot           = VectorXd::Zero(N);
@@ -131,11 +141,11 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                                 (Psi.Psi_value_sqrd_hastings(X_newa, v)/Psi.Psi_value_sqrd_hastings(Xa, v));
                 }
 
-                if(psi_ratio >= random_position()&&sampling!=2) {
+                if(psi_ratio >= random_position()) {
                     //accept and update
                     X = X_new;
                     accept += 1;
-                    E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
+                    E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int, sampling);
                     Xa = X - a;
                     v = b + (W.transpose() * X)/(sigma_sqrd);
                 }
@@ -148,11 +158,9 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                 //cout << h(N_rand) << endl;
                 X(M_rand) = x_sampling(a, h, W, sigma_sqrd, M_rand);
                 h(N_rand) = h_sampling(b, X, W, sigma_sqrd, N_rand);
-                cout << h(N_rand) << endl;
-                //cout << h(N_rand) << "\n" << endl;
                 Xa = X - a;
                 v = b + (X.transpose() * W).transpose()/(sigma_sqrd);
-                E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
+                E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int, sampling);
             }
 
             if(one_body || iter == iterations-1) {
@@ -192,9 +200,9 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             VectorXd da = VectorXd::Zero(M);
             VectorXd db = VectorXd::Zero(N);
             MatrixXd dW = MatrixXd::Zero(M,N);
-            Psi.Gradient_a(Xa, da);
-            Psi.Gradient_b(v, db);            
-            Psi.Gradient_W(X, v, dW);
+            Psi.Gradient_a(Xa, da, sampling);
+            Psi.Gradient_b(v, db, sampling);
+            Psi.Gradient_W(X, v, dW, sampling);
 
 
             da_tot   += da;
