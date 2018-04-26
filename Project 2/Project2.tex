@@ -135,7 +135,44 @@ In this project we
 
 \newpage
 
-\section{Appendix A} \label{sec:appendix_A}
+\section{Appendix A - Local energy calculations} \label{sec:appendix_A}
+The energy can be calculated by introducing a local energy, where the acerage local energy goes to the true energy with a sufficient amount of samples. This local energy can be splitted up in a kinetic part, a part from the harmonic oscillator potential and a interacting part,
+\begin{equation}
+E_L=\sum_{k=1}^{M}(E_{\text{KIN},k} + E_{\text{EXT},k})+E_{\text{POT}}.
+\end{equation}
+As discussed in \cite{Nordhagen}, the kinetic part can be expressed as
+\begin{align}
+E_{\text{KIN},k}&=\frac{1}{\Psi_T}\nabla_k^2\Psi_T\\
+&=(\nabla_k\ln\Psi_T)^2+\nabla_k^2\ln\Psi_T
+\end{align}
+where we have used that
+\begin{equation}
+\frac{1}{\Psi_T}\nabla_k\Psi_T=\nabla_k\ln\Psi_T.
+\end{equation}
+
+\begin{equation}
+\frac{\partial}{\partial X_k}\ln\Psi_T=-\frac{X_k-a_k}{\sigma^2}+\sum_{j=1}^{N}\frac{W_{kj}}{\sigma^2}\text{Logistic}(v(j))
+\end{equation}
+\begin{equation}
+\frac{\partial^2}{\partial X_k^2}\ln\Psi_T=-\frac{1}{\sigma^2}+\sum_{j=1}^{N}\frac{W_{kj}^2}{\sigma^4}\text{Logistic}^2(v(j))e^{v(j)}
+\end{equation}
+where 
+\begin{equation}
+\text{Logistic}(x)=\frac{1}{1+e^x}
+\end{equation}
+and
+\begin{equation}
+v(j)=b_j+\sum_{i=1}^{M}\frac{X_iW_{ij}}{\sigma^2}.
+\end{equation}
+Thus the local energy can be expressed as
+\begin{align}
+E_L&=\sum_{i=1}^{N}\frac{\boldsymbol{W}_{*i}^T\boldsymbol{W}_{*i}}{\sigma^4}\text{Logistic}^2\big(v(i)\big)+\\
+&\phantom{=}\sum_{i,j=1}^{N,N}\frac{\boldsymbol{W}_{*i}^T\boldsymbol{W}_{*j}}{\sigma^4}\text{Logistic}\big(v(i)\big)\text{Logistic}\big(v(j)\big)-\\
+&\phantom{=}2\sum_{i=1}^N\frac{\boldsymbol{W}_{*i}^T(\boldsymbol{X}-\boldsymbol{a})}{\sigma^4}\text{Logistic}(v(i))+\\
+&\phantom{=}\frac{(\boldsymbol{X}-\boldsymbol{a})^T\cdot(\boldsymbol{X}-\boldsymbol{a})}{\sigma^4}-\frac{1}{\sigma^2}+\boldsymbol{X}^T\boldsymbol{X}+E_{\text{INT}}
+\end{align}
+
+
 
 \newpage
 \section{References}
@@ -175,7 +212,7 @@ In this project we
 	\bibitem{Marsland}
 	S. Marsland, \emph{Machine Learning: An algorithmic Perspective, Second edition} (2015)
 	\bibitem{Nordhagen}
-	E. M. Nordhagen and D.Gjestvang \emph{Computational Physics II: Project 1} (2018)
+	 D. Gjestvang, E. M. Nordhagen \emph{Computational Physics II: Project 1} (2018)
 	
 	
 \end{thebibliography}

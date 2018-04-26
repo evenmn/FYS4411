@@ -107,7 +107,7 @@ void WaveFunction::Gradient_b(VectorXd v, VectorXd &db) {
 void WaveFunction::Gradient_W(VectorXd X, VectorXd v, MatrixXd &dW) {
 
     for(int i=0; i<m_N; i++) {
-        for(int j=0; j<m_N; j++) {
+        for(int j=0; j<m_M; j++) {
             dW(j,i) = X(j)/(1 + exp(-v(i)));
         }
     }
