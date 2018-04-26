@@ -30,10 +30,13 @@ double x_sampling(const VectorXd &a, const VectorXd &h, const MatrixXd &W, doubl
 double h_sampling(const VectorXd &b, const VectorXd &X, const MatrixXd &W, double sigma_sqrd, int i){
     //unsure how to implement; should the largest of P(h=1 given x) and P(h=0 given x be chosen?)
 
-    //WASNT ALLOWED TO DIVIDE BY SIGMA_SQRD, MUST BE FIXED
-    //double P_h1 = 1 + exp(-b(i) - X.transpose()*W.col(i));
-    //P_h1 = 1.0/P_h1;
+    VectorXd v = b + (X.transpose() * W).transpose()/sigma_sqrd;
 
+    //WASNT ALLOWED TO DIVIDE BY SIGMA_SQRD, MUST BE FIXED
+    double P_h1 = 1 + exp(-v(i));
+    P_h1 = 1.0/P_h1;
+
+    /*
     int M = X.size();
     double P_h1 = 0;
     for(int j=0;j<M;j++){
@@ -41,9 +44,9 @@ double h_sampling(const VectorXd &b, const VectorXd &X, const MatrixXd &W, doubl
     }
     P_h1 = -b(i)-P_h1/sigma_sqrd;
     P_h1 = 1.0/(1.0 + exp(P_h1));
+    */
 
-
-    double P_h0 = 1 + exp(b(i) + X.transpose()*W.col(i));
+    double P_h0 = 1 + exp(v(i));
     P_h0 = 1.0/P_h0;
 
     if(P_h1>= Random_position()){
