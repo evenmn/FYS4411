@@ -81,11 +81,19 @@ Usually, when solving a system of particles as the one described in the previous
 This challenge can be solved by using machine learning. There are several different types of machine learning systems, and the one we will present and utilize in this project has the ability to learn a probability distribution. This is perfect for quantum mechanical problems, as we know from quantum mechanics the wave function $/Psi$ is nothing more than a probability denisty, giving that $/Psi^2$ is a probability distribution that says something about where a given particle most probabliy can be found. As we are solely interested in the energy of the two-fermion system, and not the exact wave function, the fact that the machine learning program does not explicitly give the wave function is therefore of no consequence.
 
 \subsubsection{Machine Learning}
-With the goal of solving the quantum mechanical system presented in section \ref{sec:Presentation_of_potential} in mind, we should start by explaining what machine learning is. Inspired by neurons in the human brain, a neural network is a programmed network of variables, called nodes, that comminucate in a given manner.  
+With the goal of solving the quantum mechanical system presented in section \ref{sec:Presentation_of_potential} in mind, we should start by explaining what machine learning is. Machine learning is the idea that a computer can be trained to learn to yield certaint outputs, without directly being told exactly what to give. Examples on this is pattern recognizion, where the computer first is shown for example pictures of wolves and huskies. After training the computer on pictures where the computer sees huskies and wolves and is told the correct answer, it should after a sufficiently long training period, be able to recognize huskies and wolves by itself. 
+
+The example described above is what we call supervised learning, where the correct output answer is known during the training program. A machine learning program could also be unsupervised, where the correct answer is unknown, or based on reinforcement learning, where the the program learns by conducting trial-and-error experiments. 
+
+ This sound amazing, and sometimes maybe even a bit impossible. Therefore the question now is: how to program computers to learn, just like humans? The answer is, fittingly, that we should make the program run like the the human brain by implementing what is called a neural network.  Inspired by neurons in the human brain, a neural network is a programmed network of variables, called nodes, that comminucate in a given manner. Each node preforms a simple process: based on the input it receives, it decides wheter or not to fire. 
 
 \subsubsection{Restricted Boltzmann Machines}
+In this project we 
+
 
 \subsection{Energy calculation}
+
+
 
 \subsection{Onebody density}
 
@@ -155,6 +163,8 @@ With the goal of solving the quantum mechanical system presented in section \ref
 	L. P. Pitaevskii, \emph{Vortex lines in an imperfect Bose gas}, Sov. Phys. JETP. \textbf{13} (2): 451–454, (1961).
 	\bibitem{Marsland}
 	S. Marsland, \emph{Machine Learning: An algorithmic Perspective, Second edition} (2015)
+	\bibitem{Nordhagen}
+	E. M. Nordhagen and D.Gjestvang \emph{Computational Physics II: Project 1} (2018)
 	
 	
 \end{thebibliography}
