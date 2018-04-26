@@ -63,7 +63,6 @@ Abstract
 
 \section{Theory} \label{sec:Theory}
 \subsection{Presentation of potential} \label{sec:Presentation_of_potential}
-
 In this project, we simulate a system of $P$ electrons trapped in a harmonic oscillator potential, with a Hamiltonian given by
 
 \begin{equation}
@@ -71,8 +70,18 @@ In this project, we simulate a system of $P$ electrons trapped in a harmonic osc
 \hat{H} = \sum_{i=1}^{P} (-\frac{1}{2} \nabla_i^2 + \frac{1}{2} \omega^2 r_i ^2) + \sum_{i<j} \frac{1}{r_{ij}} 
 \end{equation}
 
-where $\omega$ is the harmonic oscillaor potential and  $r_i = \sqrt{x_i^2 + y_i^2}$ is the position of electron $i$. The term $\frac{1}{r_{ij}}$ is the interacting term, where $r_ij = |r_i - r_j|$ is the distance between a given pair of interacting electrons. Natural units have been used, such that $\hbar = c = m_e = e = 1$.
-\par 
+where $\omega$ is the harmonic oscillaor potential and  $r_i = \sqrt{x_i^2 + y_i^2}$ is the position of electron $i$. The term $\frac{1}{r_{ij}}$ is the interacting term, where $r_{ij} = |r_i - r_j|$ is the distance between a given pair of interacting electrons. Natural units have been used, such that $\hbar = c = m_e = e = 1$.
+
+Since electrons are fermions, we need an antisymmetric wavefunction under exchange of two coordinates, and we need to take the Pauli principle into account. A Slater determinant is therefore needed for multiple fermions to ensure that the total wavefunction is antisymmetric. In this project we will study particles in the ground state only, and according to the Pauli principle we can in this case study a maximum of two particles with spin $s=\pm 1/2$. The slater determinant for two particles read
+\begin{equation}
+\Psi_T=
+\begin{vmatrix}
+\Phi_1(\boldsymbol{r}_1) & \Phi_2(\boldsymbol{r}_1)\\
+\Phi_1(\boldsymbol{r}_2) & \Phi_2(\boldsymbol{r}_2)
+\end{vmatrix}
+=\Phi_1(\boldsymbol{r}_1)\Phi_2(\boldsymbol{r}_2)-\Phi_2(\boldsymbol{r}_1)\Phi_1(\boldsymbol{r}_2)
+\end{equation}
+where $\Phi_i(\boldsymbol{r})$ is the single particle wave function (SPF) of state $i$. This contains a spatial part and a spin part, and we assume that it can be splitted up such that the spin part takes the antisymmetry property and does not affect the energy. Therefore we only need a symmetric spatial part to calculate the energies.
 
 \subsection{Solving this with machine learning}
 Usually, when solving a system of particles as the one described in the previous system, we would need an anzats for the wave function, where we use our physical intuition to create the form of a wave function with different variational parameters, and then let it be up to the computer to find the optimal parameters through a minimization method. However, this method is only as good as the physical intuition; if the form of the wave function is unrealistic, the results will be the same, and there is no guarantee that we have actually found a ground state energy.
