@@ -86,14 +86,12 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
         volume(buffer, bin_dist, number_of_bins);
     }
-
     //Open file for writing
     ofstream myfile;
     myfile.open("../data/energy.txt");
 
     ofstream myfile1;
     myfile1.open("../data/local_energies_interaction_hastings.txt");
-
 
     for(int iter=0; iter<iterations; iter++) {
         //averages and energies
@@ -103,7 +101,6 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         double E_ext       = 0;
         double E_int       = 0;
         double E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
-
         VectorXd da_tot           = VectorXd::Zero(M);
         VectorXd daE_tot          = VectorXd::Zero(M);
         VectorXd db_tot           = VectorXd::Zero(N);
@@ -188,12 +185,14 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                 }
             }
 
+
             VectorXd da = VectorXd::Zero(M);
             VectorXd db = VectorXd::Zero(N);
             MatrixXd dW = MatrixXd::Zero(M,N);
             Psi.Gradient_a(Xa, da);
-            Psi.Gradient_b(v, db);
+            Psi.Gradient_b(v, db);            
             Psi.Gradient_W(X, v, dW);
+
 
             da_tot   += da;
             daE_tot  += E*da;
@@ -247,4 +246,5 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     //Close myfile
     if(myfile.is_open())  myfile.close();
     if(myfile1.is_open()) myfile1.close();
+
 }
