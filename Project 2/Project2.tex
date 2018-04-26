@@ -70,7 +70,7 @@ In this project, we simulate a system of $P$ electrons trapped in a harmonic osc
 \hat{H} = \sum_{i=1}^{P} (-\frac{1}{2} \nabla_i^2 + \frac{1}{2} \omega^2 r_i ^2) + \sum_{i<j} \frac{1}{r_{ij}} 
 \end{equation}
 
-where $\omega$ is the harmonic oscillaor potential and  $r_i = \sqrt{x_i^2 + y_i^2}$ is the position of electron $i$. The term $\frac{1}{r_{ij}}$ is the interacting term, where $r_{ij} = |r_i - r_j|$ is the distance between a given pair of interacting electrons. Natural units have been used, such that $\hbar = c = m_e = e = 1$.
+where $\omega$ is the harmonic oscillator potential and  $r_i = \sqrt{x_i^2 + y_i^2}$ is the position of electron $i$. The term $\frac{1}{r_{ij}}$ is the interacting term, where $r_{ij} = |r_i - r_j|$ is the distance between a given pair of interacting electrons. Natural units have been used, such that $\hbar = c = m_e = e = 1$.
 
 Since electrons are fermions, we need an antisymmetric wavefunction under exchange of two coordinates, and we need to take the Pauli principle into account. A Slater determinant is therefore needed for multiple fermions to ensure that the total wavefunction is antisymmetric. In this project we will study particles in the ground state only, and according to the Pauli principle we can in this case study a maximum of two particles with spin $s=\pm 1/2$. The slater determinant for two particles read
 \begin{equation}
@@ -122,6 +122,18 @@ The idea behind machine learning is that the weights $W_i$, that decides how muc
 \subsubsection{Restricted Boltzmann Machines}
 There are plenty of ways to put together a neural network, as one can modify the number of nodes and layers, the bias, and also which nodes that are allowed to communicated. In this project, we will be using the so-called Restricted Boltzmann Machine (RBM). It is a two-layer network. The reason why it is named "restrictive" is that there are no connections between nodes in the same layer, but every node in the previous layer is connected to all the nodes in the next layer. The RBM can learn to draw samples from a probability distribution, which is just what we want in our project. In addition, we want to use a Gaussian-Binary RBM, where the hidden nodes have binary values, while the positions of the particles can take continous values, as they are, in fact, positions. 
 
+The joint probability distribution is known from statistical mechanics,
+\begin{equation}
+F(\boldsymbol{X},\boldsymbol{H})=\frac{1}{Z}e^{-\beta E(\boldsymbol{X},\boldsymbol{H})}
+\end{equation}
+where we set $\beta=1/kT=1$ and $Z$ is the partition function, which can be ignored since it will vanish anyway. 
+
+The system energy of a Gaussian-Binary RBM is given by
+\begin{equation}
+E(\boldsymbol{X},\boldsymbol{H})=\sum_{i=1}^{M}\frac{(X_i-a_i)^2}{2\sigma_i^2}-\sum_{j=1}^Nb_jH_j-\sum_{i,j=1}^{M,N}\frac{X_iW_{ij}H_j}{\sigma_i^2}
+\end{equation}
+(Hinton 2010). 
+
 
 \subsection{Energy calculation}
 
@@ -141,8 +153,25 @@ There are plenty of ways to put together a neural network, as one can modify the
 \subsubsection{Importance sampling}
 \subsubsection{Gibbs sampling}
 
-\subsection{Minimalization method}
-\subsubsection{Gradient decent}
+\subsection{Gradient descent}
+We use stochastic gradient descent to update the weights in order to minimize the local energy. The process itself is quite similar to that one typically used in Variational Monte Carlo (VMC) where the weights are our variational parameters, but compared with a normal VMC we have a lot more parameters to vary. The updating algorithm for updating the variational parameter $\alpha_i$ goes as
+\begin{equation}
+\alpha_i^+=\alpha_i-\eta d\alpha_i
+\end{equation}
+where the gradient of the local energy with respect to parameter $\alpha_i$ is
+\begin{equation}
+d\alpha_i=\frac{\partial\langle E_L\rangle}{\partial \alpha_i}=2\bigg(\Big\langle E_L\frac{1}{\Psi}\frac{\partial\Psi}{\partial\alpha_i}\Big\rangle-\Big\langle E_L\Big\rangle\Big\langle\frac{1}{\Psi}\frac{\partial\Psi}{\partial\alpha_i}\Big\rangle\bigg)
+\end{equation}
+where $\eta$ is the learning rate. We need to do this for all the parameters, and for our purposes it is convenient to vectorize the gradient such that $d\boldsymbol{a}$ and $d\boldsymbol{b}$ are vectors and $d\boldsymbol{W}$ is a matrix. The gradients to implement are
+\begin{equation}
+d\boldsymbol{a}=\frac{1}{\Psi}\frac{\partial\Psi}{\partial\boldsymbol{a}}=\frac{\boldsymbol{X}-\boldsymbol{a}}{\sigma^2}
+\end{equation}
+\begin{equation}
+d\boldsymbol{b}=\frac{1}{\Psi}\frac{\partial\Psi}{\partial\boldsymbol{b}}=
+\end{equation}
+
+\subsubsection{Adaptive stochastic gradient descent}
+A problem with the standard stochastic gradient descent method is that it will either converge fast, but the precision is poor, or the precision is good, but it converges slowly. To avoid this problem, we want a large learning rate when the energy is far from converging and a small learning rate when the energy converges. 
 
 \section{Code}
 \subsection{Structure}

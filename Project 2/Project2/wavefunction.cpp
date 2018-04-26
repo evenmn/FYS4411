@@ -61,22 +61,25 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
 
     // Kinetic energy
     VectorXd e = VectorXd::Zero(m_N);
+    VectorXd eNominator = VectorXd::Zero(m_N);
     for(int i=0; i<m_N; i++) {
-        e(i) = 1/(1 + exp(-v(i)));
+        double expi = exp(v(i));
+        eNominator(i) = expi;
+        e(i) = 1/(1 + 1./expi);
     }
 
     double E = 0;
     for(int i=0; i<m_N; i++) {
-        E += (double) (Xa.transpose() * W.col(i)) * e(i);
-        E += (double) ((W.col(i)).transpose() * W.col(i)) * e(i) * e(i);
+        E -= 2*(double) (Xa.transpose() * W.col(i)) * e(i);
+        E += (double) ((W.col(i)).transpose() * W.col(i)) * 1/eNominator(i) * e(i)*e(i);
         for(int j=0; j<m_N; j++) {
             E += (double) ((W.col(i)).transpose() * W.col(j)) * e(i) * e(j);
         }
     }
 
-    E -= m_N * m_sigma_sqrd;
+    E -= m_M * m_sigma_sqrd;
     E += Xa.transpose() * Xa;
-    E = E/(2 * m_sigma_sqrd * m_sigma_sqrd);
+    E = -E/(2 * m_sigma_sqrd * m_sigma_sqrd);
     E_k += E;
 
     // Interaction energy
@@ -93,22 +96,22 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
     return E;
 }
 
-void WaveFunction::Gradient_a(VectorXd Xa, VectorXd &da) {
+void WaveFunction::Gradient_a(const VectorXd &Xa, VectorXd &da) {
 
     da = Xa/m_sigma_sqrd;
 }
 
-void WaveFunction::Gradient_b(VectorXd v, VectorXd &db) {
+void WaveFunction::Gradient_b(const VectorXd &v, VectorXd &db) {
 
     for(int i=0; i<m_N; i++)
         db(i) = 1/(1 + exp(-v(i)));
 }
 
-void WaveFunction::Gradient_W(VectorXd X, VectorXd v, MatrixXd &dW) {
+void WaveFunction::Gradient_W(const VectorXd &X, const VectorXd &v, MatrixXd &dW) {
 
     for(int i=0; i<m_N; i++) {
         for(int j=0; j<m_M; j++) {
-            dW(j,i) = X(j)/(1 + exp(-v(i)));
+            dW(j,i) = X(j)/(m_sigma_sqrd*(1 + exp(-v(i))));
         }
     }
 }

@@ -150,6 +150,9 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                 h(N_rand) = h_sampling(b, X, W, sigma_sqrd, N_rand);
                 cout << h(N_rand) << endl;
                 //cout << h(N_rand) << "\n" << endl;
+                Xa = X - a;
+                v = b + (X.transpose() * W).transpose()/(sigma_sqrd);
+                E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
             }
 
             if(one_body || iter == iterations-1) {
@@ -238,7 +241,6 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         a -= 2*eta*(daE_tot - EL_avg*da_tot)/MC;
         b -= 2*eta*(dbE_tot - EL_avg*db_tot)/MC;
         W -= 2*eta*(dWE_tot - EL_avg*dW_tot)/MC;
-        cout << W << "\n" << endl;
 
         //Write to file
         myfile << EL_avg << "\n";
