@@ -44,11 +44,10 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
     //Marsenne Twister Random Number Generator
     normal_distribution<double> eps_gauss(0,1);       //Gaussian distr random number generator
-    normal_distribution<double> eps_gauss_small(0,0.001);       //Gaussian distr random number generator
     uniform_int_distribution<> mrand(0, M-1);         //Random number between 0 and M
     uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
 
-    double factor=0.01;
+    double factor=1;
 
     MatrixXd W = MatrixXd::Random(M, N)*factor;
     VectorXd a = VectorXd::Random(M)*factor;
@@ -59,13 +58,15 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
     VectorXd Xa = X - a;
     VectorXd v = b + (W.transpose() * X)/(sigma_sqrd);
+    VectorXd X_newa = VectorXd::Zero(M);
+    VectorXd v_new = VectorXd::Zero(N);
 
     for(int i=0; i<N; i++) {
         h(i) = hrand(gen);
     }
 
     WaveFunction Psi;
-    Psi.setTrialWF(N, M, sigma_sqrd, omega);
+    Psi.setTrialWF(N, M, sampling, sigma_sqrd, omega);
 
     //Define bins for the one body density measure
     int number_of_bins = 500;
@@ -76,28 +77,18 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     double bins_particles[number_of_bins];
 
     ofstream ob_file;
-
     if(one_body) {
         for(int i=0; i<number_of_bins; i++){
             bin_dist[i] = i * radial_step;
             bins_particles[i] = 0;
         }
-
-        //Open file for writing (will write for a specific alpha)
         ob_file.open ("../data/ob_density.dat");
 
         volume(buffer, bin_dist, number_of_bins);
     }
+
     //Open file for writing
-    ofstream myfile;    /*
-    int M = X.size();
-    double P_h1 = 0;
-    for(int j=0;j<M;j++){
-        P_h1 += X(j)*W(j,i);
-    }
-    P_h1 = -b(i)-P_h1/sigma_sqrd;
-    P_h1 = 1.0/(1.0 + exp(P_h1));
-    */
+    ofstream myfile;
     myfile.open("../data/energy.txt");
 
     ofstream myfile1;
@@ -110,7 +101,8 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         double E_k         = 0;          //sum of kinetic energies
         double E_ext       = 0;          //sum of potential energy from HO
         double E_int       = 0;          //sum of potential energy from interaction
-        double E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int, sampling);
+        double E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
+
         VectorXd da_tot           = VectorXd::Zero(M);
         VectorXd daE_tot          = VectorXd::Zero(M);
         VectorXd db_tot           = VectorXd::Zero(N);
@@ -130,37 +122,38 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                 if(sampling == 0) {
                     //Standard Metropolis
                     X_new(M_rand) = X(M_rand) + (2*random_position() - 1.0)*steplength;
-                    psi_ratio = Psi.Psi_value_sqrd(a, b, X_new, W)/Psi.Psi_value_sqrd(a, b, X, W);
+                    X_newa = X_new - a;
+                    v_new = b + (W.transpose() * X_new)/sigma_sqrd;
+                    psi_ratio = Psi.Psi_value_sqrd(X_newa, v_new)/Psi.Psi_value_sqrd(Xa, v);
                 }
 
                 else if(sampling == 1) {
                     //Metropolis-Hastings
                     X_new(M_rand) = X(M_rand) + Diff*QForce(Xa, v, W, sigma_sqrd, M_rand)*timestep + eps_gauss(gen)*sqrt(timestep);
-                    VectorXd X_newa = X_new - a;
+                    X_newa = X_new - a;
+                    v_new = b + (W.transpose() * X_new)/sigma_sqrd;
                     psi_ratio = GreenFuncSum(X, X_new, X_newa, Xa, v, W, sigma_sqrd, timestep, D, Diff) * \
-                                (Psi.Psi_value_sqrd_hastings(X_newa, v)/Psi.Psi_value_sqrd_hastings(Xa, v));
+                                (Psi.Psi_value_sqrd(X_newa, v_new)/Psi.Psi_value_sqrd(Xa, v));
                 }
 
                 if(psi_ratio >= random_position()) {
                     //accept and update
-                    X = X_new;
                     accept += 1;
-                    E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int, sampling);
-                    Xa = X - a;
-                    v = b + (W.transpose() * X)/(sigma_sqrd);
+                    X  = X_new;
+                    Xa = X_newa;
+                    v  = v_new;
+                    E  = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
                 }
-
             }
 
             else if(sampling == 2) {
                 //Gibbs' sampling
                 N_rand = nrand(gen);
-                //cout << h(N_rand) << endl;
                 X(M_rand) = x_sampling(a, h, W, sigma_sqrd, M_rand);
-                h(N_rand) = h_sampling(b, X, W, sigma_sqrd, N_rand);
+                h(N_rand) = h_sampling(v, N_rand);
                 Xa = X - a;
-                v = b + (X.transpose() * W).transpose()/(sigma_sqrd);
-                E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int, sampling);
+                v = b + (W.transpose() * X)/sigma_sqrd;
+                E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
             }
 
             if(one_body || iter == iterations-1) {
@@ -200,9 +193,9 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             VectorXd da = VectorXd::Zero(M);
             VectorXd db = VectorXd::Zero(N);
             MatrixXd dW = MatrixXd::Zero(M,N);
-            Psi.Gradient_a(Xa, da, sampling);
-            Psi.Gradient_b(v, db, sampling);
-            Psi.Gradient_W(X, v, dW, sampling);
+            Psi.Gradient_a(Xa, da);
+            Psi.Gradient_b(v, db);
+            Psi.Gradient_W(X, v, dW);
 
 
             da_tot   += da;
@@ -224,26 +217,28 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         double variance = (EL_avg_sqrd - EL_avg*EL_avg)/MC;
         double CPU_time = (double)(end_time - start_time)/CLOCKS_PER_SEC;
 
-        cout << "\n--- Iteration " << iter << " ---" << endl;
+        cout << "\n--- Iteration " << iter+1 << " ---" << endl;
         cout << "E_L_avg: " << EL_avg << endl;
-        cout << "<E_k>: " << E_k/MC << endl;
-        cout << "<E_ext>: " << E_ext/MC << endl;
-        cout << "<E_int>: " << E_int/MC << endl;
         cout << "Acceptance ratio: " << accept/MC << endl;
         cout << "Variance " << variance << endl;
         cout << "CPU time: " << CPU_time << "\n" << endl;
 
         //Printing onebody density to file
-        if(one_body && iter == iterations-1){
-            //Write to file
-            for(int j=0; j<number_of_bins; j++) {
-               ob_file << bins_particles[j]/(buffer[j]*MC) << "\n";
+        if(iter == iterations - 1) {
+            if(one_body){
+                //Write to file
+                for(int j=0; j<number_of_bins; j++) {
+                   ob_file << bins_particles[j]/(buffer[j]*MC) << "\n";
+                }
+                //Close myfile
+                ob_file.close();
             }
-            //Close myfile
-            ob_file.close();
-
+            cout << "<E_k>: " << E_k/MC << endl;
+            cout << "<E_ext>: " << E_ext/MC << endl;
+            cout << "<E_int>: " << E_int/MC << endl;
             cout << "Mean distance: " << tot_dist/(MC*factorial(P-1)) << endl;
         }
+
 
         //Gradient descent
         a -= 2*eta*(daE_tot - EL_avg*da_tot)/MC;

@@ -27,25 +27,12 @@ double x_sampling(const VectorXd &a, const VectorXd &h, const MatrixXd &W, doubl
 
 }
 
-double h_sampling(const VectorXd &b, const VectorXd &X, const MatrixXd &W, double sigma_sqrd, int i){
-    //unsure how to implement; should the largest of P(h=1 given x) and P(h=0 given x be chosen?)
+double h_sampling(const VectorXd &v, int i){
 
-    VectorXd v = b + (X.transpose() * W).transpose()/sigma_sqrd;
+    double P_h1 = 1/(1 + exp(-2*v(i)));
 
-    double P_h1 = 1 + exp(-2*v(i));
-    P_h1 = 1.0/P_h1;
-
-
-    double P_h0 = 1 + exp(2*v(i));
-    P_h0 = 1.0/P_h0;
-
-    if(P_h1>= Random_position()){
-        return 1;
-    }
-
-    else{
-        return 0;
-    }
+    if(P_h1>= Random_position()) return 1;
+    else                         return 0;
 
 }
 

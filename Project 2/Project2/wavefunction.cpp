@@ -21,21 +21,18 @@ double rij(VectorXd X, int D) {
     return Ep;
 }
 
-int WaveFunction::setTrialWF(int N, int M, double sigma_sqrd, double omega)
+int WaveFunction::setTrialWF(int N, int M, int sampling, double sigma_sqrd, double omega)
 {
-    m_N = N;
-    m_M = M;
+    m_N          = N;
+    m_M          = M;
+    m_sampling   = sampling;
     m_sigma_sqrd = sigma_sqrd;
     m_omega_sqrd = omega*omega;
 }
 
-double WaveFunction::Psi_value_sqrd(VectorXd a, VectorXd b, VectorXd X, MatrixXd W)
+double WaveFunction::Psi_value_sqrd(const VectorXd &Xa, const VectorXd &v)
 {
     //Unnormalized wave function
-
-    VectorXd v = b + (X.transpose() * W).transpose()/m_sigma_sqrd;
-    VectorXd Xa = X - a;
-
     double prod = 1;
     for(int i=0; i<m_N; i++) {
         prod *= (1 + exp(v(i)));
@@ -44,24 +41,13 @@ double WaveFunction::Psi_value_sqrd(VectorXd a, VectorXd b, VectorXd X, MatrixXd
     return exp(-(double) (Xa.transpose() * Xa)/(m_sigma_sqrd)) * prod * prod;
 }
 
-double WaveFunction::Psi_value_sqrd_hastings(VectorXd Xa, VectorXd v)
-{
-    //Unnormalized wave function
 
-    double prod = 1;
-    for(int i=0; i<m_N; i++) {
-        prod *= (1 + exp(v(i)));
-    }
-
-    return exp(-(double) (Xa.transpose() * Xa)/(m_sigma_sqrd)) * prod * prod;
-}
-
-double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, int D, int interaction, double &E_k, double &E_ext, double &E_int, int sampling) {
+double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, int D, int interaction, double &E_k, double &E_ext, double &E_int) {
     // Local energy calculations
 
     double E = 0;
     // Kinetic energy
-    if(sampling==5) {
+    if(m_sampling==3) {
         VectorXd e = VectorXd::Zero(m_N);
         VectorXd eNominator = VectorXd::Zero(m_N);
         for(int i=0; i<m_N; i++) {
@@ -72,7 +58,7 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
 
         for(int i=0; i<m_N; i++) {
             E -= 0.5*(double) (Xa.transpose() * W.col(i)) * e(i);
-            E += 0.5*(double) ((W.col(i)).transpose() * W.col(i)) * 1/eNominator(i) * e(i)*e(i);
+            E += 0.5*(double) ((W.col(i)).transpose() * W.col(i)) * 1/eNominator(i) * e(i) * e(i);
             for(int j=0; j<m_N; j++) {
                 E += 0.25*(double) ((W.col(i)).transpose() * W.col(j)) * e(i) * e(j);
             }
@@ -121,9 +107,9 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
     return E;
 }
 
-void WaveFunction::Gradient_a(const VectorXd &Xa, VectorXd &da, int sampling) {
+void WaveFunction::Gradient_a(const VectorXd &Xa, VectorXd &da) {
 
-    if(sampling==5) {
+    if(m_sampling==3) {
         da = 0.5*Xa/m_sigma_sqrd;
     }
     else{
@@ -132,9 +118,9 @@ void WaveFunction::Gradient_a(const VectorXd &Xa, VectorXd &da, int sampling) {
 
 }
 
-void WaveFunction::Gradient_b(const VectorXd &v, VectorXd &db, int sampling) {
+void WaveFunction::Gradient_b(const VectorXd &v, VectorXd &db) {
 
-    if(sampling==5) {
+    if(m_sampling==3) {
         for(int i=0; i<m_N; i++)
             db(i) = 0.5/(1 + exp(-v(i)));
     }
@@ -144,9 +130,9 @@ void WaveFunction::Gradient_b(const VectorXd &v, VectorXd &db, int sampling) {
     }
 }
 
-void WaveFunction::Gradient_W(const VectorXd &X, const VectorXd &v, MatrixXd &dW, int sampling) {
+void WaveFunction::Gradient_W(const VectorXd &X, const VectorXd &v, MatrixXd &dW) {
 
-    if(sampling==5) {
+    if(m_sampling==3) {
         for(int i=0; i<m_N; i++) {
             for(int j=0; j<m_M; j++) {
                 dW(j,i) = 0.5*X(j)/(m_sigma_sqrd*(1 + exp(-v(i))));

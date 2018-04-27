@@ -13,7 +13,7 @@ int main()
     int     D           = 2;               //Number of dimensions
     int     N           = 2;              //Number of hidden nodes
     int     MC          = 1000000;        //Number of Monte Carlo cycles
-    int     iterations  = 500;             //Number of gradient decent cycles
+    int     iterations  = 10000;             //Number of gradient decent cycles
     int     sampling    = 1;               //Brute force- (0), Hastings- (1) or Gibbs' sampling (2)
     bool    interaction = 1;               //Interaction on if true
     bool    one_body    = 0;               //Calculating onebody density if true
