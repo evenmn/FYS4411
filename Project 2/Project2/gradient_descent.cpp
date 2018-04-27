@@ -49,17 +49,17 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
     double factor=1;
 
-    MatrixXd W = MatrixXd::Random(M, N)*factor;
-    VectorXd a = VectorXd::Random(M)*factor;
-    VectorXd b = VectorXd::Random(N)*factor;
-    VectorXd X = VectorXd::Random(M)*factor;
-    VectorXd X_new = VectorXd::Zero(M);
-    VectorXd h = VectorXd::Zero(N);
+    MatrixXd W       = MatrixXd::Random(M, N) * factor;
+    VectorXd a       = VectorXd::Random(M)    * factor;
+    VectorXd b       = VectorXd::Random(N)    * factor;
+    VectorXd X       = VectorXd::Random(M)    * factor;
+    VectorXd X_new   = VectorXd::Zero(M);
+    VectorXd h       = VectorXd::Zero(N);
 
-    VectorXd Xa = X - a;
-    VectorXd v = b + (W.transpose() * X)/(sigma_sqrd);
-    VectorXd X_newa = VectorXd::Zero(M);
-    VectorXd v_new = VectorXd::Zero(N);
+    VectorXd Xa      = X - a;
+    VectorXd v       = b + (W.transpose() * X)/(sigma_sqrd);
+    VectorXd X_newa  = VectorXd::Zero(M);
+    VectorXd v_new   = VectorXd::Zero(N);
 
     for(int i=0; i<N; i++) {
         h(i) = hrand(gen);

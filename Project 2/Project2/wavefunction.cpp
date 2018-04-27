@@ -51,14 +51,14 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
         VectorXd e = VectorXd::Zero(m_N);
         VectorXd eNominator = VectorXd::Zero(m_N);
         for(int i=0; i<m_N; i++) {
-            double expi = exp(v(i));
+            double expi = exp(-v(i));
             eNominator(i) = expi;
-            e(i) = 1/(1 + 1./expi);
+            e(i) = 1/(1 + expi);
         }
 
         for(int i=0; i<m_N; i++) {
             E -= 0.5*(double) (Xa.transpose() * W.col(i)) * e(i);
-            E += 0.5*(double) ((W.col(i)).transpose() * W.col(i)) * 1/eNominator(i) * e(i) * e(i);
+            E += 0.5*(double) ((W.col(i)).transpose() * W.col(i)) * eNominator(i) * e(i) * e(i);
             for(int j=0; j<m_N; j++) {
                 E += 0.25*(double) ((W.col(i)).transpose() * W.col(j)) * e(i) * e(j);
             }

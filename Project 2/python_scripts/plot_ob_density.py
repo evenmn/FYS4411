@@ -1,10 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import os
+
 
 # Numerical values
-dirpath = os.getcwd()
 data = np.loadtxt("../data/ob_density.dat")
 label_size = {"size":"14"}
 
