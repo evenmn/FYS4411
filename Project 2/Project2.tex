@@ -84,10 +84,10 @@ Since electrons are fermions, we need an antisymmetric wavefunction under exchan
 where $\Phi_i(\boldsymbol{r})$ is the single particle wave function (SPF) of state $i$. This contains a spatial part and a spin part, and we assume that it can be splitted up such that the spin part takes the antisymmetry property and does not affect the energy. Therefore we only need a symmetric spatial part to calculate the energies.
 
 \subsection{Solving this with machine learning}
-Usually, when solving a system of particles as the one described in the previous system, we would need an anzats for the wave function, where we use our physical intuition to create the form of a wave function with different variational parameters, and then let it be up to the computer to find the optimal parameters through a minimization method. However, this method is only as good as the physical intuition; if the form of the wave function is unrealistic, the results will be the same, and there is no guarantee that we have actually found a ground state energy.
+When solving a system of particles as the one described in the previous system with Variational Monte Carlo, as described in \cite{Nordhagen}, we would need an anzats for the wave function, where we use our physical intuition to create the form of a wave function with different variational parameters, and then let it be up to the computer to find the optimal parameters through a minimization method. However, this method is only as good as the physical intuition; if the form of the wave function is unrealistic, the results will be the same
 \par 
 \vspace{3mm}
-This challenge can be solved by using machine learning. There are several different types of machine learning systems, and the one we will present and utilize in this project has the ability to learn a probability distribution. This is perfect for quantum mechanical problems, as we know from quantum mechanics the wave function $\Psi$ is nothing more than a probability denisty, giving that $\Psi^2$ is a probability distribution that says something about where a given particle most probabliy can be found. As we are solely interested in the energy of the two-fermion system, and not the exact wave function, the fact that the machine learning program does not explicitly give the wave function is therefore of no consequence.
+This challenge can be mended by using machine learning. There are several different types of machine learning systems, and the one we will present and utilize in this project has the ability to learn and sample from a probability distribution. This is perfect for quantum mechanical problems, as we know from quantum mechanics the wave function $\Psi$ is nothing more than a probability denisty, giving that $\Psi^2$ is a probability distribution that says something about where a given particle most probabliy can be found. As we are solely interested in the energy of the two-fermion system, and not the exact wave function, the fact that the machine learning program does not explicitly give the wave function is therefore of no consequence. We still have to give some guidelines for the form of the probability distribution, but the machine learning program can sample from a larger variety of probability distributions compared to the form used in VMC.
 
 \subsubsection{Machine learning}
 With the goal of solving the quantum mechanical system presented in section \ref{sec:Presentation_of_potential} in mind, we should start by explaining what machine learning is. Machine learning is the idea that a computer can be trained to learn to yield certaint outputs, without directly being told exactly what to give. Examples on this is pattern recognizion, where the computer first is shown for example pictures of wolves and huskies. After training the computer on pictures where the computer sees huskies and wolves and is told the correct answer, it should after a sufficiently long training period, be able to recognize huskies and wolves by itself. 
@@ -100,23 +100,23 @@ The example described above is what we call supervised learning, where the corre
 \subsubsection{Neural network}
 
  This sound amazing, and maybe even impossible. Therefore the question now is: how to program computers to learn, just like humans? The answer is, fittingly, that we should make the program run like the the human brain by implementing what is called a neural network. Inspired by neurons in the human brain, a neural network is a programmed network of variables, called nodes, that comminucate in a given manner. Each node preforms a simple process: based on the input it receives, and how that input is weighted, it decides wheter or not to fire. The mathematical model of an example of a neural node was presented by McCulloch and Pitts in 1943 \cite{Marsland}, shown in figure \ref{fig:neuron}, where the input is mared $x_i$, the weights deciding how much the input should count is $W_i$, and the output from the node based on $x_i$ and $W_i$ is called h. 
-\iffalse
+
  \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.6]{plots/neuron.png}
  	\caption{McCullochs and Pitts' model of neutrons visualized. Image reproduced from \cite{Marsland} }
  	\label{fig:neuron}
  \end{figure}
-\fi
+
 The neutrons are arranged in layers in the neural network, one visible layer that receives the input, and up to several hidden layers. The layers are arranged such that the output values from the visible nodes is the input values of the visible nodes. The nodes can also have bias values, that shift the output value $h$ with a ceirtan number, and the nodes in different layers can be connected in different ways.  An example of a neural network with two layers is shown in figure \ref{fig:neural_network}.
-\iffalse
+
  \begin{figure} [H]
 	\centering
 	\includegraphics[scale=0.5]{plots/neural_network.png}
 	\caption{An example of a neural network with one visible and one hidden layer of nodes, and with bias $-1$ on the hidden nodes. Image reproduced from \cite{Marsland} }
 	\label{fig:neural_network}
 \end{figure}
-\fi
+
 The idea behind machine learning is that the weights $W_i$, that decides how much a node puts emphazis on a given input, can be changed, and thus change the system's response to the same input. We will explain with the example from earlier, with huskies and the wolves: first, the program are shown pictures of wolves and huskies, and it is told the correct answer. The weights $W_i$ are then updated such that when a husky is shown, the output "husky" is generated, and the same for wolves. After a sufficiently long training period, the program's weights are optimalized for recognizing wolves and huskies. When shown a picture, the program should then by itself be able to determine wheter it is a wolf or a husky that it sees. 
 
 \subsubsection{Restricted Boltzmann Machines}
@@ -134,6 +134,11 @@ E(\boldsymbol{X},\boldsymbol{H})=\sum_{i=1}^{M}\frac{(X_i-a_i)^2}{2\sigma_i^2}-\
 \end{equation}
 (Hinton 2010). 
 
+By setting $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, we know have a general form of the probability distribution. In equation \ref{label} the form of the wave function is shown, when we have used that we have $M$ visible nodes and $N$ hidden nodes, and that the hidden nodes should take binary values. 
+
+\begin{equation}
+	\Psi = \frac{1}{Z} e^{\sum_i^M \frac{(X_i - a_i)^2}{2\sigma^2}} \prod_j^N (1+ e^{b_j + \sum_iM \frac{X_i W_{ij}}{\sigma^2}})
+\end{equation}
 
 \subsection{Energy calculation}
 
@@ -237,28 +242,6 @@ E_L&=\sum_{i=1}^{N}\frac{\boldsymbol{W}_{*i}^T\boldsymbol{W}_{*i}}{\sigma^4}\tex
 	Computational Physics 2: Variational Monte Carlo methods, Lecture Notes Spring 2018.
 	Department of Physics, University of Oslo,
 	(2018).
-	\bibitem{DuBois}
-	J. L. DuBois and H. R. Glyde, H. R., \emph{Bose-Einstein condensation in trapped bosons: A variational Monte Carlo analysis}, Phys. Rev. A \textbf{63}, 023602 (2001).
-	\bibitem{Nilsen}
-	J. K. Nilsen,  J. Mur-Petit, M. Guilleumas, M. Hjorth-Jensen, and A. Polls, \emph{Vortices in atomic Bose-Einstein condensates in the large-gas-parameter region}, Phys. Rev. A \textbf{71}, 053610, (2005).
-	\bibitem{Dalfovo}
-	F. Dalfovo, S. Stringari, \emph{Bosons in anisotropic traps: ground state and vortices} Phys. Rev. A \textbf{53}, 2477, (1996).
-	\bibitem{JE2016}
-	J. Emspak, \emph{States of Matter: Bose-Einstein Condensate}, LiveScience, (2016).
-	\url{https://www.livescience.com/54667-bose-einstein-condensate.html}
-	Downloaded March 15th 2018.
-	\bibitem{SP}
-	S. Perkowitz \emph{Bose-Einstein condensate} Encyclopaedia Britannica 
-	\url{https://www.britannica.com/science/Bose-Einstein-condensate}
-	Downloaded March 15th 2018.
-	\bibitem{Anderson}
-	M. H. Anderson, J. R. Ensher, M. R. Matthews, C. E. Wieman, E. A. Cornell, \emph{Observation of Bose-Einstein Condensation in a Dilute Atomic Vapor}, Science \textbf{269}, (1995).
-	\bibitem{JKNilsen}
-	J. K. Nilsen \emph{Bose-Einstein condensation in trapped bosons: A quantum Monte Carlo analysis}, Master thesis 2004, Department of Physics, University of Oslo, (2004). 
-	\bibitem{Gross}
-	E. P. Gross, \emph{Structure of a quantized vortex in boson systems}, Il Nuovo Cimento, \textbf{20} (3): 454–457, (1961).
-	\bibitem{Pitaevskii}
-	L. P. Pitaevskii, \emph{Vortex lines in an imperfect Bose gas}, Sov. Phys. JETP. \textbf{13} (2): 451–454, (1961).
 	\bibitem{Marsland}
 	S. Marsland, \emph{Machine Learning: An algorithmic Perspective, Second edition} (2015)
 	\bibitem{Nordhagen}
