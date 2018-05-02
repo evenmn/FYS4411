@@ -11,6 +11,7 @@
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{tikz}
+\usepackage{physics}
 
 \lstset{language=c++}
 \lstset{basicstyle=\small}
@@ -134,15 +135,54 @@ E(\boldsymbol{X},\boldsymbol{H})=\sum_{i=1}^{M}\frac{(X_i-a_i)^2}{2\sigma_i^2}-\
 \end{equation}
 (Hinton 2010). 
 
-By setting $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, we know have a general form of the probability distribution. In equation \ref{label} the form of the wave function is shown, when we have used that we have $M$ visible nodes and $N$ hidden nodes, and that the hidden nodes should take binary values. 
+By setting $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, we know have a general form of the probability distribution. In equation \ref{eq:wf_form} the form of the wave function is shown, when we have used that we have $M$ visible nodes and $N$ hidden nodes, and that the hidden nodes should take binary values. 
 
 \begin{equation}
+\label{eq:wf_form}
 	\Psi = \frac{1}{Z} e^{\sum_i^M \frac{(X_i - a_i)^2}{2\sigma^2}} \prod_j^N (1+ e^{b_j + \sum_iM \frac{X_i W_{ij}}{\sigma^2}})
 \end{equation}
 
 \subsection{Energy calculation}
+We want to calculate the energy of the two-fermion system, given the wave function described in \ref{eq:wf_form}. As explained in \cite{Nordhagen}, the energy of the system is the expectation value of the Hamiltonian, but this is hard to compute directly. 
 
+\begin{equation}
+E_L(\vec{r})=\frac{1}{\Psi_T(\vec{r})}\hat{H}\Psi_T(\vec{r}).
+\label{eq:Local_energy}
+\end{equation}
 
+By defining the local energy given in equation \ref{eq:Local_energy}, the energy can be expressed as equation \ref{eq:MC_energy}, and this can be solved with a Monte Carlo loop.
+
+\begin{equation}
+\label{eq:MC_energy}
+E = \int | \Psi_T^2| E_L d\vec{r}
+\end{equation}
+
+\subsubsection{Exact energy for non-interacting case}
+
+The wave function of one electron in the Hamiltonian given in equation \ref{eq:Hamiltonian} is given by
+
+\begin{equation}
+	\label{eq:one_e_wf_ho}
+	\phi_{n_x, n_y} = A H_{nx} \sqrt{\omega} x H_{ny} \sqrt{\omega} y e^{-\frac{\omega(x^2 + y^2)}{2}}
+\end{equation}
+
+where $H_{nx} \sqrt{\omega} x$ is the Hermite polynomials and A is the normalization constant, and $n_x$ and $n_y$ are the energy quantum numbers. If we denote $\psi_1$ the spatial wave function for the first electron, and $\psi_2$ the spatial wave function for the second electron, then the total spatial wave function for the two-particle system is $\phi_1 \phi_2$. As explained in section \ref{sec:Presentation_of_potential}, the spin wave functions are anti-symmetric, and therefore it is fine that the spatial wave function is symmetric.
+
+For a one-electron system the \textcolor{red}{energy quantum numbers (??)} are 0, and the energy can be shown to take the value 
+
+\begin{equation}
+	H \ket{\phi_1} = E_1 \ket{\phi_1} = \omega(n_{x,1} + n_{y,1} + 1) \ket{\phi_1} \quad  \rightarrow E_1 = \omega(n_x + n_y + 1)
+\end{equation}
+
+When calculating the energy for the two-electron system we then get the following
+
+\begin{equation}
+	H \ket{\phi_1 \phi_2} = \ket{H \phi_1 } \ket{\phi_2} + \ket{\phi_1} \ket{H \phi_2} = E_1 \ket{\phi_1 \phi_2} + E_2 \ket{\phi_1 \phi_2} 
+\end{equation}
+
+For the ground state $n_x = n_y = 0$, $E_1 = E_2 = \omega$ and therefore the ground state energy is simply $E_1 + E_2 = 2\omega$.
+
+\subsubsection{Exact energy for interacting case}
 
 \subsection{Onebody density}
 
