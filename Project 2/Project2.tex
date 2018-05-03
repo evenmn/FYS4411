@@ -398,13 +398,16 @@ We observe that the energies produced by brute-force and Metropolis-Hastings are
 \end{table}
 
 \subsubsection{Playing with learning rate and number of hidden nodes}
-To find the lowest energy, we experiment with different learning rates and a various number of hidden nodes. 
+To find the lowest energy, we experiment with different learning rates and a various number of hidden nodes. We use brute-force Metropolis and in figure \ref{fig:compare_nodes} one can find energy plotted as  functions of number of iterations. Initially the energy is overall higher for more hidden nodes, but we get a closer energy to the exact energy for lower number of hidden nodes. 
+
  \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_compare_nodes.png}
- 	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. Brute-Force (BF) Metropolis (blue line), Metropolis-Hastings (H) (orange line), Gibbs' (green line) and analytical value (dashed red line). All the samplings were conducted with $MC=1000000$ and $\eta=0.01$. For BF we used steplength $dx=1.0$, while for H the timestep was $dt=0.01$. See text for further description.}
- 	\label{fig:OB}
+ 	\caption{Energy as functions of iterations for N=1,2,3,5 and 10. Brute-Force Metropolis is used, MC=1000000, $\eta=0.01$ and $dx=1.0$.}
+ 	\label{fig:compare_nodes}
  \end{figure}
+ 
+Since the optimal number of hidden nodes is one in this case, we will use N=1 while optimizing the learning rate.
 
 \subsection{Energy calculations, with interaction}
 
