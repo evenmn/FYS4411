@@ -228,7 +228,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             if(one_body){
                 //Write to file
                 for(int j=0; j<number_of_bins; j++) {
-                   ob_file << bins_particles[j]/(buffer[j]*MC) << "\n";
+                   ob_file << bins_particles[j]/MC << "\n";
                 }
                 //Close myfile
                 ob_file.close();

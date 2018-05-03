@@ -30,9 +30,10 @@ double x_sampling(const VectorXd &a, const VectorXd &h, const MatrixXd &W, doubl
 double h_sampling(const VectorXd &v, int i){
 
     double P_h1 = 1/(1 + exp(-2*v(i)));
+    double P_h0 = 1/(1 + exp(2*v(i)));
 
-    if(P_h1>= Random_position()) return 1;
-    else                         return 0;
+    if(P_h1 >= P_h0) return 1;
+    else             return 0;
 
 }
 
