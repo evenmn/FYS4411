@@ -187,6 +187,14 @@ For the ground state $n_x = n_y = 0$, $E_1 = E_2 = \omega$ and therefore the gro
 For the non-interacting case with $\omega=1$ it is known the ground state energy is 3 a.u. \cite{Project2}. 
 
 \subsection{Onebody density}
+A quantity that often is handy to calculate is the onebody density. The onebody density is the density of particles in the potential, and may give a better understanding of the placement of the particles than their positions. The onebody density $\rho_i$ with respect to a given particle $i$ is given by equation \ref{eq:onebody_density}, which can be solved by Monte Carlo integration, as described in \cite{Nordhagen}.
+
+\begin{equation}
+\label{eq:onebody_density}
+\rho_i=\int_{-\infty}^{\infty}d\vec{r}_1\hdots d\vec{r}_{i-1}d\vec{r}_{i+1}\hdots d\vec{r}_N |\Psi(\vec{r}_1,\hdots \vec{r}_N)|^2.
+\end{equation}
+
+Apart from the fact that the one body density is a good visual representation of the positions of the particles, it is also a qunatity that is often calculated experimentally. Therefore, it is simpler to compare computational simulations to  experimental results when having calculated the onebody density.
 
 \subsection{Error estimation} \label{sec:error_estimation}
 As a physicist one should always be sceptical to measurements presented without an estimation of the uncertainties. When someone says they have measured their height to be 1.90 cm, is the uncertainty $\pm 1 cm$ or $\pm 10 cm$? If they used $\pm 1 cm$, we have a fairly good idea of the height of the person, but if it is $\pm 10 cm$, we do not really know anything about the real height of the person. 
