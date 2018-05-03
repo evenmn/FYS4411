@@ -306,6 +306,52 @@ A problem with the standard stochastic gradient descent method is that it will e
 \subsection{Implementation}
 
 \section{Results} \label{sec:Results}
+In this section we will see how accurate results we achieve using the NQS wavefunction for the brute-force Metropolis-, the Metropolis-Hastings- and the Gibbs' sampling method. Firstly, we calculate the energy of one particle in one dimension to ensure that the method works and we obtain an energy close to the analytical energy. Secondly, we extend the system to two interacting electrons in a two-dimensional harmonic oscillator. Furthermore the onebody densities with and without interaction are presented and finally we study how the total energy is distributed between kinetic energy and potential energy for various harmonic oscillator frequencies. 
+
+\subsection{Energy calculations, without interaction}
+We first study the energy of a non-interacting electron in one dimension, and in figure \ref{fig:energy1P1D} we compare the energies produced by the three methods as a function of number of iterations. 
+ \begin{figure} [H]
+ 	\centering
+ 	\includegraphics[scale=0.6]{plots/comparison_1P_MC_1000000_eta_001_iter_500.png}
+ 	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. Brute-Force (BF) Metropolis (blue line), Metropolis-Hastings (MH) (orange line), Gibbs' (green line) and analytical value (dashed red line). All the samplings were conducted with MC=$1000000$ and $\eta=0.01$. For BF we used steplength $dx=1.0$, while for MH the timestep was $dt=0.01$. See text for further description.}
+ 	\label{fig:energy1P1D}
+ \end{figure}
+We observe that the energies produced by brute-force and Metropolis-Hastings are very similar, and in fact it is hard to distinguish them. They also give energies closer to the analytical energy compared to Gibbs' sampling and converge faster. In table \ref{tab:energies1P1D} some chosen energies from figure \ref{fig:energy1P1D} are listed, and we observe that brute-force has actually the smallest absolute error for all number of iterations. 
+
+\begin{table} [H]
+	\caption{ \vspace{2mm}}
+	\begin{tabularx}{\textwidth}{X|XXXX} \hline\hline
+		\label{tab:energies1P1D}
+		Iterations & BF & MH & Gibbs & Exact \\ \hline
+				100 & 0.506332 & 0.507337 & 0.516750 & 0.5 \\
+				200 & 0.501485 & 0.502318 & 0.485531 & 0.5 \\
+				300 & 0.501363 & 0.501983 & 0.484165 & 0.5 \\
+				400 & 0.501207 & 0.501983 & 0.484105 & 0.5 \\
+				500 & 0.501323 & 0.501731 & 0.484648 & 0.5 \\ \hline
+	\end{tabularx}
+\end{table}
+
+\subsubsection{Playing with learning rate and number of hidden nodes}
+To find the lowest energy, we experiment with different learning rates and a various number of hidden nodes. 
+
+
+\subsection{Energy calculations, with interaction}
+
+
+\subsection{Onebody density}
+In figure \ref{fig:OB} the onebody densities for two particles in two dimensions with and without interaction is plotted. From the energy calculations, we found Metropolis-Hastings method to be the better one for two particles, and henceforth we will therefore stick to it. 
+\iffalse
+ \begin{figure} [H]
+ 	\centering
+ 	\includegraphics[scale=0.6]{plots/comparison_1P_MC_1000000_eta_001_iter_500.png}
+ 	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. Brute-Force (BF) Metropolis (blue line), Metropolis-Hastings (H) (orange line), Gibbs' (green line) and analytical value (dashed red line). All the samplings were conducted with $MC=1000000$ and $\eta=0.01$. For BF we used steplength $dx=1.0$, while for H the timestep was $dt=0.01$. See text for further description.}
+ 	\label{fig:OB}
+ \end{figure}
+\fi
+They look similar, but 
+
+\subsection{Average energies and distance}
+
 
 \section{Discussion} \label{sec:Discussion}
 
