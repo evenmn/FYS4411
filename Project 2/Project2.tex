@@ -199,22 +199,85 @@ The error in a measurement is the difference between the true value of the mesur
 	error = x - x_i
 \end{equation}
 
-However, the true value $x$ is rarely known. When $x$ is not known, it is thus impossible to give the error in the measurement. We must therefore be content with providing estimates of the error. It is common to give this uncertainty as the standard deviation $\sigma$; when preforming a mesurement n times, such that we have n measured points $x_1, .., x_n$ where the average value is $\bar{x}$, then the standard deviation is defined as
+However, the true value $x$ is rarely known. When $x$ is not known, it is thus impossible to give the error in the measurement. We must therefore be content with providing estimates of the error. It is common to give this uncertainty as the standard deviation $\sigma$; when preforming a mesurement n times, such that we have n measured points $x_1, .., x_n$ where the average value is $ \langle x \rangle $, then the standard deviation is defined as
 
 \begin{equation}
-\sigma_{\theta} =  \sqrt{\frac{1}{n} \sum_{k=1}^n (x_i - \bar{x})^2}
+\sigma_{\theta} =  \sqrt{\frac{1}{n} \sum_{k=1}^n (x_i - \langle x \rangle)^2}
 \end{equation}
 
 When giving the uncertainty, one writes $x_i \pm \sigma$, where $\sigma$ is so that $\approx 68 \%$ of the measured values lies withing the interval $\pm \sigma$. 
 
+There are different kinds of sources of error when conducting computer experiments. Systematic errors originate from faults in the theory used in the experiment, and this might give consistently wrong results. Systematic errors are hard to handle, as one might get seemingly good looking results. One way to avoid systematic results are to benchmark the code with either experimental results, or with other's computer simulation results. \par 
+\vspace{3mm}
+Another source of error is the statistical error, which is based on how many measurements you have done. In the example with the height measurement in the beginning of this section, if the experimentalist only measured the height one time, we can be fairly certain that this is not the true value of the person. If they, however, repeated the same measurement several times and then maybe used the average as the estimate of the mesurand, we can be more confident that they have a better estimate, compared to when they only used one point. A common way to estimate the statistical uncertainty is with equation \ref{eq:variance_simplified}.
+
+\begin{equation}
+\label{eq:variance_simplified}
+\sigma^2 \approx \langle x^2 \rangle - \langle x \rangle^2
+\end{equation}
+
+However, as explained in \cite{Nordhagen}, this does not account for the covarinace between measurements. This leads to equation \ref{eq:variance_simplified} being an underestimation of $\sigma^2$, and is thus more a guideline for the size of the uncertainty, more than an actual estimate of it. Luckily, there are computational methods that can calculate $\sigma^2$ with the covariance contribution included. The method used in this project is the blocking method, presented in section \ref{sec:Blocking}.
 
 \section{Method}
 
 \subsection{Variational Monte Carlo}
-\subsection{Metropolis Algorithm}
+The Variational Monte Carlo method, often referred to as VMC, is a method in computational physics. The goal of VMC is to approximate the ground state energy of a quantum mechanical system by using the variational principle. The variational principle says that for any given trial wave function $\Psi_T$, the energy $E$ given this $\Psi_T$ is always more than or equal to the ground state energy $E_0$ of the system:
+
+\begin{equation}
+	\label{eq:variational_method}
+	E = \frac{\bra{\Psi_T}H \ket{\Psi_T}}{\braket{\Psi_T}} \geq E_0
+\end{equation} 
+
+In VMC, the user inputs a trial wave function for the quantum mechanical system. Over a Monte Carlo loop, the particles in the system are moved randomly, and for each proposed move, the new position of the particle is accepted or rejected depending on if the new position is more probable according to $\Psi_T$, compared to the previous position. For the ground state wave function, the position which yields a minimum in the energy of the quantum mechanical system is the most probable position. The result is therefore that the particles in the system are moved towards lower energies. When the method has converged, the energy $E$ is an upper estimate of the true ground state energy $E_0$. If $\Psi_T$ in addition is the true ground state wave function, then $E=E_0$. 
+
+\subsection{Metropolis algorithm}
+Above, we described that the VMC method had to reject or accept proposed moves of the particles in the system. The task of handeling this is often left up to the Metropolis algorithm. The Metropolis algorithm uses the theory that the probability of a system to transition from a state $i$ to state $j$ is given by
+
+\begin{equation}
+W_{i\rightarrow j} = T_{i \rightarrow j}\cdot A_{i \rightarrow j}
+\end{equation}
+
+where $T_{i \rightarrow j}$ is the transition probability and $A_{i \rightarrow j}$ is the acceptance probability. If we denote the probability for being in a given state for $p$, and then look at the transition from a state $i$ to a state $j$ and back again, then it can be shown that we obtain the following relation between the transition and acceptance probabilities \cite{Nordhagen}:
+
+\begin{equation}
+\label{eq:metropolis_acceptance}
+\frac{A_{j\rightarrow i}}{A_{i\rightarrow j}}=\frac{p_iT_{i\rightarrow j}}{p_jT_{j\rightarrow i}} = w
+\end{equation}
+
+As the Metropolis algorithm's job is to evaluate probable moves between states, the expression in equation \ref{eq:metropolis_acceptance} is used as the acceptance criteria. Thus the ratio $\frac{A_{j\rightarrow i}}{A_{i\rightarrow j}}$ describes if the system is more likely to move one way or the other. There are several methods that can be used for accepting and rejecting the moves, and these use different expressions for $T$ and $p$ in equation \ref{eq:metropolis_acceptance}. In this project, we will study the brute force and the Hastings sampling algorithms.
+
 \subsubsection{Brute force}
-\subsubsection{Importance sampling}
-\subsubsection{Gibbs sampling}
+The brute force got is name because when proposing and accepting moves, the algorithm does so without "thinking" which way the system will most probably move. A random particle with position $\vec{R}$ is chosen, and its new position $\vec{R}_{new}$ is proposed at random as follows:
+
+\begin{equation}
+\boldsymbol{R}_{new} = \boldsymbol{R} + r\cdot \text{step}.
+\end{equation}
+
+where $r$ is a random number and $step$ is the steplength.
+\par 
+\vspace{3mm}
+The brute force algorithm does not concider the transitions probabilities, and simply puts $T_{i\rightarrow j} = T_{j\rightarrow i}$. To check the probability of a system being found in a given state, it uses $p(\vec{R})=|\Psi_T(\vec{R})|^2$ for both position, such that the probability $w$ for the transition is given by
+
+\begin{equation}
+w=\frac{P(\vec{R}_{new})}{P(\vec{R})}=\frac{|\Psi_T(\vec{R}_{new})|^2}{|\Psi_T(\vec{R})|^2}.
+\end{equation}
+
+A random number $r \in [0,1]$ is then drawn, and compared to $w$. If $w$ is larger than $r$, then the new position is accepted, and if not, the move is rejected and the particle is moved back to its original position:
+
+\begin{equation}
+\text{New position: }
+\begin{cases} 
+\text{accept} & \text{if}\quad w > r \\
+\text{reject} & \text{if}\quad w \leq r.
+\end{cases}
+\end{equation}
+
+This way, the algorithm will over many iterations move the particles towards the most probable state.
+
+
+\subsubsection{Metropolis-Hastings}
+also known as importance sampling
+\subsection{Gibbs sampling}
 
 \subsection{Gradient descent}
 We use stochastic gradient descent to update the weights in order to minimize the local energy. The process itself is quite similar to that one typically used in Variational Monte Carlo (VMC) where the weights are our variational parameters, but compared with a normal VMC we have a lot more parameters to vary. The updating algorithm for updating the variational parameter $\alpha_i$ goes as
@@ -235,6 +298,8 @@ d\boldsymbol{b}=\frac{1}{\Psi}\frac{\partial\Psi}{\partial\boldsymbol{b}}=
 
 \subsubsection{Adaptive stochastic gradient descent}
 A problem with the standard stochastic gradient descent method is that it will either converge fast, but the precision is poor, or the precision is good, but it converges slowly. To avoid this problem, we want a large learning rate when the energy is far from converging and a small learning rate when the energy converges. 
+
+\subsection{Blocking method} \label{sec:Blocking}
 
 \section{Code}
 \subsection{Structure}
