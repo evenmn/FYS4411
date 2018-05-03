@@ -159,20 +159,21 @@ E = \int | \Psi_T^2| E_L d\vec{r}
 
 \subsubsection{Exact energy for non-interacting case}
 
-The wave function of one electron in the Hamiltonian given in equation \ref{eq:Hamiltonian} is given by
+The wave function of one electron in a two-dimensional harmonic oscillator is given by
 
 \begin{equation}
 	\label{eq:one_e_wf_ho}
 	\phi_{n_x, n_y} = A H_{nx} \sqrt{\omega} x H_{ny} \sqrt{\omega} y e^{-\frac{\omega(x^2 + y^2)}{2}}
 \end{equation}
 
-where $H_{nx} \sqrt{\omega} x$ is the Hermite polynomials and A is the normalization constant, and $n_x$ and $n_y$ are the energy quantum numbers. If we denote $\psi_1$ the spatial wave function for the first electron, and $\psi_2$ the spatial wave function for the second electron, then the total spatial wave function for the two-particle system is $\phi_1 \phi_2$. As explained in section \ref{sec:Presentation_of_potential}, the spin wave functions are anti-symmetric, and therefore it is fine that the spatial wave function is symmetric.
+where $H_{nx} \sqrt{\omega} x$ is the Hermite polynomials and A is the normalization constant, and $n_x$ and $n_y$ are the principal quantum numbers. If we denote $\phi_1$ the spatial wave function for the first electron, and $\phi_2$ the spatial wave function for the second electron, then the total spatial wave function for the two-particle system is $\phi_1 \phi_2$. As explained in section \ref{sec:Presentation_of_potential}, the spin wave functions are anti-symmetric, and therefore it is fine that the spatial wave function is symmetric.
 
-For a one-electron system the \textcolor{red}{energy quantum numbers (??)} are 0, and the energy can be shown to take the value 
+For a one-electron system the energy can be shown to take the value 
 
 \begin{equation}
 	H \ket{\phi_1} = E_1 \ket{\phi_1} = \omega(n_{x,1} + n_{y,1} + 1) \ket{\phi_1} \quad  \rightarrow E_1 = \omega(n_x + n_y + 1)
 \end{equation}
+where we have used natural units, and all the energies are given in atomic units a.u.
 
 When calculating the energy for the two-electron system we then get the following
 
@@ -180,15 +181,32 @@ When calculating the energy for the two-electron system we then get the followin
 	H \ket{\phi_1 \phi_2} = \ket{H \phi_1 } \ket{\phi_2} + \ket{\phi_1} \ket{H \phi_2} = E_1 \ket{\phi_1 \phi_2} + E_2 \ket{\phi_1 \phi_2} 
 \end{equation}
 
-For the ground state $n_x = n_y = 0$, $E_1 = E_2 = \omega$ and therefore the ground state energy is simply $E_1 + E_2 = 2\omega$.
+For the ground state $n_x = n_y = 0$, $E_1 = E_2 = \omega$ and therefore the ground state energy is simply $E_1 + E_2 = 2\omega$. 
 
-For the non-interacting case it is known that when using natural units, the ground state energy is 3 a.u.
+For the non-interacting case with $\omega=1$ it is known the ground state energy is 3 a.u. \cite{Project2}. 
 
 \subsection{Onebody density}
 
 \subsection{Scaling}
 
 \subsection{Error estimation}
+As a physicist one should always be sceptical to measurements presented without an estimation of the uncertainties. When someone says they have measured their height to be 1.90 cm, is the uncertainty $\pm 1 cm$ or $\pm 10 cm$? If they used $\pm 1 cm$, we have a fairly good idea of the height of the person, but if it is $\pm 10 cm$, we do not really know anything about the real height of the person. 
+\par 
+\vspace{3mm}
+The error in a measurement is the difference between the true value of the mesurand, $x$, and the mesured value $x_i$:
+
+\begin{equation}
+	error = x - x_i
+\end{equation}
+
+However, the true value $x$ is rarely known. When $x$ is not known, it is thus impossible to give the error in the measurement. We must therefore be content with providing estimates of the error. It is common to give this uncertainty as the standard deviation $\sigma$; when preforming a mesurement n times, such that we have n measured points $x_1, .., x_n$ where the average value is $\bar{x}$, then the standard deviation is defined as
+
+\begin{equation}
+\sigma_{\theta} =  \sqrt{\frac{1}{n} \sum_{k=1}^n (x_i - \bar{x})^2}
+\end{equation}
+
+When giving the uncertainty, one writes $x_i \pm \sigma$, where $\sigma$ is so that $\approx 68 \%$ of the measured values lies withing the interval $\pm \sigma$. 
+
 
 \section{Method}
 
@@ -272,8 +290,6 @@ E_L&=\sum_{i=1}^{N}\frac{\boldsymbol{W}_{*i}^T\boldsymbol{W}_{*i}}{\sigma^4}\tex
 \newpage
 \section{References}
 
-\textcolor{red}{INCLUDE ONLY THOSE REFERENSES WE USE}
-
 \begingroup
 \renewcommand{\section}[2]{}
 \begin{thebibliography}{}
@@ -286,6 +302,11 @@ E_L&=\sum_{i=1}^{N}\frac{\boldsymbol{W}_{*i}^T\boldsymbol{W}_{*i}}{\sigma^4}\tex
 	S. Marsland, \emph{Machine Learning: An algorithmic Perspective, Second edition} (2015)
 	\bibitem{Nordhagen}
 	 D. Gjestvang, E. M. Nordhagen \emph{Computational Physics II: Project 1} (2018)
+	 \bibitem{Project2}
+	 V. Flugsrud and M. Hjort-Jensen
+	 Project 2, The restricted Boltzmannn machine applied to the quantum many body problem. Deadline June 1
+	 Department of Physics, University of Oslo,
+	 (2018).
 	
 	
 \end{thebibliography}
