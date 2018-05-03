@@ -333,7 +333,12 @@ We observe that the energies produced by brute-force and Metropolis-Hastings are
 
 \subsubsection{Playing with learning rate and number of hidden nodes}
 To find the lowest energy, we experiment with different learning rates and a various number of hidden nodes. 
-
+ \begin{figure} [H]
+ 	\centering
+ 	\includegraphics[scale=0.8]{plots/energy_compare_nodes.png}
+ 	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. Brute-Force (BF) Metropolis (blue line), Metropolis-Hastings (H) (orange line), Gibbs' (green line) and analytical value (dashed red line). All the samplings were conducted with $MC=1000000$ and $\eta=0.01$. For BF we used steplength $dx=1.0$, while for H the timestep was $dt=0.01$. See text for further description.}
+ 	\label{fig:OB}
+ \end{figure}
 
 \subsection{Energy calculations, with interaction}
 
@@ -418,6 +423,9 @@ E_L&=\sum_{i=1}^{N}\frac{\boldsymbol{W}_{*i}^T\boldsymbol{W}_{*i}}{\sigma^4}\tex
 	 Project 2, The restricted Boltzmannn machine applied to the quantum many body problem. Deadline June 1
 	 Department of Physics, University of Oslo,
 	 (2018).
+	\bibitem{Taut}
+	 M. Taut \emph{Two electrons in an external oscillator potential: Particular analytic solutions of a Coulomb correlation problem.} Phys. Rev. \textbf{A 48}, 3561 (1993).
+
 	
 	
 \end{thebibliography}
