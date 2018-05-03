@@ -7,6 +7,7 @@
 #include <fstream>
 #include "hastings_tools.h"
 #include "gibbs_tools.h"
+#include "test.h"
 
 using namespace Eigen;
 using namespace std;
@@ -55,6 +56,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     VectorXd X       = VectorXd::Random(M)    * factor;
     VectorXd X_new   = VectorXd::Zero(M);
     VectorXd h       = VectorXd::Zero(N);
+    VectorXd energies_old = VectorXd::Zero(5);
 
     VectorXd Xa      = X - a;
     VectorXd v       = b + (W.transpose() * X)/(sigma_sqrd);
@@ -237,8 +239,30 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             cout << "<E_ext>: " << E_ext/MC << endl;
             cout << "<E_int>: " << E_int/MC << endl;
             cout << "Mean distance: " << tot_dist/(MC*factorial(P-1)) << endl;
+
+            test_energy_convergence(EL_avg, omega, M, interaction);
         }
 
+        //Stop criterion
+        for(int j=0; j<4; j++) {
+            energies_old(j) = energies_old(j+1);
+        }
+        energies_old(4) = EL_avg;
+        double epsilon = 0.002;
+
+        /*
+        if(fabs(EL_avg - energies_old(0))/energies_old(0) < epsilon && \
+           fabs(EL_avg - energies_old(1))/energies_old(1) < epsilon && \
+           fabs(EL_avg - energies_old(2))/energies_old(2) < epsilon && \
+           fabs(EL_avg - energies_old(3))/energies_old(3) < epsilon) {
+            cout << "\n Final values" << endl;
+            cout << "E_L_avg: " << EL_avg << endl;
+            cout << "Acceptance ratio: " << accept/MC << endl;
+            cout << "Variance " << variance << endl;
+            cout << "CPU time: " << CPU_time << "\n" << endl;
+            break;
+        }
+        */
 
         //Gradient descent
         a -= 2*eta*(daE_tot - EL_avg*da_tot)/MC;
