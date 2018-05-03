@@ -11,8 +11,8 @@ int main()
 {
     int     P           = 1;               //Number of particles
     int     D           = 1;               //Number of dimensions
-    int     N           = 10;              //Number of hidden nodes
-    int     MC          = 1000000;        //Number of Monte Carlo cycles
+    int     N           = 1;              //Number of hidden nodes
+    int     MC          = 5000000;        //Number of Monte Carlo cycles
     int     iterations  = 100;             //Number of gradient decent cycles
     int     sampling    = 0;               //Brute force- (0), Hastings- (1) or Gibbs' sampling (2)
     bool    interaction = 0;               //Interaction on if true
