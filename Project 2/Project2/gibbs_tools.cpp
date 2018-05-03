@@ -22,18 +22,20 @@ double x_sampling(const VectorXd &a, const VectorXd &h, const MatrixXd &W, doubl
     for(int j=0; j<N; j++) {
         mu += h(j)*W(i,j);
     }
-    normal_distribution<double> d(mu, sigma_sqrd/2);
+    normal_distribution<double> d(mu, sigma_sqrd);
     return d(Gen);
 
 }
 
 double h_sampling(const VectorXd &v, int i){
 
-    double P_h1 = 1/(1 + exp(-2*v(i)));
-    double P_h0 = 1/(1 + exp(2*v(i)));
+    double P_h1 = 1/(1 + exp(-v(i)));
+    double P_h0 = 1/(1 + exp(v(i)));
 
-    if(P_h1 >= P_h0) return 1;
-    else             return 0;
-
+    if(Random_position() <= P_h0) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 

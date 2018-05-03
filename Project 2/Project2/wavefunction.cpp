@@ -47,7 +47,7 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
 
     double E = 0;
     // Kinetic energy
-    if(m_sampling==3) {
+    if(m_sampling==2) {
         VectorXd e = VectorXd::Zero(m_N);
         VectorXd eNominator = VectorXd::Zero(m_N);
         for(int i=0; i<m_N; i++) {
@@ -109,7 +109,7 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
 
 void WaveFunction::Gradient_a(const VectorXd &Xa, VectorXd &da) {
 
-    if(m_sampling==3) {
+    if(m_sampling==2) {
         da = 0.5*Xa/m_sigma_sqrd;
     }
     else{
@@ -120,7 +120,7 @@ void WaveFunction::Gradient_a(const VectorXd &Xa, VectorXd &da) {
 
 void WaveFunction::Gradient_b(const VectorXd &v, VectorXd &db) {
 
-    if(m_sampling==3) {
+    if(m_sampling==2) {
         for(int i=0; i<m_N; i++)
             db(i) = 0.5/(1 + exp(-v(i)));
     }
@@ -132,7 +132,7 @@ void WaveFunction::Gradient_b(const VectorXd &v, VectorXd &db) {
 
 void WaveFunction::Gradient_W(const VectorXd &X, const VectorXd &v, MatrixXd &dW) {
 
-    if(m_sampling==3) {
+    if(m_sampling==2) {
         for(int i=0; i<m_N; i++) {
             for(int j=0; j<m_M; j++) {
                 dW(j,i) = 0.5*X(j)/(m_sigma_sqrd*(1 + exp(-v(i))));

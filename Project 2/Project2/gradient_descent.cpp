@@ -22,13 +22,6 @@ double random_position(){
     return dis(gen);
 }
 
-void volume(double* buffer, double* bin_dist, int N_bins) {
-    buffer[0] = (4*M_PI/3)*pow(bin_dist[0], 3);
-    for(int j = 1; j<N_bins; j++) {
-        buffer[j] = (4*M_PI/3)*pow((bin_dist[j]), 3) - buffer[j-1];
-    }
-}
-
 int factorial(int n) {
   return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
 }
@@ -48,7 +41,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     uniform_int_distribution<> mrand(0, M-1);         //Random number between 0 and M
     uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
 
-    double factor=1;
+    double factor = 0.1;
 
     MatrixXd W       = MatrixXd::Random(M, N) * factor;
     VectorXd a       = VectorXd::Random(M)    * factor;
@@ -57,6 +50,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     VectorXd X_new   = VectorXd::Zero(M);
     VectorXd h       = VectorXd::Zero(N);
     VectorXd energies_old = VectorXd::Zero(5);
+
 
     VectorXd Xa      = X - a;
     VectorXd v       = b + (W.transpose() * X)/(sigma_sqrd);
@@ -74,7 +68,6 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     int number_of_bins = 500;
     double max_radius = 3;
     double radial_step = max_radius/number_of_bins;
-    double buffer[number_of_bins];
     double bin_dist[number_of_bins];
     double bins_particles[number_of_bins];
 
@@ -85,8 +78,6 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             bins_particles[i] = 0;
         }
         ob_file.open ("../data/ob_density.dat");
-
-        volume(buffer, bin_dist, number_of_bins);
     }
 
     //Open file for writing
@@ -158,24 +149,19 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                 E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
             }
 
-            if(one_body || iter == iterations-1) {
+            if(one_body && iter == iterations-1) {
                 for(int j=0; j<P; j++) {
                     double dist = 0;
                     for(int d=0; d<D; d++) {
                         dist += X(D*j+d)*X(D*j+d);
                     }
                     double r = sqrt(dist);      //Distance from particle to origin
-
-                    double err = 1000000;       //Initial error
-                    int bin_nr = 0;             //Which bin a particle is located at
                     for(int k=0; k<number_of_bins; k++) {
-                        double e = fabs(buffer[k] - r);
-                        if(e < err) {
-                            err = e;
-                            bin_nr = k;
+                        if(r < bin_dist[k]) {
+                            bins_particles[k] += 1;
+                            break;
                         }
                     }
-                    bins_particles[bin_nr] += 1;
                 }
             }
 
@@ -230,7 +216,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             if(one_body){
                 //Write to file
                 for(int j=0; j<number_of_bins; j++) {
-                   ob_file << bins_particles[j]/MC << "\n";
+                    ob_file << bins_particles[j] << "\n";
                 }
                 //Close myfile
                 ob_file.close();
@@ -271,7 +257,6 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
         //Write to file
         myfile << EL_avg << "\n";
-
     }
     //Close myfile
     if(myfile.is_open())  myfile.close();
