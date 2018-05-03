@@ -120,11 +120,12 @@ The neutrons are arranged in layers in the neural network, one visible layer tha
 
 The idea behind machine learning is that the weights $W_i$, that decides how much a node puts emphazis on a given input, can be changed, and thus change the system's response to the same input. We will explain with the example from earlier, with huskies and the wolves: first, the program are shown pictures of wolves and huskies, and it is told the correct answer. The weights $W_i$ are then updated such that when a husky is shown, the output "husky" is generated, and the same for wolves. After a sufficiently long training period, the program's weights are optimalized for recognizing wolves and huskies. When shown a picture, the program should then by itself be able to determine wheter it is a wolf or a husky that it sees. 
 
-\subsubsection{Restricted Boltzmann Machines}
+\subsubsection{Restricted Boltzmann Machines} \label{sec:RBM}
 There are plenty of ways to put together a neural network, as one can modify the number of nodes and layers, the bias, and also which nodes that are allowed to communicated. In this project, we will be using the so-called Restricted Boltzmann Machine (RBM). It is a two-layer network. The reason why it is named "restrictive" is that there are no connections between nodes in the same layer, but every node in the previous layer is connected to all the nodes in the next layer. The RBM can learn to draw samples from a probability distribution, which is just what we want in our project. In addition, we want to use a Gaussian-Binary RBM, where the hidden nodes have binary values, while the positions of the particles can take continous values, as they are, in fact, positions. 
 
 The joint probability distribution is known from statistical mechanics,
 \begin{equation}
+\label{eq:F_rbm}
 F(\boldsymbol{X},\boldsymbol{H})=\frac{1}{Z}e^{-\beta E(\boldsymbol{X},\boldsymbol{H})}
 \end{equation}
 where we set $\beta=1/kT=1$ and $Z$ is the partition function, which can be ignored since it will vanish anyway. 
@@ -276,8 +277,62 @@ This way, the algorithm will over many iterations move the particles towards the
 
 
 \subsubsection{Metropolis-Hastings}
-also known as importance sampling
+The Metropolis-Hastings algorithm, also known as importance sampling, have a more refined approach to choosing new positions and accepting them, compared to the brute force method. Instead of proposing the new position at random, the Metropolis-Hastings algorithm considers the drift force F, given by equation \ref{eq:drift_force}, which says something about which direction the particle is pushed in. 
+
+\begin{equation}
+\label{eq:drift_force}
+F(R) = \frac{2 \nabla \psi_T}{\psi_T}
+\end{equation}
+
+The equation that describes the motion of a particle pushed around by the drift force $F$, is called the Langevin equation. The Langevin equation can be derived from the Fokker-Planch equation, which describes the time-evolution of the probability density function. The Langevin equation can be solved using the Euler method. The result, presented in equation \ref{eq:hastings_newpos} , describes how the Metropolis-Hastings algorithm chooses a new position for the random particle:
+
+\begin{equation}
+\label{eq:hastings_newpos}
+R_{new} = R + DF(R)\Delta t + \xi\sqrt{\Delta t}
+\end{equation}
+
+where $D=\frac{1}{2}$ is the diffusion constant and $\Delta t$ is the timestep, that decides how long steps the method should take for each move. This is a much more educated guess compared to the brute force algorithm. 
+\par 
+\vspace{3mm}
+When regaring the transition probabilities, the Metropolis-Hastings algoritm does not go the easy way with $T_{i\rightarrow j} = T_{j\rightarrow i}$.  Instead it uses that the transition probabilities are given as the Green's function, also found using the Fokker-Planch equation:
+
+\begin{align}
+G(R_{new},R,\Delta t)&=\frac{1}{(4\pi D\Delta t)^{3N/2}}\exp[-(R_{new} - R - D\Delta tF(R))^2/4D\Delta t]\notag\\
+&=T_{R\rightarrow R_{new}}
+\end{align}
+
+such that the probability parameter $w$ becomes 
+
+\begin{equation}
+w = \frac{G(R,R_{new},\Delta t)|\Psi_T(R_{new})|^2}{G(R_{new},R,\Delta t)|\Psi_T(R)|^2}.
+\end{equation}
+
+Thereafter a random number $r$ is drawn and compared to $w$, just like in the brute force method. This more complicated way of proposing and accepting positions makes the Metropolis-Hastings slightly slower than the brute force method, but also quicker to converge towards the ground state.
+\par 
+\vspace{3mm}
+
+One thing that is worth to note with the brute force and the Metropolis-Hastings algorithms when doing machine learnign projects, is that both of them in this project are implemented so that only the positions, ie the visible nodes, are updated. This makes it so that we lose the opportunity to modify half of the syste, which maybe yield a worse convergence than if we varied the whole system.
+
+
 \subsection{Gibbs sampling}
+As an alternative to the Metropolis algorithm, one can use the Gibbs sampling method. In both the brute force method and Metropolis-Hastings, one has to accound for that proposed particle moves can be rejected, and this "wastes" one Monte Carlo cycle with doing several flops, when no change is inflicted on the system. \par 
+\vspace{3mm}
+The Gibbs sampling algorithm differs from the Metropolis in several ways. In section \ref{sec:RBM} we wrote that we chose the trial wave function $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, where $F$ is defined in equation \ref{eq:F_rbm}. In Gibbs sampling, we instead use the trial wave function $\Psi_T = \sqrt{F}$. 
+\par 
+\vspace{3mm}
+Furthermore, instead of updating only the visible nodes, as is done in Metropolis, the Gibbs sampling algorithm is a two-step sampling process where first a new position is chosen, and then one of the hidden nodes are updated. The positions are sampled from a Gaussian probability distribution, shown in equation \ref{eq:gibbs_xsampling}, while the probability for sampling $h=1$ is shown in equation \ref{eq:gibbs_hsampling}.
+
+\begin{equation}
+\label{eq:gibbs_xsampling}
+P(\boldsymbol{X} | \boldsymbol{h}) = \mathcal{N}(\boldsymbol{X}; \boldsymbol{a} + \boldsymbol{W} \boldsymbol{h} \sigma^2)
+\end{equation}
+
+\begin{equation}
+\label{eq:gibbs_hsampling}
+P(H_j = 1 | \boldsymbol{X}) = \frac{1}{ 1 + e^{- b_j - \frac{\boldsymbol{X}^T \boldsymbol{W_{cols,j}} }{\sigma^2}}}
+\end{equation}
+
+When we say that the visible and hidden nodes here are "sampled", we mean that they are drawn from the probability distribution, and then automatically accepted. This is different from Metropolis, and should mean that the Gibbs sampling method converges faster than both brute force and Metropolis-Hansings, as no Monte Carlo cycles are lost on the move not being accepted. 
 
 \subsection{Gradient descent}
 We use stochastic gradient descent to update the weights in order to minimize the local energy. The process itself is quite similar to that one typically used in Variational Monte Carlo (VMC) where the weights are our variational parameters, but compared with a normal VMC we have a lot more parameters to vary. The updating algorithm for updating the variational parameter $\alpha_i$ goes as
