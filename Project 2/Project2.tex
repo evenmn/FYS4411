@@ -354,7 +354,18 @@ A problem with the standard stochastic gradient descent method is that it will e
 \subsection{Blocking method} \label{sec:Blocking}
 
 \section{Code}
+In this section, we give an overview of the structure and implementation of our code, to make it easier for potential users to familiarize themselves with the code. 
+
 \subsection{Structure}
+In order to keep the code structured, we have split the running of the program up in several files. The user only needs to interact with main.cpp, as all the parameters for running the machine lerning project are set here. Examples are that the user can choose between brute force, Metropolis-Hastings og Gibbs sampling, and set the number of visible and hidden nodes, along with the number of iterations. The structure can be shown in figure \ref{fig:program_structure}.
+
+ \begin{figure} [H]
+	\centering
+	\includegraphics[scale=0.4]{program_structure.png}
+	\caption{The structure of the machine learning program, showing the communication between the different files}
+	\label{fig:program_structure}
+\end{figure}
+
 \subsection{Implementation}
 
 \section{Results} \label{sec:Results}
