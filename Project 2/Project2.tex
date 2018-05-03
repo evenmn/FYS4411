@@ -360,7 +360,7 @@ A problem with the standard stochastic gradient descent method is that it will e
 In this section, we give an overview of the structure and implementation of our code, to make it easier for potential users to familiarize themselves with the code. 
 
 \subsection{Structure}
-In order to keep the code structured, we have split the running of the program up in several files. The user only needs to interact with main.cpp, as all the parameters for running the machine lerning project are set here. Examples are that the user can choose between brute force, Metropolis-Hastings og Gibbs sampling, and set the number of visible and hidden nodes, along with the number of iterations. The structure can be shown in figure \ref{fig:program_structure}.
+In order to keep the code structured, we have split the running of the program up in several files. The user only needs to interact with main.cpp, as all the parameters for running the machine lerning project are set here. Examples are that the user can choose between brute force, Metropolis-Hastings og Gibbs sampling, and set the number of visible and hidden nodes, along with the number of iterations. main.cpp calls on the function GradientDecent in gradient\_decent.cpp, where the machine learning structure is implemented. The machine learning structure consists of the VMC-loop, where the nodes are updated, and the gradient decent method, where the weights are updated. GradientDecent uses the class WaveFunction in wavefunction.cpp to calculate the value of the wave function, along with the energy of the system. Depending on whether the user chose brute force, Metropolis-Hastings or Gibbs sampling, GradientDecent calls functions in either wavefunction.cpp, hastings\_tools.cpp or gibbs\_tools.cpp to update the positions and calculate the transition probabilities. The test functions are found in test.cpp. The structure can be seen in figure \ref{fig:program_structure}.
 
  \begin{figure} [H]
 	\centering
@@ -370,6 +370,66 @@ In order to keep the code structured, we have split the running of the program u
 \end{figure}
 
 \subsection{Implementation}
+
+\subsubsection{General implementation}
+\lstset{basicstyle=\scriptsize}
+
+\begin{lstlisting}
+	Set up vectors X and h for visible and hidden nodes, fill with random numbers, X between -1 and 1, h with 0 and 1
+	
+	Set opp vectors a, b, W for the weights, fill with random numbers between -1 and 1
+	
+	Initialize class WaveFunction
+	
+	for iter iterations
+		for MC Monte Carlo cycles
+			#do VMC
+		
+		#do GradientDecent
+		
+		end when stopping criterias == true, when method has converged
+		print final energy
+\end{lstlisting}
+
+\subsubsection{VMC}
+
+\lstset{basicstyle=\scriptsize}
+\begin{lstlisting}
+
+for M Monte Carlo iterations
+	
+	if Metropolis:
+		move random particle
+		accept or reject move based on transition probability
+		
+	if Gibbs:
+		sample new position and hidden node
+		
+	calculate energy of new position
+	update sum of E_L
+
+print estimated E 
+
+\end{lstlisting}
+
+\subsubsection{Gradient Decent}
+
+\lstset{basicstyle=\scriptsize}
+\begin{lstlisting}
+
+for iter iterations:
+	
+	for MC Monte Carlo cycles:
+		#do VMC
+		
+	Check if stopping criteria == true:
+		if true, break and print final values
+		
+	Calculate gradient for the weights a, b and W
+	Update a, b and W
+
+\end{lstlisting}
+
 
 \section{Results} \label{sec:Results}
 In this section we will see how accurate results we achieve using the NQS wavefunction for the brute-force Metropolis-, the Metropolis-Hastings- and the Gibbs' sampling method. Firstly, we calculate the energy of one particle in one dimension to ensure that the method works and we obtain an energy close to the analytical energy. Secondly, we extend the system to two interacting electrons in a two-dimensional harmonic oscillator. Furthermore the onebody densities with and without interaction are presented and finally we study how the total energy is distributed between kinetic energy and potential energy for various harmonic oscillator frequencies. 
