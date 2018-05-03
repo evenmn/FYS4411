@@ -339,7 +339,10 @@ P(\boldsymbol{X} | \boldsymbol{h}) = \mathcal{N}(\boldsymbol{X}; \boldsymbol{a} 
 P(H_j = 1 | \boldsymbol{X}) = \frac{1}{ 1 + e^{- b_j - \frac{\boldsymbol{X}^T \boldsymbol{W_{cols,j}} }{\sigma^2}}}
 \end{equation}
 
-When we say that the visible and hidden nodes here are "sampled", we mean that they are drawn from the probability distribution, and then automatically accepted. This is different from Metropolis, and should mean that the Gibbs sampling method converges faster than both brute force and Metropolis-Hansings, as no Monte Carlo cycles are lost on the move not being accepted. 
+When we say that the visible and hidden nodes here are "sampled", we mean that they are drawn from the probability distribution, and then automatically accepted. This is different from Metropolis, and should mean that the Gibbs sampling method converges faster than both brute force and Metropolis-Hansings, as no Monte Carlo cycles are lost on the move not being accepted. \par 
+\vspace{3mm}
+As we use a new trial wave function in Gibbs sampling, the expression for the local energy changes. The expression for the local energy using the Gibbs trial wave function is calculated in \ref{sec:appendix_B}.
+
 
 \subsection{Gradient descent}
 We use stochastic gradient descent to update the weights in order to minimize the local energy. The process itself is quite similar to that one typically used in Variational Monte Carlo (VMC) where the weights are our variational parameters, but compared with a normal VMC we have a lot more parameters to vary. The updating algorithm for updating the variational parameter $\alpha_i$ goes as
@@ -551,6 +554,7 @@ E_L&=\sum_{i=1}^{N}\frac{\boldsymbol{W}_{*i}^T\boldsymbol{W}_{*i}}{\sigma^4}\tex
 &\phantom{=}+\frac{(\boldsymbol{X}-\boldsymbol{a})^T\cdot(\boldsymbol{X}-\boldsymbol{a})}{\sigma^4}-\frac{M}{\sigma^2}+\boldsymbol{X}^T\boldsymbol{X}+E_{\text{INT}}
 \end{align}
 
+\section{Appendix B - Gibbs local energy calculation} \label{sec:appendix_B}
 
 
 \newpage
