@@ -188,9 +188,7 @@ For the non-interacting case with $\omega=1$ it is known the ground state energy
 
 \subsection{Onebody density}
 
-\subsection{Scaling}
-
-\subsection{Error estimation}
+\subsection{Error estimation} \label{sec:error_estimation}
 As a physicist one should always be sceptical to measurements presented without an estimation of the uncertainties. When someone says they have measured their height to be 1.90 cm, is the uncertainty $\pm 1 cm$ or $\pm 10 cm$? If they used $\pm 1 cm$, we have a fairly good idea of the height of the person, but if it is $\pm 10 cm$, we do not really know anything about the real height of the person. 
 \par 
 \vspace{3mm}
@@ -203,7 +201,8 @@ The error in a measurement is the difference between the true value of the mesur
 However, the true value $x$ is rarely known. When $x$ is not known, it is thus impossible to give the error in the measurement. We must therefore be content with providing estimates of the error. It is common to give this uncertainty as the standard deviation $\sigma$; when preforming a mesurement n times, such that we have n measured points $x_1, .., x_n$ where the average value is $ \langle x \rangle $, then the standard deviation is defined as
 
 \begin{equation}
-\sigma_{\theta} =  \sqrt{\frac{1}{n} \sum_{k=1}^n (x_i - \langle x \rangle)^2}
+\label{eq:standard_dev}
+\sigma_{\theta} =  \sqrt{\frac{1}{n-1} \sum_{k=1}^n (x_i - \langle x \rangle)^2}
 \end{equation}
 
 When giving the uncertainty, one writes $x_i \pm \sigma$, where $\sigma$ is so that $\approx 68 \%$ of the measured values lies withing the interval $\pm \sigma$. 
@@ -355,6 +354,20 @@ d\boldsymbol{b}=\frac{1}{\Psi}\frac{\partial\Psi}{\partial\boldsymbol{b}}=
 A problem with the standard stochastic gradient descent method is that it will either converge fast, but the precision is poor, or the precision is good, but it converges slowly. To avoid this problem, we want a large learning rate when the energy is far from converging and a small learning rate when the energy converges. 
 
 \subsection{Blocking method} \label{sec:Blocking}
+In section \ref{sec:error_estimation}, we described the need of a proper estimation of the uncertainty in computational simulations, where the covariance was included in the calculation od $\sigma$. A quick and easy way to get a proper estimate of the uncertainty, is by using the blocking method. If we have a data set ${x_1, x_2, ..., x_n }$ with $n$ data points, where the mean value is $\langle x \rangle$. We can calculate the standard deviation using equation \ref{eq:standard_dev}, however, as explained before, this does not include the covariance, as the data points ${x_1, x_2, ..., x_n }$  may be correlated.  A way to get around this, it by transforming the data set such that
+
+\begin{equation}
+x'_i = \frac{1}{2}(x_{2i} + x_{2i+1})
+\end{equation}
+
+The number of points in the transformed data set is now $n'$, and every $x'_i$ consists of two of the original data points. The transformed $x'_i$'s are referred to as blocks, and the standard deviation in each block $\sigma_i$ can now be calculated. An estimate of the total standard deviation $\hat{\sigma}$ when we have $n'$ transformed data points is
+
+\begin{equation}
+	\label{eq:total_std_dev}
+	\hat{\sigma} = \frac{\sigma_1 + .. + \sigma_{n'}}{n'}
+\end{equation} 
+
+We now increase the block size, such that there are even more of the original data point in each block, and calculate the total standard deviation from equation \ref{eq:total_std_dev} again. If we continue doing this and plot the resulting estimates of $\hat{\sigma}$, we will observe that it first increases, until it flats out. When we have reached this plateu, we know that the data blocks $x'_i$ are no longer correlated. The covariance is then 0, and we have thus obtained a proper estimation of the uncertainty. 
 
 \section{Code}
 In this section, we give an overview of the structure and implementation of our code, to make it easier for potential users to familiarize themselves with the code. 
@@ -524,10 +537,10 @@ v(j)=b_j+\sum_{i=1}^{M}\frac{X_iW_{ij}}{\sigma^2}.
 \end{equation}
 Thus the local energy can be expressed as
 \begin{align}
-E_L&=\sum_{i=1}^{N}\frac{\boldsymbol{W}_{*i}^T\boldsymbol{W}_{*i}}{\sigma^4}\text{Logistic}^2\big(v(i)\big)+\\
-&\phantom{=}\sum_{i,j=1}^{N,N}\frac{\boldsymbol{W}_{*i}^T\boldsymbol{W}_{*j}}{\sigma^4}\text{Logistic}\big(v(i)\big)\text{Logistic}\big(v(j)\big)-\\
-&\phantom{=}2\sum_{i=1}^N\frac{\boldsymbol{W}_{*i}^T(\boldsymbol{X}-\boldsymbol{a})}{\sigma^4}\text{Logistic}(v(i))+\\
-&\phantom{=}\frac{(\boldsymbol{X}-\boldsymbol{a})^T\cdot(\boldsymbol{X}-\boldsymbol{a})}{\sigma^4}-\frac{1}{\sigma^2}+\boldsymbol{X}^T\boldsymbol{X}+E_{\text{INT}}
+E_L&=\sum_{i=1}^{N}\frac{\boldsymbol{W}_{*i}^T\boldsymbol{W}_{*i}}{\sigma^4}\text{Logistic}^2\big(v(i)\big)\\
+&\phantom{=}+\sum_{i,j=1}^{N,N}\frac{\boldsymbol{W}_{*i}^T\boldsymbol{W}_{*j}}{\sigma^4}\text{Logistic}\big(v(i)\big)\text{Logistic}\big(v(j)\big)\\
+&\phantom{=}-2\sum_{i=1}^N\frac{\boldsymbol{W}_{*i}^T(\boldsymbol{X}-\boldsymbol{a})}{\sigma^4}\text{Logistic}(v(i))\\
+&\phantom{=}+\frac{(\boldsymbol{X}-\boldsymbol{a})^T\cdot(\boldsymbol{X}-\boldsymbol{a})}{\sigma^4}-\frac{M}{\sigma^2}+\boldsymbol{X}^T\boldsymbol{X}+E_{\text{INT}}
 \end{align}
 
 
