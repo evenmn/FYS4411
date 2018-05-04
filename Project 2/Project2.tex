@@ -191,10 +191,20 @@ A quantity that often is handy to calculate is the onebody density. The onebody 
 
 \begin{equation}
 \label{eq:onebody_density}
-\rho_i=\int_{-\infty}^{\infty}d\vec{r}_1\hdots d\vec{r}_{i-1}d\vec{r}_{i+1}\hdots d\vec{r}_N |\Psi(\vec{r}_1,\hdots \vec{r}_N)|^2.
+\rho_i(\boldsymbol{r})=\int_{-\infty}^{\infty}d\boldsymbol{r}_1\hdots d\boldsymbol{r}_{i-1}d\boldsymbol{r}_{i+1}\hdots d\boldsymbol{r}_N |\Psi(\boldsymbol{r}_1,\hdots \boldsymbol{r}_N)|^2.
 \end{equation}
 
 Apart from the fact that the one body density is a good visual representation of the positions of the particles, it is also a qunatity that is often calculated experimentally. Therefore, it is simpler to compare computational simulations to  experimental results when having calculated the onebody density.
+
+Without interaction, the onebody density of particle $i$ is simply its wavefunction squared, which is known to be
+\begin{equation}
+\rho_i(\boldsymbol{r})=A^2e^{-\boldsymbol{r}_i^2}
+\end{equation}
+for a particle in the groundstate of a harmonic oscillator potential with $A$ as the normalization constant. Numerically we solve this by dividing the area around a particle into bins. Thereafter we count the number of particles in each bin, and divid by the area to get the density. The area of bin $k$ is
+\begin{equation}
+A_k=\pi r_k^2-\pi r_{k-1}^2=2\pi r_kdr-\pi dr^2
+\end{equation}
+where $r_k$ is the outer radius of bin $k$ and $dr$ is the bin width.
 
 \subsection{Error estimation} \label{sec:error_estimation}
 As a physicist one should always be sceptical to measurements presented without an estimation of the uncertainties. When someone says they have measured their height to be 1.90 cm, is the uncertainty $\pm 1 cm$ or $\pm 10 cm$? If they used $\pm 1 cm$, we have a fairly good idea of the height of the person, but if it is $\pm 10 cm$, we do not really know anything about the real height of the person. 
@@ -506,14 +516,13 @@ We now go further to study the results from two iteracting fermions. From above 
 
 \subsection{Onebody density}
 In figure \ref{fig:OB} the onebody densities for two particles in two dimensions with and without interaction is plotted. From the energy calculations, we found Metropolis-Hastings method to be the better one for two particles, and henceforth we will therefore stick to it. 
-\iffalse
  \begin{figure} [H]
  	\centering
- 	\includegraphics[scale=0.6]{plots/comparison_1P_MC_1000000_eta_001_iter_500.png}
- 	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. Brute-Force (BF) Metropolis (blue line), Metropolis-Hastings (H) (orange line), Gibbs' (green line) and analytical value (dashed red line). All the samplings were conducted with $MC=1000000$ and $\eta=0.01$. For BF we used steplength $dx=1.0$, while for H the timestep was $dt=0.01$. See text for further description.}
+ 	\includegraphics[scale=0.6]{plots/OB_comparison_MC_1e9.png}
+ 	\caption{OB density 1e9 MC cycles, 1000 bins, Metropolis-Hastings.}
  	\label{fig:OB}
  \end{figure}
-\fi
+
 They look similar, but 
 
 \subsection{Average energies and distance}
