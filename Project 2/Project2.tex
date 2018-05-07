@@ -488,7 +488,7 @@ We first study the energy of a non-interacting electron in one dimension, and in
  	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. Brute-Force (BF) Metropolis (blue line), Metropolis-Hastings (MH) (orange line), Gibbs' (green line) and analytical value (dashed red line). All the samplings were conducted with MC=$1000000$ and $\eta=0.01$. For BF we used steplength $dx=1.0$, while for MH the timestep was $dt=0.01$. See text for further description.}
  	\label{fig:energy1P1D}
  \end{figure}
-We observe that the energies produced by brute-force and Metropolis-Hastings are very similar, and in fact it is hard to distinguish them. They also give energies closer to the analytical energy compared to Gibbs' sampling and converge faster. In table \ref{tab:energies1P1D} some chosen energies from figure \ref{fig:energy1P1D} are listed, and we observe that brute-force has actually the smallest absolute error for all number of iterations. 
+We observe that the energies produced by brute-force and Metropolis-Hastings are very similar, and in fact it is hard to distinguish them. They also give lower energies to the analytical energy compared to Gibbs' sampling. In table \ref{tab:energies1P1D} some chosen energies from figure \ref{fig:energy1P1D} are listed, and we observe that brute-force has actually the smallest absolute error for all number of iterations. 
 
 \begin{table} [H]
 	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. \vspace{2mm}}
@@ -529,7 +529,7 @@ We now go further to study the results from two iteracting fermions. From above 
 \begin{table} [H]
 	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. \vspace{2mm}}
 	\begin{tabularx}{\textwidth}{X|XXXX} \hline\hline
-		\label{tab:energies1P1D}
+		\label{tab:energies2P2D}
 		Iterations & BF & MH & Gibbs & Exact \\ \hline
 				200 & 3.19482 & 0.507337 & 0.516750 & 0.5 \\
 				400 & 3.08322 & 0.502318 & 0.485531 & 0.5 \\
@@ -551,6 +551,8 @@ For the non-interacting case we see that the numerical calculation reproduces th
  
 
 \subsection{Average energies and distance}
+In table \ref{tab:average_energies} average kinetic, interaction and potential energy is presented along with the mean distance for both the interacting and non-interacting case and for various frequencies. We observe that both the interaction energy and the potential energy increase as the frequency increase, while the mean distance decreases.
+
 \begin{table} [H]
 	\caption{In this table we present average kinetic, interaction and potential energies for various $\omega$'s, along wiht the average distance between particles in the rightmost column. We used Metropolis-Hastings method with $dt=0.01$, $\eta=0.01$ and found the averages after convergence.  \vspace{2mm}}
 	\begin{tabularx}{\textwidth}{c|XXXXX} \hline\hline
@@ -573,6 +575,13 @@ For the non-interacting case we see that the numerical calculation reproduces th
 
 
 \section{Discussion} \label{sec:Discussion}
+For one particle in one dimension, we found the brute-force Metropolis algorithm and the Metropolis-Hastings algorithm to be more accurate compared to Gibbs' sampling. The reason for that is probably related to how we define the wave function. Since the wave function used in Gibbs' sampling is the square root of the porbability distribution, this is farer from the true wave function. 
+
+We can also see from \ref{tab:energies1P1D} that the calculated energies are really close to the exact energies for brute-force Metropolis and Metropolis-Hastings, and the variance decreases as we increase the number of iterations. 
+
+When varying the number of hidden nodes, we saw that N=1 gave the lowest energy, 
+
+The  
 
 \section{Conclusion} \label{sec:Conclusion}
 
