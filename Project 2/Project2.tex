@@ -48,10 +48,12 @@
 \end{itemize}
 
 \begin{abstract}
-This project aims to simulate a quantum dot by using a restricted Boltzmann machine (RBM) in combination with Variational Monte Carlo (VMC). 
+This project aims to simulate a quantum dot by using a restricted Boltzmann machine (RBM) in combination with Variational Monte Carlo (VMC) with either Metropolis or Gibbs sampling. Using a form of the wave function given by the RBM, we find the optimal ground state wave function with the gradient decent method, and calculate an upper bound limit of the ground state energy and onebody density for one electron, as well as for two electrons with and without interaction. Our results are benchmarked with analytical expectations. 
 \par 
 
+Using two electrons without interaction, the Metropolis algorithm reproduces the benchmarks. When turning interaction, the Metropolis algorithm yields a lower upper bound estimate of the ground state energy, compared to Gibbs. This is due to the wave function used in Gibbs sampling is not the exact ground state wave function. The onebody density changes when introducing interaction, which is as expected.   
 \end{abstract}
+
 
 \newpage
 
