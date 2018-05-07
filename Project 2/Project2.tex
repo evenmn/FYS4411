@@ -495,11 +495,11 @@ We observe that the energies produced by brute-force and Metropolis-Hastings are
 	\begin{tabularx}{\textwidth}{X|XXXX} \hline\hline
 		\label{tab:energies1P1D}
 		Iterations & BF & MH & Gibbs & Exact \\ \hline
-				100 & 0.500005 & 0.499993 & 0.516750 & 0.5 \\
-				200 & 0.499999 & 0.500017 & 0.485531 & 0.5 \\
-				300 & 0.500001 & 0.499997 & 0.484165 & 0.5 \\
-				400 & 0.499999 & 0.500001 & 0.484105 & 0.5 \\
-				500 & 0.500000 & 0.499986 & 0.484648 & 0.5 \\ \hline
+				100 & 0.500005(23) & 0.49999(13) & 0.62560(52) & 0.5 \\
+				200 & 0.499999(08) & 0.500017(36) & 0.62550(51) & 0.5 \\
+				300 & 0.500001(03) & 0.499997(11) & 0.62550(51) & 0.5 \\
+				400 & 0.499999(02) & 0.500001(07) & 0.62476(52) & 0.5 \\
+				500 & 0.500000(02) & 0.499986(06) & 0.62555(52) & 0.5 \\ \hline
 	\end{tabularx}
 \end{table}
 
@@ -551,6 +551,14 @@ For the non-interacting case we see that the numerical calculation reproduces th
  
 
 \subsection{Average energies and distance}
+\begin{table} [H]
+	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. \vspace{2mm}}
+	\begin{tabularx}{\textwidth}{X|XXX} \hline\hline
+		\label{tab:average_energies}
+		$\omega$ & $\langle E_k\rangle$ & $\langle V_{ext}\rangle$ & $\langle V_{int}\rangle$ \\ \hline
+				0.01 & 3.19482 & 0.507337 & 0.516750 \\ \hline
+	\end{tabularx}
+\end{table}
 
 
 \section{Discussion} \label{sec:Discussion}
