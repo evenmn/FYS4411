@@ -71,9 +71,6 @@ The goal is to find an upper bound limit of the ground state energy and the oneb
 The RBM is used to find the optimal wave function for the state, while we use Variational Monte Carlo (VMC) with either the Metropolis algorithm or Gibbs sampling to move the system towards the most likely state. The NQS wave function is optimalized with the gradient decent method.  The metods used are presented in section \ref{sec:Method}, and the code structure and implementation are presented in section \ref{sec:Code}. The upper bound estimate of the ground state energy and the onebody density are given in section \ref{sec:Results}, and our results are discussed in section \ref{sec:Discussion}.
 
 
- 
-
-
 \section{Theory} \label{sec:Theory}
 \subsection{Presentation of potential} \label{sec:Presentation_of_potential}
 In this project, we simulate a system of $P$ electrons trapped in a harmonic oscillator potential, with a Hamiltonian given by
@@ -215,6 +212,22 @@ for a particle in the groundstate of a harmonic oscillator potential with $A$ as
 A_k=\pi r_k^2-\pi r_{k-1}^2=2\pi r_kdr-\pi dr^2
 \end{equation}
 where $r_k$ is the outer radius of bin $k$ and $dr$ is the bin width.
+
+\subsection{Virial theorem}
+The virial theorem is an equation in mechanics that gives a relation between the time-averaged kinetic energy $\langle T \rangle$ and the potential forces acting on $N$ particles confined in a stable system. The theorem takes the following form:
+
+\begin{equation}
+	\langle T \rangle = - \frac{1}{2} \sum_{i=0}^N \langle \boldsymbol{F_i} \cdot \boldsymbol{r_i} \rangle 
+\end{equation}
+
+where $\boldsymbol{F_i}$ is the sum of forces acting on particle $i$.\par 
+\vspace{3mm}
+
+In a two-particle system where the potential is proportional to $r^n$, then the virial theorem simplifies to 
+
+\begin{equation}
+	2 \langle T \rangle = n \langle V_{tot} \rangle
+\end{equation} 
 
 \subsection{Error estimation} \label{sec:error_estimation}
 As a physicist one should always be sceptical to measurements presented without an estimation of the uncertainties. When someone says they have measured their height to be 1.90 cm, is the uncertainty $\pm 1 cm$ or $\pm 10 cm$? If they used $\pm 1 cm$, we have a fairly good idea of the height of the person, but if it is $\pm 10 cm$, we do not really know anything about the real height of the person. 
