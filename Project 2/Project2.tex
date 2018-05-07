@@ -321,7 +321,7 @@ This way, the algorithm will over many iterations move the particles towards the
 
 
 \subsubsection{Metropolis-Hastings}
-The Metropolis-Hastings algorithm, also known as importance sampling, have a more refined approach to choosing new positions and accepting them, compared to the brute force method. Instead of proposing the new position at random, the Metropolis-Hastings algorithm considers the drift force F, given by equation \ref{eq:drift_force}, which says something about which direction the particle is pushed in. 
+The Metropolis-Hastings algorithm, also known as importance sampling, have a more refined approach to choosing new positions and accepting them, compared to the brute force method. Instead of proposing the new position at random, the Metropolis-Hastings algorithm considers the quantum force F, given by equation \ref{eq:drift_force}, which says something about which direction the particle is pushed in. 
 
 \begin{equation}
 \label{eq:drift_force}
@@ -349,7 +349,7 @@ such that the probability parameter $w$ becomes
 w = \frac{G(R,R_{new},\Delta t)|\Psi_T(R_{new})|^2}{G(R_{new},R,\Delta t)|\Psi_T(R)|^2}.
 \end{equation}
 
-Thereafter a random number $r$ is drawn and compared to $w$, just like in the brute force method. This more complicated way of proposing and accepting positions makes the Metropolis-Hastings slightly slower than the brute force method, but also quicker to converge towards the ground state.
+Thereafter a random number $r$ is drawn and compared to $w$, just like in the brute force method. This more complicated way of proposing and accepting positions makes the Metropolis-Hastings slightly slower than the brute force method, but also quicker to converge towards the ground state. When using the Metropolis-Hastings algorithm, we need the expression for the quantum force for the NQS wave function. The calculations and the final expression of $\boldsymbol{F}$ are shown in appendix \ref{sec:appendix_A}.
 \par 
 \vspace{3mm}
 
@@ -376,7 +376,7 @@ P(H_j = 1 | \boldsymbol{X}) = \frac{1}{ 1 + e^{- b_j - \frac{\boldsymbol{X}^T \b
 
 When we say that the visible and hidden nodes here are "sampled", we mean that they are drawn from the probability distribution, and then automatically accepted. This is different from Metropolis, and should mean that the Gibbs sampling method converges faster than both brute force and Metropolis-Hansings, as no Monte Carlo cycles are lost on the move not being accepted. \par 
 \vspace{3mm}
-As we use a new trial wave function in Gibbs sampling, the expression for the local energy changes. The expression for the local energy using the Gibbs trial wave function is calculated in \ref{sec:appendix_B}.
+As we use a new trial wave function in Gibbs sampling, the expression for the local energy changes. The expression for the local energy using the Gibbs trial wave function is calculated in appendix \ref{sec:appendix_B}.
 
 
 \subsection{Gradient descent}
@@ -584,8 +584,11 @@ For the non-interacting case we see that the numerical calculation reproduces th
 
 \newpage
 
-\section{Appendix A - Local energy calculations} \label{sec:appendix_A}
-The energy can be calculated by introducing a local energy, where the acerage local energy goes to the true energy with a sufficient amount of samples. This local energy can be splitted up in a kinetic part, a part from the harmonic oscillator potential and a interacting part,
+\section{Appendix A - Local energy and quantum force calculations for Metropolis} \label{sec:appendix_A}
+
+\subsection{Local energy}
+
+The energy can be calculated by introducing a local energy, where the acerage local energy goes to the true energy with a sufficient amount of samples, as explained in \ref{sec:Theory}. This local energy can be splitted up in a kinetic part, a part from the harmonic oscillator potential and a interacting part,
 \begin{equation}
 E_L=\sum_{k=1}^{M}(E_{\text{KIN},k} + E_{\text{EXT},k})+E_{\text{POT}}.
 \end{equation}
@@ -621,7 +624,62 @@ E_L&=\sum_{i=1}^{N}\frac{\boldsymbol{W}_{*i}^T\boldsymbol{W}_{*i}}{\sigma^4}\tex
 &\phantom{=}+\frac{(\boldsymbol{X}-\boldsymbol{a})^T\cdot(\boldsymbol{X}-\boldsymbol{a})}{\sigma^4}-\frac{M}{\sigma^2}+\boldsymbol{X}^T\boldsymbol{X}+E_{\text{INT}}
 \end{align}
 
-\section{Appendix B - Gibbs local energy calculation} \label{sec:appendix_B}
+\subsection{Quantum force}
+In equation \ref{eq:drift_force}, the equation for the quantum force is given, but we repeat it here:
+
+\begin{equation*}
+\label{eq:drift_force}
+\boldsymbol{F}(\boldsymbol{R}) = \frac{2 \nabla \psi_T(\boldsymbol{R})}{\psi_T(\boldsymbol{R})}
+\end{equation*}
+
+ When implementing importance sampling, we need the expression for the quantum force for the NQS wave function. As shown above, 
+ 
+\begin{equation}
+\frac{1}{\Psi_T}\nabla_k\Psi_T=\nabla_k\ln\Psi_T.
+\end{equation}
+
+and
+
+\begin{equation}
+\frac{\partial}{\partial X_k}\ln\Psi_T=-\frac{X_k-a_k}{\sigma^2}+\sum_{j=1}^{N}\frac{W_{kj}}{\sigma^2}\text{Logistic}(v(j))
+\end{equation}
+
+The expression for the quantum force is thus
+
+\begin{equation}
+\boldsymbol{F}(\boldsymbol{R})=-2\frac{X_k-a_k}{\sigma^2}+2\sum_{j=1}^{N}\frac{W_{kj}}{\sigma^2}\text{Logistic}(v(j))
+\end{equation}
+
+
+
+\section{Appendix B - Gibbs local energy and gradient calculation} \label{sec:appendix_B}
+
+\subsection{Local energy}
+We need the expression for the local energy with the new trial wave function $\Psi_T = \sqrt{F(\boldsymbol{X}, \boldsymbol{H})}$. We denote this new wave function $\Psi ^* = \sqrt{\Psi}$. Earlier, we saw that we had the following relation:
+
+\begin{equation}
+\frac{1}{\Psi_T}\nabla_k^2\Psi_T = (\nabla_k\ln\Psi_T)^2+\nabla_k^2\ln\Psi_T
+\end{equation}
+
+Using $\Psi ^* = \sqrt{\Psi}$, we now get
+
+\begin{align}
+	\frac{1}{\Psi ^*}\nabla_k^2\Psi ^*
+	&= (\nabla_k \ln \Psi ^*)^2 + \nabla_k^2 \ln \Psi ^* \\
+	&= (\nabla_k \ln \Psi^{\frac{1}{2}})^2 + \nabla_k^2 \ln \Psi^{\frac{1}{2}} \\
+	&= \frac{1}{4}(\nabla_k\ln\Psi_T)^2 + \frac{1}{2}\nabla_k^2\ln\Psi_T
+\end{align}
+
+We see that there are two constants which differ the local energy caculated with $\Psi$ and $\Psi ^*$. 
+
+\subsection{Gradient for gradient decent method}
+When calculating the gradients for $\boldsymbol{W}$, $\boldsymbol{a}$ and $\boldsymbol{b}$ when using the wave function $\Psi ^* = \sqrt{\Psi}$, we must remember that:
+
+\begin{equation}
+	\nabla \ln \Psi^{\frac{1}{2}} = \frac{1}{2} \nabla \ln \Psi
+\end{equation}
+
+We thus get a factor $2$ difference in the gradients that are used to uptade the weights $\boldsymbol{W}$, $\boldsymbol{a}$ and $\boldsymbol{b}$, which we must remember to add when running Gibbs sampling.
 
 
 \newpage
