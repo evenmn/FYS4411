@@ -41,7 +41,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     uniform_int_distribution<> mrand(0, M-1);         //Random number between 0 and M
     uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
 
-    double factor = 0.1;
+    double factor = 2.0;
 
     MatrixXd W       = MatrixXd::Random(M, N) * factor;
     VectorXd a       = VectorXd::Random(M)    * factor;

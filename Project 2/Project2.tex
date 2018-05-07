@@ -583,11 +583,15 @@ We can also see from \ref{tab:energies1P1D} that the calculated energies are rea
 
 When varying the number of hidden nodes, we saw that N=1 gave the lowest energy, 
 
-The  
+We also observed that the convergence rapidness was heavily dependent on the learning rate, where a low learing rate gave a slow convergence. This is what we expect, since the learning rate defines how much we change the weights for each iteration. 
+\vspace{3mm}
 
-\section{Conclusion} \label{sec:Conclusion}
+The onebody density, in figure \ref{fig:OB}, reproduces the analytical onebody density without interaction, and for the interacting case it gets broader. Since the electrons then are affected by repulsive force, they will have a larger separation distance and a broader distribution makes sense.
+\vspace{3mm}
 
-In table \ref{tab:average_energies}, we see that the estimates of the average distance between the two electrons $\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$ increases with increasing harmonic oscillator frequancy $\omega$. This is as expected, as the higher $\omega$, the steeper the sides of the potential well, and thus the electrons are forced together. We also observe that the average distance for the same $\omega$ increases when the interaction is turned on, which correspons to the Coulomb repulsion forcing the electrons apart. 
+In table \ref{tab:average_energies}, we see that the estimates of the average distance between the two electrons $\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$ increases with increasing harmonic oscillator frequancy $\omega$. This is as expected, as the higher $\omega$, the steeper the sides of the potential well, and thus the electrons are forced together. We also observe that the average distance for the same $\omega$ increases when the interaction is turned on, which correspons to the Coulomb repulsion forcing the electrons apart.
+
+\section{Conclusion} \label{sec:Conclusion} 
 
 
 \newpage

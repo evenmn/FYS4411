@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 asymptote = 0.5
-'''
+
 data = np.loadtxt("../data/energy.txt")
 x = np.linspace(0, len(data) - 1, len(data))
 
@@ -42,3 +42,4 @@ plt.legend()
 #plt.axis([-10, 210, 1.5, 6])
 #plt.savefig('figure.png')
 plt.show()
+'''
