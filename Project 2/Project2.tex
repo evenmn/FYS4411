@@ -48,10 +48,12 @@
 \end{itemize}
 
 \begin{abstract}
-Abstract
+This project aims to simulate a quantum dot by using a restricted Boltzmann machine (RBM) in combination with Variational Monte Carlo (VMC) with either Metropolis or Gibbs sampling. Using a form of the wave function given by the RBM, we find the optimal ground state wave function with the gradient decent method, and calculate an upper bound limit of the ground state energy and onebody density for one electron, as well as for two electrons with and without interaction. Our results are benchmarked with analytical expectations. 
 \par 
 
+Using two electrons without interaction, the Metropolis algorithm reproduces the benchmarks. When turning interaction, the Metropolis algorithm yields a lower upper bound estimate of the ground state energy, compared to Gibbs. This is due to the wave function used in Gibbs sampling is not the exact ground state wave function. The onebody density changes when introducing interaction, which is as expected.   
 \end{abstract}
+
 
 \newpage
 
@@ -153,7 +155,7 @@ E(\boldsymbol{X},\boldsymbol{H})=\sum_{i=1}^{M}\frac{(X_i-a_i)^2}{2\sigma_i^2}-\
 	\Psi = \frac{1}{Z} e^{\sum_i^M \frac{(X_i - a_i)^2}{2\sigma^2}} \prod_j^N (1+ e^{b_j + \sum_iM \frac{X_i W_{ij}}{\sigma^2}})
 \end{equation}
 
-\subsection{Energy calculation}
+\subsection{Energy calculation} \label{sec:RBM_energy_cal}
 We want to calculate the energy of the two-fermion system, given the wave function described in \ref{eq:wf_form}. As explained in \cite{Nordhagen}, the energy of the system is the expectation value of the Hamiltonian, but this is hard to compute directly. 
 
 \begin{equation}
@@ -557,7 +559,7 @@ In table \ref{tab:average_energies} average kinetic, interaction and potential e
 	\caption{In this table we present average kinetic, interaction and potential energies for various $\omega$'s, along wiht the average distance between particles in the rightmost column. We used Metropolis-Hastings method with $dt=0.01$, $\eta=0.01$ and found the averages after convergence.  \vspace{2mm}}
 	\begin{tabularx}{\textwidth}{c|XXXXX} \hline\hline
 		\label{tab:average_energies}
-		$\omega$ & $\langle E_{tot}\rangle$ [a.u.] & $\langle E_k\rangle$ [a.u.] & $\langle V_{ext}\rangle$ [a.u.] & $\langle V_{int}\rangle$ [a.u.] & $\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$ \\ \hline \\
+		$\omega$ & $ E_{tot}$ [a.u.] & $\langle E_k\rangle$ [a.u.] & $\langle V_{ext}\rangle$ [a.u.] & $\langle V_{int}\rangle$ [a.u.] & $\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$ \\ \hline \\
 				& \multicolumn{4}{c}{\textbf{Without interaction}}\\ \hline
 				0.01 & 0.79719 & 0.79703 & 1.6864e-4 & - & 1.7483 \\
 				0.05 & 0.79380 & 0.78975 & 0.0040605 & - & 1.7119 \\
@@ -584,6 +586,9 @@ When varying the number of hidden nodes, we saw that N=1 gave the lowest energy,
 The  
 
 \section{Conclusion} \label{sec:Conclusion}
+
+In table \ref{tab:average_energies}, we see that the estimates of the average distance between the two electrons $\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$ increases with increasing harmonic oscillator frequancy $\omega$. This is as expected, as the higher $\omega$, the steeper the sides of the potential well, and thus the electrons are forced together. We also observe that the average distance for the same $\omega$ increases when the interaction is turned on, which correspons to the Coulomb repulsion forcing the electrons apart. 
+
 
 \newpage
 
