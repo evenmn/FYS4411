@@ -483,11 +483,11 @@ We observe that the energies produced by brute-force and Metropolis-Hastings are
 	\begin{tabularx}{\textwidth}{X|XXXX} \hline\hline
 		\label{tab:energies1P1D}
 		Iterations & BF & MH & Gibbs & Exact \\ \hline
-				100 & 0.506332 & 0.507337 & 0.516750 & 0.5 \\
-				200 & 0.501485 & 0.502318 & 0.485531 & 0.5 \\
-				300 & 0.501363 & 0.501983 & 0.484165 & 0.5 \\
-				400 & 0.501207 & 0.501983 & 0.484105 & 0.5 \\
-				500 & 0.501323 & 0.501731 & 0.484648 & 0.5 \\ \hline
+				100 & 0.500005 & 0.499993 & 0.516750 & 0.5 \\
+				200 & 0.499999 & 0.500017 & 0.485531 & 0.5 \\
+				300 & 0.500001 & 0.499997 & 0.484165 & 0.5 \\
+				400 & 0.499999 & 0.500001 & 0.484105 & 0.5 \\
+				500 & 0.500000 & 0.499986 & 0.484648 & 0.5 \\ \hline
 	\end{tabularx}
 \end{table}
 
@@ -512,7 +512,20 @@ Since the optimal number of hidden nodes is one in this case, we will use N=1 wh
 The smaller learning rate the slower it converges, and after 100 iterations both $\eta$=0.5 and $\eta$=0.05 are really close to the exact value. 
 
 \subsection{Energy calculations, with interaction}
-We now go further to study the results from two iteracting fermions. From above we know that the Metropolis algorithms give roughly the same results and are better than Gibbs' sampling, but for more particles we expect Metropolis-Hastings to be more accurate
+We now go further to study the results from two iteracting fermions. From above we know that the Metropolis algorithms give roughly the same results and are better than Gibbs' sampling, but for more particles we expect Metropolis-Hastings to be more accurate.
+
+\begin{table} [H]
+	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. \vspace{2mm}}
+	\begin{tabularx}{\textwidth}{X|XXXX} \hline\hline
+		\label{tab:energies1P1D}
+		Iterations & BF & MH & Gibbs & Exact \\ \hline
+				200 & 3.19482 & 0.507337 & 0.516750 & 0.5 \\
+				400 & 3.08322 & 0.502318 & 0.485531 & 0.5 \\
+				600 & 3.07963 & 0.501983 & 0.484165 & 0.5 \\
+				800 & 3.07894 & 0.501983 & 0.484105 & 0.5 \\
+				1000 & 3.07868 & 0.501731 & 0.484648 & 0.5 \\ \hline
+	\end{tabularx}
+\end{table}
 
 \subsection{Onebody density}
 In figure \ref{fig:OB} the onebody densities for two particles in two dimensions with and without interaction is plotted. From the energy calculations, we found Metropolis-Hastings method to be the better one for two particles, and henceforth we will therefore stick to it. 

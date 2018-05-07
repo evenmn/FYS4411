@@ -85,7 +85,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     myfile.open("../data/energy.txt");
 
     ofstream myfile1;
-    myfile1.open("../data/local_energies_interaction_hastings.txt");
+    myfile1.open("../data/local_energies.txt");
 
     for(int iter=0; iter<iterations; iter++) {
         //averages and energies
@@ -166,7 +166,6 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             }
 
             if(iter == iterations - 1) {
-                myfile1 << E << endl;
                 for(int j=0; j<P; j++) {
                     for(int k=0; k<j; k++) {
                         double dist = 0;
@@ -175,6 +174,9 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                         tot_dist += sqrt(dist);
                     }
                 }
+            }
+            if((iter-iterations-1)%100==0) {
+                myfile1 << E << endl;
             }
 
 

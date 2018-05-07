@@ -38,8 +38,13 @@ def block(x):
     return ans
 
 # input data must be a power of two
-x = loadtxt("data/local_energies_interaction_hastings.txt")
-print(x)
-ans = block(x)
+x = loadtxt("../data/local_energies_G_1P_N_1_MC_2pow20_eta_001.txt")
+number_of_measurements = 5     #Number of measurements in one textfile
+length_of_measurement = int(len(x)/number_of_measurements)
+
+for i in range(number_of_measurements):
+    print('\n --- Measurement %d ---' % (i+1))
+    ans = block(x[i*length_of_measurement:(i+1)*length_of_measurement])
+    #print('VARIANCE: %15g' % ans)
 
 
