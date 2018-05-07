@@ -38,7 +38,7 @@ def block(x):
     return ans
 
 # input data must be a power of two
-x = loadtxt("../data/local_energies_G_1P_N_1_MC_2pow20_eta_001.txt")
+x = loadtxt("../data/local_energies_G_1P_N_1_MC_2pow20_eta_001_factor_1.txt")
 number_of_measurements = 5     #Number of measurements in one textfile
 length_of_measurement = int(len(x)/number_of_measurements)
 
