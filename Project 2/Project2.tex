@@ -216,23 +216,6 @@ A_k=\pi r_k^2-\pi r_{k-1}^2=2\pi r_kdr-\pi dr^2
 \end{equation}
 where $r_k$ is the outer radius of bin $k$ and $dr$ is the bin width.
 
-\subsection{Virial theorem}
-The virial theorem is an equation in mechanics that gives a relation between the time-averaged kinetic energy $\langle T \rangle$ and the potential forces acting on $N$ particles confined in a stable system. The theorem takes the following form:
-
-\begin{equation}
-\langle T \rangle = - \frac{1}{2} \sum_{i=0}^N \langle \boldsymbol{F_i} \cdot \boldsymbol{r_i} \rangle 
-\end{equation}
-
-where $\boldsymbol{F_i}$ is the sum of forces acting on particle $i$.\par 
-\vspace{3mm}
-
-In a two-particle system where the potential is proportional to $r^n$, then the virial theorem simplifies to 
-
-\begin{equation}
-2 \langle T \rangle = n \langle V_{tot} \rangle
-\end{equation} 
-
-
 \subsection{Error estimation} \label{sec:error_estimation}
 As a physicist one should always be sceptical to measurements presented without an estimation of the uncertainties. When someone says they have measured their height to be 1.90 cm, is the uncertainty $\pm 1 cm$ or $\pm 10 cm$? If they used $\pm 1 cm$, we have a fairly good idea of the height of the person, but if it is $\pm 10 cm$, we do not really know anything about the real height of the person. 
 \par 
@@ -569,11 +552,22 @@ For the non-interacting case we see that the numerical calculation reproduces th
 
 \subsection{Average energies and distance}
 \begin{table} [H]
-	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. \vspace{2mm}}
-	\begin{tabularx}{\textwidth}{X|XXX} \hline\hline
+	\caption{In this table we present average kinetic, interaction and potential energies for various $\omega$'s, along wiht the average distance between particles in the rightmost column. We used Metropolis-Hastings method with $dt=0.01$, $\eta=0.01$ and found the averages after convergence.  \vspace{2mm}}
+	\begin{tabularx}{\textwidth}{c|XXXXX} \hline\hline
 		\label{tab:average_energies}
-		$\omega$ & $\langle E_k\rangle$ & $\langle V_{ext}\rangle$ & $\langle V_{int}\rangle$ \\ \hline
-				0.01 & 3.19482 & 0.507337 & 0.516750 \\ \hline
+		$\omega$ & $\langle E_{tot}\rangle$ [a.u.] & $\langle E_k\rangle$ [a.u.] & $\langle V_{ext}\rangle$ [a.u.] & $\langle V_{int}\rangle$ [a.u.] & $\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$ \\ \hline \\
+				& \multicolumn{4}{c}{\textbf{Without interaction}}\\ \hline
+				0.01 & 0.79719 & 0.79703 & 1.6864e-4 & - & 1.7483 \\
+				0.05 & 0.79380 & 0.78975 & 0.0040605 & - & 1.7119 \\
+				0.1 & 0.79823 & 0.78295 & 0.015275 & - & 1.6012 \\
+				0.5 & 1.1709 & 0.86473 & 0.30615 & - & 1.4152 \\
+				1.0 & 2.0053 & 0.96468 & 1.0406 & - & 1.2402 \\ \hline \\
+		& \multicolumn{4}{c}{\textbf{With interaction}}\\ \hline
+				0.01 & 1.1658 & 0.98214 & 9.1585e-4 & 0.18212 & 5.6447 \\
+				0.05 & 1.2771 & 1.0638 & 0.020341 & 0.19292 & 5.3634 \\
+				0.1 & 1.2678 & 0.97435 & 0.060602 & 0.23282 & 4.5556 \\
+				0.5 & 1.9367 & 0.8039 & 0.57722 & 0.55509 & 2.4126 \\
+				1.0 & 3.1605 & 0.84170 & 1.2846 & 1.0342 & 1.5060 \\ \hline
 	\end{tabularx}
 \end{table}
 
