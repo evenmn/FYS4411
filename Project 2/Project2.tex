@@ -60,7 +60,19 @@ Abstract
 \newpage
 
 \section{Introduction} \label{sec:Introduction}
-Need to mention Neural Network Quantum State (NQS)....
+In this project, we study a two-electron system in a two-dimensional harmonic oscillator. This system is often referred to as a quantum dot. Quantum dots are a highly relevant topic in modern physics, and the technology has a wide range of applications, ranging from solar panel development to medical imaging \cite{Chilton}.
+\par 
+\vspace{3mm}
+
+The goal is to find an upper bound limit of the ground state energy and the onebody density of the system, using a restricted Boltzmann machine (RBM). We represent the wave function of the system as a probability distribution for the RBM, as first done by \cite{Carleo}, who named this kind of network a \emph{neural network quantum state} (NQS). We calculate estimates of the ground state energy. The system is evaluated for one electron, along with two electrons with and without interaction. The theory is presented in section \ref{sec:Theory}.
+\par 
+\vspace{3mm}
+
+The RBM is used to find the optimal wave function for the state, while we use Variational Monte Carlo (VMC) with either the Metropolis algorithm or Gibbs sampling to move the system towards the most likely state. The NQS wave function is optimalized with the gradient decent method.  The metods used are presented in section \ref{sec:Method}, and the code structure and implementation are presented in section \ref{sec:Code}. The upper bound estimate of the ground state energy and the onebody density are given in section \ref{sec:Results}, and our results are discussed in section \ref{sec:Discussion}.
+
+
+ 
+
 
 \section{Theory} \label{sec:Theory}
 \subsection{Presentation of potential} \label{sec:Presentation_of_potential}
@@ -73,7 +85,7 @@ In this project, we simulate a system of $P$ electrons trapped in a harmonic osc
 
 where $\omega$ is the harmonic oscillator potential and  $r_i = \sqrt{x_i^2 + y_i^2}$ is the position of electron $i$. The term $\frac{1}{r_{ij}}$ is the interacting term, where $r_{ij} = |r_i - r_j|$ is the distance between a given pair of interacting electrons. Natural units have been used, such that $\hbar = c = m_e = e = 1$.
 
-Since electrons are fermions, we need an antisymmetric wavefunction under exchange of two coordinates, and we need to take the Pauli principle into account. A Slater determinant is therefore needed for multiple fermions to ensure that the total wavefunction is antisymmetric. In this project we will study particles in the ground state only, and according to the Pauli principle we can in this case study a maximum of two particles with spin $s=\pm 1/2$. The slater determinant for two particles reads
+Since electrons are fermions, we need an antisymmetric wave function under exchange of two coordinates, and we need to take the Pauli principle into account. A Slater determinant is therefore needed for multiple fermions to ensure that the total wave function is antisymmetric. In this project we will study particles in the ground state only, and according to the Pauli principle we can in this case study a maximum of two particles with spin $s=\pm 1/2$. The slater determinant for two particles reads
 \begin{equation}
 \Psi_T=
 \begin{vmatrix}
@@ -134,7 +146,7 @@ The system energy of a Gaussian-Binary RBM is given by
 \begin{equation}
 E(\boldsymbol{X},\boldsymbol{H})=\sum_{i=1}^{M}\frac{(X_i-a_i)^2}{2\sigma_i^2}-\sum_{j=1}^Nb_jH_j-\sum_{i,j=1}^{M,N}\frac{X_iW_{ij}H_j}{\sigma_i^2}
 \end{equation}
-(Hinton 2010). We then define the NQS wavefunction as $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, which has a general form of the probability distribution. In equation \ref{eq:wf_form} the form of the wave function is shown, when we have used that we have $M$ visible nodes and $N$ hidden nodes, and that the hidden nodes should take binary values. 
+(Hinton 2010). We then define the NQS wave function as $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, which has a general form of the probability distribution. In equation \ref{eq:wf_form} the form of the wave function is shown, when we have used that we have $M$ visible nodes and $N$ hidden nodes, and that the hidden nodes should take binary values. 
 
 \begin{equation}
 \label{eq:wf_form}
@@ -194,7 +206,7 @@ A quantity that often is handy to calculate is the onebody density. The onebody 
 
 Apart from the fact that the one body density is a good visual representation of the positions of the particles, it is also a qunatity that is often calculated experimentally. Therefore, it is simpler to compare computational simulations to  experimental results when having calculated the onebody density.
 
-Without interaction, the onebody density of particle $i$ is simply its wavefunction squared, which is known to be
+Without interaction, the onebody density of particle $i$ is simply its wave function squared, which is known to be
 \begin{equation}
 \rho_i(\boldsymbol{r})=A^2e^{-\boldsymbol{r}_i^2}
 \end{equation}
@@ -234,7 +246,7 @@ Another source of error is the statistical error, which is based on how many mea
 
 However, as explained in \cite{Nordhagen}, this does not account for the covarinace between measurements. This leads to equation \ref{eq:variance_simplified} being an underestimation of $\sigma^2$, and is thus more a guideline for the size of the uncertainty, more than an actual estimate of it. Luckily, there are computational methods that can calculate $\sigma^2$ with the covariance contribution included. The method used in this project is the blocking method, presented in section \ref{sec:Blocking}.
 
-\section{Method}
+\section{Method} \label{sec:Method}
 
 \subsection{Variational Monte Carlo}
 The Variational Monte Carlo method, often referred to as VMC, is a method in computational physics. The goal of VMC is to approximate the ground state energy of a quantum mechanical system by using the variational principle. The variational principle says that for any given trial wave function $\Psi_T$, the energy $E$ given this $\Psi_T$ is always more than or equal to the ground state energy $E_0$ of the system:
@@ -390,7 +402,7 @@ The number of points in the transformed data set is now $n'$, and every $x'_i$ c
 
 We now increase the block size, such that there are even more of the original data point in each block, and calculate the total standard deviation from equation \ref{eq:total_std_dev} again. If we continue doing this and plot the resulting estimates of $\hat{\sigma}$, we will observe that it first increases, until it flats out. When we have reached this plateu, we know that the data blocks $x'_i$ are no longer correlated. The covariance is then 0, and we have thus obtained a proper estimation of the uncertainty. 
 
-\section{Code}
+\section{Code} \label{sec:Code}
 In this section, we give an overview of the structure and implementation of our code, to make it easier for potential users to familiarize themselves with the code. 
 
 \subsection{Structure}
@@ -466,7 +478,7 @@ for iter iterations:
 
 
 \section{Results} \label{sec:Results}
-In this section we will see how accurate results we achieve using the NQS wavefunction for the brute-force Metropolis-, the Metropolis-Hastings- and the Gibbs' sampling method. Firstly, we calculate the energy of one particle in one dimension to ensure that the method works and we obtain an energy close to the analytical energy. Secondly, we extend the system to two interacting electrons in a two-dimensional harmonic oscillator. Furthermore the onebody densities with and without interaction are presented and finally we study how the total energy is distributed between kinetic energy and potential energy for various harmonic oscillator frequencies. 
+In this section we will see how accurate results we achieve using the NQS wave function for the brute-force Metropolis-, the Metropolis-Hastings- and the Gibbs' sampling method. Firstly, we calculate the energy of one particle in one dimension to ensure that the method works and we obtain an energy close to the analytical energy. Secondly, we extend the system to two interacting electrons in a two-dimensional harmonic oscillator. Furthermore the onebody densities with and without interaction are presented and finally we study how the total energy is distributed between kinetic energy and potential energy for various harmonic oscillator frequencies. 
 
 \subsection{Energy calculations, without interaction}
 We first study the energy of a non-interacting electron in one dimension, and in figure \ref{fig:energy1P1D} we compare the energies produced by the three methods as a function of number of iterations. 
@@ -596,6 +608,10 @@ E_L&=\sum_{i=1}^{N}\frac{\boldsymbol{W}_{*i}^T\boldsymbol{W}_{*i}}{\sigma^4}\tex
 	 (2018).
 	\bibitem{Taut}
 	 M. Taut \emph{Two electrons in an external oscillator potential: Particular analytic solutions of a Coulomb correlation problem.} Phys. Rev. \textbf{A 48}, 3561 (1993).
+	 \bibitem{Carleo}
+	 G.Carleo and M. Troyer  \emph{Solving the quantum many-body problem with artificial neural networks} Science 355, Issue 6325, pp. 602-606 (2017)
+	 \bibitem{Chilton}
+	 A. Chilton \emph{The Properties and Applications of Quantum Dots} (2014) \url{https://www.azoquantum.com/Article.aspx?ArticleID=31} downloaded May 6th 2018
 
 	
 	
