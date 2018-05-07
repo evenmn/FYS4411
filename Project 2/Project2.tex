@@ -60,7 +60,7 @@ Abstract
 \newpage
 
 \section{Introduction} \label{sec:Introduction}
-
+Need to mention Neural Network Quantum State (NQS)....
 
 \section{Theory} \label{sec:Theory}
 \subsection{Presentation of potential} \label{sec:Presentation_of_potential}
@@ -73,7 +73,7 @@ In this project, we simulate a system of $P$ electrons trapped in a harmonic osc
 
 where $\omega$ is the harmonic oscillator potential and  $r_i = \sqrt{x_i^2 + y_i^2}$ is the position of electron $i$. The term $\frac{1}{r_{ij}}$ is the interacting term, where $r_{ij} = |r_i - r_j|$ is the distance between a given pair of interacting electrons. Natural units have been used, such that $\hbar = c = m_e = e = 1$.
 
-Since electrons are fermions, we need an antisymmetric wavefunction under exchange of two coordinates, and we need to take the Pauli principle into account. A Slater determinant is therefore needed for multiple fermions to ensure that the total wavefunction is antisymmetric. In this project we will study particles in the ground state only, and according to the Pauli principle we can in this case study a maximum of two particles with spin $s=\pm 1/2$. The slater determinant for two particles read
+Since electrons are fermions, we need an antisymmetric wavefunction under exchange of two coordinates, and we need to take the Pauli principle into account. A Slater determinant is therefore needed for multiple fermions to ensure that the total wavefunction is antisymmetric. In this project we will study particles in the ground state only, and according to the Pauli principle we can in this case study a maximum of two particles with spin $s=\pm 1/2$. The slater determinant for two particles reads
 \begin{equation}
 \Psi_T=
 \begin{vmatrix}
@@ -85,7 +85,7 @@ Since electrons are fermions, we need an antisymmetric wavefunction under exchan
 where $\Phi_i(\boldsymbol{r})$ is the single particle wave function (SPF) of state $i$. This contains a spatial part and a spin part, and we assume that it can be splitted up such that the spin part takes the antisymmetry property and does not affect the energy. Therefore we only need a symmetric spatial part to calculate the energies.
 
 \subsection{Solving this with machine learning}
-When solving a system of particles as the one described in the previous system with Variational Monte Carlo, as described in \cite{Nordhagen}, we would need an anzats for the wave function, where we use our physical intuition to create the form of a wave function with different variational parameters, and then let it be up to the computer to find the optimal parameters through a minimization method. However, this method is only as good as the physical intuition; if the form of the wave function is unrealistic, the results will be the same
+When solving a system of particles as the one described in the previous system with Variational Monte Carlo, as described in \cite{Nordhagen}, we would need an ansatz for the wave function, where we use our physical intuition to create the form of a wave function with different variational parameters, and then let it be up to the computer to find the optimal parameters through a minimization method. However, this method is only as good as the physical intuition; if the form of the wave function is unrealistic, the results will be the same
 \par 
 \vspace{3mm}
 This challenge can be mended by using machine learning. There are several different types of machine learning systems, and the one we will present and utilize in this project has the ability to learn and sample from a probability distribution. This is perfect for quantum mechanical problems, as we know from quantum mechanics the wave function $\Psi$ is nothing more than a probability denisty, giving that $\Psi^2$ is a probability distribution that says something about where a given particle most probabliy can be found. As we are solely interested in the energy of the two-fermion system, and not the exact wave function, the fact that the machine learning program does not explicitly give the wave function is therefore of no consequence. We still have to give some guidelines for the form of the probability distribution, but the machine learning program can sample from a larger variety of probability distributions compared to the form used in VMC.
@@ -134,9 +134,7 @@ The system energy of a Gaussian-Binary RBM is given by
 \begin{equation}
 E(\boldsymbol{X},\boldsymbol{H})=\sum_{i=1}^{M}\frac{(X_i-a_i)^2}{2\sigma_i^2}-\sum_{j=1}^Nb_jH_j-\sum_{i,j=1}^{M,N}\frac{X_iW_{ij}H_j}{\sigma_i^2}
 \end{equation}
-(Hinton 2010). 
-
-By setting $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, we know have a general form of the probability distribution. In equation \ref{eq:wf_form} the form of the wave function is shown, when we have used that we have $M$ visible nodes and $N$ hidden nodes, and that the hidden nodes should take binary values. 
+(Hinton 2010). We then define the NQS wavefunction as $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, which has a general form of the probability distribution. In equation \ref{eq:wf_form} the form of the wave function is shown, when we have used that we have $M$ visible nodes and $N$ hidden nodes, and that the hidden nodes should take binary values. 
 
 \begin{equation}
 \label{eq:wf_form}
@@ -147,7 +145,7 @@ By setting $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, we know have a general for
 We want to calculate the energy of the two-fermion system, given the wave function described in \ref{eq:wf_form}. As explained in \cite{Nordhagen}, the energy of the system is the expectation value of the Hamiltonian, but this is hard to compute directly. 
 
 \begin{equation}
-E_L(\vec{r})=\frac{1}{\Psi_T(\vec{r})}\hat{H}\Psi_T(\vec{r}).
+E_L(\boldsymbol{r})=\frac{1}{\Psi_T(\boldsymbol{r})}\hat{H}\Psi_T(\boldsymbol{r}).
 \label{eq:Local_energy}
 \end{equation}
 
@@ -155,7 +153,7 @@ By defining the local energy given in equation \ref{eq:Local_energy}, the energy
 
 \begin{equation}
 \label{eq:MC_energy}
-E = \int | \Psi_T^2| E_L d\vec{r}
+E = \int | \Psi_T^2| E_L d\boldsymbol{r}
 \end{equation}
 
 \subsubsection{Exact energy for non-interacting case}
@@ -184,10 +182,10 @@ When calculating the energy for the two-electron system we then get the followin
 
 For the ground state $n_x = n_y = 0$, $E_1 = E_2 = \omega$ and therefore the ground state energy is simply $E_1 + E_2 = 2\omega$. 
 
-For the non-interacting case with $\omega=1$ it is known the ground state energy is 3 a.u. \cite{Project2}. 
+For the non-interacting case with $\omega=1$ it is known the ground state energy is 3 a.u. \cite{Taut}. 
 
-\subsection{Onebody density}
-A quantity that often is handy to calculate is the onebody density. The onebody density is the density of particles in the potential, and may give a better understanding of the placement of the particles than their positions. The onebody density $\rho_i$ with respect to a given particle $i$ is given by equation \ref{eq:onebody_density}, which can be solved by Monte Carlo integration, as described in \cite{Nordhagen}.
+\subsection{Onebody density} \label{sec:onebody}
+A quantity that often is handy to calculate is the onebody density. The onebody density is the density of particles in the potential, and may give a better understanding of the placement of the particles than their positions. The onebody density $\rho_i$ with respect to a given particle $i$ is given by equation \ref{eq:onebody_density}, which can be solved by Monte Carlo integration, as described in \cite{Nordhagen}.    
 
 \begin{equation}
 \label{eq:onebody_density}
@@ -246,7 +244,7 @@ The Variational Monte Carlo method, often referred to as VMC, is a method in com
 	E = \frac{\bra{\Psi_T}H \ket{\Psi_T}}{\braket{\Psi_T}} \geq E_0
 \end{equation} 
 
-In VMC, the user inputs a trial wave function for the quantum mechanical system. Over a Monte Carlo loop, the particles in the system are moved randomly, and for each proposed move, the new position of the particle is accepted or rejected depending on if the new position is more probable according to $\Psi_T$, compared to the previous position. For the ground state wave function, the position which yields a minimum in the energy of the quantum mechanical system is the most probable position. The result is therefore that the particles in the system are moved towards lower energies. When the method has converged, the energy $E$ is an upper estimate of the true ground state energy $E_0$. If $\Psi_T$ in addition is the true ground state wave function, then $E=E_0$. 
+In VMC, the user inputs a trial wave function for the quantum mechanical system. Over a Monte Carlo loop, the particles in the system are moved randomly, and for each proposed move, the new position of the particle is accepted or rejected depending on whether the new position is more probable according to $\Psi_T$ or not, compared to the previous position. For the ground state wave function, the position which yields a minimum in the energy of the quantum mechanical system is the most probable position. The result is therefore that the particles in the system are moved towards lower energies. When the method has converged, the energy $E$ is an upper limit estimate of the true ground state energy $E_0$. If $\Psi_T$ in addition is the true ground state wave function, then $E=E_0$. 
 
 \subsection{Metropolis algorithm}
 Above, we described that the VMC method had to reject or accept proposed moves of the particles in the system. The task of handeling this is often left up to the Metropolis algorithm. The Metropolis algorithm uses the theory that the probability of a system to transition from a state $i$ to state $j$ is given by
@@ -265,19 +263,19 @@ where $T_{i \rightarrow j}$ is the transition probability and $A_{i \rightarrow 
 As the Metropolis algorithm's job is to evaluate probable moves between states, the expression in equation \ref{eq:metropolis_acceptance} is used as the acceptance criteria. Thus the ratio $\frac{A_{j\rightarrow i}}{A_{i\rightarrow j}}$ describes if the system is more likely to move one way or the other. There are several methods that can be used for accepting and rejecting the moves, and these use different expressions for $T$ and $p$ in equation \ref{eq:metropolis_acceptance}. In this project, we will study the brute force and the Hastings sampling algorithms.
 
 \subsubsection{Brute force}
-The brute force got is name because when proposing and accepting moves, the algorithm does so without "thinking" which way the system will most probably move. A random particle with position $\vec{R}$ is chosen, and its new position $\vec{R}_{new}$ is proposed at random as follows:
+The brute force got is name because when proposing and accepting moves, the algorithm does so without "thinking" which way the system will most probably move. A random particle with position $\boldsymbol{R}$ is chosen, and its new position $\boldsymbol{R}_{new}$ is proposed at random as follows:
 
 \begin{equation}
-\boldsymbol{R}_{new} = \boldsymbol{R} + r\cdot \text{step}.
+\boldsymbol{R}_{new} = \boldsymbol{R} + \boldsymbol{r}\cdot \text{step}.
 \end{equation}
 
-where $r$ is a random number and $step$ is the steplength.
+where $\boldsymbol{r}$ is random numbers and $step$ is the steplength.
 \par 
 \vspace{3mm}
-The brute force algorithm does not concider the transitions probabilities, and simply puts $T_{i\rightarrow j} = T_{j\rightarrow i}$. To check the probability of a system being found in a given state, it uses $p(\vec{R})=|\Psi_T(\vec{R})|^2$ for both position, such that the probability $w$ for the transition is given by
+The brute force algorithm does not concider the transitions probabilities, and simply puts $T_{i\rightarrow j} = T_{j\rightarrow i}$. To check the probability of a system being found in a given state, it uses $p(\boldsymbol{R})=|\Psi_T(\boldsymbol{R})|^2$ for both position, such that the probability $w$ for the transition is given by
 
 \begin{equation}
-w=\frac{P(\vec{R}_{new})}{P(\vec{R})}=\frac{|\Psi_T(\vec{R}_{new})|^2}{|\Psi_T(\vec{R})|^2}.
+w=\frac{P(\boldsymbol{R}_{new})}{P(\boldsymbol{R})}=\frac{|\Psi_T(\boldsymbol{R}_{new})|^2}{|\Psi_T(\boldsymbol{R})|^2}.
 \end{equation}
 
 A random number $r \in [0,1]$ is then drawn, and compared to $w$. If $w$ is larger than $r$, then the new position is accepted, and if not, the move is rejected and the particle is moved back to its original position:
@@ -298,16 +296,14 @@ The Metropolis-Hastings algorithm, also known as importance sampling, have a mor
 
 \begin{equation}
 \label{eq:drift_force}
-F(R) = \frac{2 \nabla \psi_T}{\psi_T}
+\boldsymbol{F}(\boldsymbol{R}) = \frac{2 \nabla \psi_T(\boldsymbol{R})}{\psi_T(\boldsymbol{R})}
 \end{equation}
-
 The equation that describes the motion of a particle pushed around by the drift force $F$, is called the Langevin equation. The Langevin equation can be derived from the Fokker-Planch equation, which describes the time-evolution of the probability density function. The Langevin equation can be solved using the Euler method. The result, presented in equation \ref{eq:hastings_newpos} , describes how the Metropolis-Hastings algorithm chooses a new position for the random particle:
 
 \begin{equation}
 \label{eq:hastings_newpos}
 R_{new} = R + DF(R)\Delta t + \xi\sqrt{\Delta t}
 \end{equation}
-
 where $D=\frac{1}{2}$ is the diffusion constant and $\Delta t$ is the timestep, that decides how long steps the method should take for each move. This is a much more educated guess compared to the brute force algorithm. 
 \par 
 \vspace{3mm}
@@ -328,7 +324,7 @@ Thereafter a random number $r$ is drawn and compared to $w$, just like in the br
 \par 
 \vspace{3mm}
 
-One thing that is worth to note with the brute force and the Metropolis-Hastings algorithms when doing machine learnign projects, is that both of them in this project are implemented so that only the positions, ie the visible nodes, are updated. This makes it so that we lose the opportunity to modify half of the syste, which maybe yield a worse convergence than if we varied the whole system.
+One thing that is worth to note with the brute force and the Metropolis-Hastings algorithms when doing machine learning projects, is that both of them in this project are implemented so that only the positions, i.e., the visible nodes, are updated. This makes it so that we lose the opportunity to modify half of the system, which maybe yield a worse convergence than if we varied the whole system.
 
 
 \subsection{Gibbs sampling}
@@ -355,7 +351,7 @@ As we use a new trial wave function in Gibbs sampling, the expression for the lo
 
 
 \subsection{Gradient descent}
-We use stochastic gradient descent to update the weights in order to minimize the local energy. The process itself is quite similar to that one typically used in Variational Monte Carlo (VMC) where the weights are our variational parameters, but compared with a normal VMC we have a lot more parameters to vary. The updating algorithm for updating the variational parameter $\alpha_i$ goes as
+We use stochastic gradient descent to update the weights in order to minimize the local energy. The process itself is quite similar to that one typically used in VMC where the weights are our variational parameters, but compared to a standard VMC we have a lot more parameters to vary. The updating algorithm for updating the variational parameter $\alpha_i$ goes as
 \begin{equation}
 \alpha_i^+=\alpha_i-\eta d\alpha_i
 \end{equation}
@@ -368,11 +364,15 @@ where $\eta$ is the learning rate. We need to do this for all the parameters, an
 d\boldsymbol{a}=\frac{1}{\Psi}\frac{\partial\Psi}{\partial\boldsymbol{a}}=\frac{\boldsymbol{X}-\boldsymbol{a}}{\sigma^2}
 \end{equation}
 \begin{equation}
-d\boldsymbol{b}=\frac{1}{\Psi}\frac{\partial\Psi}{\partial\boldsymbol{b}}=
+d\boldsymbol{b}=\frac{1}{\Psi}\frac{\partial\Psi}{\partial\boldsymbol{b}}=\frac{1}{1+e^{-\boldsymbol{v}}}
 \end{equation}
-
-\subsubsection{Adaptive stochastic gradient descent}
-A problem with the standard stochastic gradient descent method is that it will either converge fast, but the precision is poor, or the precision is good, but it converges slowly. To avoid this problem, we want a large learning rate when the energy is far from converging and a small learning rate when the energy converges. 
+\begin{equation}
+d\boldsymbol{W}=\frac{1}{\Psi}\frac{\partial\Psi}{\partial\boldsymbol{W}}=\frac{\boldsymbol{X}}{\sigma^2}\frac{1}{1+e^{-\boldsymbol{v}}}
+\end{equation}
+which means that we need to calculate $d\boldsymbol{b}$ and $d\boldsymbol{W}$ elementwise, i.e, $db_k=(1+e^{-v_k})^{-1}$. $\boldsymbol{v}$ is defined as
+\begin{equation}
+\boldsymbol{v}\equiv \boldsymbol{b} + \frac{\boldsymbol{X}^T\cdot\boldsymbol{W}}{\sigma^2}.
+\end{equation}
 
 \subsection{Blocking method} \label{sec:Blocking}
 In section \ref{sec:error_estimation}, we described the need of a proper estimation of the uncertainty in computational simulations, where the covariance was included in the calculation od $\sigma$. A quick and easy way to get a proper estimate of the uncertainty, is by using the blocking method. If we have a data set ${x_1, x_2, ..., x_n }$ with $n$ data points, where the mean value is $\langle x \rangle$. We can calculate the standard deviation using equation \ref{eq:standard_dev}, however, as explained before, this does not include the covariance, as the data points ${x_1, x_2, ..., x_n }$  may be correlated.  A way to get around this, it by transforming the data set such that
@@ -518,12 +518,12 @@ We now go further to study the results from two iteracting fermions. From above 
 In figure \ref{fig:OB} the onebody densities for two particles in two dimensions with and without interaction is plotted. From the energy calculations, we found Metropolis-Hastings method to be the better one for two particles, and henceforth we will therefore stick to it. 
  \begin{figure} [H]
  	\centering
- 	\includegraphics[scale=0.6]{plots/OB_comparison_MC_1e9.png}
- 	\caption{OB density 1e9 MC cycles, 1000 bins, Metropolis-Hastings.}
+ 	\includegraphics[scale=0.8]{plots/OB_comparison_MC_1e9.png}
+ 	\caption{Onebody densities plotted as a function of the distance from origin. The orange (dashed and dotted) represents the numerical calculation of two interacting particles, the blue (dotted) line represents the numerical calculation of two non-interacting particles, while the red (dotted) line repsresents the analytical calculation of two non-interacting particles. The graphs are normalized to 1 in the interval $r\in[0,3]$, and they are conducted in the way discussed in section \ref{sec:onebody}. We used 1000 bins, MC=1e9 Monte-Carlo cycles and the Metropolis-Hastings method.}
  	\label{fig:OB}
  \end{figure}
-
-They look similar, but 
+For the non-interacting case we see that the numerical calculation reproduces the analytical onebody density, but its slightly noisy for small $r$'s. The onebody density for two interacting fermions is broader and has a lower maximum.
+ 
 
 \subsection{Average energies and distance}
 
