@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes, mark_inset
 
-asymptote = 0.5
+asymptote = 3.0
 '''
 data = np.loadtxt("../data/energy.txt")
 x = np.linspace(0, len(data) - 1, len(data))
@@ -18,9 +18,9 @@ plt.legend()
 plt.show()
 
 '''
-data1 = np.loadtxt("../data/BF_1P_MC_1000000_eta_001_iter_500.txt")
-data2 = np.loadtxt("../data/H_1P_MC_1000000_eta_001_iter_500_dt_01.txt")
-data3 = np.loadtxt("../data/G_1P_N_1_MC_2pow20_eta_001_factor_1.txt")
+data1 = np.loadtxt("../data/BF_2P_2N_inter_MC_2pow25_iter_1000_eta_0p1_dx_1.txt")
+data2 = np.loadtxt("../data/H_2P_2N_MC_2pow25_iter_1000_inter_eta_0p1.txt")
+data3 = np.loadtxt("../data/G_2P_2N_inter_MC_2pow25_iter_1000_eta_0p1.txt")
 
 
 x = np.linspace(0, len(data1) - 1, len(data1))
@@ -48,7 +48,7 @@ axins.plot(x, data1)
 axins.plot(x, data2)
 axins.plot(x, data3)
 
-x1, x2, y1, y2 = 480, 501, 0.495, 0.505
+x1, x2, y1, y2 = 960, 1001, 2.925, 3.1
 
 axins.set_xlim(x1, x2)
 axins.set_ylim(y1, y2)

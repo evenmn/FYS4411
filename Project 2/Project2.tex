@@ -480,7 +480,7 @@ for iter iterations:
 
 
 \section{Results} \label{sec:Results}
-In this section we will see how accurate results we achieve using the NQS wave function for the brute-force Metropolis-, the Metropolis-Hastings- and the Gibbs' sampling method. Firstly, we calculate the energy of one particle in one dimension to ensure that the method works and we obtain an energy close to the analytical energy. Secondly, we extend the system to two interacting electrons in a two-dimensional harmonic oscillator. Furthermore the onebody densities with and without interaction are presented and finally we study how the total energy is distributed between kinetic energy and potential energy for various harmonic oscillator frequencies. 
+Firstly, we calculate the energy of one particle in one dimension. Secondly, we extend the system to two interacting electrons in a two-dimensional harmonic oscillator. Furthermore the onebody densities with and without interaction are presented and finally we study how the total energy is distributed between kinetic energy and potential energy for various harmonic oscillator frequencies. 
 
 \subsection{Energy calculations, without interaction}
 We first study the energy of a non-interacting electron in one dimension, and in figure \ref{fig:energy1P1D} we compare the energies produced by the three methods as a function of number of iterations. 
@@ -526,20 +526,30 @@ Since the optimal number of hidden nodes is one in this case, we will use N=1 wh
 The smaller learning rate the slower it converges, and after 100 iterations both $\eta$=0.5 and $\eta$=0.05 are really close to the exact value. 
 
 \subsection{Energy calculations, with interaction}
-We now go further to study the results from two iteracting fermions. From above we know that the Metropolis algorithms give roughly the same results and are better than Gibbs' sampling, but for more particles we expect Metropolis-Hastings to be more accurate.
+We now go further to study the results from two iteracting fermions. 
+
+ \begin{figure} [H]
+ 	\centering
+ 	\includegraphics[scale=0.8]{plots/comparison_energy_2P.png}
+ 	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. Brute-Force (BF) Metropolis (blue line), Metropolis-Hastings (MH) (orange line), Gibbs' (green line) and analytical value (dashed red line). All the samplings were conducted with MC=$2^20=1048576$, $\eta=0.01$, two hidden nodes, $\omega=1.0$ and $\sigma=1.0$. For BF we used steplength $dx=1.0$, while for MH the timestep was $dt=0.01$. See text for further description.}
+ 	\label{fig:energy2P2D}
+ \end{figure}
 
 \begin{table} [H]
 	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. \vspace{2mm}}
 	\begin{tabularx}{\textwidth}{X|XXXX} \hline\hline
 		\label{tab:energies2P2D}
 		Iterations & BF & MH & Gibbs & Exact \\ \hline
-				200 & 3.19482 & 0.507337 & 0.516750 & 0.5 \\
-				400 & 3.08322 & 0.502318 & 0.485531 & 0.5 \\
-				600 & 3.07963 & 0.501983 & 0.484165 & 0.5 \\
-				800 & 3.07894 & 0.501983 & 0.484105 & 0.5 \\
-				1000 & 3.07868 & 0.501731 & 0.484648 & 0.5 \\ \hline
+				200 & 3.19482 & 0.507337 & 3.65337 & 3.0 \\
+				400 & 3.08322 & 0.502318 & 3.52992 & 3.0 \\
+				600 & 3.07963 & 0.501983 & 3.4714 & 3.0 \\
+				800 & 3.07894 & 0.501983 & 3.44103 & 3.0 \\
+				1000 & 3.07868 & 0.501731 & 3.42241 & 3.0 \\ \hline
 	\end{tabularx}
 \end{table}
+
+\subsubsection{Playing with learning rate and number of hidden nodes}
+Again we play with the number of nodes and the learning rate
 
 \subsection{Onebody density}
 In figure \ref{fig:OB} the onebody densities for two particles in two dimensions with and without interaction is plotted. From the energy calculations, we found Metropolis-Hastings method to be the better one for two particles, and henceforth we will therefore stick to it. 
@@ -577,7 +587,7 @@ In table \ref{tab:average_energies} average kinetic, interaction and potential e
 
 
 \section{Discussion} \label{sec:Discussion}
-For one particle in one dimension, we found the brute-force Metropolis algorithm and the Metropolis-Hastings algorithm to be more accurate compared to Gibbs' sampling. The reason for that is probably related to how we define the wave function. Since the wave function used in Gibbs' sampling is the square root of the porbability distribution, this is farer from the true wave function. 
+Initially we calculate the energy for one particle in one dimension to ensure that the method works properly and we obtain an energy close to the analytical energy for brute-force Metropolis and Metropolis-Hasting, while Gibbs' sampling had a percent error of roughly 25\%. The reason for that is probably related to how we define the wave function. Since the wave function used in Gibbs' sampling is the square root of the probability distribution, this is farther from the true wave function. Nevertheless, we observe that brute-force Metropolis is slightly more accurate than the Metropolis/Hastings method. 
 
 We can also see from \ref{tab:energies1P1D} that the calculated energies are really close to the exact energies for brute-force Metropolis and Metropolis-Hastings, and the variance decreases as we increase the number of iterations. 
 
