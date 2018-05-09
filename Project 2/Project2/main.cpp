@@ -3,6 +3,7 @@
 #include <cmath>
 #include "eigen3/Eigen/Dense"
 #include "gradient_descent.h"
+#include "test.h"
 
 using namespace std;
 using namespace Eigen;
@@ -25,7 +26,10 @@ int main()
     double  eta         = 0.1;            //Learning rate for gradient decent
     double  Diff        = 0.5;             //Diffusion constant
 
-    GradientDescent(P, Diff, D, N, MC, iterations, sampling, sigma, omega, steplength, timestep, eta, interaction, one_body);
+    //GradientDescent(P, Diff, D, N, MC, iterations, sampling, sigma, omega, steplength, timestep, eta, interaction, one_body);
+
+    test_E_L_calc();
+
     return 0;
 }
 
