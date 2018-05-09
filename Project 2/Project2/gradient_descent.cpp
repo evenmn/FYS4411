@@ -41,12 +41,13 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     uniform_int_distribution<> mrand(0, M-1);         //Random number between 0 and M
     uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
 
-    double factor = 2.0;
+    double factor = 0.5;
+    double factor_x = 4.0;
 
     MatrixXd W       = MatrixXd::Random(M, N) * factor;
     VectorXd a       = VectorXd::Random(M)    * factor;
     VectorXd b       = VectorXd::Random(N)    * factor;
-    VectorXd X       = VectorXd::Random(M)    * factor;
+    VectorXd X       = VectorXd::Random(M)    * factor_x;
     VectorXd X_new   = VectorXd::Zero(M);
     VectorXd h       = VectorXd::Zero(N);
     VectorXd energies_old = VectorXd::Zero(5);
@@ -259,6 +260,10 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
         //Write to file
         myfile << EL_avg << "\n";
+
+        cout << "<E_k>: " << E_k/MC << endl;
+        cout << "<E_ext>: " << E_ext/MC << endl;
+        cout << "<E_int>: " << E_int/MC << endl;
     }
     //Close myfile
     if(myfile.is_open())  myfile.close();

@@ -74,14 +74,14 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
         VectorXd e = VectorXd::Zero(m_N);
         VectorXd eNominator = VectorXd::Zero(m_N);
         for(int i=0; i<m_N; i++) {
-            double expi = exp(v(i));
+            double expi = exp(-v(i));
             eNominator(i) = expi;
-            e(i) = 1/(1 + 1./expi);
+            e(i) = 1/(1 + expi);
         }
 
         for(int i=0; i<m_N; i++) {
             E -= 2*(double) (Xa.transpose() * W.col(i)) * e(i);
-            E += (double) ((W.col(i)).transpose() * W.col(i)) * 1/eNominator(i) * e(i)*e(i);
+            E += (double) ((W.col(i)).transpose() * W.col(i)) * eNominator(i) * e(i)*e(i);
             for(int j=0; j<m_N; j++) {
                 E += (double) ((W.col(i)).transpose() * W.col(j)) * e(i) * e(j);
             }
@@ -100,9 +100,10 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
     E_int += E_p;
 
     // Harmonic oscillator potential
-    E_p = (double) (X.transpose() * X) * m_omega_sqrd/ 2;
-    E += E_p;
-    E_ext += E_p;
+    double E_p1 = 0;
+    E_p1 += (double) (X.transpose() * X) * m_omega_sqrd/ 2;
+    E += E_p1;
+    E_ext += E_p1;
 
     return E;
 }
