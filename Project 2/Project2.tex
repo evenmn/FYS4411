@@ -487,7 +487,7 @@ We first study the energy of a non-interacting electron in one dimension, and in
  \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_comparison.png}
- 	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. Brute-Force (BF) Metropolis (blue line), Metropolis-Hastings (MH) (orange line), Gibbs' (green line) and analytical value (dashed red line). All the samplings were conducted with MC=$2^20=1048576$, $\eta=0.01$, two hidden nodes, $\omega=1.0$ and $\sigma=1.0$. For BF we used steplength $dx=1.0$, while for MH the timestep was $dt=0.01$. See text for further description.}
+ 	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. Brute-Force (BF) Metropolis (blue line), Metropolis-Hastings (MH) (orange line), Gibbs' (green line) and analytical value (dashed red line). All the samplings were conducted with MC=$2^{20}=1048576$, $\eta=0.01$, two hidden nodes, $\omega=1.0$ and $\sigma=1.0$. For BF we used steplength $dx=1.0$, while for MH the timestep was $dt=0.01$. See text for further description.}
  	\label{fig:energy1P1D}
  \end{figure}
 We observe that the energies produced by brute-force and Metropolis-Hastings are very similar, and in fact it is hard to distinguish them. They also give lower energies to the analytical energy compared to Gibbs' sampling. In table \ref{tab:energies1P1D} some chosen energies from figure \ref{fig:energy1P1D} are listed, and we observe that brute-force has actually the smallest absolute error for all number of iterations. 
@@ -531,7 +531,7 @@ We now go further to study the results from two iteracting fermions.
  \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/comparison_energy_2P.png}
- 	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. Brute-Force (BF) Metropolis (blue line), Metropolis-Hastings (MH) (orange line), Gibbs' (green line) and analytical value (dashed red line). All the samplings were conducted with MC=$2^20=1048576$, $\eta=0.01$, two hidden nodes, $\omega=1.0$ and $\sigma=1.0$. For BF we used steplength $dx=1.0$, while for MH the timestep was $dt=0.01$. See text for further description.}
+ 	\caption{Energy as a function of number of iterations up to 1000 iterations for two particles in two dimensions. Brute-Force Metropolis (blue line), Metropolis-Hastings (orange line), Gibbs' (green line) and analytical value (dashed red line). All the samplings were conducted with MC=$2^{25}=33 554 432$, $\eta=0.01$, two hidden nodes, $\omega=1.0$ and $\sigma=1.0$. For BF we used steplength $dx=1.0$, while for MH the timestep was $dt=0.01$. See text for further description.}
  	\label{fig:energy2P2D}
  \end{figure}
 
@@ -540,11 +540,11 @@ We now go further to study the results from two iteracting fermions.
 	\begin{tabularx}{\textwidth}{X|XXXX} \hline\hline
 		\label{tab:energies2P2D}
 		Iterations & BF & MH & Gibbs & Exact \\ \hline
-				200 & 3.19482 & 0.507337 & 3.65337 & 3.0 \\
-				400 & 3.08322 & 0.502318 & 3.52992 & 3.0 \\
-				600 & 3.07963 & 0.501983 & 3.4714 & 3.0 \\
-				800 & 3.07894 & 0.501983 & 3.44103 & 3.0 \\
-				1000 & 3.07868 & 0.501731 & 3.42241 & 3.0 \\ \hline
+				200 & 3.10897 & 3.10712 & 3.65337 & 3.0 \\
+				400 & 3.08195 & 3.08410 & 3.52992 & 3.0 \\
+				600 & 3.07979 & 3.07890 & 3.4714 & 3.0 \\
+				800 & 3.07895 & 3.07970 & 3.44103 & 3.0 \\
+				1000 & 3.07881 & 3.07791 & 3.42241 & 3.0 \\ \hline
 	\end{tabularx}
 \end{table}
 

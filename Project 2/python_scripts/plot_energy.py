@@ -4,7 +4,7 @@ from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes, mark_inset
 
 asymptote = 3.0
 '''
-data = np.loadtxt("../data/energy.txt")
+data = np.loadtxt("../data/BF_2P_2N_inter_MC_2pow25_iter_1000_eta_0p1_dx_1.txt")
 x = np.linspace(0, len(data) - 1, len(data))
 
 plt.plot(x, data, label="Calculated")
@@ -33,8 +33,6 @@ ax.plot(x, data3, label="Gibbs' sampling")
 ax.axhline(asymptote, linestyle='--', color='r', label="Exact")
 plt.xlabel("Iteration")
 plt.ylabel("Energy")
-#plt.axis([-10, 210, 1.5, 6])
-#plt.savefig('figure.png')
 
 plt.xlabel(u'Iteration', fontname = 'Times New Roman', size = 14)
 plt.ylabel(u'Energy [a.u.]', fontname = 'Times New Roman', size = 14)
@@ -48,7 +46,7 @@ axins.plot(x, data1)
 axins.plot(x, data2)
 axins.plot(x, data3)
 
-x1, x2, y1, y2 = 960, 1001, 2.925, 3.1
+x1, x2, y1, y2 = 960, 1001, 2.96, 3.1
 
 axins.set_xlim(x1, x2)
 axins.set_ylim(y1, y2)
@@ -59,3 +57,4 @@ ax.grid()
 ax.legend(loc='upper right')
 
 plt.show()
+
