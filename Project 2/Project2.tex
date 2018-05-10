@@ -12,6 +12,7 @@
 \usepackage{amsmath}
 \usepackage{tikz}
 \usepackage{physics}
+\usepackage{amssymb}
 
 \lstset{language=c++}
 \lstset{basicstyle=\small}
@@ -28,7 +29,11 @@
 \usepackage{titlesec}
 
 \setcounter{secnumdepth}{4}
-\usetikzlibrary{through,calc,er,positioning}
+\usetikzlibrary{through, shapes, calc, shapes, arrows, positioning}
+
+\tikzstyle{neuron}=[draw,circle,minimum size=20pt,inner sep=0pt, fill=white]
+\tikzstyle{stateTransition}=[thick]
+\tikzstyle{learned}=[text=red]
 
 \titleformat{\paragraph}
 {\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
@@ -51,7 +56,7 @@
 This project aims to simulate a quantum dot by using a restricted Boltzmann machine (RBM) in combination with Variational Monte Carlo (VMC) with either Metropolis or Gibbs sampling. Using a form of the wave function given by the RBM, we find the optimal ground state wave function with the gradient decent method, and calculate an upper bound limit of the ground state energy and onebody density for one electron, as well as for two electrons with and without interaction. Our results are benchmarked with analytical expectations. 
 \par 
 
-Using two electrons without interaction, the Metropolis algorithm reproduces the benchmarks. When turning interaction, the Metropolis algorithm yields a lower upper bound estimate of the ground state energy, compared to Gibbs. This is due to the wave function used in Gibbs sampling is not the exact ground state wave function. The onebody density changes when introducing interaction, which is as expected.   
+Using one electrons without interaction, the Metropolis algorithm reproduces the benchmarks. When turning interaction, the Metropolis algorithm yields a lower upper bound estimate of the ground state energy, compared to Gibbs. This is due to the wave function used in Gibbs sampling is not the exact ground state wave function. The onebody density changes when introducing interaction, which is as expected.   
 \end{abstract}
 
 
@@ -70,7 +75,7 @@ The goal is to find an upper bound limit of the ground state energy and the oneb
 \par 
 \vspace{3mm}
 
-The RBM is used to find the optimal wave function for the state, while we use Variational Monte Carlo (VMC) with either the Metropolis algorithm or Gibbs sampling to move the system towards the most likely state. The NQS wave function is optimalized with the gradient decent method.  The metods used are presented in section \ref{sec:Method}, and the code structure and implementation are presented in section \ref{sec:Code}. The upper bound estimate of the ground state energy and the onebody density are given in section \ref{sec:Results}, and our results are discussed in section \ref{sec:Discussion}.
+The RBM is used to find the optimal wave function for the state, while we use Variational Monte Carlo (VMC) with either the Metropolis algorithm or Gibbs sampling to move the system towards the most likely state. The NQS wave function is optimalized with the gradient decent method.  The methods used are presented in section \ref{sec:Method}, and the code structure and implementation are presented in section \ref{sec:Code}. The upper bound estimate of the ground state energy and the onebody density are given in section \ref{sec:Results}, and our results are discussed in section \ref{sec:Discussion}.
 
 
  
@@ -84,8 +89,7 @@ In this project, we simulate a system of $P$ electrons trapped in a harmonic osc
 \label{eq:Hamiltonian}
 \hat{H} = \sum_{i=1}^{P} (-\frac{1}{2} \nabla_i^2 + \frac{1}{2} \omega^2 r_i ^2) + \sum_{i<j} \frac{1}{r_{ij}} 
 \end{equation}
-
-where $\omega$ is the harmonic oscillator potential and  $r_i = \sqrt{x_i^2 + y_i^2}$ is the position of electron $i$. The term $\frac{1}{r_{ij}}$ is the interacting term, where $r_{ij} = |r_i - r_j|$ is the distance between a given pair of interacting electrons. Natural units have been used, such that $\hbar = c = m_e = e = 1$.
+where $\omega$ is the harmonic oscillator potential and  $\boldsymbol{r}_i = (x_i, y_i)$ is the position of electron $i$. The term $\frac{1}{r_{ij}}$ is the interacting term, where $r_{ij} = |\boldsymbol{r}_i - \boldsymbol{r}_j|$ is the distance between a given pair of interacting electrons. Natural units have been used, such that $\hbar = c = m_e = e = 1$.
 
 Since electrons are fermions, we need an antisymmetric wave function under exchange of two coordinates, and we need to take the Pauli principle into account. A Slater determinant is therefore needed for multiple fermions to ensure that the total wave function is antisymmetric. In this project we will study particles in the ground state only, and according to the Pauli principle we can in this case study a maximum of two particles with spin $s=\pm 1/2$. The slater determinant for two particles reads
 \begin{equation}
@@ -102,7 +106,7 @@ where $\Phi_i(\boldsymbol{r})$ is the single particle wave function (SPF) of sta
 When solving a system of particles as the one described in the previous system with Variational Monte Carlo, as described in \cite{Nordhagen}, we would need an ansatz for the wave function, where we use our physical intuition to create the form of a wave function with different variational parameters, and then let it be up to the computer to find the optimal parameters through a minimization method. However, this method is only as good as the physical intuition; if the form of the wave function is unrealistic, the results will be the same
 \par 
 \vspace{3mm}
-This challenge can be mended by using machine learning. There are several different types of machine learning systems, and the one we will present and utilize in this project has the ability to learn and sample from a probability distribution. This is perfect for quantum mechanical problems, as we know from quantum mechanics the wave function $\Psi$ is nothing more than a probability denisty, giving that $\Psi^2$ is a probability distribution that says something about where a given particle most probabliy can be found. As we are solely interested in the energy of the two-fermion system, and not the exact wave function, the fact that the machine learning program does not explicitly give the wave function is therefore of no consequence. We still have to give some guidelines for the form of the probability distribution, but the machine learning program can sample from a larger variety of probability distributions compared to the form used in VMC.
+This challenge can be mended by using machine learning. There are several different types of machine learning systems, and the one we will present and utilize in this project has the ability to learn and sample from a probability distribution. This is perfect for quantum mechanical problems, as we know from quantum mechanics the wave function $\Psi$ is nothing more than a probability density, giving that $\Psi^2$ is a probability distribution that says something about where a given particle most probably can be found. As we are solely interested in the energy of the two-fermion system, and not the exact wave function, the fact that the machine learning program does not explicitly give the wave function is therefore of no consequence. We still have to give some guidelines for the form of the probability distribution, but the machine learning program can sample from a larger variety of probability distributions compared to the form used in VMC.
 
 \subsubsection{Machine learning}
 With the goal of solving the quantum mechanical system presented in section \ref{sec:Presentation_of_potential} in mind, we should start by explaining what machine learning is. Machine learning is the idea that a computer can be trained to learn to yield certaint outputs, without directly being told exactly what to give. Examples on this is pattern recognizion, where the computer first is shown for example pictures of wolves and huskies. After training the computer on pictures where the computer sees huskies and wolves and is told the correct answer, it should after a sufficiently long training period, be able to recognize huskies and wolves by itself. 
@@ -113,8 +117,7 @@ The example described above is what we call supervised learning, where the corre
 \vspace{3mm}
 
 \subsubsection{Neural network}
-
- This sound amazing, and maybe even impossible. Therefore the question now is: how to program computers to learn, just like humans? The answer is, fittingly, that we should make the program run like the the human brain by implementing what is called a neural network. Inspired by neurons in the human brain, a neural network is a programmed network of variables, called nodes, that comminucate in a given manner. Each node preforms a simple process: based on the input it receives, and how that input is weighted, it decides wheter or not to fire. The mathematical model of an example of a neural node was presented by McCulloch and Pitts in 1943 \cite{Marsland}, shown in figure \ref{fig:neuron}, where the input is mared $x_i$, the weights deciding how much the input should count is $W_i$, and the output from the node based on $x_i$ and $W_i$ is called h. 
+This sound amazing, and maybe even impossible. Therefore the question now is: how to program computers to learn, just like humans? The answer is, fittingly, that we should make the program run like the the human brain by implementing what is called a neural network. Inspired by neurons in the human brain, a neural network is a programmed network of variables, called nodes, that communicate in a given manner. Each node preforms a simple process: based on the input it receives, and how that input is weighted, it decides wheter or not to fire. The mathematical model of an example of a neural node was presented by McCulloch and Pitts in 1943 \cite{Marsland}, shown in figure \ref{fig:neuron}, where the input is marked $x_i$, the weights deciding how much the input should count is $W_i$, and the output from the node based on $x_i$ and $W_i$ is called h. 
 
  \begin{figure} [H]
  	\centering
@@ -123,19 +126,67 @@ The example described above is what we call supervised learning, where the corre
  	\label{fig:neuron}
  \end{figure}
 
-The neutrons are arranged in layers in the neural network, one visible layer that receives the input, and up to several hidden layers. The layers are arranged such that the output values from the visible nodes is the input values of the visible nodes. The nodes can also have bias values, that shift the output value $h$ with a ceirtan number, and the nodes in different layers can be connected in different ways.  An example of a neural network with two layers is shown in figure \ref{fig:neural_network}.
+The neurons are arranged in layers in the neural network, one visible layer that receives the input, and up to several hidden layers. The layers are arranged such that the output values from the visible nodes is the input values of the visible nodes. The nodes can also have bias values, that shift the output value $h$ with a certain number, and the nodes in different layers can be connected in different ways.  An example of a neural network with two layers is shown in figure \ref{fig:neural_network}.
 
  \begin{figure} [H]
 	\centering
 	\includegraphics[scale=0.5]{plots/neural_network.png}
-	\caption{An example of a neural network with one visible and one hidden layer of nodes, and with bias $-1$ on the hidden nodes. Image reproduced from \cite{Marsland} }
+	\caption{An example of a neural network with one visible and one output layer of nodes, and with bias $-1$ on the hidden nodes. Image reproduced from \cite{Marsland} }
 	\label{fig:neural_network}
 \end{figure}
 
 The idea behind machine learning is that the weights $W_i$, that decides how much a node puts emphazis on a given input, can be changed, and thus change the system's response to the same input. We will explain with the example from earlier, with huskies and the wolves: first, the program are shown pictures of wolves and huskies, and it is told the correct answer. The weights $W_i$ are then updated such that when a husky is shown, the output "husky" is generated, and the same for wolves. After a sufficiently long training period, the program's weights are optimalized for recognizing wolves and huskies. When shown a picture, the program should then by itself be able to determine wheter it is a wolf or a husky that it sees. 
 
 \subsubsection{Restricted Boltzmann Machines} \label{sec:RBM}
-There are plenty of ways to put together a neural network, as one can modify the number of nodes and layers, the bias, and also which nodes that are allowed to communicated. In this project, we will be using the so-called Restricted Boltzmann Machine (RBM). It is a two-layer network. The reason why it is named "restrictive" is that there are no connections between nodes in the same layer, but every node in the previous layer is connected to all the nodes in the next layer. The RBM can learn to draw samples from a probability distribution, which is just what we want in our project. In addition, we want to use a Gaussian-Binary RBM, where the hidden nodes have binary values, while the positions of the particles can take continous values, as they are, in fact, positions. 
+There are plenty of ways to put together a neural network, as one can modify the number of nodes and layers, the bias, and also which nodes that are allowed to communicated. In this project, we will be using the so-called Restricted Boltzmann Machine (RBM). It is a two-layer network. The reason why it is named "restrictive" is that there are no connections between nodes in the same layer, but every node in the previous layer is connected to all the nodes in the next layer. The RBM can learn to draw samples from a probability distribution, which is just what we want in our project. In addition, we want to use a Gaussian-Binary RBM (see figure \ref{fig:RBM}), where the hidden nodes have binary values, while the positions of the particles can take continuous values, as they are, in fact, positions. 
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[scale=2]
+    % \draw ;
+    \draw[fill=black!30, rounded corners] (-0.2, -0.2) rectangle (3.2, 0.2) {};
+    \draw[fill=black!30, rounded corners] (0.3, 0.8) rectangle (2.7, 1.2) {};
+
+    \node (v1)[neuron] at (0, 0) {$x_1$};
+    \node (v2)[neuron] at (1, 0) {$x_2$};
+    \node (v3)[neuron] at (2, 0) {$x_3$};
+    \node (v4)[neuron] at (3, 0) {$x_4$};
+    \node[right=0.1cm of v4] (v) {$\boldsymbol{X} = {\cal N}(\boldsymbol{X};\boldsymbol{a} + \boldsymbol{W} \boldsymbol{h}, \sigma^2)^4$};
+    \node[learned,below=0.1cm of v1] (bv1) {$a_{x_1}$};
+    \node[learned,below=0.1cm of v2] (bv2) {$a_{x_2}$};
+    \node[learned,below=0.1cm of v3] (bv3) {$a_{x_3}$};
+    \node[learned,below=0.1cm of v4] (bv4) {$a_{x_4}$};
+
+    \node (h1)[neuron] at (0.5, 1) {$h_1$};
+    \node (h2)[neuron] at (1.5, 1) {$h_2$};
+    \node (h3)[neuron] at (2.5, 1) {$h_3$};
+    \node[right=0.1cm of h3] (h) {$\boldsymbol{h} \in \{0, 1\}^3$};
+    \node[learned,above=0.1cm of h1] (bh1) {$b_{h_1}$};
+    \node[learned,above=0.1cm of h2] (bh2) {$b_{h_2}$};
+    \node[learned,above=0.1cm of h3] (bh3) {$b_{h_3}$};
+
+    \node[learned] (W) at (3.5, 0.5) {$W \in \mathbb{R}^{3 \times 4}$};
+
+    \draw[learned,stateTransition] (v1) -- (h1) node [midway,above=-0.06cm,sloped] {$w_{1,1}$};
+    \draw[stateTransition] (v1) -- (h2) node [midway,above=-0.06cm,sloped] {};
+    \draw[stateTransition] (v1) -- (h3) node [midway,above=-0.06cm,sloped] {};
+
+    \draw[stateTransition] (v2) -- (h1) node [midway,above=-0.06cm,sloped] {};
+    \draw[stateTransition] (v2) -- (h2) node [midway,above=-0.06cm,sloped] {};
+    \draw[stateTransition] (v2) -- (h3) node [midway,above=-0.06cm,sloped] {};
+
+    \draw[stateTransition] (v3) -- (h1) node [midway,above=-0.06cm,sloped] {};
+    \draw[stateTransition] (v3) -- (h2) node [midway,above=-0.06cm,sloped] {};
+    \draw[stateTransition] (v3) -- (h3) node [midway,above=-0.06cm,sloped] {};
+
+    \draw[stateTransition] (v4) -- (h1) node [midway,above=-0.06cm,sloped] {};
+    \draw[stateTransition] (v4) -- (h2) node [midway,above=-0.06cm,sloped] {};
+    \draw[learned,stateTransition] (v4) -- (h3) node [midway,above=-0.06cm,sloped] {$w_{4,3}$};
+
+\end{tikzpicture}
+\caption{An example of a Gaussian-Binary RBM with four visible nodes ($\boldsymbol{X}$) and three hidden nodes ($\boldsymbol{h}$), where $\boldsymbol{W}$ are the weights, and $\boldsymbol{a}$ and $\boldsymbol{b}$ are the bias weights. }
+\label{fig:RBM}
+\end{figure}
 
 The joint probability distribution is known from statistical mechanics,
 \begin{equation}
@@ -148,7 +199,7 @@ The system energy of a Gaussian-Binary RBM is given by
 \begin{equation}
 E(\boldsymbol{X},\boldsymbol{H})=\sum_{i=1}^{M}\frac{(X_i-a_i)^2}{2\sigma_i^2}-\sum_{j=1}^Nb_jH_j-\sum_{i,j=1}^{M,N}\frac{X_iW_{ij}H_j}{\sigma_i^2}
 \end{equation}
-(Hinton 2010). We then define the NQS wave function as $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, which has a general form of the probability distribution. In equation \ref{eq:wf_form} the form of the wave function is shown, when we have used that we have $M$ visible nodes and $N$ hidden nodes, and that the hidden nodes should take binary values. 
+\cite{Hinton}. We then define the NQS wave function as $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, which has a general form of the probability distribution. In equation \ref{eq:wf_form} the form of the wave function is shown, when we have used that we have $M$ visible nodes and $N$ hidden nodes, and that the hidden nodes should take binary values. 
 
 \begin{equation}
 \label{eq:wf_form}
@@ -178,7 +229,6 @@ The wave function of one electron in a two-dimensional harmonic oscillator is gi
 	\label{eq:one_e_wf_ho}
 	\phi_{n_x, n_y} = A H_{nx} \sqrt{\omega} x H_{ny} \sqrt{\omega} y e^{-\frac{\omega(x^2 + y^2)}{2}}
 \end{equation}
-
 where $H_{nx} \sqrt{\omega} x$ is the Hermite polynomials and A is the normalization constant, and $n_x$ and $n_y$ are the principal quantum numbers. If we denote $\phi_1$ the spatial wave function for the first electron, and $\phi_2$ the spatial wave function for the second electron, then the total spatial wave function for the two-particle system is $\phi_1 \phi_2$. As explained in section \ref{sec:Presentation_of_potential}, the spin wave functions are anti-symmetric, and therefore it is fine that the spatial wave function is symmetric.
 
 We know that the energy of a harmonic oscillator in one dimension is given by
@@ -187,14 +237,12 @@ We know that the energy of a harmonic oscillator in one dimension is given by
 	\label{eq:HO_energy}
 	E_n = \omega (n + \frac{1}{2} )
 \end{equation}
-
 where $n$ is the principal quantum number.
 
 For a one-electron system in two dimensions the energy can be shown to take the value 
-
 \begin{equation}
+H \ket{\phi_1} = E_1 \ket{\phi_1} = \omega(n_{x,1} + n_{y,1} + 1) \ket{\phi_1} \quad  \rightarrow E_1 = \omega(n_x + n_y + 1)
 	\label{eq:exact_E_1P1D}
-	H \ket{\phi_1} = E_1 \ket{\phi_1} = \omega(n_{x,1} + n_{y,1} + 1) \ket{\phi_1} \quad  \rightarrow E_1 = \omega(n_x + n_y + 1)
 \end{equation}
 where $n_x$ and $n_y$ are the principal quantum number for the $x$ and $y$ direction respectively, and we have used natural units, and thus all the energies are given in atomic units a.u.
 
@@ -361,7 +409,7 @@ Furthermore, instead of updating only the visible nodes, as is done in Metropoli
 
 \begin{equation}
 \label{eq:gibbs_xsampling}
-P(\boldsymbol{X} | \boldsymbol{h}) = \mathcal{N}(\boldsymbol{X}; \boldsymbol{a} + \boldsymbol{W} \boldsymbol{h} \sigma^2)
+P(\boldsymbol{X} | \boldsymbol{h}) = \mathcal{N}(\boldsymbol{X}; \boldsymbol{a} + \boldsymbol{W} \boldsymbol{h}, \sigma^2)
 \end{equation}
 
 \begin{equation}
@@ -745,6 +793,8 @@ We thus get a factor $2$ difference in the gradients that are used to uptade the
 	 G.Carleo and M. Troyer  \emph{Solving the quantum many-body problem with artificial neural networks} Science 355, Issue 6325, pp. 602-606 (2017)
 	 \bibitem{Chilton}
 	 A. Chilton \emph{The Properties and Applications of Quantum Dots} (2014) \url{https://www.azoquantum.com/Article.aspx?ArticleID=31} downloaded May 6th 2018
+	 \bibitem{Hinton}
+	 G.E. Hinton \emph{A Practical Guide to Training Restricted Boltzmann Machines}, Lecture Notes in Computer Science, vol \textbf{7700}. Springer, Berlin, Heidelberg (2012)
 
 	
 	
