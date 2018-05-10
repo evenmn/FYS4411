@@ -19,8 +19,8 @@ int main()
     bool    interaction = 0;               //Interaction on if true
     bool    one_body    = 0;               //Calculating onebody density if true
     double  sigma       = 1.0;             //Width of Gaussian distribution
-    double  omega       = 0.1;             //FrequencyE_k
-    double  steplength  = 10.0;             //Steplength for Metropolis
+    double  omega       = 1.0;             //FrequencyE_k
+    double  steplength  = 20.0;             //Steplength for Metropolis
     double  timestep    = 1.0;             //Timestep used in Hastings algorithm
     double  eta         = 0.1;            //Learning rate for gradient decent
     double  Diff        = 0.5;             //Diffusion constant
