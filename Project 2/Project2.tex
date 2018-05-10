@@ -53,10 +53,10 @@
 \end{itemize}
 
 \begin{abstract}
-This project aims to simulate a quantum dot by using a restricted Boltzmann machine (RBM) in combination with Variational Monte Carlo (VMC) with either Metropolis or Gibbs sampling. Using a form of the wave function given by the RBM, we find the optimal ground state wave function with the gradient decent method, and calculate an upper bound limit of the ground state energy and onebody density for one electron, as well as for two electrons with and without interaction. Our results are benchmarked with analytical expectations. 
+This project aims to simulate a quantum dot by using a restricted Boltzmann machine (RBM) in combination with Variational Monte Carlo (VMC), with either Metropolis or Gibbs sampling. Using a form of the wave function given by the RBM, we find the optimal ground state wave function with the gradient decent method, and calculate an upper bound limit of the ground state energy and onebody density for a one electron system, as well as for two electrons with and without Coulomb interaction. Our results are benchmarked with analytical expectations. 
 \par 
 
-Using one electrons without interaction, the Metropolis algorithm reproduces the benchmarks. When turning interaction, the Metropolis algorithm yields a lower upper bound estimate of the ground state energy, compared to Gibbs. This is due to the wave function used in Gibbs sampling is not the exact ground state wave function. The onebody density changes when introducing interaction, which is as expected.   
+Using one electron without interaction, the Metropolis algorithm reproduces the benchmarks. For both the interacting and non-interacting case, the Metropolis algorithm yields a lower upper bound estimate of the ground state energy, compared to Gibbs. The onebody density (OB) reproduces analytical calculations. The OB distribution changes when introducing interaction, which is as expected. We are unable to reproduce the virial theorem for different potential strengths.
 \end{abstract}
 
 
@@ -384,7 +384,7 @@ A random number $r \in [0,1]$ is then drawn, and compared to $w$. If $w$ is larg
 This way, the algorithm will over many iterations move the particles towards the most probable state.
 
 
-\subsubsection{Metropolis-Hastings}
+\subsubsection{Metropolis-Hastings} \label{sec:Metropolis-Hastings}
 The Metropolis-Hastings algorithm, also known as importance sampling, have a more refined approach to choosing new positions and accepting them, compared to the brute force method. Instead of proposing the new position at random, the Metropolis-Hastings algorithm considers the quantum force F, given by equation \ref{eq:drift_force}, which says something about which direction the particle is pushed in. 
 
 \begin{equation}
@@ -666,15 +666,15 @@ In table \ref{tab:average_energies} average kinetic, interaction and potential e
 
 
 \section{Discussion} \label{sec:Discussion}
-Initially we calculated the energy for one particle in one dimension to ensure that the method worked properly. Using equation \ref{eq:HO_energy} to calculate the ground state energy, we get that the energy for one particle in one dimention with $\omega=1$ should be $\frac{1}{2}$. The result of the calculation with the machine learning program with different sampling algorithms can be seen in figure \ref{fig:energy1P1D}. We see that both the  brute-force Metropolis and Metropolis-Hasting converges towards the analytical energy. Additionally, from table \ref{tab:energies1P1D}, we see that the variance decreases when the two methods converges towards $\frac{1}{2}$, as we increases the number of gradient decent cycles used in the minimalization. This is a good indication that our methods are approaching the correct value, even if we did not have an analytical anwer to compare them to.
+Initially we calculated the energy for one particle in one dimension to ensure that the method worked properly. Using equation \ref{eq:HO_energy} to calculate the ground state energy, we get that the energy for one particle in one dimention with $\omega=1$ should be $\frac{1}{2}$. The result of the calculation with the machine learning program with different sampling algorithms can be seen in figure \ref{fig:energy1P1D}. We see that both the  brute-force Metropolis and Metropolis-Hasting converges towards the analytical energy. Additionally, from table \ref{tab:energies1P1D}, we see that the variance decreases when the two methods converges towards $\frac{1}{2}$, as we increases the number of gradient decent cycles used in the minimalization. This is a good indication that our methods are approaching the correct value, even if we did not have an analytical anwer to compare them to. The two methods yield nearly identical results, while we would expect Metropolis-Hastings to be a better method, due to the more advanced sampling routine presented in section \ref{sec:Metropolis-Hastings}. However, the difference might be to small to give an impact to this project, as we use few particles.
 \par 
 \vspace{3mm}
 
-However, from figure \ref{fig:energy1P1D}, one can see that Gibbs' sampling converges to a higher energy than the analytic value. The reason for that is probably related to how we define the wave function. For brute force and Metropolis-Hastings, we use the probability distribution defined in $\ref{eq:F_rbm}$ to represent the wave function, while the wave function used in Gibbs' sampling is the square root of the probability distribution. It seems this representation of the wave function is further away from the true wave function, and thus Gibbs converges towards a higher energy. This is in accordance with the variational principle; a worse guess on trial wave function will yield a upper bound estimate of the ground state energy $E$ that is larger than the true ground state energy $E_0$.
+From figure \ref{fig:energy1P1D}, one can see that Gibbs' sampling converges to a higher energy than the analytic value. The reason for that is probably related to how we define the wave function. For brute force and Metropolis-Hastings, we use the probability distribution defined in $\ref{eq:F_rbm}$ to represent the wave function, while the wave function used in Gibbs' sampling is the square root of the probability distribution. It seems this representation of the wave function is further away from the true wave function, and thus Gibbs converges towards a higher energy. This is in accordance with the variational principle; a worse guess on trial wave function will yield a upper bound estimate of the ground state energy $E$ that is larger than the true ground state energy $E_0$.
 
 \par 
 \vspace{3mm}
-For the case where the Coulomb repulsion is turned on, the results of the convergence of the Metropolis algorithms and the Gibbs sampling method are shown in figure \ref{fig:energies2P2D}and table \ref{tab:energies2P2D}. Again, as described above, we see that the brute force and Metropolis-Hastings algorithms converges towards the exact value of $3$ a.u, while Gibbs sampling approaches a higher energy. The fraction of deviation between the calculated and analytical value is roughly the same for the interacting and non-interacting case for all three methods, which can be seen by comparing table \ref{tab:energies1P1D} and \ref{tab:energies2P2D}.
+For the case where the Coulomb repulsion is turned on, the results of the convergence of the Metropolis algorithms and the Gibbs sampling method are shown in figure \ref{fig:energy2P2D} and table \ref{tab:energies2P2D}. Again, as described above, we see that the brute force and Metropolis-Hastings algorithms converges towards the exact value of $3$ a.u, while Gibbs sampling approaches a higher energy. The fraction of deviation between the calculated and analytical value is roughly the same for the interacting and non-interacting case for all three methods, which can be seen by comparing table \ref{tab:energies1P1D} and \ref{tab:energies2P2D}.
 
 \par 
 \vspace{3mm}
@@ -702,6 +702,16 @@ As explained in section \ref{sec:Virial_theorem}, the virial theorem holds for p
 Another concern regarding table \ref{tab:average_energies} is that the energies in the non-interacting case are not on the form $2 \omega$, as they should have been, accoring to equation \ref{eq:HO_energy_2omega}. This is likely due to the same unstability described above, which makes us unable to reproduce the virial theorem. 
 
 \section{Conclusion} \label{sec:Conclusion} 
+In this project, we have found that by using principles of machine learning in combination with Variational Monte Carlo, we are able to find good upper bound estimates of the ground state energy in a system consisting of two electrons in a harmonic oscillator. The brute force Metropolis and Metropolis-Hastings yields nearly identical results, while Gibbs sampling gives higher estimates of $E_0$, due to a different choice in trial wave function. 
+\par 
+\vspace{3mm}
+The choice of learning rate $\eta$ and number of hidden nodes $N$ used in the simulation affects the convergence rate and final results, where the convergence rate is higher for more hidden nodes and higher  $\eta$. 
+\par 
+\vspace{3mm}
+The onebody density distribution obtained in this project maches the analytical calucaltion for the non-interacting case. The distribution becomes broader and lower when turning on the interaction, which matches the physical explanation that the repulsive Coulomb force forces the particles apart.
+\par
+\vspace{3mm}
+We are solely able to reproduce the virial theorem for $\omega=1.0$, as the code becomes unstable for different choices of $\omega$.
 
 
 \newpage
