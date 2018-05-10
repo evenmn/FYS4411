@@ -576,22 +576,22 @@ For the non-interacting case we see that the numerical calculation reproduces th
 In table \ref{tab:average_energies} average kinetic, interaction and potential energy is presented along with the mean distance for both the interacting and non-interacting case and for various frequencies. We observe that both the interaction energy and the potential energy increase as the frequency increase, while the mean distance decreases.
 
 \begin{table} [H]
-	\caption{In this table we present average kinetic, interaction and potential energies for various $\omega$'s, along wiht the average distance between particles in the rightmost column. We used Metropolis-Hastings method with $dt=0.01$, $\eta=0.01$ and found the averages after convergence.  \vspace{2mm}}
+	\caption{In this table we present average kinetic ($\langle E_k\rangle$), interaction ($\langle V_{int}\rangle$) and external potential energies ($\langle V_{ext}\rangle$) for various $\omega$'s, along with the average distance between particles ($\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$) in the rightmost column. We used the brute-force Metropolis method with $dx=1.0$ and found the averages after convergence.  \vspace{2mm}}
 	\begin{tabularx}{\textwidth}{c|XXXXX} \hline\hline
 		\label{tab:average_energies}
 		$\omega$ & $ E_{tot}$ [a.u.] & $\langle E_k\rangle$ [a.u.] & $\langle V_{ext}\rangle$ [a.u.] & $\langle V_{int}\rangle$ [a.u.] & $\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$ \\ \hline \\
 				& \multicolumn{4}{c}{\textbf{Without interaction}}\\ \hline
-				0.01 & 0.79719 & 0.79703 & 1.6864e-4 & - & 1.7483 \\
-				0.05 & 0.79380 & 0.78975 & 0.0040605 & - & 1.7119 \\
-				0.1 & 0.79823 & 0.78295 & 0.015275 & - & 1.6012 \\
-				0.5 & 1.1709 & 0.86473 & 0.30615 & - & 1.4152 \\
-				1.0 & 2.0053 & 0.96468 & 1.0406 & - & 1.2402 \\ \hline \\
+				0.01 & 0.86104 & 0.86104 & 1.6997e-4 & - & 1.7483 \\
+				0.05 & 0.86911 & 0.86410 & 0.0041111 & - & 1.6904 \\
+				0.1 & 0.87778 & 0.86231 & 0.015474 & - & 1.6492 \\
+				0.5 & 1.1947 & 0.91850 & 0.27619 & - & 1.3217 \\
+				1.0 & 2.0004 & 0.98093 & 1.0195 & - & 1.2685 \\ \hline \\
 		& \multicolumn{4}{c}{\textbf{With interaction}}\\ \hline
-				0.01 & 1.1658 & 0.98214 & 9.1585e-4 & 0.18212 & 5.6447 \\
-				0.05 & 1.2771 & 1.0638 & 0.020341 & 0.19292 & 5.3634 \\
-				0.1 & 1.2678 & 0.97435 & 0.060602 & 0.23282 & 4.5556 \\
-				0.5 & 1.9367 & 0.8039 & 0.57722 & 0.55509 & 2.4126 \\
-				1.0 & 3.1605 & 0.84170 & 1.2846 & 1.0342 & 1.5060 \\ \hline
+				0.01 & 1.1663 & 0.98781 & 9.4224e-4 & 0.17756 & 5.8220 \\
+				0.05 & 1.2075 & 0.99888 & 0.021559 & 0.18710 & 5.5416 \\
+				0.1 & 1.2736 & 0.98968 & 0.069086 & 0.21483 & 4.8911 \\
+				0.5 & 2.0287 & 0.90810 & 0.56948 & 0.55025 & 2.4452 \\
+				1.0 & 3.1638 & 0.92120 & 1.1673 & 1.0753 & 1.4412 \\ \hline
 	\end{tabularx}
 \end{table}
 
