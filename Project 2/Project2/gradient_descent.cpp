@@ -42,7 +42,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     uniform_int_distribution<> nrand(0, N-1);         //Random number between 0 and N
 
     double factor = 0.5;
-    double factor_x = 4.0;
+    double factor_x = 5.0;
 
     MatrixXd W       = MatrixXd::Random(M, N) * factor;
     VectorXd a       = VectorXd::Random(M)    * factor;
@@ -91,16 +91,14 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     for(int iter=0; iter<iterations; iter++) {
         //averages and energies
         double EL_tot      = 0;          //sum of energies of all states
-        double EL_tot_new  = 0;
         double EL_tot_sqrd = 0;          //sum of energies of all states squared
         double E_k         = 0;          //sum of kinetic energies
         double E_ext       = 0;          //sum of potential energy from HO
         double E_int       = 0;          //sum of potential energy from interaction
+        double E_k_tot     = 0;
+        double E_ext_tot     = 0;
+        double E_int_tot   = 0;
         double E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
-        double E_initial = E;
-        double E_k_initial = E_k;
-        double E_ext_initial = E_ext;
-        double E_int_initial = E_int;
 
         VectorXd da_tot           = VectorXd::Zero(M);
         VectorXd daE_tot          = VectorXd::Zero(M);
@@ -142,7 +140,6 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                     Xa = X_newa;
                     v  = v_new;
                     E  = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
-                    EL_tot_new += E;
                 }
             }
 
@@ -154,7 +151,6 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                 Xa = X - a;
                 v = b + (W.transpose() * X)/sigma_sqrd;
                 E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
-                EL_tot_new += E;
             }
 
             if(one_body && iter == iterations-1) {
@@ -205,13 +201,15 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
             EL_tot      += E;
             EL_tot_sqrd += E*E;
-
+            E_k_tot     += E_k;
+            E_ext_tot     += E_ext;
+            E_int_tot   += E_int;
         }
         clock_t end_time = clock();
 
         //Calculate <EL> and <EL^2>
-        double EL_avg = (EL_tot-E_initial)/MC;
-        double EL_avg_sqrd = (EL_tot_sqrd-E_initial*E_initial)/MC;
+        double EL_avg = EL_tot/MC;
+        double EL_avg_sqrd = EL_tot_sqrd/MC;
         double variance = (EL_avg_sqrd - EL_avg*EL_avg)/MC;
         double CPU_time = (double)(end_time - start_time)/CLOCKS_PER_SEC;
 
@@ -231,9 +229,9 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                 //Close myfile
                 ob_file.close();
             }
-            cout << "<E_k>: " << E_k/MC << endl;
-            cout << "<E_ext>: " << E_ext/MC << endl;
-            cout << "<E_int>: " << E_int/MC << endl;
+            cout << "<E_k>: " << E_k_tot/MC << endl;
+            cout << "<E_ext>: " << E_ext_tot/MC << endl;
+            cout << "<E_int>: " << E_int_tot/MC << endl;
             cout << "Mean distance: " << tot_dist/(MC*factorial(P-1)) << endl;
 
             test_energy_convergence(EL_avg, omega, M, interaction);
@@ -268,10 +266,9 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         //Write to file
         myfile << EL_avg << "\n";
 
-        cout << "<E_tot>" << E_k/MC + E_ext/MC + E_int/MC << endl;
-        cout << "<E_k>: " << (E_k-E_k_initial)/MC << endl;
-        cout << "<E_ext>: " << (E_ext-E_ext_initial)/MC << endl;
-        cout << "<E_int>: " << (E_int-E_int_initial)/MC << endl;
+        cout << "<E_k>: " << E_k_tot/MC << endl;
+        cout << "<E_ext>: " << E_ext_tot/MC << endl;
+        cout << "<E_int>: " << E_int_tot/MC << endl;
     }
     //Close myfile
     if(myfile.is_open())  myfile.close();

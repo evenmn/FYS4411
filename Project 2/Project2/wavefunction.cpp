@@ -46,6 +46,9 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
     // Local energy calculations
 
     double E = 0;
+    E_k = 0;
+    E_ext = 0;
+    E_int = 0;
     double E_knew = 0;
     double E_pnew = 0;
     double E_intnew = 0;
@@ -61,17 +64,17 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
     // Kinetic energy
     if(m_sampling==2) {
         for(int i=0; i<m_N; i++) {
-            E -= 0.5*(double) (Xa.transpose() * W.col(i)) * e(i);
-            E += 0.5*(double) ((W.col(i)).transpose() * W.col(i)) * eNominator(i) * e(i) * e(i);
+            E_knew -= 0.5*(double) (Xa.transpose() * W.col(i)) * e(i);
+            E_knew += 0.5*(double) ((W.col(i)).transpose() * W.col(i)) * eNominator(i) * e(i) * e(i);
             for(int j=0; j<m_N; j++) {
-                E += 0.25*(double) ((W.col(i)).transpose() * W.col(j)) * e(i) * e(j);
+                E_knew += 0.25*(double) ((W.col(i)).transpose() * W.col(j)) * e(i) * e(j);
             }
         }
 
-        E -= 0.5*m_M * m_sigma_sqrd;
-        E += 0.25*Xa.transpose() * Xa;
-        E = -E/(2 * m_sigma_sqrd * m_sigma_sqrd);
-        E_k += E;
+        E_knew -= 0.5*m_M * m_sigma_sqrd;
+        E_knew += 0.25*Xa.transpose() * Xa;
+        E_knew = -E_knew/(2 * m_sigma_sqrd * m_sigma_sqrd);
+        E_k += E_knew;
     }
 
     else {
@@ -98,6 +101,9 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
     E_ext += E_pnew;
 
     E = E_knew + E_pnew + E_intnew;
+    E_k = E_knew;
+    E_ext = E_pnew;
+    E_int = E_intnew;
     return E;
 }
 
