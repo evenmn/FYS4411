@@ -253,7 +253,12 @@ When calculating the energy of the two-electron system we then get the following
 	H \ket{\phi_1 \phi_2} = \ket{H \phi_1 } \ket{\phi_2} + \ket{\phi_1} \ket{H \phi_2} = E_1 \ket{\phi_1 \phi_2} + E_2 \ket{\phi_1 \phi_2} 
 \end{equation}
 
-For the ground state $n_x = n_y = 0$, $E_1 = E_2 = \omega$ and therefore the ground state energy is simply $E_1 + E_2 = 2\omega$. 
+For the ground state $n_x = n_y = 0$, $E_1 = E_2 = \omega$ and therefore the ground state energy is simply 
+
+\begin{equation}
+\label{eq:HO_energy_2omega}
+	E_1 + E_2 = 2\omega.
+\end{equation} 
 
 For the non-interacting case with $\omega=1$ it is known the ground state energy is 3 a.u. \cite{Taut}. 
 
@@ -277,7 +282,7 @@ A_k=\pi r_k^2-\pi r_{k-1}^2=2\pi r_kdr-\pi dr^2
 \end{equation}
 where $r_k$ is the outer radius of bin $k$ and $dr$ is the bin width.
 
-\subsection{Virial theorem}
+\subsection{Virial theorem} \label{sec:Virial_theorem}
 The virial theorem is an equation in mechanics that gives a relation between the time-averaged kinetic energy $\langle T \rangle$ and the potential forces acting on $N$ particles confined in a stable system. The theorem takes the following form:
 
 \begin{equation}
@@ -290,6 +295,7 @@ where $\boldsymbol{F_i}$ is the sum of forces acting on particle $i$.\par
 In a two-particle system where the potential is proportional to $r^n$, then the virial theorem simplifies to 
 
 \begin{equation}
+\label{eq:virial_simple}
 2 \langle T \rangle = n \langle V_{tot} \rangle
 \end{equation}
 
@@ -689,7 +695,11 @@ In table \ref{tab:average_energies}, we see that the estimates of the average di
 \par 
 \vspace{3mm}
 
-As explained in 
+As explained in section \ref{sec:Virial_theorem}, the virial theorem holds for particles in stable systems, and the relation between the time-averaged kinetic and potential energy for potentials that are proportional to $r^n$ is shown in equation \ref{eq:virial_simple}. In the non-interacting case, the only potential affecting the particles is the harmonic oscillator potential, which is proportional to $r^2$. Thus equation \ref{eq:virial_simple} gives that the time-averaged kinetic and potential energies should be equal. From table \ref{tab:average_energies}, we see that we are able to reproduce this for two particles without interaction and $\omega=1.0$. However, for different values of $\omega$, it seems that the method becomes unstable, and we are no longer able to reproduce the virial theorem. In the interaction case, both the harmonic oscillator potential and the Coulomb interaction contributes to the total potential, and the total potential is thus no longer on the form $r^n$. Thus the simple relation between the time-averaged kinetic and potential energies in equation \ref{eq:virial_simple} no longer applies.
+\par 
+\vspace{3mm}
+
+Another concern regarding table \ref{tab:average_energies} is that the energies in the non-interacting case are not on the form $2 \omega$, as they should have been, accoring to equation \ref{eq:HO_energy_2omega}. This is likely due to the same unstability described above, which makes us unable to reproduce the virial theorem. 
 
 \section{Conclusion} \label{sec:Conclusion} 
 
