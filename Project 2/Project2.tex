@@ -205,6 +205,7 @@ E(\boldsymbol{X},\boldsymbol{H})=\sum_{i=1}^{M}\frac{(X_i-a_i)^2}{2\sigma_i^2}-\
 \label{eq:wf_form}
 	\Psi = \frac{1}{Z} e^{\sum_i^M \frac{(X_i - a_i)^2}{2\sigma^2}} \prod_j^N (1+ e^{b_j + \sum_iM \frac{X_i W_{ij}}{\sigma^2}})
 \end{equation}
+See appendix C for derivation.
 
 \subsection{Energy calculation} \label{sec:RBM_energy_cal}
 We want to calculate the energy of the two-fermion system, given the wave function described in \ref{eq:wf_form}. As explained in \cite{Nordhagen}, the energy of the system is the expectation value of the Hamiltonian, but this is hard to compute directly. 
@@ -246,7 +247,7 @@ H \ket{\phi_1} = E_1 \ket{\phi_1} = \omega(n_{x,1} + n_{y,1} + 1) \ket{\phi_1} \
 \end{equation}
 where $n_x$ and $n_y$ are the principal quantum number for the $x$ and $y$ direction respectively, and we have used natural units, and thus all the energies are given in atomic units a.u.
 
-When calculating the energy for the two-electron system we then get the following
+When calculating the energy of the two-electron system we then get the following
 
 \begin{equation}
 	H \ket{\phi_1 \phi_2} = \ket{H \phi_1 } \ket{\phi_2} + \ket{\phi_1} \ket{H \phi_2} = E_1 \ket{\phi_1 \phi_2} + E_2 \ket{\phi_1 \phi_2} 
@@ -264,7 +265,7 @@ A quantity that often is handy to calculate is the onebody density. The onebody 
 \rho_i(\boldsymbol{r})=\int_{-\infty}^{\infty}d\boldsymbol{r}_1\hdots d\boldsymbol{r}_{i-1}d\boldsymbol{r}_{i+1}\hdots d\boldsymbol{r}_N |\Psi(\boldsymbol{r}_1,\hdots \boldsymbol{r}_N)|^2.
 \end{equation}
 
-Apart from the fact that the one body density is a good visual representation of the positions of the particles, it is also a qunatity that is often calculated experimentally. Therefore, it is simpler to compare computational simulations to  experimental results when having calculated the onebody density.
+Apart from the fact that the one body density is a good visual representation of the positions of the particles, it is also a quantity that is often calculated experimentally. Therefore, it is simpler to compare computational simulations to  experimental results when having calculated the onebody density.
 
 Without interaction, the onebody density of particle $i$ is simply its wave function squared, which is known to be
 \begin{equation}
@@ -296,31 +297,31 @@ In a two-particle system where the potential is proportional to $r^n$, then the 
 As a physicist one should always be sceptical to measurements presented without an estimation of the uncertainties. When someone says they have measured their height to be 1.90 cm, is the uncertainty $\pm 1 cm$ or $\pm 10 cm$? If they used $\pm 1 cm$, we have a fairly good idea of the height of the person, but if it is $\pm 10 cm$, we do not really know anything about the real height of the person. 
 \par 
 \vspace{3mm}
-The error in a measurement is the difference between the true value of the mesurand, $x$, and the mesured value $x_i$:
+The error in a measurement is the difference between the true value of the measurand, $x$, and the measured value $x_i$:
 
 \begin{equation}
 	error = x - x_i
 \end{equation}
 
-However, the true value $x$ is rarely known. When $x$ is not known, it is thus impossible to give the error in the measurement. We must therefore be content with providing estimates of the error. It is common to give this uncertainty as the standard deviation $\sigma$; when preforming a mesurement n times, such that we have n measured points $x_1, .., x_n$ where the average value is $ \langle x \rangle $, then the standard deviation is defined as
+However, the true value $x$ is rarely known. When $x$ is not known, it is thus impossible to give the error in the measurement. We must therefore be content with providing estimates of the error. It is common to give this uncertainty as the standard deviation $\sigma$; when performing a mesurement n times, such that we have n measured points $x_1, .., x_n$ where the average value is $ \langle x \rangle $, then the standard deviation is defined as
 
 \begin{equation}
 \label{eq:standard_dev}
 \sigma_{\theta} =  \sqrt{\frac{1}{n-1} \sum_{k=1}^n (x_i - \langle x \rangle)^2}
 \end{equation}
 
-When giving the uncertainty, one writes $x_i \pm \sigma$, where $\sigma$ is so that $\approx 68 \%$ of the measured values lies withing the interval $\pm \sigma$. 
+When giving the uncertainty, one writes $x_i \pm \sigma$, where $\sigma$ is so that $\approx 68 \%$ of the measured values lies within the interval $\pm \sigma$. 
 
 There are different kinds of sources of error when conducting computer experiments. Systematic errors originate from faults in the theory used in the experiment, and this might give consistently wrong results. Systematic errors are hard to handle, as one might get seemingly good looking results. One way to avoid systematic results are to benchmark the code with either experimental results, or with other's computer simulation results. \par 
 \vspace{3mm}
-Another source of error is the statistical error, which is based on how many measurements you have done. In the example with the height measurement in the beginning of this section, if the experimentalist only measured the height one time, we can be fairly certain that this is not the true value of the person. If they, however, repeated the same measurement several times and then maybe used the average as the estimate of the mesurand, we can be more confident that they have a better estimate, compared to when they only used one point. A common way to estimate the statistical uncertainty is with equation \ref{eq:variance_simplified}.
+Another source of error is the statistical error, which is based on how many measurements you have done. In the example with the height measurement in the beginning of this section, if the experimentalist only measured the height one time, we can be fairly certain that this is not the true value of the person. If they, however, repeated the same measurement several times and then maybe used the average as the estimate of the measurand, we can be more confident that they have a better estimate, compared to when they only used one point. A common way to estimate the statistical uncertainty is with equation \ref{eq:variance_simplified}.
 
 \begin{equation}
 \label{eq:variance_simplified}
 \sigma^2 \approx \langle x^2 \rangle - \langle x \rangle^2
 \end{equation}
 
-However, as explained in \cite{Nordhagen}, this does not account for the covarinace between measurements. This leads to equation \ref{eq:variance_simplified} being an underestimation of $\sigma^2$, and is thus more a guideline for the size of the uncertainty, more than an actual estimate of it. Luckily, there are computational methods that can calculate $\sigma^2$ with the covariance contribution included. The method used in this project is the blocking method, presented in section \ref{sec:Blocking}.
+However, as explained in \cite{Nordhagen}, this does not account for the covariance between measurements. This leads to equation \ref{eq:variance_simplified} being an underestimation of $\sigma^2$, and is thus more a guideline for the size of the uncertainty, more than an actual estimate of it. Luckily, there are computational methods that can calculate $\sigma^2$ with the covariance contribution included. The method used in this project is the blocking method, presented in section \ref{sec:Blocking}.
 
 \section{Method} \label{sec:Method}
 
@@ -340,7 +341,6 @@ Above, we described that the VMC method had to reject or accept proposed moves o
 \begin{equation}
 W_{i\rightarrow j} = T_{i \rightarrow j}\cdot A_{i \rightarrow j}
 \end{equation}
-
 where $T_{i \rightarrow j}$ is the transition probability and $A_{i \rightarrow j}$ is the acceptance probability. If we denote the probability for being in a given state for $p$, and then look at the transition from a state $i$ to a state $j$ and back again, then it can be shown that we obtain the following relation between the transition and acceptance probabilities \cite{Nordhagen}:
 
 \begin{equation}
@@ -356,7 +356,6 @@ The brute force got is name because when proposing and accepting moves, the algo
 \begin{equation}
 \boldsymbol{R}_{new} = \boldsymbol{R} + \boldsymbol{r}\cdot \text{step}.
 \end{equation}
-
 where $\boldsymbol{r}$ is random numbers and $step$ is the steplength.
 \par 
 \vspace{3mm}
@@ -594,7 +593,7 @@ Since the optimal number of hidden nodes is one in this case, we will use N=1 wh
  \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_compare_eta.png}
- 	\caption{Energy as functions of iterations for $\eta$=1,2,3,5 and 10. Brute-Force Metropolis is used, MC=5000000, N=1 and $dx=1.0$.}
+ 	\caption{Energy as functions of iterations for $\eta$=1,2,3,5 and 10. Brute-Force Metropolis is used, MC=5e6, N=1 and $dx=1.0$.}
  	\label{fig:compare_etas}
  \end{figure}
 The smaller learning rate the slower it converges, and after 100 iterations both $\eta$=0.5 and $\eta$=0.05 are really close to the exact value. 
@@ -640,10 +639,10 @@ For the non-interacting case we see that the numerical calculation reproduces th
 In table \ref{tab:average_energies} average kinetic, interaction and potential energy is presented along with the mean distance for both the interacting and non-interacting case and for various frequencies. We observe that both the interaction energy and the potential energy increase as the frequency increase, while the mean distance decreases.
 
 \begin{table} [H]
-	\caption{In this table we present average kinetic ($\langle E_k\rangle$), interaction ($\langle V_{int}\rangle$) and external potential energies ($\langle V_{ext}\rangle$) for various $\omega$'s, along with the average distance between particles ($\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$) in the rightmost column. We used the brute-force Metropolis method with $dx=1.0$ and found the averages after convergence.  \vspace{2mm}}
+	\caption{In this table we present average kinetic ($\langle T\rangle$), interaction ($\langle V_{int}\rangle$) and external potential energies ($\langle V_{ext}\rangle$) for various $\omega$'s, along with the average distance between particles ($\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$) in the rightmost column. We used the brute-force Metropolis method with $dx=1.0$ and found the averages after convergence.  \vspace{2mm}}
 	\begin{tabularx}{\textwidth}{c|XXXXX} \hline\hline
 		\label{tab:average_energies}
-		$\omega$ & $ E_{tot}$ [a.u.] & $\langle E_k\rangle$ [a.u.] & $\langle V_{ext}\rangle$ [a.u.] & $\langle V_{int}\rangle$ [a.u.] & $\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$ \\ \hline \\
+		$\omega$ & $ E_{tot}$ [a.u.] & $\langle T\rangle$ [a.u.] & $\langle V_{ext}\rangle$ [a.u.] & $\langle V_{int}\rangle$ [a.u.] & $\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$ \\ \hline \\
 				& \multicolumn{4}{c}{\textbf{Without interaction}}\\ \hline
 				0.01 & 0.86104 & 0.86104 & 1.6997e-4 & - & 1.7483 \\
 				0.05 & 0.86911 & 0.86410 & 0.0041111 & - & 1.6904 \\
