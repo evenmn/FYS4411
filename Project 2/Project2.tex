@@ -276,6 +276,22 @@ A_k=\pi r_k^2-\pi r_{k-1}^2=2\pi r_kdr-\pi dr^2
 \end{equation}
 where $r_k$ is the outer radius of bin $k$ and $dr$ is the bin width.
 
+\subsection{Virial theorem}
+The virial theorem is an equation in mechanics that gives a relation between the time-averaged kinetic energy $\langle T \rangle$ and the potential forces acting on $N$ particles confined in a stable system. The theorem takes the following form:
+
+\begin{equation}
+\langle T \rangle = - \frac{1}{2} \sum_{i=0}^N \langle \boldsymbol{F_i} \cdot \boldsymbol{r_i} \rangle 
+\end{equation}
+
+where $\boldsymbol{F_i}$ is the sum of forces acting on particle $i$.\par 
+\vspace{3mm}
+
+In a two-particle system where the potential is proportional to $r^n$, then the virial theorem simplifies to 
+
+\begin{equation}
+2 \langle T \rangle = n \langle V_{tot} \rangle
+\end{equation}
+
 \subsection{Error estimation} \label{sec:error_estimation}
 As a physicist one should always be sceptical to measurements presented without an estimation of the uncertainties. When someone says they have measured their height to be 1.90 cm, is the uncertainty $\pm 1 cm$ or $\pm 10 cm$? If they used $\pm 1 cm$, we have a fairly good idea of the height of the person, but if it is $\pm 10 cm$, we do not really know anything about the real height of the person. 
 \par 
@@ -650,19 +666,31 @@ Initially we calculated the energy for one particle in one dimension to ensure t
 \vspace{3mm}
 
 However, from figure \ref{fig:energy1P1D}, one can see that Gibbs' sampling converges to a higher energy than the analytic value. The reason for that is probably related to how we define the wave function. For brute force and Metropolis-Hastings, we use the probability distribution defined in $\ref{eq:F_rbm}$ to represent the wave function, while the wave function used in Gibbs' sampling is the square root of the probability distribution. It seems this representation of the wave function is further away from the true wave function, and thus Gibbs converges towards a higher energy. This is in accordance with the variational principle; a worse guess on trial wave function will yield a upper bound estimate of the ground state energy $E$ that is larger than the true ground state energy $E_0$.
+
+\par 
+\vspace{3mm}
+For the case where the Coulomb repulsion is turned on, the results of the convergence of the Metropolis algorithms and the Gibbs sampling method are shown in figure \ref{fig:energies2P2D}and table \ref{tab:energies2P2D}. Again, as described above, we see that the brute force and Metropolis-Hastings algorithms converges towards the exact value of $3$ a.u, while Gibbs sampling approaches a higher energy. The fraction of deviation between the calculated and analytical value is roughly the same for the interacting and non-interacting case for all three methods, which can be seen by comparing table \ref{tab:energies1P1D} and \ref{tab:energies2P2D}.
+
+\par 
+\vspace{3mm}
+We varied the number of hidden nodes $N$ used in the machine learning program, as seen in figure \ref{fig:compare_nodes}. We see that varying the number of hidden nodes changes the rapidness of the method's convergence. For few hidden nodes, the convergence of the energy seems to happen slower, while for many hidden nodes, it decends steeply towards the analytical energy. \textcolor{red}{This can maybe be explained by when there are more free parameters that can be varied, the optimalization occurs faster. $\rightarrow$ Discuss with Vilde}. \par 
+We also see that we get better estimates of the ground state energy when using fewer hidden nodes. This is as expected, since more hidden nodes means more variables that has to be updated for each cycle, and thus a less precise answer. \textcolor{red}{$\rightarrow$ Discuss with Vilde}
 \par 
 \vspace{3mm}
 
-
-When varying the number of hidden nodes, we saw that N=1 gave the lowest energy, 
-
-We also observed that the convergence rapidness was heavily dependent on the learning rate, where a low learing rate gave a slow convergence. This is what we expect, since the learning rate defines how much we change the weights for each iteration. 
+Furthermore, we observed the effects of changing the learning rate $\eta$ used in the gradient decent method. The results are shown in figure \ref{fig:compare_etas}. We see that the convergence rapidness was heavily dependent on the learning rate, where a low learing rate gave a slow convergence. This is what we expected, as the learning rate defines how much the weights $W$, $a$ and $b$ are updated in each gradient decent iteration, that is, how large steps the method takes for each iteration. Larger steps will lead to the method aproaching the convergence more rapidly. As seen in this figure, if we limit the number of gradient decent iterations, then the choice of $\eta=0.01$ has not converged by the end of 100 minimalization iterations. A good choice of $\eta$ is thus necessary for the method to work optimally.
+\par  
 \vspace{3mm}
 
-The onebody density, in figure \ref{fig:OB}, reproduces the analytical onebody density without interaction, and for the interacting case it gets broader. Since the electrons then are affected by repulsive force, they will have a larger separation distance and a broader distribution makes sense.
+The onebody density calculated for two particles in two dimentions with the Metropolis-Hastings method is plotted in figure \ref{fig:OB}. We are able to reproduce the analytical onebody density without interaction. When interaction is introduced, the distribution of particles becomes broader and lower. This is explained by the two electrons now being supject to a repulsive force which pushed them apart, so that the average distance between the electrons increases. This creates a broader onebody density distribution.
+\par 
 \vspace{3mm}
 
-In table \ref{tab:average_energies}, we see that the estimates of the average distance between the two electrons $\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$ increases with increasing harmonic oscillator frequancy $\omega$. This is as expected, as the higher $\omega$, the steeper the sides of the potential well, and thus the electrons are forced together. We also observe that the average distance for the same $\omega$ increases when the interaction is turned on, which correspons to the Coulomb repulsion forcing the electrons apart.
+In table \ref{tab:average_energies}, we see that the estimates of the average distance between the two electrons $\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$ increases with increasing harmonic oscillator frequancy $\omega$. This is as expected, as the higher $\omega$, the steeper the sides of the potential well, and thus the electrons are forced together. We also observe that the average distance for the same $\omega$ increases when the interaction is turned on, which as explained above, correspons to the Coulomb repulsion forcing the electrons apart.
+\par 
+\vspace{3mm}
+
+As explained in 
 
 \section{Conclusion} \label{sec:Conclusion} 
 
