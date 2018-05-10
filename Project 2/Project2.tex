@@ -181,12 +181,22 @@ The wave function of one electron in a two-dimensional harmonic oscillator is gi
 
 where $H_{nx} \sqrt{\omega} x$ is the Hermite polynomials and A is the normalization constant, and $n_x$ and $n_y$ are the principal quantum numbers. If we denote $\phi_1$ the spatial wave function for the first electron, and $\phi_2$ the spatial wave function for the second electron, then the total spatial wave function for the two-particle system is $\phi_1 \phi_2$. As explained in section \ref{sec:Presentation_of_potential}, the spin wave functions are anti-symmetric, and therefore it is fine that the spatial wave function is symmetric.
 
-For a one-electron system the energy can be shown to take the value 
+We know that the energy of a harmonic oscillator in one dimension is given by
 
 \begin{equation}
+	\label{eq:HO_energy}
+	E_n = \omega (n + \frac{1}{2} )
+\end{equation}
+
+where $n$ is the principal quantum number.
+
+For a one-electron system in two dimensions the energy can be shown to take the value 
+
+\begin{equation}
+	\label{eq:exact_E_1P1D}
 	H \ket{\phi_1} = E_1 \ket{\phi_1} = \omega(n_{x,1} + n_{y,1} + 1) \ket{\phi_1} \quad  \rightarrow E_1 = \omega(n_x + n_y + 1)
 \end{equation}
-where we have used natural units, and all the energies are given in atomic units a.u.
+where $n_x$ and $n_y$ are the principal quantum number for the $x$ and $y$ direction respectively, and we have used natural units, and thus all the energies are given in atomic units a.u.
 
 When calculating the energy for the two-electron system we then get the following
 
@@ -587,9 +597,14 @@ In table \ref{tab:average_energies} average kinetic, interaction and potential e
 
 
 \section{Discussion} \label{sec:Discussion}
-Initially we calculate the energy for one particle in one dimension to ensure that the method works properly and we obtain an energy close to the analytical energy for brute-force Metropolis and Metropolis-Hasting, while Gibbs' sampling had a percent error of roughly 25\%. The reason for that is probably related to how we define the wave function. Since the wave function used in Gibbs' sampling is the square root of the probability distribution, this is farther from the true wave function. Nevertheless, we observe that brute-force Metropolis is slightly more accurate than the Metropolis/Hastings method. 
+Initially we calculated the energy for one particle in one dimension to ensure that the method worked properly. Using equation \ref{eq:HO_energy} to calculate the ground state energy, we get that the energy for one particle in one dimention with $\omega=1$ should be $\frac{1}{2}$. The result of the calculation with the machine learning program with different sampling algorithms can be seen in figure \ref{fig:energy1P1D}. We see that both the  brute-force Metropolis and Metropolis-Hasting converges towards the analytical energy. Additionally, from table \ref{tab:energies1P1D}, we see that the variance decreases when the two methods converges towards $\frac{1}{2}$, as we increases the number of gradient decent cycles used in the minimalization. This is a good indication that our methods are approaching the correct value, even if we did not have an analytical anwer to compare them to.
+\par 
+\vspace{3mm}
 
-We can also see from \ref{tab:energies1P1D} that the calculated energies are really close to the exact energies for brute-force Metropolis and Metropolis-Hastings, and the variance decreases as we increase the number of iterations. 
+However, from figure \ref{fig:energy1P1D}, one can see that Gibbs' sampling converges to a higher energy than the analytic value. The reason for that is probably related to how we define the wave function. For brute force and Metropolis-Hastings, we use the probability distribution defined in $\ref{eq:F_rbm}$ to represent the wave function, while the wave function used in Gibbs' sampling is the square root of the probability distribution. It seems this representation of the wave function is further away from the true wave function, and thus Gibbs converges towards a higher energy. This is in accordance with the variational principle; a worse guess on trial wave function will yield a upper bound estimate of the ground state energy $E$ that is larger than the true ground state energy $E_0$.
+\par 
+\vspace{3mm}
+
 
 When varying the number of hidden nodes, we saw that N=1 gave the lowest energy, 
 
