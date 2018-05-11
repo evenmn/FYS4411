@@ -627,9 +627,6 @@ We now go further to study the results from two iteracting fermions.
 	\end{tabularx}
 \end{table}
 
-\subsubsection{Playing with learning rate and number of hidden nodes}
-Again we play with the number of nodes and the learning rate
-
 \subsection{Onebody density}
 In figure \ref{fig:OB} the onebody densities for two particles in two dimensions with and without interaction is plotted. From the energy calculations, we found Metropolis-Hastings method to be the better one for two particles, and henceforth we will therefore stick to it. 
  \begin{figure} [H]
@@ -679,7 +676,8 @@ For the case where the Coulomb repulsion is turned on, the results of the conver
 \par 
 \vspace{3mm}
 We varied the number of hidden nodes $N$ used in the machine learning program, as seen in figure \ref{fig:compare_nodes}. We see that varying the number of hidden nodes changes the rapidness of the method's convergence. For few hidden nodes, the convergence of the energy seems to happen slower, while for many hidden nodes, it decends steeply towards the analytical energy. \textcolor{red}{This can maybe be explained by when there are more free parameters that can be varied, the optimalization occurs faster. $\rightarrow$ Discuss with Vilde}. \par 
-We also see that we get better estimates of the ground state energy when using fewer hidden nodes. This is as expected, since more hidden nodes means more variables that has to be updated for each cycle, and thus a less precise answer. \textcolor{red}{$\rightarrow$ Discuss with Vilde}
+We also see that we get better estimates of the ground state energy when using fewer hidden nodes. This is as expected, since more hidden nodes means more variables that has to be updated for each cycle, and thus a less precise answer. \textcolor{red}{$\rightarrow$ Discuss with Vilde}.\par
+The results discussed above are run for the non-interacting case with the brute force Metropolis algorithm, but the interacting case yielded the same results, and we therefore found them unnecessary to include. 
 \par 
 \vspace{3mm}
 
