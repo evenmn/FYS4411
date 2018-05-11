@@ -566,13 +566,13 @@ We first study the energy of a non-interacting electron in one dimension, and in
  \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_comparison.png}
- 	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. Brute-Force (BF) Metropolis (blue line), Metropolis-Hastings (MH) (orange line), Gibbs' (green line) and analytical value (dashed red line). All the samplings were conducted with MC=$2^{20}=1048576$, $\eta=0.01$, two hidden nodes, $\omega=1.0$ and $\sigma=1.0$. For BF we used steplength $dx=1.0$, while for MH the timestep was $dt=0.01$. See text for further description.}
+ 	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. Brute-Force (BF) Metropolis (blue line), Metropolis-Hastings (MH) (orange line), Gibbs (green line) and analytical value (dashed red line). All the samplings were conducted with MC=$2^{20}=1048576$, $\eta=0.01$, two hidden nodes, $\omega=1.0$ and $\sigma=1.0$. For BF we used steplength $dx=1.0$, while for MH the timestep was $dt=0.01$.}
  	\label{fig:energy1P1D}
  \end{figure}
-We observe that the energies produced by brute-force and Metropolis-Hastings are very similar, and in fact it is hard to distinguish them. They also give lower energies to the analytical energy compared to Gibbs' sampling. In table \ref{tab:energies1P1D} some chosen energies from figure \ref{fig:energy1P1D} are listed, and we observe that brute-force has actually the smallest absolute error for all number of iterations. 
+We observe that the energies produced by brute-force and Metropolis-Hastings are very similar, and in fact it is hard to distinguish them. They also give lower energies to the analytical energy compared to Gibbs sampling. In table \ref{tab:energies1P1D} some chosen energies from figure \ref{fig:energy1P1D} are listed, and we observe that brute-force has actually the smallest absolute error for all number of iterations. 
 
 \begin{table} [H]
-	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. \vspace{2mm}}
+	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. The table is associated with figure \ref{fig:energy1P1D}, with the same parameters and initials.  \vspace{2mm}}
 	\begin{tabularx}{\textwidth}{X|XXXX} \hline\hline
 		\label{tab:energies1P1D}
 		Iterations & BF & MH & Gibbs & Exact \\ \hline
@@ -590,16 +590,16 @@ To find the lowest energy, we experiment with different learning rates and a var
  \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_compare_nodes.png}
- 	\caption{Energy as functions of iterations for N=1,2,3,5 and 10. Brute-Force Metropolis is used, MC=5000000, $\eta=0.01$ and $dx=1.0$.}
+ 	\caption{Energy as functions of iterations for a various number of hidden nodes, N= 1 (blue), 2 (orange), 3 (green), 5 (red) and 10 (purple). Also the analytical energy is plotted as a red, dashed line. Brute-Force Metropolis is used with $dx=1.0$, MC=5e6, $\eta=0.01$, $\sigma=1.0$ and $\omega=1.0$.}
  	\label{fig:compare_nodes}
  \end{figure}
  
-Since the optimal number of hidden nodes is one in this case, we will use N=1 while optimizing the learning rate. In figure \ref{fig:compare_etas} we compare the energy convergence for various $\eta$'s.  Initially set all the weights and positions to 0.2, such that we they all start at the same point, and again we use brute-force Metropolis with $dx=1.0$.
+We observe that the optimal number of hidden nodes in this case is N=1. In figure \ref{fig:compare_etas} we compare the energy convergence for various $\eta$'s.  Initially all the weights and positions are set to 0.2, and again we use brute-force Metropolis with $dx=1.0$.
 
  \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_compare_eta.png}
- 	\caption{Energy as functions of iterations for $\eta$=1,2,3,5 and 10. Brute-Force Metropolis is used, MC=5e6, N=1 and $dx=1.0$.}
+ 	\caption{Energy as functions of iterations when varying the learning rate, $\eta$= 0.05 (blue), 0.01 (orange) and 0.5 (green). Also the analytical energy is plotted as a red, dashed line. Brute-force Metropolis is used with $dx=1.0$, MC=5e6, N=1, $\sigma=1.0$ and $\omega=1.0$.}
  	\label{fig:compare_etas}
  \end{figure}
 The smaller learning rate the slower it converges, and after 100 iterations both $\eta$=0.5 and $\eta$=0.05 are really close to the exact value. 
@@ -610,12 +610,12 @@ We now go further to study the results from two iteracting fermions.
  \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/comparison_energy_2P.png}
- 	\caption{Energy as a function of number of iterations up to 1000 iterations for two particles in two dimensions. Brute-Force Metropolis (blue line), Metropolis-Hastings (orange line), Gibbs' (green line) and analytical value (dashed red line). All the samplings were conducted with MC=$2^{25}=33 554 432$, $\eta=0.01$, two hidden nodes, $\omega=1.0$ and $\sigma=1.0$. For BF we used steplength $dx=1.0$, while for MH the timestep was $dt=0.01$. See text for further description.}
+ 	\caption{Energy as a function of number of iterations up to 1000 iterations for two particles in two dimensions. Brute-force Metropolis (BF) (blue line), Metropolis-Hastings (MH) (orange line), Gibbs (green line) and analytical value (dashed red line). All the samplings were conducted with MC=$2^{25}=33 554 432$, $\eta=0.01$, two hidden nodes, $\omega=1.0$ and $\sigma=1.0$. For BF we used steplength $dx=1.0$, while for MH the timestep was $dt=0.01$.}
  	\label{fig:energy2P2D}
  \end{figure}
 
 \begin{table} [H]
-	\caption{Energy as a function of number of iterations up to 500 iterations for one particle in one dimension. \vspace{2mm}}
+	\caption{Energy as a function of number of iterations up to 1000 iterations for two particles in two dimensions. The table is associated with figure \ref{fig:energy2P2D}, with the same parameters and initials. \vspace{2mm}}
 	\begin{tabularx}{\textwidth}{X|XXXX} \hline\hline
 		\label{tab:energies2P2D}
 		Iterations & BF & MH & Gibbs & Exact \\ \hline
@@ -630,19 +630,26 @@ We now go further to study the results from two iteracting fermions.
 \subsubsection{Playing with learning rate and number of hidden nodes}
 Again we play with the number of nodes and the learning rate
 
+ \begin{figure} [H]
+ 	\centering
+ 	\includegraphics[scale=0.8]{plots/energy_compare_eta_2P.png}
+ 	\caption{Energy as a function of number of iterations up to 1000 iterations for two particles in two dimensions. Brute-Force Metropolis was used for $\eta=0.01$ (blue line), 0.05 (orange line), 0.1 (green line) and $0.5$ (red line). All the samplings were conducted with MC=$2^{24}=16777216$, two hidden nodes, $dx=1.0$, $\omega=1.0$ and $\sigma=1.0$.}
+ 	\label{fig:energy2P2D}
+ \end{figure}
+
 \subsection{Onebody density}
-In figure \ref{fig:OB} the onebody densities for two particles in two dimensions with and without interaction is plotted. From the energy calculations, we found Metropolis-Hastings method to be the better one for two particles, and henceforth we will therefore stick to it. 
+In figure \ref{fig:OB} the onebody densities for two particles in two dimensions with and without interaction is plotted.
  \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/OB_comparison_MC_1e9.png}
- 	\caption{Onebody densities plotted as a function of the distance from origin. The orange (dashed and dotted) represents the numerical calculation of two interacting particles, the blue (dotted) line represents the numerical calculation of two non-interacting particles, while the red (dotted) line repsresents the analytical calculation of two non-interacting particles. The graphs are normalized to 1 in the interval $r\in[0,3]$, and they are conducted in the way discussed in section \ref{sec:onebody}. We used 1000 bins, MC=1e9 Monte-Carlo cycles and the Metropolis-Hastings method.}
+ 	\caption{Onebody densities plotted as a function of the distance from origin. The orange (dashed and dotted) represents the numerical calculation of two interacting particles, the blue (dashed) line represents the numerical calculation of two non-interacting particles, while the red (dotted) line represents the analytical calculation of two non-interacting particles. The graphs are normalized to 1 in the interval $r\in[0,3]$, and they are conducted in the way discussed in section \ref{sec:onebody}. We used 1000 bins, MC=1e9 Monte-Carlo cycles and the Metropolis-Hastings method.}
  	\label{fig:OB}
  \end{figure}
 For the non-interacting case we see that the numerical calculation reproduces the analytical onebody density, but its slightly noisy for small $r$'s. The onebody density for two interacting fermions is broader and has a lower maximum.
  
 
 \subsection{Average energies and distance}
-In table \ref{tab:average_energies} average kinetic, interaction and potential energy is presented along with the mean distance for both the interacting and non-interacting case and for various frequencies. We observe that both the interaction energy and the potential energy increase as the frequency increase, while the mean distance decreases.
+In table \ref{tab:average_energies} average kinetic, interaction and potential energy is presented along with the mean distance for both the interacting and non-interacting case and for various frequencies. We observe that both the interaction energy and the potential energy increase as the frequency increases, while the mean distance decreases.
 
 \begin{table} [H]
 	\caption{In this table we present average kinetic ($\langle T\rangle$), interaction ($\langle V_{int}\rangle$) and external potential energies ($\langle V_{ext}\rangle$) for various $\omega$'s, along with the average distance between particles ($\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$) in the rightmost column. We used the brute-force Metropolis method with $dx=1.0$ and found the averages after convergence.  \vspace{2mm}}
