@@ -71,7 +71,7 @@ In this project, we study a two-electron system in a two-dimensional harmonic os
 \par 
 \vspace{3mm}
 
-The goal is to find an upper bound limit of the ground state energy and the onebody density of the system, using a restricted Boltzmann machine (RBM). We represent the wave function of the system as a probability distribution for the RBM, as first done by \cite{Carleo}, who named this kind of network a \emph{neural network quantum state} (NQS). We calculate estimates of the ground state energy. The system is evaluated for one electron, along with two electrons with and without interaction. The theory is presented in section \ref{sec:Theory}.
+The goal is to find an upper bound limit of the ground state energy and the onebody density of the system, using a restricted Boltzmann machine (RBM). We represent the wave function of the system as a probability distribution for the RBM, as first done by \cite{Carleo}, who named this kind of network a \emph{neural network quantum state} (NQS). We calculate estimates of the ground state energy, and the system is evaluated for one electron, along with two electrons with and without interaction. The theory is presented in section \ref{sec:Theory}.
 \par 
 \vspace{3mm}
 
@@ -100,13 +100,13 @@ Since electrons are fermions, we need an antisymmetric wave function under excha
 \end{vmatrix}
 =\Phi_1(\boldsymbol{r}_1)\Phi_2(\boldsymbol{r}_2)-\Phi_2(\boldsymbol{r}_1)\Phi_1(\boldsymbol{r}_2)
 \end{equation}
-where $\Phi_i(\boldsymbol{r})$ is the single particle wave function (SPF) of state $i$. This contains a spatial part and a spin part, and we assume that it can be splitted up such that the spin part takes the antisymmetry property and does not affect the energy. Therefore we only need a symmetric spatial part to calculate the energies.
+where $\Phi_i(\boldsymbol{r})$ is the single particle wave function (SPF) of state $i$. This contains a spatial part and a spin part, and we assume that it can be splitted up such that the spin part takes the antisymmetry property and does not affect the energy. Therefore we only need a symmetric spatial trial wave function to calculate estimates of the energies.
 
 \subsection{Solving this with machine learning}
-When solving a system of particles as the one described in the previous system with Variational Monte Carlo, as described in \cite{Nordhagen}, we would need an ansatz for the wave function, where we use our physical intuition to create the form of a wave function with different variational parameters, and then let it be up to the computer to find the optimal parameters through a minimization method. However, this method is only as good as the physical intuition; if the form of the wave function is unrealistic, the results will be the same
+When solving a system of particles as the one described above solely with Variational Monte Carlo, we would need a good ansatz for the wave function. In this anzats, we would have to use our physical intuition to create the form of a wave function with different variational parameters, and then let it be up to the computer to find the optimal parameters through a minimization method. However, this method is only as good as the physical intuition; if the form of the wave function is unrealistic, the results will be the same.
 \par 
 \vspace{3mm}
-This challenge can be mended by using machine learning. There are several different types of machine learning systems, and the one we will present and utilize in this project has the ability to learn and sample from a probability distribution. This is perfect for quantum mechanical problems, as we know from quantum mechanics the wave function $\Psi$ is nothing more than a probability density, giving that $\Psi^2$ is a probability distribution that says something about where a given particle most probably can be found. As we are solely interested in the energy of the two-fermion system, and not the exact wave function, the fact that the machine learning program does not explicitly give the wave function is therefore of no consequence. We still have to give some guidelines for the form of the probability distribution, but the machine learning program can sample from a larger variety of probability distributions compared to the form used in VMC.
+This challenge can be mended by using machine learning. There are several different types of machine learning systems, and the one we will present and utilize in this project has the ability to learn to sample from a probability distribution. This is perfect for quantum mechanical problems, as we know from quantum mechanics the wave function $\Psi$ is nothing more than a probability density, giving that $\Psi^2$ is a probability distribution that says something about where a given particle most likely can be found. As we are solely interested in the energy of the two-fermion system, and not the exact wave function, the fact that the machine learning program does not explicitly give the wave function is therefore of no consequence. We still have to give some guidelines for the form of the probability distribution, but the machine learning program can sample from a larger variety of probability distributions compared to the form used in a simple VMC program.
 
 \subsubsection{Machine learning}
 With the goal of solving the quantum mechanical system presented in section \ref{sec:Presentation_of_potential} in mind, we should start by explaining what machine learning is. Machine learning is the idea that a computer can be trained to learn to yield certaint outputs, without directly being told exactly what to give. Examples on this is pattern recognizion, where the computer first is shown for example pictures of wolves and huskies. After training the computer on pictures where the computer sees huskies and wolves and is told the correct answer, it should after a sufficiently long training period, be able to recognize huskies and wolves by itself. 
@@ -135,10 +135,10 @@ The neurons are arranged in layers in the neural network, one visible layer that
 	\label{fig:neural_network}
 \end{figure}
 
-The idea behind machine learning is that the weights $W_i$, that decides how much a node puts emphazis on a given input, can be changed, and thus change the system's response to the same input. We will explain with the example from earlier, with huskies and the wolves: first, the program are shown pictures of wolves and huskies, and it is told the correct answer. The weights $W_i$ are then updated such that when a husky is shown, the output "husky" is generated, and the same for wolves. After a sufficiently long training period, the program's weights are optimalized for recognizing wolves and huskies. When shown a picture, the program should then by itself be able to determine wheter it is a wolf or a husky that it sees. 
+The idea behind machine learning is that the weights $W_i$, that decides how much a node puts emphazis on a given input, can be changed, and thus change the system's response to the same input. We will explain with the example from earlier, with huskies and the wolves: first, the program are shown pictures of wolves and huskies, and it is told the correct answer. The weights $W_i$ are then updated such that when a husky is shown, the output "husky" is generated, and then "wolves" for pictures of wolves. After a sufficiently long training period, the program's weights are optimalized for recognizing wolves and huskies. When shown a picture, the program should then by itself be able to determine wheter it is a wolf or a husky that it sees. 
 
 \subsubsection{Restricted Boltzmann Machines} \label{sec:RBM}
-There are plenty of ways to put together a neural network, as one can modify the number of nodes and layers, the bias, and also which nodes that are allowed to communicated. In this project, we will be using the so-called Restricted Boltzmann Machine (RBM). It is a two-layer network. The reason why it is named "restrictive" is that there are no connections between nodes in the same layer, but every node in the previous layer is connected to all the nodes in the next layer. The RBM can learn to draw samples from a probability distribution, which is just what we want in our project. In addition, we want to use a Gaussian-Binary RBM (see figure \ref{fig:RBM}), where the hidden nodes have binary values, while the positions of the particles can take continuous values, as they are, in fact, positions. 
+There are plenty of ways to put together a neural network, as one can modify the number of nodes and layers, the biases, and also which nodes that are allowed to communicate. In this project, we will be using the so-called Restricted Boltzmann Machine (RBM). It is a two-layer network. The reason why it is named "restrictive" is that there are no connections between nodes in the same layer, but every node in the previous layer is connected to all the nodes in the next layer. The RBM can learn to draw samples from a probability distribution, which is just what we want in our project. In addition, we want to use a Gaussian-Binary RBM (see figure \ref{fig:RBM}), where the hidden nodes have binary values, while the visible nodes of the particles can take continuous values, as they are the positions of the particles. 
 
 \begin{figure}
 \centering
@@ -195,11 +195,11 @@ F(\boldsymbol{X},\boldsymbol{H})=\frac{1}{Z}e^{-\beta E(\boldsymbol{X},\boldsymb
 \end{equation}
 where we set $\beta=1/kT=1$ and $Z$ is the partition function, which can be ignored since it will vanish anyway. 
 
-The system energy of a Gaussian-Binary RBM is given by
+The system energy of a Gaussian-Binary RBM is given by \cite{Hinton}
 \begin{equation}
 E(\boldsymbol{X},\boldsymbol{H})=\sum_{i=1}^{M}\frac{(X_i-a_i)^2}{2\sigma_i^2}-\sum_{j=1}^Nb_jH_j-\sum_{i,j=1}^{M,N}\frac{X_iW_{ij}H_j}{\sigma_i^2}
 \end{equation}
-\cite{Hinton}. We then define the NQS wave function as $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, which has a general form of the probability distribution. In equation \ref{eq:wf_form} the form of the wave function is shown, when we have used that we have $M$ visible nodes and $N$ hidden nodes, and that the hidden nodes should take binary values. 
+ We then define the NQS wave function as $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, which has a general form of the probability distribution. In equation \ref{eq:wf_form} the form of the wave function is shown, when we have used that we have $M$ visible nodes and $N$ hidden nodes, and that the hidden nodes should take binary values. 
 
 \begin{equation}
 \label{eq:wf_form}
