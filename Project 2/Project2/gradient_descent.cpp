@@ -83,7 +83,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
     //Open file for writing
     ofstream myfile;
-    myfile.open("../data/energy.txt");
+    myfile.open("../data/energy_eta_0p01.txt");
 
     ofstream myfile1;
     myfile1.open("../data/local_energies.txt");
@@ -265,10 +265,6 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
         //Write to file
         myfile << EL_avg << "\n";
-
-        cout << "<E_k>: " << E_k_tot/MC << endl;
-        cout << "<E_ext>: " << E_ext_tot/MC << endl;
-        cout << "<E_int>: " << E_int_tot/MC << endl;
     }
     //Close myfile
     if(myfile.is_open())  myfile.close();
