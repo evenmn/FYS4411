@@ -53,7 +53,7 @@
 \end{itemize}
 
 \begin{abstract}
-This project aims to simulate a quantum dot by using a restricted Boltzmann machine (RBM) in combination with Variational Monte Carlo (VMC), with either Metropolis or Gibbs sampling. Using a form of the wave function given by the RBM, we find the optimal ground state wave function with the gradient decent method, and calculate an upper bound limit of the ground state energy and onebody density for a one electron system, as well as for two electrons with and without Coulomb interaction. Our results are benchmarked with analytical expectations. 
+This project aims to simulate a quantum dot by using a restricted Boltzmann machine (RBM) in combination with Variational Monte Carlo (VMC), with either Metropolis or Gibbs sampling. Using a form of the wave function given by the RBM, we find the optimal ground state wave function with the gradient descent method, and calculate an upper bound limit of the ground state energy and onebody density for a one electron system, as well as for two electrons with and without Coulomb interaction. Our results are benchmarked with analytical expectations. 
 \par 
 
 Using one electron without interaction, the Metropolis algorithm reproduces the benchmarks. For both the interacting and non-interacting case, the Metropolis algorithm yields a lower upper bound estimate of the ground state energy, compared to Gibbs. The onebody density (OB) reproduces analytical calculations. The OB distribution changes when introducing interaction, which is as expected. We are unable to reproduce the virial theorem for different potential strengths.
@@ -75,7 +75,7 @@ The goal is to find an upper bound limit of the ground state energy and the oneb
 \par 
 \vspace{3mm}
 
-The RBM is used to find the optimal wave function for the state, while we use Variational Monte Carlo (VMC) with either the Metropolis algorithm or Gibbs sampling to move the system towards the most likely state. The NQS wave function is optimalized with the gradient decent method.  The methods used are presented in section \ref{sec:Method}, and the code structure and implementation are presented in section \ref{sec:Code}. The upper bound estimate of the ground state energy and the onebody density are given in section \ref{sec:Results}, and our results are discussed in section \ref{sec:Discussion}.
+The RBM is used to find the optimal wave function for the state, while we use Variational Monte Carlo (VMC) with either the Metropolis algorithm or Gibbs sampling to move the system towards the most likely state. The NQS wave function is optimalized with the gradient descent method.  The methods used are presented in section \ref{sec:Method}, and the code structure and implementation are presented in section \ref{sec:Code}. The upper bound estimate of the ground state energy and the onebody density are given in section \ref{sec:Results}, and our results are discussed in section \ref{sec:Discussion}.
 
 
  
@@ -483,11 +483,13 @@ The number of points in the transformed data set is now $n'$, and every $x'_i$ c
 
 We now increase the block size, such that there are even more of the original data point in each block, and calculate the total standard deviation from equation \ref{eq:total_std_dev} again. If we continue doing this and plot the resulting estimates of $\hat{\sigma}$, we will observe that it first increases, until it flats out. When we have reached this plateu, we know that the data blocks $x'_i$ are no longer correlated. The covariance is then 0, and we have thus obtained a proper estimation of the uncertainty. 
 
+In this project we are using the blocking code produced by Marius Jonsson, see \cite{Jonsson}
+
 \section{Code} \label{sec:Code}
 In this section, we give an overview of the structure and implementation of our code, to make it easier for potential users to familiarize themselves with the code. 
 
 \subsection{Structure}
-In order to keep the code structured, we have split the running of the program up in several files. The user only needs to interact with main.cpp, as all the parameters for running the machine lerning project are set here. Examples are that the user can choose between brute force, Metropolis-Hastings og Gibbs sampling, and set the number of visible and hidden nodes, along with the number of iterations. main.cpp calls on the function GradientDecent in gradient\_decent.cpp, where the machine learning structure is implemented. The machine learning structure consists of the VMC-loop, where the nodes are updated, and the gradient decent method, where the weights are updated. GradientDecent uses the class WaveFunction in wavefunction.cpp to calculate the value of the wave function, along with the energy of the system. Depending on whether the user chose brute force, Metropolis-Hastings or Gibbs sampling, GradientDecent calls functions in either wavefunction.cpp, hastings\_tools.cpp or gibbs\_tools.cpp to update the positions and calculate the transition probabilities. The test functions are found in test.cpp. The structure can be seen in figure \ref{fig:program_structure}.
+In order to keep the code structured, we have split the running of the program up in several files. The user only needs to interact with main.cpp, as all the parameters for running the machine lerning project are set here. Examples are that the user can choose between brute force, Metropolis-Hastings og Gibbs sampling, and set the number of visible and hidden nodes, along with the number of iterations. main.cpp calls on the function GradientDescent in gradient\_descent.cpp, where the machine learning structure is implemented. The machine learning structure consists of the VMC-loop, where the nodes are updated, and the gradient descent method, where the weights are updated. GradientDescent uses the class WaveFunction in wavefunction.cpp to calculate the value of the wave function, along with the energy of the system. Depending on whether the user chose brute force, Metropolis-Hastings or Gibbs sampling, GradientDescent calls functions in either wavefunction.cpp, hastings\_tools.cpp or gibbs\_tools.cpp to update the positions and calculate the transition probabilities. The test functions are found in test.cpp. The structure can be seen in figure \ref{fig:program_structure}.
 
  \begin{figure} [H]
 	\centering
@@ -512,7 +514,7 @@ In order to keep the code structured, we have split the running of the program u
 		for MC Monte Carlo cycles
 			#do VMC
 		
-		#do GradientDecent
+		#do GradientDescent
 		
 		end when stopping criterias == true, when method has converged
 		print final energy
@@ -539,7 +541,7 @@ print estimated E
 
 \end{lstlisting}
 
-\subsubsection{Gradient Decent}
+\subsubsection{Gradient Descent}
 
 \lstset{basicstyle=\scriptsize}
 \begin{lstlisting}
@@ -633,8 +635,8 @@ Again we play with the number of nodes and the learning rate
  \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_compare_eta_2P.png}
- 	\caption{Energy as a function of number of iterations up to 1000 iterations for two particles in two dimensions. Brute-Force Metropolis was used for $\eta=0.01$ (blue line), 0.05 (orange line), 0.1 (green line) and $0.5$ (red line). All the samplings were conducted with MC=$2^{24}=16777216$, two hidden nodes, $dx=1.0$, $\omega=1.0$ and $\sigma=1.0$.}
- 	\label{fig:energy_compare_eta_2P}
+ 	\caption{Energy as a function of number of iterations up to 1000 iterations for two particles in two dimensions. Brute-Force Metropolis was used for $\eta=0.01$ (blue line), 0.05 (orange line), 0.1 (green line) and $0.5$ (red line). All the samplings were conducted with MC=$2^{25}=33 554 432$, two hidden nodes, $dx=1.0$, $\omega=1.0$ and $\sigma=1.0$.}
+ 	\label{fig:fig:energy_compare_eta_2P}
  \end{figure}
 
 \subsection{Gibbs sampling}
@@ -679,39 +681,43 @@ In table \ref{tab:average_energies} average kinetic, interaction and potential e
 
 
 \section{Discussion} \label{sec:Discussion}
-Initially we calculated the energy for one particle in one dimension to ensure that the method worked properly. Using equation \ref{eq:HO_energy} to calculate the ground state energy, we get that the energy for one particle in one dimention with $\omega=1$ should be $\frac{1}{2}$. The result of the calculation with the machine learning program with different sampling algorithms can be seen in figure \ref{fig:energy1P1D}. We see that both the  brute-force Metropolis and Metropolis-Hasting converges towards the analytical energy. Additionally, from table \ref{tab:energies1P1D}, we see that the variance decreases when the two methods converges towards $\frac{1}{2}$, as we increases the number of gradient decent cycles used in the minimalization. This is a good indication that our methods are approaching the correct value, even if we did not have an analytical anwer to compare them to. The two methods yield nearly identical results, while we would expect Metropolis-Hastings to be a better method, due to the more advanced sampling routine presented in section \ref{sec:Metropolis-Hastings}. However, the difference might be to small to give an impact to this project, as we use few particles.
+Initially we calculated the energy for one particle in one dimension to ensure that the method worked properly. Using equation \ref{eq:HO_energy} to calculate the ground state energy, we get that the energy for one particle in one dimension with $\omega=1$ should be $\frac{1}{2}$. The result of the calculation with the machine learning program with different sampling algorithms can be seen in figure \ref{fig:energy1P1D}. We see that both the  brute-force Metropolis and Metropolis-Hasting converges towards the analytical energy. Additionally, from table \ref{tab:energies1P1D}, we see that the variance decreases when the two methods converges towards $\frac{1}{2}$, as we increases the number of gradient descent cycles used in the minimalization. This is a good indication that our methods are approaching the correct value, even if we did not have an analytical anwer to compare them to. The two methods yield nearly identical results, while we would expect Metropolis-Hastings to be a better method, due to the more advanced sampling routine presented in section \ref{sec:Metropolis-Hastings}. However, the difference might be to small to give an impact to this project, as we use few particles. We used a two-power number of Monte Carlo cycles for properly blocking. 
 \par 
 \vspace{3mm}
 
-From figure \ref{fig:energy1P1D}, one can see that Gibbs' sampling converges to a higher energy than the analytic value. The reason for that is probably related to how we define the wave function. For brute force and Metropolis-Hastings, we use the probability distribution defined in $\ref{eq:F_rbm}$ to represent the wave function, while the wave function used in Gibbs' sampling is the square root of the probability distribution. It seems this representation of the wave function is further away from the true wave function, and thus Gibbs converges towards a higher energy. This is in accordance with the variational principle; a worse guess on trial wave function will yield a upper bound estimate of the ground state energy $E$ that is larger than the true ground state energy $E_0$.
+From figure \ref{fig:energy1P1D}, one can see that Gibbs sampling converges to a higher energy than the analytical value. The reason for that is probably related to how we define the wave function. For brute force and Metropolis-Hastings, we use the probability distribution defined in $\ref{eq:F_rbm}$ to represent the wave function, while the wave function used in Gibbs sampling is the square root of the probability distribution. It seems this representation of the wave function is farther away from the true wave function, and thus Gibbs converges towards a higher energy. This is in accordance with the variational principle; a worse guess on trial wave function will yield a upper bound estimate of the ground state energy $E$ that is larger than the true ground state energy $E_0$.
 
 \par 
 \vspace{3mm}
-For the case where the Coulomb repulsion is turned on, the results of the convergence of the Metropolis algorithms and the Gibbs sampling method are shown in figure \ref{fig:energy2P2D} and table \ref{tab:energies2P2D}. Again, as described above, we see that the brute force and Metropolis-Hastings algorithms converges towards the exact value of $3$ a.u, while Gibbs sampling approaches a higher energy. The fraction of deviation between the calculated and analytical value is roughly the same for the interacting and non-interacting case for all three methods, which can be seen by comparing table \ref{tab:energies1P1D} and \ref{tab:energies2P2D}.
+For the case where the Coulomb repulsion is turned on, the results of the convergence of the Metropolis algorithms and the Gibbs sampling method are shown in figure \ref{fig:energy2P2D} and table \ref{tab:energies2P2D}. Again, as described above, we see that the brute force and Metropolis-Hastings algorithms converge towards a value close to the exact value of $3$ a.u, while Gibbs sampling approaches a higher energy. The fraction of deviation between the calculated and analytical value is roughly the same for the interacting and non-interacting case for all three methods, which can be seen by comparing table \ref{tab:energies1P1D} and \ref{tab:energies2P2D}.
 
 \par 
 \vspace{3mm}
-We varied the number of hidden nodes $N$ used in the machine learning program, as seen in figure \ref{fig:compare_nodes}. We see that varying the number of hidden nodes changes the rapidness of the method's convergence. For few hidden nodes, the convergence of the energy seems to happen slower, while for many hidden nodes, it decends steeply towards the analytical energy. \textcolor{red}{This can maybe be explained by when there are more free parameters that can be varied, the optimalization occurs faster. $\rightarrow$ Discuss with Vilde}. \par 
+We varied the number of hidden nodes $N$ used in the machine learning program, as seen in figure \ref{fig:compare_nodes}. We see that varying the number of hidden nodes changes the rapidness of the method's convergence. For few hidden nodes, the convergence of the energy seems to happen slower, while for many hidden nodes, it descends steeply towards the analytical energy. \textcolor{red}{This can maybe be explained by when there are more free parameters that can be varied, the optimalization occurs faster. $\rightarrow$ Discuss with Vilde}. \par 
 We also see that we get better estimates of the ground state energy when using fewer hidden nodes. This is as expected, since more hidden nodes means more variables that has to be updated for each cycle, and thus a less precise answer. \textcolor{red}{$\rightarrow$ Discuss with Vilde}.
 \par 
 \vspace{3mm}
 
-Furthermore, we observed the effects of changing the learning rate $\eta$ used in the gradient decent method. The results are shown in figure \ref{fig:compare_etas}. We see that the convergence rapidness was heavily dependent on the learning rate, where a low learing rate gave a slow convergence. This is what we expected, as the learning rate defines how much the weights $W$, $a$ and $b$ are updated in each gradient decent iteration, that is, how large steps the method takes for each iteration. Larger steps will lead to the method aproaching the convergence more rapidly. As seen in this figure, if we limit the number of gradient decent iterations, then the choice of $\eta=0.01$ has not converged by the end of 100 minimalization iterations. A good choice of $\eta$ is thus necessary for the method to work optimally.
+Furthermore, we observed the effects of changing the learning rate $\eta$ used in the gradient descent method. The results are shown in figure \ref{fig:compare_etas}. We see that the convergence rapidness was heavily dependent on the learning rate, where a low learing rate gave a slow convergence. This is what we expected, as the learning rate defines how much the weights $W$, $a$ and $b$ are updated in each gradient descent iteration, that is, how large steps the method takes for each iteration. Larger steps will lead to the method aproaching the convergence more rapidly. As seen in this figure, if we limit the number of gradient descent iterations, then the choice of $\eta=0.01$ has not converged by the end of 100 minimalization iterations. A good choice of $\eta$ is thus necessary for the method to work optimally.
 \par  
 \vspace{3mm}
 
-The results for changing the learning rate and number of hidden nodes discussed above are run for the non-interacting case with the brute force Metropolis algorithm. As shown in figure \ref{fig:energy_compare_eta_2P} and \ref{fig:}, the interacting case yielded the same results. 
+The results for changing the learning rate and number of hidden nodes discussed above are run for the interacting case with the brute force Metropolis algorithm. As shown in figure \ref{fig:energy_compare_eta_2P} and \ref{fig:}, the interacting case yielded the same results. \textcolor{red}{$\rightarrow$ Need to extend this}
 \par
 \vspace{3mm}
-The onebody density calculated for two particles in two dimentions with the Metropolis-Hastings method is plotted in figure \ref{fig:OB}. We are able to reproduce the analytical onebody density without interaction. When interaction is introduced, the distribution of particles becomes broader and lower. This is explained by the two electrons now being supject to a repulsive force which pushed them apart, so that the average distance between the electrons increases. This creates a broader onebody density distribution.
+The onebody density calculated for two particles in two dimensions with the Metropolis-Hastings method is plotted in figure \ref{fig:OB}. We are able to reproduce the analytical onebody density without interaction. When interaction is introduced, the distribution of particles becomes broader and lower. This is explained by the two electrons now being subject to a repulsive force which pushed them apart, so that the average distance between the electrons increases. This creates a broader onebody density distribution.
+
+We also see that the graphs are slightly noisy near origin, although we run for 1e9 Monte Carlo cycles. That is because the area we divide by is small, and we therefore need a very large number of cycles to get a statistical descent number of particles in this bin. 
 \par 
 \vspace{3mm}
 
-In table \ref{tab:average_energies}, we see that the estimates of the average distance between the two electrons $\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$ increases with increasing harmonic oscillator frequancy $\omega$. This is as expected, as the higher $\omega$, the steeper the sides of the potential well, and thus the electrons are forced together. We also observe that the average distance for the same $\omega$ increases when the interaction is turned on, which as explained above, correspons to the Coulomb repulsion forcing the electrons apart.
+In table \ref{tab:average_energies}, we see that the estimates of the average distance between the two electrons $\langle |\boldsymbol{r}_i-\boldsymbol{r}_j|\rangle$ increases with increasing harmonic oscillator frequency $\omega$. This is as expected, as the higher $\omega$, the steeper the sides of the potential well, and thus the electrons are forced together. We also observe that the average distance for the same $\omega$ increases when the interaction is turned on, which as explained above, corresponds to the Coulomb repulsion forcing the electrons apart.
 \par 
 \vspace{3mm}
 
-As explained in section \ref{sec:Virial_theorem}, the virial theorem holds for particles in stable systems, and the relation between the time-averaged kinetic and potential energy for potentials that are proportional to $r^n$ is shown in equation \ref{eq:virial_simple}. In the non-interacting case, the only potential affecting the particles is the harmonic oscillator potential, which is proportional to $r^2$. Thus equation \ref{eq:virial_simple} gives that the time-averaged kinetic and potential energies should be equal. From table \ref{tab:average_energies}, we see that we are able to reproduce this for two particles without interaction and $\omega=1.0$. However, for different values of $\omega$, it seems that the method becomes unstable, and we are no longer able to reproduce the virial theorem. In the interaction case, both the harmonic oscillator potential and the Coulomb interaction contributes to the total potential, and the total potential is thus no longer on the form $r^n$. Thus the simple relation between the time-averaged kinetic and potential energies in equation \ref{eq:virial_simple} no longer applies.
+As explained in section \ref{sec:Virial_theorem}, the virial theorem holds for particles in stable systems, and the relation between the time-averaged kinetic and potential energy for potentials that are proportional to $r^n$ is shown in equation \ref{eq:virial_simple}. In the non-interacting case, the only potential affecting the particles is the harmonic oscillator potential, which is proportional to $r^2$. Thus equation \ref{eq:virial_simple} gives that the time-averaged kinetic and potential energies should be equal. From table \ref{tab:average_energies}, we see that we are able to reproduce this for two particles without interaction and $\omega=1.0$. However, for different values of $\omega$, it seems that the method becomes unstable, and we are no longer able to reproduce the virial theorem. If we look at the hermite functions, which are the analytical wave functions in a harmonic oscillator potential for ideal particles, the exponents are scaled with respect to $\omega$. The NQS wave function is not scaled in the same way, which may explain why the virial theorem only works for $\omega=1.0$.
+
+In the interaction case, both the harmonic oscillator potential and the Coulomb interaction contributes to the total potential, and the total potential is thus no longer on the form $r^n$. Thus the simple relation between the time-averaged kinetic and potential energies in equation \ref{eq:virial_simple} no longer applies.
 \par 
 \vspace{3mm}
 
@@ -728,7 +734,7 @@ In this project, we have found that by using principles of machine learning in c
 The choice of learning rate $\eta$ and number of hidden nodes $N$ used in the simulation affects the convergence rate and final results, where the convergence rate is higher for more hidden nodes and higher  $\eta$. The energy the method converges towards is closer for to the analytical energy for lower $N$ and higher $\eta$.
 \par 
 \vspace{3mm}
-The onebody density distribution obtained in this project maches the analytical calucaltion for the non-interacting case. The distribution becomes broader and lower when turning on the interaction, which matches the physical explanation that the repulsive Coulomb force forces the particles apart.
+The onebody density distribution obtained in this project matches the analytical calculation for the non-interacting case. The distribution becomes broader and lower when turning on the interaction, which matches the physical explaination that the repulsive Coulomb force forces the particles apart.
 \par
 \vspace{3mm}
 We are solely able to reproduce the virial theorem for $\omega=1.0$, as the code becomes unstable for different choices of $\omega$.
@@ -824,7 +830,7 @@ Using $\Psi ^* = \sqrt{\Psi}$, we now get
 
 We see that there are two constants which differ the local energy caculated with $\Psi$ and $\Psi ^*$. 
 
-\subsection{Gradient for gradient decent method}
+\subsection{Gradient for gradient descent method}
 When calculating the gradients for $\boldsymbol{W}$, $\boldsymbol{a}$ and $\boldsymbol{b}$ when using the wave function $\Psi ^* = \sqrt{\Psi}$, we must remember that:
 
 \begin{equation}
@@ -884,6 +890,8 @@ F_{\text{RBM}}(\boldsymbol{X})&=\sum_{\{\boldsymbol{h}\}}e^{\sum_{i=1}^M \frac{(
 	 A. Chilton \emph{The Properties and Applications of Quantum Dots} (2014) \url{https://www.azoquantum.com/Article.aspx?ArticleID=31} downloaded May 6th 2018
 	 \bibitem{Hinton}
 	 G.E. Hinton \emph{A Practical Guide to Training Restricted Boltzmann Machines}, Lecture Notes in Computer Science, vol \textbf{7700}. Springer, Berlin, Heidelberg (2012)
+	 \bibitem{Jonsson}
+	 M. Jonsson, \emph{Captain Hook}, Program for blocking, \url{https://github.com/computative/block} downloaded April 2018. 
 
 	
 	
