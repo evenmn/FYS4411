@@ -702,8 +702,8 @@ For the case where the Coulomb repulsion is turned on, the results of the conver
 
 \par 
 \vspace{3mm}
-We varied the number of hidden nodes $N$ used in the machine learning program, as seen in figure \ref{fig:compare_nodes}. We see that varying the number of hidden nodes changes the rapidness of the method's convergence. For few hidden nodes, the convergence of the energy seems to happen slower, while for many hidden nodes, it descends steeply towards the analytical energy. \textcolor{red}{This can maybe be explained by when there are more free parameters that can be varied, the optimalization occurs faster. $\rightarrow$ Discuss with Vilde}. \par 
-We also see that we get better estimates of the ground state energy when using fewer hidden nodes. This is as expected, since more hidden nodes means more variables that has to be updated for each cycle, and thus a less precise answer. \textcolor{red}{$\rightarrow$ Discuss with Vilde}.
+We varied the number of hidden nodes $N$ used in the machine learning program, as seen in figure \ref{fig:compare_nodes}. We see that varying the number of hidden nodes changes the rapidness of the method's convergence. For few hidden nodes, the convergence of the energy seems to happen slower, while for many hidden nodes, it descends steeply towards the analytical energy. This can maybe be explained by when there are more free parameters that can be varied, the optimalization occurs faster. \par 
+We also see that we get better estimates of the ground state energy when using fewer hidden nodes. This is as expected, since more hidden nodes means more variables that has to be updated for each cycle, and thus a less precise answer. However, this is one of the drawback pf machine learning; there are many choices of different numbers of paramteres, and it is difficult to choose these parameters such that one gets optimal results.
 \par 
 \vspace{3mm}
 
