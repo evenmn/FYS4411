@@ -53,7 +53,7 @@
 \end{itemize}
 
 \begin{abstract}
-This project aims to simulate a quantum dot by using a restricted Boltzmann machine (RBM) in combination with Variational Monte Carlo (VMC), with either Metropolis or Gibbs sampling. Using a form of the wave function given by the RBM, we find the optimal ground state wave function with the gradient descent method, and calculate an upper bound limit of the ground state energy and onebody density for a one electron system, as well as for two electrons with and without Coulomb interaction. Our results are benchmarked with analytical expectations. 
+This project aims to simulate a quantum dot by using a restricted Boltzmann machine (RBM) in combination with Variational Monte Carlo (VMC), with either Metropolis or Gibbs sampling. Using a form of the wave function given by the RBM, we find the optimal ground state wave function with the gradient descent method, and calculate an upper bound limit of the ground state energy and onebody density for an one electron system, as well as for two electrons with and without Coulomb interaction. Our results are benchmarked with analytical expectations. 
 \par 
 
 Using one electron without interaction, the Metropolis algorithm reproduces the benchmarks. For both the interacting and non-interacting case, the Metropolis algorithm yields a lower upper bound estimate of the ground state energy, compared to Gibbs. The onebody density (OB) reproduces analytical calculations. The OB distribution changes when introducing interaction, which is as expected. We are unable to reproduce the virial theorem for different potential strengths.
@@ -67,7 +67,7 @@ Using one electron without interaction, the Metropolis algorithm reproduces the 
 \newpage
 
 \section{Introduction} \label{sec:Introduction}
-In this project, we study a two-electron system in a two-dimensional harmonic oscillator. This system is often referred to as a quantum dot. Quantum dots are a highly relevant topic in modern physics, and the technology has a wide range of applications, ranging from solar panel development to medical imaging \cite{Chilton}.
+In this project, we study an one- and two-electron system in a two-dimensional harmonic oscillator. This system is often referred to as a quantum dot. Quantum dots are a highly relevant topic in modern physics, and the technology has a wide range of applications, ranging from solar panel development to medical imaging \cite{Chilton}.
 \par 
 \vspace{3mm}
 
@@ -103,7 +103,7 @@ Since electrons are fermions, we need an antisymmetric wave function under excha
 where $\Phi_i(\boldsymbol{r})$ is the single particle wave function (SPF) of state $i$. This contains a spatial part and a spin part, and we assume that it can be splitted up such that the spin part takes the antisymmetry property and does not affect the energy. Therefore we only need a symmetric spatial trial wave function to calculate estimates of the energies.
 
 \subsection{Solving this with machine learning}
-When solving a system of particles as the one described above solely with Variational Monte Carlo, we would need a good ansatz for the wave function. In this anzats, we would have to use our physical intuition to create the form of a wave function with different variational parameters, and then let it be up to the computer to find the optimal parameters through a minimization method. However, this method is only as good as the physical intuition; if the form of the wave function is unrealistic, the results will be the same.
+When solving a system of particles as the one described above solely with Variational Monte Carlo, as done in \cite{Nordhagen}, we would need a good ansatz for the wave function. In this anzats, we would have to use our physical intuition to create the form of a wave function with different variational parameters, and then let it be up to the computer to find the optimal parameters through a minimization method. However, this method is only as good as the physical intuition; if the form of the wave function is unrealistic, the results will be the same.
 \par 
 \vspace{3mm}
 This challenge can be mended by using machine learning. There are several different types of machine learning systems, and the one we will present and utilize in this project has the ability to learn to sample from a probability distribution. This is perfect for quantum mechanical problems, as we know from quantum mechanics the wave function $\Psi$ is nothing more than a probability density, giving that $\Psi^2$ is a probability distribution that says something about where a given particle most likely can be found. As we are solely interested in the energy of the two-fermion system, and not the exact wave function, the fact that the machine learning program does not explicitly give the wave function is therefore of no consequence. We still have to give some guidelines for the form of the probability distribution, but the machine learning program can sample from a larger variety of probability distributions compared to the form used in a simple VMC program.
@@ -126,7 +126,7 @@ This sound amazing, and maybe even impossible. Therefore the question now is: ho
  	\label{fig:neuron}
  \end{figure}
 
-The neurons are arranged in layers in the neural network, one visible layer that receives the input, and up to several hidden layers. The layers are arranged such that the output values from the visible nodes is the input values of the visible nodes. The nodes can also have bias values, that shift the output value $h$ with a certain number, and the nodes in different layers can be connected in different ways.  An example of a neural network with two layers is shown in figure \ref{fig:neural_network}.
+The neurons are arranged in layers in the neural network, one visible layer that receives the input, and up to several hidden layers. The layers are arranged such that the output values from the visible nodes is the input values of the hidden nodes. The nodes can also have bias values, that shift the output value $h$ with a certain number, and the nodes in different layers can be connected in different ways.  An example of a neural network with two layers is shown in figure \ref{fig:neural_network}.
 
  \begin{figure} [H]
 	\centering
@@ -138,7 +138,7 @@ The neurons are arranged in layers in the neural network, one visible layer that
 The idea behind machine learning is that the weights $W_i$, that decides how much a node puts emphazis on a given input, can be changed, and thus change the system's response to the same input. We will explain with the example from earlier, with huskies and the wolves: first, the program are shown pictures of wolves and huskies, and it is told the correct answer. The weights $W_i$ are then updated such that when a husky is shown, the output "husky" is generated, and then "wolves" for pictures of wolves. After a sufficiently long training period, the program's weights are optimalized for recognizing wolves and huskies. When shown a picture, the program should then by itself be able to determine wheter it is a wolf or a husky that it sees. 
 
 \subsubsection{Restricted Boltzmann Machines} \label{sec:RBM}
-There are plenty of ways to put together a neural network, as one can modify the number of nodes and layers, the biases, and also which nodes that are allowed to communicate. In this project, we will be using the so-called Restricted Boltzmann Machine (RBM). It is a two-layer network. The reason why it is named "restrictive" is that there are no connections between nodes in the same layer, but every node in the previous layer is connected to all the nodes in the next layer. The RBM can learn to draw samples from a probability distribution, which is just what we want in our project. In addition, we want to use a Gaussian-Binary RBM (see figure \ref{fig:RBM}), where the hidden nodes have binary values, while the visible nodes of the particles can take continuous values, as they are the positions of the particles. 
+There are plenty of ways to put together a neural network, as one can modify the number of nodes and layers, the biases, and also which nodes that are allowed to communicate. In this project, we will be using the so-called Restricted Boltzmann Machine (RBM). It is a two-layer network. The reason why it is named "restrictive" is that there are no connections between nodes in the same layer, but every node in the previous layer is connected to all the nodes in the next layer. The RBM can learn to draw samples from a probability distribution, which is just what we want in our project. In addition, we want to use a Gaussian-Binary RBM (see figure \ref{fig:RBM}) where the hidden nodes have binary values, while the visible nodes of the particles can take continuous values, as they are the positions of the particles. 
 
 \begin{figure}
 \centering
@@ -188,16 +188,17 @@ There are plenty of ways to put together a neural network, as one can modify the
 \label{fig:RBM}
 \end{figure}
 
-The joint probability distribution is known from statistical mechanics,
+The joint probability distribution $F$ is known from statistical mechanics:
 \begin{equation}
 \label{eq:F_rbm}
 F(\boldsymbol{X},\boldsymbol{H})=\frac{1}{Z}e^{-\beta E(\boldsymbol{X},\boldsymbol{H})}
 \end{equation}
 where we set $\beta=1/kT=1$ and $Z$ is the partition function, which can be ignored since it will vanish anyway. 
 
-The system energy of a Gaussian-Binary RBM is given by \cite{Hinton} :
+The system energy of a Gaussian-Binary RBM is given by:
 \begin{equation}
 E(\boldsymbol{X},\boldsymbol{H})=\sum_{i=1}^{M}\frac{(X_i-a_i)^2}{2\sigma_i^2}-\sum_{j=1}^Nb_jH_j-\sum_{i,j=1}^{M,N}\frac{X_iW_{ij}H_j}{\sigma_i^2}
+ \quad \cite{Hinton}
 \end{equation}
  We then define the NQS wave function as $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, which has a general form of the probability distribution. In equation \ref{eq:wf_form} the form of the wave function is shown, when we have used that we have $M$ visible nodes and $N$ hidden nodes, and that the hidden nodes should take binary values. 
 
@@ -205,7 +206,7 @@ E(\boldsymbol{X},\boldsymbol{H})=\sum_{i=1}^{M}\frac{(X_i-a_i)^2}{2\sigma_i^2}-\
 \label{eq:wf_form}
 	\Psi = \frac{1}{Z} e^{\sum_i^M \frac{(X_i - a_i)^2}{2\sigma^2}} \prod_j^N (1+ e^{b_j + \sum_iM \frac{X_i W_{ij}}{\sigma^2}})
 \end{equation}
-See appendix C for derivation.
+See appendix \ref{sec:appendix_C} for derivation.
 
 \subsection{Energy calculation} \label{sec:RBM_energy_cal}
 We want to calculate the energy of the two-fermion system, given the wave function described in \ref{eq:wf_form}. As explained in \cite{Nordhagen}, the energy of the system is the expectation value of the Hamiltonian, but this is hard to compute directly. 
@@ -240,7 +241,7 @@ We know that the energy of a harmonic oscillator in one dimension is given by
 \end{equation}
 where $n$ is the principal quantum number.
 
-For a one-electron system in two dimensions the energy can be shown to take the value 
+For an one-electron system in two dimensions the energy can be shown to take the value 
 \begin{equation}
 H \ket{\phi_1} = E_1 \ket{\phi_1} = \omega(n_{x,1} + n_{y,1} + 1) \ket{\phi_1} \quad  \rightarrow E_1 = \omega(n_x + n_y + 1)
 	\label{eq:exact_E_1P1D}
@@ -250,7 +251,7 @@ where $n_x$ and $n_y$ are the principal quantum number for the $x$ and $y$ direc
 When calculating the energy of the two-electron system we then get the following
 
 \begin{equation}
-	H \ket{\phi_1 \phi_2} = \ket{H \phi_1 } \ket{\phi_2} + \ket{\phi_1} \ket{H \phi_2} = E_1 \ket{\phi_1 \phi_2} + E_2 \ket{\phi_1 \phi_2} 
+	H \ket{\phi_1 \phi_2} = \ket{H \phi_1 } \ket{\phi_2} + \ket{\phi_1} \ket{H \phi_2} = E_1 \ket{\phi_1 \phi_2} + E_2 \ket{\phi_1 \phi_2} = (E_1 + E_2) \ket{\phi_1 \phi_2}
 \end{equation}
 
 For the ground state $n_x = n_y = 0$, $E_1 = E_2 = \omega$ and therefore the ground state energy is simply 
@@ -260,30 +261,35 @@ For the ground state $n_x = n_y = 0$, $E_1 = E_2 = \omega$ and therefore the gro
 	E_1 + E_2 = 2\omega.
 \end{equation} 
 
-For the non-interacting case with $\omega=1$ it is known the ground state energy is 3 a.u. \cite{Taut}. 
+For the non-interacting case with $\omega=1.0$ it is known the ground state energy is 3 a.u. \cite{Taut}. 
 
 \subsection{Onebody density} \label{sec:onebody}
-A quantity that often is handy to calculate is the onebody density. The onebody density is the density of particles in the potential, and may give a better understanding of the placement of the particles than their positions. The onebody density $\rho_i$ with respect to a given particle $i$ is given by equation \ref{eq:onebody_density}, which can be solved by Monte Carlo integration, as described in \cite{Nordhagen}.    
+A quantity that often is handy to calculate is the onebody density. The onebody density is the density of particles in the potential, and may give a better understanding of the placement of the particles than their positions. The onebody density $\rho_i$ with respect to a given particle $i$ is given by equation \ref{eq:onebody_density}, which can be solved by Monte Carlo integration.
 
 \begin{equation}
 \label{eq:onebody_density}
 \rho_i(\boldsymbol{r})=\int_{-\infty}^{\infty}d\boldsymbol{r}_1\hdots d\boldsymbol{r}_{i-1}d\boldsymbol{r}_{i+1}\hdots d\boldsymbol{r}_N |\Psi(\boldsymbol{r}_1,\hdots \boldsymbol{r}_N)|^2.
 \end{equation}
 
+Numerically we solve this by dividing the area around a particle into bins. Thereafter we count the number of particles in each bin, and divid by the area to get the density. The area of bin $k$ is
+\begin{equation}
+A_k=\pi r_k^2-\pi r_{k-1}^2=2\pi r_kdr-\pi dr^2
+\end{equation}
+where $r_k$ is the outer radius of bin $k$ and $dr$ is the bin width. For a more thorughout explanation, see \cite{Nordhagen}.
+\par 
+\vspace{3mm}
 Apart from the fact that the one body density is a good visual representation of the positions of the particles, it is also a quantity that is often calculated experimentally. Therefore, it is simpler to compare computational simulations to  experimental results when having calculated the onebody density.
+\par 
+\vspace{3mm}
 
 Without interaction, the onebody density of particle $i$ is simply its wave function squared, which is known to be
 \begin{equation}
 \rho_i(\boldsymbol{r})=A^2e^{-\boldsymbol{r}_i^2}
 \end{equation}
-for a particle in the groundstate of a harmonic oscillator potential with $A$ as the normalization constant. Numerically we solve this by dividing the area around a particle into bins. Thereafter we count the number of particles in each bin, and divid by the area to get the density. The area of bin $k$ is
-\begin{equation}
-A_k=\pi r_k^2-\pi r_{k-1}^2=2\pi r_kdr-\pi dr^2
-\end{equation}
-where $r_k$ is the outer radius of bin $k$ and $dr$ is the bin width.
+for a particle in the groundstate of a harmonic oscillator potential with $A$ as the normalization constant.
 
 \subsection{Virial theorem} \label{sec:Virial_theorem}
-The virial theorem is an equation in mechanics that gives a relation between the time-averaged kinetic energy $\langle T \rangle$ and the potential forces acting on $N$ particles confined in a stable system. The theorem takes the following form:
+The virial theorem is an equation in mechanics that gives a relation between the time-averaged kinetic energy $\langle T \rangle$ and the forces acting on $N$ particles confined in a stable system. The theorem takes the following form:
 
 \begin{equation}
 \langle T \rangle = - \frac{1}{2} \sum_{i=0}^N \langle \boldsymbol{F_i} \cdot \boldsymbol{r_i} \rangle 
@@ -313,10 +319,11 @@ However, the true value $x$ is rarely known. When $x$ is not known, it is thus i
 
 \begin{equation}
 \label{eq:standard_dev}
-\sigma_{\theta} =  \sqrt{\frac{1}{n-1} \sum_{k=1}^n (x_i - \langle x \rangle)^2}
+\sigma =  \sqrt{\frac{1}{n-1} \sum_{k=1}^n (x_i - \langle x \rangle)^2}
 \end{equation}
 
-When giving the uncertainty, one writes $x_i \pm \sigma$, where $\sigma$ is so that $\approx 68 \%$ of the measured values lies within the interval $\pm \sigma$. 
+When giving the uncertainty, one writes $x_i \pm \sigma$, where $\sigma$ is so that $\approx 68 \%$ of the measured values lies within the interval $\pm \sigma$. \par 
+\vspace{3mm}
 
 There are different kinds of sources of error when conducting computer experiments. Systematic errors originate from faults in the theory used in the experiment, and this might give consistently wrong results. Systematic errors are hard to handle, as one might get seemingly good looking results. One way to avoid systematic results are to benchmark the code with either experimental results, or with other's computer simulation results. \par 
 \vspace{3mm}
@@ -385,19 +392,19 @@ This way, the algorithm will over many iterations move the particles towards the
 
 
 \subsubsection{Metropolis-Hastings} \label{sec:Metropolis-Hastings}
-The Metropolis-Hastings algorithm, also known as importance sampling, have a more refined approach to choosing new positions and accepting them, compared to the brute force method. Instead of proposing the new position at random, the Metropolis-Hastings algorithm considers the quantum force F, given by equation \ref{eq:drift_force}, which says something about which direction the particle is pushed in. 
+The Metropolis-Hastings algorithm, also known as importance sampling, have a more refined approach to choosing new positions and accepting them, compared to the brute force method. Instead of proposing the new position at random, the Metropolis-Hastings algorithm considers the quantum force, or drift force, $\boldsymbol{F}$, given by equation \ref{eq:drift_force}, which says something about which direction the particle is pushed in. 
 
 \begin{equation}
 \label{eq:drift_force}
 \boldsymbol{F}(\boldsymbol{R}) = \frac{2 \nabla \psi_T(\boldsymbol{R})}{\psi_T(\boldsymbol{R})}
 \end{equation}
-The equation that describes the motion of a particle pushed around by the drift force $F$, is called the Langevin equation. The Langevin equation can be derived from the Fokker-Planch equation, which describes the time-evolution of the probability density function. The Langevin equation can be solved using the Euler method. The result, presented in equation \ref{eq:hastings_newpos} , describes how the Metropolis-Hastings algorithm chooses a new position for the random particle:
+The equation that describes the motion of a particle pushed around by the drift force $\boldsymbol{F}$, is called the Langevin equation. The Langevin equation can be derived from the Fokker-Planch equation, which describes the time-evolution of the probability density function. The Langevin equation can be solved using the Euler method. The result, presented in equation \ref{eq:hastings_newpos} , describes how the Metropolis-Hastings algorithm chooses a new position for the random particle:
 
 \begin{equation}
 \label{eq:hastings_newpos}
 R_{new} = R + DF(R)\Delta t + \xi\sqrt{\Delta t}
 \end{equation}
-where $D=\frac{1}{2}$ is the diffusion constant and $\Delta t$ is the timestep, that decides how long steps the method should take for each move. This is a much more educated guess compared to the brute force algorithm. 
+where $D=\frac{1}{2}$ is the diffusion constant and $\Delta t$ is the timestep, that decides how long steps the method should take for each move. This is a much more educated pick of movement compared to the brute force algorithm. 
 \par 
 \vspace{3mm}
 When regaring the transition probabilities, the Metropolis-Hastings algoritm does not go the easy way with $T_{i\rightarrow j} = T_{j\rightarrow i}$.  Instead it uses that the transition probabilities are given as the Green's function, also found using the Fokker-Planch equation:
@@ -421,9 +428,9 @@ One thing that is worth to note with the brute force and the Metropolis-Hastings
 
 
 \subsection{Gibbs sampling}
-As an alternative to the Metropolis algorithm, one can use the Gibbs sampling method. In both the brute force method and Metropolis-Hastings, one has to accound for that proposed particle moves can be rejected, and this "wastes" one Monte Carlo cycle with doing several flops, when no change is inflicted on the system. \par 
+As an alternative to the Metropolis algorithm, one can use the Gibbs sampling method. In both the brute force method and Metropolis-Hastings, one has to accound for that proposed particle moves can be rejected. This "wastes" one Monte Carlo cycle  and several flops, and no change is inflicted on the system. \par 
 \vspace{3mm}
-The Gibbs sampling algorithm differs from the Metropolis in several ways. In section \ref{sec:RBM} we wrote that we chose the trial wave function $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, where $F$ is defined in equation \ref{eq:F_rbm}. In Gibbs sampling, we instead use the trial wave function $\Psi_T = \sqrt{F}$. 
+The Gibbs sampling algorithm differs from the Metropolis in several ways. In section \ref{sec:RBM} we wrote that we chose the trial wave function $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, where $F$ is the joint probability distribution defined in equation \ref{eq:F_rbm}. In Gibbs sampling, we instead use the trial wave function $\Psi_T = \sqrt{F}$. 
 \par 
 \vspace{3mm}
 Furthermore, instead of updating only the visible nodes, as is done in Metropolis, the Gibbs sampling algorithm is a two-step sampling process where first a new position is chosen, and then one of the hidden nodes are updated. The positions are sampled from a Gaussian probability distribution, shown in equation \ref{eq:gibbs_xsampling}, while the probability for sampling $h=1$ is shown in equation \ref{eq:gibbs_hsampling}.
@@ -438,6 +445,8 @@ P(\boldsymbol{X} | \boldsymbol{h}) = \mathcal{N}(\boldsymbol{X}; \boldsymbol{a} 
 P(H_j = 1 | \boldsymbol{X}) = \frac{1}{ 1 + e^{- b_j - \frac{\boldsymbol{X}^T \boldsymbol{W_{cols,j}} }{\sigma^2}}}
 \end{equation}
 
+As explained earlier, $\boldsymbol{X}$ are the positions of the particles, equal to the visible nodes, while $\boldsymbol{h}$ are the hidden nodes. $\boldsymbol{a}$ and $\boldsymbol{b}$ are the visible and hidden biases, and $\boldsymbol{W}$ are the weights on the nodes. The value $\sigma$ controls the width of the sampling distribution for the positions.\par 
+\vspace{3mm} 
 When we say that the visible and hidden nodes here are "sampled", we mean that they are drawn from the probability distribution, and then automatically accepted. This is different from Metropolis, and should mean that the Gibbs sampling method converges faster than both brute force and Metropolis-Hansings, as no Monte Carlo cycles are lost on the move not being accepted. \par 
 \vspace{3mm}
 As we use a new trial wave function in Gibbs sampling, the expression for the local energy changes. The expression for the local energy using the Gibbs trial wave function is calculated in appendix \ref{sec:appendix_B}.
@@ -452,7 +461,7 @@ where the gradient of the local energy with respect to parameter $\alpha_i$ is
 \begin{equation}
 d\alpha_i=\frac{\partial\langle E_L\rangle}{\partial \alpha_i}=2\bigg(\Big\langle E_L\frac{1}{\Psi}\frac{\partial\Psi}{\partial\alpha_i}\Big\rangle-\Big\langle E_L\Big\rangle\Big\langle\frac{1}{\Psi}\frac{\partial\Psi}{\partial\alpha_i}\Big\rangle\bigg)
 \end{equation}
-where $\eta$ is the learning rate. We need to do this for all the parameters, and for our purposes it is convenient to vectorize the gradient such that $d\boldsymbol{a}$ and $d\boldsymbol{b}$ are vectors and $d\boldsymbol{W}$ is a matrix. The gradients to implement are
+where $\eta$ is the learning rate and $\alpha_i^+$ is the new value of $\alpha_i$. We need to do this for all the variational parameters, which are $\boldsymbol{W}$, $\boldsymbol{a}$ and $\boldsymbol{b}$. For our purposes it is convenient to vectorize the gradient such that $d\boldsymbol{a}$ and $d\boldsymbol{b}$ are vectors and $d\boldsymbol{W}$ is a matrix. The gradients to implement are
 \begin{equation}
 d\boldsymbol{a}=\frac{1}{\Psi}\frac{\partial\Psi}{\partial\boldsymbol{a}}=\frac{\boldsymbol{X}-\boldsymbol{a}}{\sigma^2}
 \end{equation}
@@ -468,7 +477,7 @@ which means that we need to calculate $d\boldsymbol{b}$ and $d\boldsymbol{W}$ el
 \end{equation}
 
 \subsection{Blocking method} \label{sec:Blocking}
-In section \ref{sec:error_estimation}, we described the need of a proper estimation of the uncertainty in computational simulations, where the covariance was included in the calculation od $\sigma$. A quick and easy way to get a proper estimate of the uncertainty, is by using the blocking method. If we have a data set ${x_1, x_2, ..., x_n }$ with $n$ data points, where the mean value is $\langle x \rangle$. We can calculate the standard deviation using equation \ref{eq:standard_dev}, however, as explained before, this does not include the covariance, as the data points ${x_1, x_2, ..., x_n }$  may be correlated.  A way to get around this, it by transforming the data set such that
+In section \ref{sec:error_estimation}, we described the need of a proper estimation of the uncertainty in computational simulations, where the covariance was included in the calculation of $\sigma$. A quick and easy way to get a proper estimate of the uncertainty, is by using the blocking method. If we have a data set ${x_1, x_2, ..., x_n }$ with $n$ data points, where the mean value is $\langle x \rangle$. We can calculate the standard deviation using equation \ref{eq:standard_dev}, however, as explained before, this does not include the covariance, as the data points ${x_1, x_2, ..., x_n }$  may be correlated.  A way to get around this, it by transforming the data set such that
 
 \begin{equation}
 x'_i = \frac{1}{2}(x_{2i} + x_{2i+1})
@@ -483,7 +492,7 @@ The number of points in the transformed data set is now $n'$, and every $x'_i$ c
 
 We now increase the block size, such that there are even more of the original data point in each block, and calculate the total standard deviation from equation \ref{eq:total_std_dev} again. If we continue doing this and plot the resulting estimates of $\hat{\sigma}$, we will observe that it first increases, until it flats out. When we have reached this plateu, we know that the data blocks $x'_i$ are no longer correlated. The covariance is then 0, and we have thus obtained a proper estimation of the uncertainty. 
 
-In this project we are using the blocking code produced by Marius Jonsson, see \cite{Jonsson}
+In this project we are using the blocking code produced by Marius Jonsson, see \cite{Jonsson}.
 
 \section{Code} \label{sec:Code}
 In this section, we give an overview of the structure and implementation of our code, to make it easier for potential users to familiarize themselves with the code. 
@@ -564,7 +573,7 @@ for iter iterations:
 Firstly, we calculate the energy of one particle in one dimension. Secondly, we extend the system to two interacting electrons in a two-dimensional harmonic oscillator. Furthermore the onebody densities with and without interaction are presented and finally we study how the total energy is distributed between kinetic energy and potential energy for various harmonic oscillator frequencies. 
 
 \subsection{Energy calculations, without interaction}
-We first study the energy of a non-interacting electron in one dimension, and in figure \ref{fig:energy1P1D} we compare the energies produced by the three methods as a function of number of iterations. 
+We first study the energy of a non-interacting electron in one dimension, and in figure \ref{fig:energy1P1D} we compare the energies produced by the three VMC sampling methods as a function of number of iterations. 
  \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_comparison.png}
@@ -681,11 +690,11 @@ In table \ref{tab:average_energies} average kinetic, interaction and potential e
 
 
 \section{Discussion} \label{sec:Discussion}
-Initially we calculated the energy for one particle in one dimension to ensure that the method worked properly. Using equation \ref{eq:HO_energy} to calculate the ground state energy, we get that the energy for one particle in one dimension with $\omega=1$ should be $\frac{1}{2}$. The result of the calculation with the machine learning program with different sampling algorithms can be seen in figure \ref{fig:energy1P1D}. We see that both the  brute-force Metropolis and Metropolis-Hasting converges towards the analytical energy. Additionally, from table \ref{tab:energies1P1D}, we see that the variance decreases when the two methods converges towards $\frac{1}{2}$, as we increases the number of gradient descent cycles used in the minimalization. This is a good indication that our methods are approaching the correct value, even if we did not have an analytical anwer to compare them to. The two methods yield nearly identical results, while we would expect Metropolis-Hastings to be a better method, due to the more advanced sampling routine presented in section \ref{sec:Metropolis-Hastings}. However, the difference might be to small to give an impact to this project, as we use few particles. We used a two-power number of Monte Carlo cycles for properly blocking. 
+Initially we calculated the energy for one particle in one dimension to ensure that the method worked properly. Using equation \ref{eq:HO_energy} to calculate the ground state energy, we get that the energy for one particle in one dimension with $\omega=1.0$ should be $\frac{1}{2}$. The result of the calculation with the machine learning program with different sampling algorithms can be seen in figure \ref{fig:energy1P1D}. We see that both the  brute-force Metropolis and Metropolis-Hasting converges towards the analytical energy. Additionally, from table \ref{tab:energies1P1D}, we see that the variance decreases when the two methods converges towards $\frac{1}{2}$, as we increases the number of gradient descent cycles used in the minimalization. This is a good indication that our methods are approaching the correct value, even if we did not have an analytical anwer to compare them to. The two methods yield nearly identical results, while we would expect Metropolis-Hastings to be a better method, due to the more advanced sampling routine presented in section \ref{sec:Metropolis-Hastings}. However, the difference might be to small to give an impact to this project, as we use few particles. Furthermore, we used a two-power number of Monte Carlo cycles for blocking. 
 \par 
 \vspace{3mm}
 
-From figure \ref{fig:energy1P1D}, one can see that Gibbs sampling converges to a higher energy than the analytical value. The reason for that is probably related to how we define the wave function. For brute force and Metropolis-Hastings, we use the probability distribution defined in $\ref{eq:F_rbm}$ to represent the wave function, while the wave function used in Gibbs sampling is the square root of the probability distribution. It seems this representation of the wave function is farther away from the true wave function, and thus Gibbs converges towards a higher energy. This is in accordance with the variational principle; a worse guess on trial wave function will yield a upper bound estimate of the ground state energy $E$ that is larger than the true ground state energy $E_0$.
+From figure \ref{fig:energy1P1D}, one can see that Gibbs sampling converges to a higher energy than the analytical value. The reason for that is probably related to how we define the wave function. For brute force and Metropolis-Hastings, we use the probability distribution defined in equation $\ref{eq:F_rbm}$ to represent the wave function, while the wave function used in Gibbs sampling is the square root of the probability distribution. It seems this representation of the wave function is further away from the true wave function, and thus Gibbs converges towards a higher energy. This is in accordance with the variational principle; a worse guess on trial wave function will yield a upper bound estimate of the ground state energy $E$ that is larger than the true ground state energy $E_0$.
 
 \par 
 \vspace{3mm}
@@ -705,7 +714,7 @@ Furthermore, we observed the effects of changing the learning rate $\eta$ used i
 The results for changing the learning rate and number of hidden nodes discussed above are run for the interacting case with the brute force Metropolis algorithm. As shown in figure \ref{fig:energy_compare_eta_2P} and \ref{fig:}, the interacting case yielded the same results. \textcolor{red}{$\rightarrow$ Need to extend this}
 \par
 \vspace{3mm}
-The onebody density calculated for two particles in two dimensions with the Metropolis-Hastings method is plotted in figure \ref{fig:OB}. We are able to reproduce the analytical onebody density without interaction. When interaction is introduced, the distribution of particles becomes broader and lower. This is explained by the two electrons now being subject to a repulsive force which pushed them apart, so that the average distance between the electrons increases. This creates a broader onebody density distribution.
+The onebody density calculated for two particles in two dimensions with the Metropolis-Hastings method is plotted in figure \ref{fig:OB}. We are able to reproduce the analytical onebody density without interaction. When interaction is introduced, the distribution of particles becomes broader and lower. This is explained by the two electrons now being subject to a repulsive force which pushes them apart, so that the average distance between the electrons increases. This creates a broader onebody density distribution.
 
 We also see that the graphs are slightly noisy near origin, although we run for 1e9 Monte Carlo cycles. That is because the area we divide by is small, and we therefore need a very large number of cycles to get a statistical descent number of particles in this bin. 
 \par 
@@ -724,8 +733,7 @@ In the interaction case, both the harmonic oscillator potential and the Coulomb 
 Another concern regarding table \ref{tab:average_energies} is that the energies in the non-interacting case are not on the form $2 \omega$, as they should have been, accoring to equation \ref{eq:HO_energy_2omega}. This is likely due to the same unstability described above, which makes us unable to reproduce the virial theorem. 
 \par 
 \vspace{3mm}
-
-In this project, we have experimented with one and two particles in a system, with different harmonic oscillator potential strengths $\omega$, and observed the results with and without the Coulomb repulsion. Another experiment which is usually done is to increase the number of particles in the trap. In our case, however, this does not make sense. As explained in section \ref{sec:Presentation_of_potential}, we assume that the trial wave function used is such that it can be split in a symmetric spatial and an antisymmetric spin part. In other terms, then one electron is in the "spin-up"-state, while the other is in "spin-down". This configuration can only hold two particles. According to Pauli's principle, two identical fermions cannot be found in the same state, and this system thus only makes physical sense for a maximum of two particles. 
+ An experiment which is usually done in these kinds of project, and as we did in \cite{Nordhagen}, is to increase the number of particles in the trap. In this case, however, this does not make sense. As explained in section \ref{sec:Presentation_of_potential}, we assume that the trial wave function used is such that it can be split in a symmetric spatial and an antisymmetric spin part. In other terms, then one electron is in the "spin-up"-state, while the other is in "spin-down". This configuration can only hold two particles. According to Pauli's principle, two identical fermions cannot be found in the same state, and this system thus only makes physical sense for a maximum of two particles. 
 
 \section{Conclusion} \label{sec:Conclusion} 
 In this project, we have found that by using principles of machine learning in combination with Variational Monte Carlo, we are able to find good upper bound estimates of the ground state energy in a system consisting of two electrons in a harmonic oscillator. The brute force Metropolis and Metropolis-Hastings yields nearly identical results, while Gibbs sampling gives higher estimates of $E_0$, due to a different choice in trial wave function. 
@@ -746,7 +754,7 @@ We are solely able to reproduce the virial theorem for $\omega=1.0$, as the code
 
 \subsection{Local energy}
 
-The energy can be calculated by introducing a local energy, where the acerage local energy goes to the true energy with a sufficient amount of samples, as explained in \ref{sec:Theory}. This local energy can be splitted up in a kinetic part, a part from the harmonic oscillator potential and a interacting part,
+The energy can be calculated by introducing a local energy, where the acerage local energy goes to the true energy with a sufficient amount of samples, as explained in section \ref{sec:Theory}. This local energy can be splitted up in a kinetic part, a part from the harmonic oscillator potential and a interacting part,
 \begin{equation}
 E_L=\sum_{k=1}^{M}(E_{\text{KIN},k} + E_{\text{EXT},k})+E_{\text{POT}}.
 \end{equation}
@@ -839,7 +847,7 @@ When calculating the gradients for $\boldsymbol{W}$, $\boldsymbol{a}$ and $\bold
 
 We thus get a factor $2$ difference in the gradients that are used to uptade the weights $\boldsymbol{W}$, $\boldsymbol{a}$ and $\boldsymbol{b}$, which we must remember to add when running Gibbs sampling.
 
-\section{Appendix C - Derivation of the wave function}
+\section{Appendix C - Derivation of the wave function} \label{sec:appendix_C}
 We have seen that the probability of having a set of positions $\boldsymbol{X}$ with a set of hidden nodes $\boldsymbol{h}$ is given by
 \begin{equation}
 F(\boldsymbol{X},\boldsymbol{H})=\frac{1}{Z}e^{-\beta E(\boldsymbol{X},\boldsymbol{H})}
