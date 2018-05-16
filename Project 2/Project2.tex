@@ -56,7 +56,7 @@
 This project aims to simulate a quantum dot by using a restricted Boltzmann machine (RBM) in combination with Variational Monte Carlo (VMC), with either Metropolis or Gibbs sampling. Using a form of the wave function given by the RBM, we find the optimal ground state wave function with the gradient descent method, and calculate an upper bound limit of the ground state energy and onebody density for an one electron system, as well as for two electrons with and without Coulomb interaction. Our results are benchmarked with analytical expectations. 
 \par 
 
-Using one electron without interaction, the Metropolis algorithm reproduces the benchmarks. For both the interacting and non-interacting case, the Metropolis algorithm yields a lower upper bound estimate of the ground state energy, compared to Gibbs. The onebody density (OB) reproduces analytical calculations. The OB distribution changes when introducing interaction, which is as expected. We are unable to reproduce the virial theorem for different potential strengths.
+Using one electron without interaction, the Metropolis algorithm reproduces the benchmarks. For both the interacting and non-interacting case, the Metropolis algorithm yields a lower upper bound estimate of the ground state energy, compared to Gibbs. Gibbs could be improved by varying the width of the sampling distribution. The onebody density (OB) reproduces analytical calculations. The OB distribution changes when introducing interaction, which is as expected. We are unable to reproduce the virial theorem for different potential strengths.
 \end{abstract}
 
 
@@ -645,14 +645,14 @@ Again we play with the number of nodes and the learning rate
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_compare_nodes_2P.png}
  	\caption{Energy as a function of number of iterations up to 1000 iterations for two particles in two dimensions. Brute-Force Metropolis was used for N$=1$ (blue line), N$=2$ (orange line), N$=4$ (green line) and N$=10$ (red line). All the samplings were conducted with MC=$2^{27}=134\,217\,728$, $\eta=0.01$, $dx=1.0$, $\omega=1.0$ and $\sigma=1.0$.}
- 	\label{fig:fig:energy_compare_nodes_2P}
+ 	\label{fig:energy_compare_nodes_2P}
  \end{figure}
 
  \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_compare_eta_2P.png}
  	\caption{Energy as a function of number of iterations up to 1000 iterations for two particles in two dimensions. Brute-Force Metropolis was used for $\eta=0.01$ (blue line), 0.05 (orange line), 0.1 (green line) and $0.5$ (red line). All the samplings were conducted with MC=$2^{25}=33\,554\,432$, two hidden nodes, $dx=1.0$, $\omega=1.0$ and $\sigma=1.0$.}
- 	\label{fig:fig:energy_compare_eta_2P}
+ 	\label{fig:energy_compare_eta_2P}
  \end{figure}
 
 \subsection{Gibbs sampling}
@@ -662,14 +662,14 @@ Again we play with the number of nodes and the learning rate
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_compare_nodes_2P_gibbs.png}
  	\caption{Energy as a function of number of iterations up to 1000 iterations for two particles in two dimensions. Gibbs sampling was used for N$=1$ (blue line), N$=2$ (orange line), N$=4$ (green line) and N$=10$ (red line). All the samplings were conducted with MC=$2^{20}=1\,048\,576$, $\eta=0.01$, $dx=1.0$, $\omega=1.0$ and $\sigma=1.0$.}
- 	\label{fig:fig:energy_compare_nodes_2P_gibbs}
+ 	\label{fig:energy_compare_nodes_2P_gibbs}
  \end{figure}
 
   \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_compare_eta_2P_gibbs.png}
  	\caption{Energy as a function of number of iterations up to 1000 iterations for two particles in two dimensions. Gibbs sampling was used for $\eta=0.01$ (blue line), 0.05 (orange line), 0.1 (green line) and $0.5$ (red line). All the samplings were conducted with MC=$2^{20}=1\,048\,576$, two hidden nodes, $dx=1.0$, $\omega=1.0$ and $\sigma=1.0$.}
- 	\label{fig:fig:energy_compare_eta_2P_gibbs}
+ 	\label{fig:energy_compare_eta_2P_gibbs}
  \end{figure}
 
 \subsubsection{Changing the sampling width $\sigma$ used in Gibbs}
@@ -677,7 +677,7 @@ Again we play with the number of nodes and the learning rate
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_compare_sigma_2P_gibbs.png}
  	\caption{Energy as a function of number of iterations up to 1000 iterations for two particles in two dimensions. Gibbs sampling was used for $\sigma=0.5$ (blue line), 0.8 (orange line), 1.0 (green line), $1.2$ (red line) and $1.5$ (purple line). All the samplings were conducted with MC=$2^{20}=1\,048\,576$, two hidden nodes, $dx=1.0$, $\eta=0.5$ and $\omega=1.0$.}
- 	\label{fig:fig:energy_compare_sigma_2P_gibbs}
+ 	\label{fig:energy_compare_sigma_2P_gibbs}
  \end{figure}
 
 \subsection{Onebody density}
@@ -720,7 +720,7 @@ Initially we calculated the energy for one particle in one dimension to ensure t
 \par 
 \vspace{3mm}
 
-From figure \ref{fig:energy1P1D}, one can see that Gibbs sampling converges to a higher energy than the analytical value. The reason for that is probably related to how we define the wave function. For brute force and Metropolis-Hastings, we use the probability distribution defined in equation $\ref{eq:F_rbm}$ to represent the wave function, while the wave function used in Gibbs sampling is the square root of the probability distribution. It seems this representation of the wave function is further away from the true wave function, and thus Gibbs converges towards a higher energy. This is in accordance with the variational principle; a worse guess on trial wave function will yield a upper bound estimate of the ground state energy $E$ that is larger than the true ground state energy $E_0$.
+From figure \ref{fig:energy1P1D}, one can see that Gibbs sampling converges to a higher energy than the analytical value. The reason for that is probably related to how we define the wave function. For brute force and Metropolis-Hastings, we use the probability distribution defined in equation $\ref{eq:F_rbm}$ to represent the wave function, while the wave function used in Gibbs sampling is the square root of the probability distribution. It seems that the paramteres chosen for this wave function by the machine learning program does not yield the ground state wave function, and thus the energy calculated is higher. This is in accordance with the variational principle; a worse guess on trial wave function will yield a upper bound estimate of the ground state energy $E$ that is larger than the true ground state energy $E_0$.
 
 \par 
 \vspace{3mm}
@@ -728,17 +728,20 @@ For the case where the Coulomb repulsion is turned on, the results of the conver
 
 \par 
 \vspace{3mm}
-We varied the number of hidden nodes $N$ used in the machine learning program, as seen in figure \ref{fig:compare_nodes}. We see that varying the number of hidden nodes changes the rapidness of the method's convergence. For few hidden nodes, the convergence of the energy seems to happen slower, while for many hidden nodes, it descends steeply towards the analytical energy. This can maybe be explained by when there are more free parameters that can be varied, the optimalization occurs faster. \par 
-We also see that we get better estimates of the ground state energy when using fewer hidden nodes. This is as expected, since more hidden nodes means more variables that has to be updated for each cycle, and thus a less precise answer. However, this is one of the drawback pf machine learning; there are many choices of different numbers of paramteres, and it is difficult to choose these parameters such that one gets optimal results.
+We varied the number of hidden nodes $N$ used in the machine learning program, as seen in figure \ref{fig:compare_nodes}, \ref{fig:energy_compare_nodes_2P} and \ref{fig:energy_compare_nodes_2P_gibbs} for without and with interaction with brute force, and with interaction with Gibbs respectively. We see generally that varying the number of hidden nodes changes the rapidness of the method's convergence. For few hidden nodes, the convergence of the energy seems to happen at a slower rate, while for many hidden nodes, it descends steeply towards the analytical energy. This can maybe be explained by when there are more free parameters that can be varied, the optimalization occurs faster. \par 
+We also see in figure \ref{fig:compare_nodes} and \ref{fig:energy_compare_nodes_2P_gibbs} that we get better estimates of the ground state energy when using fewer hidden nodes. This ican be explained, since more hidden nodes means more variables that has to be updated for each cycle, and thus a less precise answer. However, this is not the case in figure \ref{fig:energy_compare_nodes_2P}, where $N=10$ gives the lower estimate of the energy. This is probabliy due to the fact that the runs in this plot with different numbers of hidden nodes are forced to start at the same place, while we see that this is not the case in \ref{fig:compare_nodes} and \ref{fig:energy_compare_nodes_2P_gibbs}. 
 \par 
 \vspace{3mm}
 
-Furthermore, we observed the effects of changing the learning rate $\eta$ used in the gradient descent method. The results are shown in figure \ref{fig:compare_etas}. We see that the convergence rapidness was heavily dependent on the learning rate, where a low learing rate gave a slow convergence. This is what we expected, as the learning rate defines how much the weights $W$, $a$ and $b$ are updated in each gradient descent iteration, that is, how large steps the method takes for each iteration. Larger steps will lead to the method aproaching the convergence more rapidly. As seen in this figure, if we limit the number of gradient descent iterations, then the choice of $\eta=0.01$ has not converged by the end of 100 minimalization iterations. A good choice of $\eta$ is thus necessary for the method to work optimally.
+Furthermore, we observed the effects of changing the learning rate $\eta$ used in the gradient descent method. The results are shown in figure \ref{fig:compare_etas}, \ref{fig:energy_compare_eta_2P} and \ref{fig:energy_compare_eta_2P_gibbs}. We see that the convergence rapidness is heavily dependent on the learning rate, where a low learing rate gives a slow convergence. This is what we expected, as the learning rate defines how much the weights $W$, $a$ and $b$ are updated in each gradient descent iteration, that is, how large steps the method takes for each iteration. Larger steps will lead to the method aproaching the convergence more rapidly. As seen in this figure, if we limit the number of gradient descent iterations, then the choice of $\eta=0.01$ has not converged by the end of 100 minimalization iterations. A good choice of $\eta$ is thus necessary for the method to work optimally.
 \par  
 \vspace{3mm}
 
-The results for changing the learning rate and number of hidden nodes discussed above are run for the interacting case with the brute force Metropolis algorithm. As shown in figure \ref{fig:energy_compare_eta_2P} and \ref{fig:}, the interacting case yielded the same results. \textcolor{red}{$\rightarrow$ Need to extend this}
+In figure \ref{fig:energy_compare_sigma_2P_gibbs}, we show the effects of changing the parameter $\sigma$ in the Gibbs sampling method, where $\sigma$ is the parameter deciding the width of the positions samping distribution, as seen in equation \ref{eq:gibbs_xsampling}. We can see that the energy the method converges towards is heavily dependent of the choice of $\sigma$. For $\sigma=1.0$, as is the default choice, we get convergence to a energy above the ground energy, while the choice of $\sigma=0.8$ gives converge towards 3 a.u., which is known to be the analytical ground state energy of the system. Since small changes in $\sigma$ gives vastly different results, it should probabliy have been implemented as a minimization parameter, so that the user does not have to vari it by hand in order to get optimal results
 \par
+\vspace{3mm}
+Generally, from varying both the learning rate $\eta$, the number of hidden nodes $N$, and also the sampling width $\sigma$ used in the Gibbs algorithm, we see that the quality of the results we obtain is very dependent on the correct choices of these parameters. This is a drawback with this machine learning program; the user cannot necessarily depend on the program to give correct output on the first run, and if it seems the method gives the wrong output, it might simply be due to not optimal input parameters. Regarding $\sigma$, this can be solved, as explained above, by implementing it as a parameter that is optimized through the gradient decent method. Furthermore, one could have implemented tests to check what learning rate and number of hidden nodes that converges to energies closest to the known ground state, but this is not helpful if there is no analytical solution. In general, the user should be aware of this drwaback with machine learning, and also be smart when chosing parameters to run the program with. 
+\par 
 \vspace{3mm}
 The onebody density calculated for two particles in two dimensions with the Metropolis-Hastings method is plotted in figure \ref{fig:OB}. We are able to reproduce the analytical onebody density without interaction. When interaction is introduced, the distribution of particles becomes broader and lower. This is explained by the two electrons now being subject to a repulsive force which pushes them apart, so that the average distance between the electrons increases. This creates a broader onebody density distribution.
 
