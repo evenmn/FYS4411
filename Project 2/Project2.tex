@@ -53,10 +53,10 @@
 \end{itemize}
 
 \begin{abstract}
-This project aims to simulate a quantum dot by using a restricted Boltzmann machine (RBM) in combination with Variational Monte Carlo (VMC), with either Metropolis or Gibbs sampling. Using a form of the wave function given by the RBM, we find the optimal ground state wave function with the gradient descent method, and calculate an upper bound limit of the ground state energy and onebody density for an one electron system, as well as for two electrons with and without Coulomb interaction. Our results are benchmarked with analytical expectations. 
+This project aims to simulate a quantum dot by using a restricted Boltzmann machine (RBM) in combination with variational Monte Carlo (VMC), with either Metropolis or Gibbs sampling. Using a form of the wave function given by the RBM, we find the optimal ground state wave function with the gradient descent method, and calculate an upper bound limit of the ground state energy and onebody density for an one electron system, as well as for two electrons with and without Coulomb interaction. Our results are benchmarked with analytical expectations. 
 \par 
 
-Using one electron without interaction, the Metropolis algorithm reproduces the benchmarks. For both the interacting and non-interacting case, the Metropolis algorithm yields a lower upper bound estimate of the ground state energy, compared to Gibbs. Gibbs could be improved by varying the width of the sampling distribution. The simulated results are heavily dependent on choices of running parmameters. The onebody density (OB) reproduces analytical calculations. The OB distribution changes when introducing interaction, which is as expected. We are unable to reproduce the virial theorem for different potential strengths.
+Using one electron without interaction, the Metropolis algorithm reproduces the benchmarks. For both the interacting and non-interacting case, the Metropolis algorithm yields a lower upper bound estimate of the ground state energy, compared to Gibbs. Gibbs could be improved by varying the width of the sampling distribution. The simulated results are heavily dependent on choices of running parameters. The onebody density (OB) reproduces analytical calculations. The OB distribution changes when introducing interaction, which is as expected. We are unable to reproduce the virial theorem for different potential strengths.
 \end{abstract}
 
 
@@ -100,16 +100,16 @@ Since electrons are fermions, we need an antisymmetric wave function under excha
 \end{vmatrix}
 =\Phi_1(\boldsymbol{r}_1)\Phi_2(\boldsymbol{r}_2)-\Phi_2(\boldsymbol{r}_1)\Phi_1(\boldsymbol{r}_2)
 \end{equation}
-where $\Phi_i(\boldsymbol{r})$ is the single particle wave function (SPF) of state $i$. This contains a spatial part and a spin part, and we assume that it can be splitted up such that the spin part takes the antisymmetry property and does not affect the energy. Therefore we only need a symmetric spatial trial wave function to calculate estimates of the energies.
+where $\Phi_i(\boldsymbol{r})$ is the single particle wave function (SPF) of state $i$. This contains a spatial part and a spin part, and we assume that it can be split up such that the spin part takes the antisymmetry property and does not affect the energy. Therefore we only need a symmetric spatial trial wave function to calculate estimates of the energies.
 
 \subsection{Solving this with machine learning}
-When solving a system of particles as the one described above solely with Variational Monte Carlo, as done in \cite{Nordhagen}, we would need a good ansatz for the wave function. In this anzats, we would have to use our physical intuition to create the form of a wave function with different variational parameters, and then let it be up to the computer to find the optimal parameters through a minimization method. However, this method is only as good as the physical intuition; if the form of the wave function is unrealistic, the results will be the same.
+When solving a system of particles as the one described above solely with variational Monte Carlo, as done in \cite{Nordhagen}, we would need a good ansatz for the wave function. In this ansatz, we would have to use our physical intuition to create the form of a wave function with different variational parameters, and then let it be up to the computer to find the optimal parameters through a minimization method. However, this method is only as good as the physical intuition; if the form of the wave function is unrealistic, the results will be the same.
 \par 
 \vspace{3mm}
 This challenge can be mended by using machine learning. There are several different types of machine learning systems, and the one we will present and utilize in this project has the ability to learn to sample from a probability distribution. This is perfect for quantum mechanical problems, as we know from quantum mechanics the wave function $\Psi$ is nothing more than a probability density, giving that $\Psi^2$ is a probability distribution that says something about where a given particle most likely can be found. As we are solely interested in the energy of the two-fermion system, and not the exact wave function, the fact that the machine learning program does not explicitly give the wave function is therefore of no consequence. We still have to give some guidelines for the form of the probability distribution, but the machine learning program can sample from a larger variety of probability distributions compared to the form used in a simple VMC program.
 
 \subsubsection{Machine learning}
-With the goal of solving the quantum mechanical system presented in section \ref{sec:Presentation_of_potential} in mind, we should start by explaining what machine learning is. Machine learning is the idea that a computer can be trained to learn to yield certaint outputs, without directly being told exactly what to give. Examples on this is pattern recognizion, where the computer first is shown for example pictures of wolves and huskies. After training the computer on pictures where the computer sees huskies and wolves and is told the correct answer, it should after a sufficiently long training period, be able to recognize huskies and wolves by itself. 
+With the goal of solving the quantum mechanical system presented in section \ref{sec:Presentation_of_potential} in mind, we should start by explaining what machine learning is. Machine learning is the idea that a computer can be trained to learn to yield certain outputs, without directly being told exactly what to give. Examples on this is pattern recognizion, where the computer first is shown for example pictures of wolves and huskies. After training the computer on pictures where the computer sees huskies and wolves and is told the correct answer, it should after a sufficiently long training period, be able to recognize huskies and wolves by itself. 
 \par 
 \vspace{3mm}
 The example described above is what we call supervised learning, where the correct output answer is known during the training program. A machine learning program could also be unsupervised, where the correct answer is unknown, or based on reinforcement learning, where the the program learns by conducting trial-and-error experiments. 
@@ -117,7 +117,7 @@ The example described above is what we call supervised learning, where the corre
 \vspace{3mm}
 
 \subsubsection{Neural network}
-This sound amazing, and maybe even impossible. Therefore the question now is: how to program computers to learn, just like humans? The answer is, fittingly, that we should make the program run like the the human brain by implementing what is called a neural network. Inspired by neurons in the human brain, a neural network is a programmed network of variables, called nodes, that communicate in a given manner. Each node preforms a simple process: based on the input it receives, and how that input is weighted, it decides wheter or not to fire. The mathematical model of an example of a neural node was presented by McCulloch and Pitts in 1943 \cite{Marsland}, shown in figure \ref{fig:neuron}, where the input is marked $x_i$, the weights deciding how much the input should count is $W_i$, and the output from the node based on $x_i$ and $W_i$ is called h. 
+This sound amazing, and maybe even impossible. Therefore the question now is: how to program computers to learn, just like humans? The answer is, fittingly, that we should make the program run like the the human brain by implementing what is called a neural network. Inspired by neurons in the human brain, a neural network is a programmed network of variables, called nodes, that communicate in a given manner. Each node performs a simple process: based on the input it receives, and how that input is weighted, it decides whether or not to fire. The mathematical model of an example of a neural node was presented by McCulloch and Pitts in 1943 \cite{Marsland}, shown in figure \ref{fig:neuron}, where the input is marked $x_i$, the weights deciding how much the input should count is $W_i$, and the output from the node based on $x_i$ and $W_i$ is called h. 
 
  \begin{figure} [H]
  	\centering
@@ -126,7 +126,7 @@ This sound amazing, and maybe even impossible. Therefore the question now is: ho
  	\label{fig:neuron}
  \end{figure}
 
-The neurons are arranged in layers in the neural network, one visible layer that receives the input, and up to several hidden layers. The layers are arranged such that the output values from the visible nodes are the input values of the hidden nodes. The nodes can also have bias values, that shift the output value $h$ with a certain number, and the nodes in different layers can be connected in different ways.  An example of a neural network with two layers is shown in figure \ref{fig:neural_network}.
+The neurons are arranged in layers in the neural network, one visible layer that receives the input, and up to several hidden layers. The layers are arranged such that the output values from the visible nodes are the input values of the hidden nodes. The nodes can also have bias values, that shift the output value $h$ with a certain number, and the nodes in different layers can be connected in different ways.  \iffalse An example of a neural network with two layers is shown in figure \ref{fig:neural_network}.
 
  \begin{figure} [H]
 	\centering
@@ -134,11 +134,12 @@ The neurons are arranged in layers in the neural network, one visible layer that
 	\caption{An example of a neural network with one visible and one output layer of nodes, and with bias $-1$ on the hidden nodes. Image reproduced from \cite{Marsland} }
 	\label{fig:neural_network}
 \end{figure}
+\fi
 
-The idea behind machine learning is that the weights $W_i$, that decide how much a node puts emphazis on a given input, can be changed, and thus change the system's response to the same input. We will explain with the example from earlier, with huskies and the wolves: first, the program is shown pictures of wolves and huskies, and it is told the correct answer. The weights $W_i$ are then updated such that when a husky is shown, the output "husky" is generated, and then "wolves" for pictures of wolves. After a sufficiently long training period, the program's weights are optimalized for recognizing wolves and huskies. When shown a picture, the program should then by itself be able to determine wheter it is a wolf or a husky that it sees. 
+The idea behind machine learning is that the weights $W_i$, that decide how much a node puts emphazis on a given input, can be changed, and thus change the system's response to the same input. We will explain with the example from earlier, with huskies and the wolves: first, the program is shown pictures of wolves and huskies, and it is told the correct answer. The weights $W_i$ are then updated such that when a husky is shown, the output "husky" is generated, and then "wolves" for pictures of wolves. After a sufficiently long training period, the program's weights are optimalized for recognizing wolves and huskies. When shown a picture, the program should then by itself be able to determine whether it is a wolf or a husky that it sees. 
 
 \subsubsection{Restricted Boltzmann Machines} \label{sec:RBM}
-There are plenty of ways to put together a neural network, as one can modify the number of nodes and layers, the biases, and also which nodes that are allowed to communicate. In this project, we will be using the so-called Restricted Boltzmann Machine (RBM). It is a two-layer network. The reason why it is named "restrictive" is that there are no connections between nodes in the same layer, but every node in the previous layer is connected to all the nodes in the next layer. The RBM can learn to draw samples from a probability distribution, which is just what we want in our project. In addition, we want to use a Gaussian-Binary RBM (see figure \ref{fig:RBM}) where the hidden nodes have binary values, while the visible nodes of the particles can take continuous values, as they are the positions of the particles. 
+There are plenty of ways to put together a neural network, as one can modify the number of nodes and layers, the biases, and also which nodes that are allowed to communicate. In this project, we will be using the so-called restricted Boltzmann machine (RBM). The reason why it is named "restrictive" is that there are no connections between nodes in the same layer, but every node in the previous layer is connected to all the nodes in the next layer. The RBM can learn to draw samples from a probability distribution, which is just what we want in our project. In addition, we want to use a Gaussian-Binary RBM (see figure \ref{fig:RBM}) where the hidden nodes have binary values, while the visible nodes of the particles can take continuous values, as they are the positions of the particles. 
 
 \begin{figure}
 \centering
@@ -206,7 +207,7 @@ E(\boldsymbol{X},\boldsymbol{H})=\sum_{i=1}^{M}\frac{(X_i-a_i)^2}{2\sigma_i^2}-\
 \label{eq:wf_form}
 	\Psi = \frac{1}{Z} e^{\sum_i^M \frac{(X_i - a_i)^2}{2\sigma^2}} \prod_j^N (1+ e^{b_j + \sum_iM \frac{X_i W_{ij}}{\sigma^2}})
 \end{equation}
-See appendix \ref{sec:appendix_C} for derivation.
+See appendix C for derivation.
 
 \subsection{Energy calculation} \label{sec:RBM_energy_cal}
 We want to calculate the energy of the two-fermion system, given the wave function described in \ref{eq:wf_form}. As explained in \cite{Nordhagen}, the energy of the system is the expectation value of the Hamiltonian, but this is hard to compute directly. 
@@ -229,15 +230,15 @@ The wave function of one electron in a two-dimensional harmonic oscillator is gi
 
 \begin{equation}
 	\label{eq:one_e_wf_ho}
-	\phi_{n_x, n_y} = A H_{nx} \sqrt{\omega} x H_{ny} \sqrt{\omega} y e^{-\frac{\omega(x^2 + y^2)}{2}}
+	\phi_{n_x, n_y} = A H_{n_x} \sqrt{\omega} x H_{n_y} \sqrt{\omega} y e^{-\frac{\omega(x^2 + y^2)}{2}}
 \end{equation}
-where $H_{nx} \sqrt{\omega} x$ are the Hermite polynomials and A is the normalization constant, and $n_x$ and $n_y$ are the principal quantum numbers. If we denote the spatial wave function for the first electron $\phi_1$, and $\phi_2$ for the spatial wave function for the second electron, then the total spatial wave function for the two-particle system is $\phi_1 \phi_2$. As explained in section \ref{sec:Presentation_of_potential}, the spin wave functions are anti-symmetric, and therefore it is fine that the spatial wave function is symmetric.
+where $H_{n_x} \sqrt{\omega} x$ are the Hermite polynomials and A is the normalization constant, and $n_x$ and $n_y$ are the principal quantum numbers. If we denote the spatial wave function for the first electron $\phi_1$, and $\phi_2$ for the spatial wave function for the second electron, then the total spatial wave function for the two-particle system is $\phi_1 \phi_2$. As explained in section \ref{sec:Presentation_of_potential}, the spin wave functions are antisymmetric, and therefore it is fine that the spatial wave function is symmetric.
 
 We know that the energy of a harmonic oscillator in one dimension is given by
 
 \begin{equation}
 	\label{eq:HO_energy}
-	E_n = \omega (n + \frac{1}{2} )
+	E_n = \omega \Big(n + \frac{1}{2}\Big)
 \end{equation}
 where $n$ is the principal quantum number.
 
@@ -275,7 +276,7 @@ Numerically we solve this by dividing the area around a particle into bins. Ther
 \begin{equation}
 A_k=\pi r_k^2-\pi r_{k-1}^2=2\pi r_kdr-\pi dr^2
 \end{equation}
-where $r_k$ is the outer radius of bin $k$ and $dr$ is the bin width. For a more thorughout explanation, see \cite{Nordhagen}.
+where $r_k$ is the outer radius of bin $k$ and $dr$ is the bin width. For a more thoroughout explanation, see \cite{Nordhagen}.
 \par 
 \vspace{3mm}
 Apart from the fact that the one body density is a good visual representation of the positions of the particles, it is also a quantity that is often calculated experimentally. Therefore, it is simpler to compare computational simulations to  experimental results when having calculated the onebody density.
@@ -294,7 +295,6 @@ The virial theorem is an equation in mechanics that gives a relation between the
 \begin{equation}
 \langle T \rangle = - \frac{1}{2} \sum_{i=0}^N \langle \boldsymbol{F_i} \cdot \boldsymbol{r_i} \rangle 
 \end{equation}
-
 where $\boldsymbol{F_i}$ is the sum of forces acting on particle $i$.\par 
 \vspace{3mm}
 
@@ -315,7 +315,7 @@ The error in a measurement is the difference between the true value of the measu
 	error = x - x_i
 \end{equation}
 
-However, the true value $x$ is rarely known. When $x$ is not known, it is thus impossible to give the error in the measurement. We must therefore be content with providing estimates of the error. It is common to give this uncertainty as the standard deviation $\sigma$; when performing a mesurement n times, such that we have n measured points $x_1, .., x_n$ where the average value is $ \langle x \rangle $, then the standard deviation is defined as
+However, the true value $x$ is rarely known. When $x$ is not known, it is thus impossible to give the error in the measurement. We must therefore be content with providing estimates of the error. It is common to give this uncertainty as the standard deviation $\sigma$; when performing a mesurement n times, such that we have $n$ measured points $x_1, .., x_n$ where the average value is $ \langle x \rangle $, then the standard deviation is defined as
 
 \begin{equation}
 \label{eq:standard_dev}
@@ -339,7 +339,7 @@ However, as explained in \cite{Nordhagen}, this does not account for the covaria
 \section{Method} \label{sec:Method}
 
 \subsection{Variational Monte Carlo}
-The Variational Monte Carlo method, often referred to as VMC, is a method in computational physics. The goal of VMC is to approximate the ground state energy of a quantum mechanical system by using the variational principle. The variational principle says that for any given trial wave function $\Psi_T$, the energy $E$ given this $\Psi_T$ is always more than or equal to the ground state energy $E_0$ of the system:
+The variational Monte Carlo method, often referred to as VMC, is a method in computational physics. The goal of VMC is to approximate the ground state energy of a quantum mechanical system by using the variational principle. The variational principle says that for any given trial wave function $\Psi_T$, the energy $E$ given this $\Psi_T$ is always more than or equal to the ground state energy $E_0$ of the system:
 
 \begin{equation}
 	\label{eq:variational_method}
@@ -349,7 +349,7 @@ The Variational Monte Carlo method, often referred to as VMC, is a method in com
 In VMC, the user inputs a trial wave function for the quantum mechanical system. Over a Monte Carlo loop, the particles in the system are moved randomly, and for each proposed move, the new position of the particle is accepted or rejected depending on whether the new position is more probable according to $\Psi_T$ or not, compared to the previous position. For the ground state wave function, the position which yields a minimum in the energy of the quantum mechanical system is the most probable position. The result is therefore that the particles in the system are moved towards lower energies. When the method has converged, the energy $E$ is an upper limit estimate of the true ground state energy $E_0$. If $\Psi_T$ in addition is the true ground state wave function, then $E=E_0$. 
 
 \subsection{Metropolis algorithm}
-Above, we described that the VMC method had to reject or accept proposed moves of the particles in the system. The task of handeling this is often left up to the Metropolis algorithm. The Metropolis algorithm uses the theory that the probability of a system to transition from a state $i$ to state $j$ is given by
+Above, we described that the VMC method had to reject or accept proposed moves of the particles in the system. The task of handling this is often left up to the Metropolis algorithm. The Metropolis algorithm uses the theory that the probability of a system to transition from a state $i$ to state $j$ is given by
 
 \begin{equation}
 W_{i\rightarrow j} = T_{i \rightarrow j}\cdot A_{i \rightarrow j}
@@ -369,7 +369,7 @@ The brute force got is name because when proposing and accepting moves, the algo
 \begin{equation}
 \boldsymbol{R}_{new} = \boldsymbol{R} + \boldsymbol{r}\cdot \text{step}.
 \end{equation}
-where $\boldsymbol{r}$ is random numbers and $step$ is the steplength.
+where $\boldsymbol{r}$ are random numbers and $step$ is the steplength.
 \par 
 \vspace{3mm}
 The brute force algorithm does not concider the transitions probabilities, and simply puts $T_{i\rightarrow j} = T_{j\rightarrow i}$. To check the probability of a system being found in a given state, it uses $p(\boldsymbol{R})=|\Psi_T(\boldsymbol{R})|^2$ for both position, such that the probability $w$ for the transition is given by
@@ -407,13 +407,12 @@ R_{new} = R + DF(R)\Delta t + \xi\sqrt{\Delta t}
 where $D=\frac{1}{2}$ is the diffusion constant and $\Delta t$ is the timestep, that decides how long steps the method should take for each move. This is a much more educated pick of movement compared to the brute force algorithm. 
 \par 
 \vspace{3mm}
-When regaring the transition probabilities, the Metropolis-Hastings algoritm does not go the easy way with $T_{i\rightarrow j} = T_{j\rightarrow i}$.  Instead it uses that the transition probabilities are given as the Green's function, also found using the Fokker-Planch equation:
+When regarding the transition probabilities, the Metropolis-Hastings algoritm does not go the easy way with $T_{i\rightarrow j} = T_{j\rightarrow i}$.  Instead it uses that the transition probabilities are given as the Green's function, also found using the Fokker-Planch equation:
 
 \begin{align}
 G(R_{new},R,\Delta t)&=\frac{1}{(4\pi D\Delta t)^{3N/2}}\exp[-(R_{new} - R - D\Delta tF(R))^2/4D\Delta t]\notag\\
 &=T_{R\rightarrow R_{new}}
 \end{align}
-
 such that the probability parameter $w$ becomes 
 
 \begin{equation}
@@ -428,7 +427,7 @@ One thing that is worth to note with the brute force and the Metropolis-Hastings
 
 
 \subsection{Gibbs sampling}
-As an alternative to the Metropolis algorithm, one can use the Gibbs sampling method. In both the brute force method and Metropolis-Hastings, one has to accound for that proposed particle moves can be rejected. This "wastes" one Monte Carlo cycle  and several flops, and no change is inflicted on the system. \par 
+As an alternative to the Metropolis algorithm, one can use the Gibbs sampling method. In both the brute force method and Metropolis-Hastings, one has to account for that proposed particle moves can be rejected. This "wastes" one Monte Carlo cycle  and several flops, and no change is inflicted on the system. \par 
 \vspace{3mm}
 The Gibbs sampling algorithm differs from the Metropolis in several ways. In section \ref{sec:RBM} we wrote that we chose the trial wave function $\Psi = F(\boldsymbol{X},\boldsymbol{H})$, where $F$ is the joint probability distribution defined in equation \ref{eq:F_rbm}. In Gibbs sampling, we instead use the trial wave function $\Psi_T = \sqrt{F}$. 
 \par 
@@ -449,7 +448,7 @@ As explained earlier, $\boldsymbol{X}$ are the positions of the particles, equal
 \vspace{3mm} 
 When we say that the visible and hidden nodes here are "sampled", we mean that they are drawn from the probability distribution, and then automatically accepted. This is different from Metropolis, and should mean that the Gibbs sampling method converges faster than both brute force and Metropolis-Hansings, as no Monte Carlo cycles are lost on the move not being accepted. \par 
 \vspace{3mm}
-As we use a new trial wave function in Gibbs sampling, the expression for the local energy changes. The expression for the local energy using the Gibbs trial wave function is calculated in appendix \ref{sec:appendix_B}.
+As we use a new trial wave function in Gibbs sampling, the expression for the local energy changes. The expression for the local energy using the Gibbs trial wave function is calculated in appendix B.
 
 
 \subsection{Gradient descent}
@@ -498,7 +497,7 @@ In this project we are using the blocking code produced by Marius Jonsson, see \
 In this section, we give an overview of the structure and implementation of our code, to make it easier for potential users to familiarize themselves with the code. 
 
 \subsection{Structure}
-In order to keep the code structured, we have split the running of the program up in several files. The user only needs to interact with main.cpp, as all the parameters for running the machine lerning project are set here. Examples are that the user can choose between brute force, Metropolis-Hastings og Gibbs sampling, and set the number of visible and hidden nodes, along with the number of iterations. main.cpp calls on the function GradientDescent in gradient\_descent.cpp, where the machine learning structure is implemented. The machine learning structure consists of the VMC-loop, where the nodes are updated, and the gradient descent method, where the weights are updated. GradientDescent uses the class WaveFunction in wavefunction.cpp to calculate the value of the wave function, along with the energy of the system. Depending on whether the user chose brute force, Metropolis-Hastings or Gibbs sampling, GradientDescent calls functions in either wavefunction.cpp, hastings\_tools.cpp or gibbs\_tools.cpp to update the positions and calculate the transition probabilities. The test functions are found in test.cpp, where both a test for checking the convergence of the energy is implemented, along with a function that tests if the local energy calculation is correct. The structure can be seen in figure \ref{fig:program_structure}.
+In order to keep the code structured, we have split the running of the program up in several files. The user only needs to interact with main.cpp, as all the parameters for running the machine learning project are set here. Examples are that the user can choose between brute force, Metropolis-Hastings og Gibbs sampling, and set the number of visible and hidden nodes, along with the number of iterations. main.cpp calls on the function GradientDescent in gradient\_descent.cpp, where the machine learning structure is implemented. The machine learning structure consists of the VMC-loop, where the nodes are updated, and the gradient descent method, where the weights are updated. GradientDescent uses the class WaveFunction in wavefunction.cpp to calculate the value of the wave function, along with the energy of the system. Depending on whether the user chose brute force, Metropolis-Hastings or Gibbs sampling, GradientDescent calls functions in either wavefunction.cpp, hastings\_tools.cpp or gibbs\_tools.cpp to update the positions and calculate the transition probabilities. The test functions are found in test.cpp, where both a test for checking the convergence of the energy is implemented, along with a function that tests if the local energy calculation is correct. The structure can be seen in figure \ref{fig:program_structure}.
 
  \begin{figure} [H]
 	\centering
@@ -658,8 +657,11 @@ Again we play with the number of nodes and the learning rate
  \end{figure}
 
 \subsection{Gibbs sampling}
+We will also study how the results are affected by the choices of $N$, $\eta$ and $\sigma$ for Gibbs sampling. 
 
 \subsubsection{Changing learning rate and number of hidden nodes}
+In figure \ref{fig:energy_compare_eta_2P_gibbs} the energy is calculated as a function of number of iterations, for a various number of hidden nodes. We can see that $N=1$ gives the lower energy. Further, in figure \ref{fig:energy_compare_eta_2P_gibbs}, the energy is plotted as a function of number of iterations for different $\eta$'s. The higher learning rate, the faster it converges. 
+
  \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_compare_nodes_2P_gibbs.png}
@@ -670,11 +672,13 @@ Again we play with the number of nodes and the learning rate
   \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_compare_eta_2P_gibbs.png}
- 	\caption{Energy as a function of number of iterations up to 1000 iterations for two particles in two dimensions. Gibbs sampling was used for $\eta=0.01$ (blue line), 0.05 (orange line), 0.1 (green line) and $0.5$ (red line). All the samplings were conducted with MC=$2^{20}=1\,048\,576$, two hidden nodes, $dx=1.0$, $\omega=1.0$ and $\sigma=1.0$.}
+ 	\caption{Energy as a function of number of iterations up to 1000 iterations for two particles in two dimensions. Gibbs sampling was used for $\eta=0.01$ (blue line), 0.05 (orange line), 0.1 (green line) and $0.5$ (red line). All the samplings were conducted with MC=$2^{25}=33\,554\,432$, two hidden nodes, $dx=1.0$, $\omega=1.0$ and $\sigma=1.0$.}
  	\label{fig:energy_compare_eta_2P_gibbs}
  \end{figure}
 
 \subsubsection{Changing the sampling width $\sigma$ used in Gibbs}
+Finally, Gibbs sampling is investigated for different $\sigma$'s in figure \ref{fig:energy_compare_sigma_2P_gibbs}, and we observe that $\sigma=0.8$ gives the lowest energy, close to 3.0 a.u. 
+
   \begin{figure} [H]
  	\centering
  	\includegraphics[scale=0.8]{plots/energy_compare_sigma_2P_gibbs.png}
@@ -718,11 +722,11 @@ In table \ref{tab:average_energies} average kinetic, interaction and potential e
 
 
 \section{Discussion} \label{sec:Discussion}
-Initially we calculated the energy for one particle in one dimension to ensure that the method worked properly. Using equation \ref{eq:HO_energy} to calculate the ground state energy, we get that the energy for one particle in one dimension with $\omega=1.0$ should be $\frac{1}{2}$. The result of the calculation with the machine learning program with different sampling algorithms can be seen in figure \ref{fig:energy1P1D}. We see that both the  brute-force Metropolis and Metropolis-Hasting converges towards the analytical energy. Additionally, from table \ref{tab:energies1P1D}, we see that the variance decreases when the two methods converges towards $\frac{1}{2}$, as we increases the number of gradient descent cycles used in the minimalization. This is a good indication that our methods are approaching the correct value, even if we did not have an analytical anwer to compare them to. The variance is calulared with the blocking method, presented in section \ref{sec:Blocking}, in order to account for the covariance between measured points.  The two methods yield nearly identical results, while we would expect Metropolis-Hastings to be a better method, due to the more advanced sampling routine presented in section \ref{sec:Metropolis-Hastings}. However, the difference might be to small to give an impact to this project, as we use few particles. Furthermore, we used a two-power number of Monte Carlo cycles for blocking. 
+Initially we calculated the energy for one particle in one dimension to ensure that the method worked properly. Using equation \ref{eq:HO_energy} to calculate the ground state energy, we get that the energy for one particle in one dimension with $\omega=1.0$ should be $\frac{1}{2}$. The result of the calculation with the machine learning program with different sampling algorithms can be seen in figure \ref{fig:energy1P1D}. We see that both the  brute-force Metropolis and Metropolis-Hasting converges towards the analytical energy. Additionally, from table \ref{tab:energies1P1D}, we see that the variance decreases when the two methods converges towards $\frac{1}{2}$, as we increases the number of gradient descent cycles used in the minimalization. This is a good indication that our methods are approaching the correct value, even if we did not have an analytical answer to compare them to. The variance is calculated with the blocking method, presented in section \ref{sec:Blocking}, in order to account for the covariance between measured points.  The two methods yield nearly identical results, while we would expect Metropolis-Hastings to be a better method, due to the more advanced sampling routine presented in section \ref{sec:Metropolis-Hastings}. However, the difference might be too small to give an impact to this project, as we use few particles. Furthermore, we used a two-power number of Monte Carlo cycles for blocking. 
 \par 
 \vspace{3mm}
 
-From figure \ref{fig:energy1P1D}, one can see that Gibbs sampling converges to a higher energy than the analytical value. The reason for that is probably related to how we define the wave function. For brute force and Metropolis-Hastings, we use the probability distribution defined in equation $\ref{eq:F_rbm}$ to represent the wave function, while the wave function used in Gibbs sampling is the square root of the probability distribution. It seems that the paramteres chosen for this wave function by the machine learning program does not yield the ground state wave function, and thus the energy calculated is higher. This is in accordance with the variational principle; a worse guess on trial wave function will yield a upper bound estimate of the ground state energy $E$ that is larger than the true ground state energy $E_0$.
+From figure \ref{fig:energy1P1D}, one can see that Gibbs sampling converges to a higher energy than the analytical value. The reason for that is probably related to how we define the wave function. For brute force and Metropolis-Hastings, we use the probability distribution defined in equation $\ref{eq:F_rbm}$ to represent the wave function, while the wave function used in Gibbs sampling is the square root of the probability distribution. It seems that the parameters chosen for this wave function by the machine learning program does not yield the ground state wave function, and thus the energy calculated is higher. This is in accordance with the variational principle; a worse guess on trial wave function will yield a upper bound estimate of the ground state energy $E$ that is larger than the true ground state energy $E_0$.
 
 \par 
 \vspace{3mm}
@@ -731,18 +735,18 @@ For the case where the Coulomb repulsion is turned on, the results of the conver
 \par 
 \vspace{3mm}
 We varied the number of hidden nodes $N$ used in the machine learning program, as seen in figure \ref{fig:compare_nodes}, \ref{fig:energy_compare_nodes_2P} and \ref{fig:energy_compare_nodes_2P_gibbs} for without and with interaction with brute force, and with interaction with Gibbs respectively. We see generally that varying the number of hidden nodes changes the rapidness of the method's convergence. For few hidden nodes, the convergence of the energy seems to happen at a slower rate, while for many hidden nodes, it descends steeply towards the analytical energy. This can maybe be explained by when there are more free parameters that can be varied, the optimalization occurs faster. \par 
-We also see in figure \ref{fig:compare_nodes} and \ref{fig:energy_compare_nodes_2P_gibbs} that we get better estimates of the ground state energy when using fewer hidden nodes. This can be explained, since more hidden nodes means more variables that has to be updated for each cycle, and thus we get a less precise answer. However, this is not the case in figure \ref{fig:energy_compare_nodes_2P}, where $N=10$ gives the lower estimate of the energy. This is probabliy due to the fact that the runs in this plot with different numbers of hidden nodes are forced to start at the same place, while we see that this is not the case in figure \ref{fig:compare_nodes} and \ref{fig:energy_compare_nodes_2P_gibbs}. 
+We also see in figure \ref{fig:compare_nodes} and \ref{fig:energy_compare_nodes_2P_gibbs} that we get better estimates of the ground state energy when using fewer hidden nodes. This can be explained, since more hidden nodes means more variables that has to be updated for each cycle, and thus we get a less precise answer. However, this is not the case in figure \ref{fig:energy_compare_nodes_2P}, where $N=10$ gives the lower estimate of the energy. This is probably due to the fact that the runs in this plot with different numbers of hidden nodes are forced to start at the same place, while we see that this is not the case in figure \ref{fig:compare_nodes} and \ref{fig:energy_compare_nodes_2P_gibbs}. 
 \par 
 \vspace{3mm}
 
-Furthermore, we observed the effects of changing the learning rate $\eta$ used in the gradient descent method. The results are shown in figure \ref{fig:compare_etas}, \ref{fig:energy_compare_eta_2P} and \ref{fig:energy_compare_eta_2P_gibbs}. We see that the convergence rapidness is heavily dependent on the learning rate, where a low learing rate gives a slow convergence. This is what we expected, as the learning rate defines how much the weights $W$, $a$ and $b$ are updated in each gradient descent iteration, that is, how large steps the method takes for each iteration. Larger steps will lead to the method aproaching the convergence more rapidly. As seen in this figure, if we limit the number of gradient descent iterations, then the choice of $\eta=0.01$ has not converged by the end of 100 minimalization iterations. A good choice of $\eta$ is thus necessary for the method to work optimally.
+Furthermore, we observed the effects of changing the learning rate $\eta$ used in the gradient descent method. The results are shown in figure \ref{fig:compare_etas}, \ref{fig:energy_compare_eta_2P} and \ref{fig:energy_compare_eta_2P_gibbs}. We see that the convergence rapidness is heavily dependent on the learning rate, where a low learning rate gives a slow convergence. This is what we expected, as the learning rate defines how much the weights $W$, $a$ and $b$ are updated in each gradient descent iteration, that is, how large steps the method takes for each iteration. Larger steps will lead to the method approaching the convergence more rapidly. As seen in this figure, if we limit the number of gradient descent iterations, then the choice of $\eta=0.01$ has not converged by the end of 100 minimalization iterations. A good choice of $\eta$ is thus necessary for the method to work optimally.
 \par  
 \vspace{3mm}
 
-In figure \ref{fig:energy_compare_sigma_2P_gibbs}, we show the effects of changing the parameter $\sigma$ in the Gibbs sampling method, where $\sigma$ is the parameter deciding the width of the positions samping distribution, as seen in equation \ref{eq:gibbs_xsampling}. We can see that the energy the method converges towards is heavily dependent of the choice of $\sigma$. For $\sigma=1.0$, as is the default choice, we get convergence to a energy above the ground energy, while the choice of $\sigma=0.8$ gives converge towards 3 a.u., which is known to be the analytical ground state energy of the system. Since small changes in $\sigma$ gives vastly different results, it should probabliy have been implemented as a minimization parameter, so that the user does not have to vary it by hand in order to get optimal results
+In figure \ref{fig:energy_compare_sigma_2P_gibbs}, we show the effects of changing the parameter $\sigma$ in the Gibbs sampling method, where $\sigma$ is the parameter deciding the width of the positions samping distribution, as seen in equation \ref{eq:gibbs_xsampling}. We can see that the energy the method converges towards is heavily dependent of the choice of $\sigma$. For $\sigma=1.0$, as is the default choice, we get convergence to a energy above the ground energy, while the choice of $\sigma=0.8$ gives converge towards 3 a.u., which is known to be the analytical ground state energy of the system. Since small changes in $\sigma$ gives vastly different results, it should probably have been implemented as a minimization parameter, so that the user does not have to vary it by hand in order to get optimal results
 \par
 \vspace{3mm}
-Generally, from varying both the learning rate $\eta$, the number of hidden nodes $N$, and also the sampling width $\sigma$ used in the Gibbs algorithm, we see that the quality of the results we obtain is very dependent on the correct choices of these parameters. This is a drawback with this machine learning program; the user cannot necessarily depend on the program to give correct output on the first run, and if it seems the method gives the wrong output, it might simply be due to not optimal input parameters. Regarding $\sigma$, this can be solved, as explained above, by implementing it as a parameter that is optimized through the gradient decent method. Furthermore, one could have implemented tests to check what learning rate and number of hidden nodes that converges to energies closest to the known ground state, but this is not helpful if there is no analytical solution. In general, the user should be aware of this drawback with machine learning, and also be smart when chosing parameters to run the program with. 
+Generally, from varying both the learning rate $\eta$, the number of hidden nodes $N$, and also the sampling width $\sigma$ used in the Gibbs algorithm, we see that the quality of the results we obtain is very dependent on the correct choices of these parameters. This is a drawback with this machine learning program; the user cannot necessarily depend on the program to give correct output on the first run, and if it seems the method gives the wrong output, it might simply be due to not optimal input parameters. Regarding $\sigma$, this can be solved, as explained above, by implementing it as a parameter that is optimized through the gradient descent method. Furthermore, one could have implemented tests to check what learning rate and number of hidden nodes that converges to energies closest to the known ground state, but this is not helpful if there is no analytical solution. In general, the user should be aware of this drawback with machine learning, and also be smart when chosing parameters to run the program with. 
 \par 
 \vspace{3mm}
 The onebody density calculated for two particles in two dimensions with the Metropolis-Hastings method is plotted in figure \ref{fig:OB}. We are able to reproduce the analytical onebody density without interaction. When interaction is introduced, the distribution of particles becomes broader and lower. This is explained by the two electrons now being subject to a repulsive force which pushes them apart, so that the average distance between the electrons increases. This creates a broader onebody density distribution.
@@ -767,7 +771,7 @@ Another concern regarding table \ref{tab:average_energies} is that the energies 
  An experiment which is usually done in these kinds of project, and as we did in \cite{Nordhagen}, is to increase the number of particles in the trap. In this case, however, this does not make sense. As explained in section \ref{sec:Presentation_of_potential}, we assume that the trial wave function used is such that it can be split in a symmetric spatial and an antisymmetric spin part. In other terms, then one electron is in the "spin-up"-state, while the other is in "spin-down". This configuration can only hold two particles. According to Pauli's principle, two identical fermions cannot be found in the same state, and this system thus only makes physical sense for a maximum of two particles. 
 
 \section{Conclusion} \label{sec:Conclusion} 
-In this project, we have found that by using principles of machine learning in combination with Variational Monte Carlo, we are able to find good upper bound estimates of the ground state energy in a system consisting of two electrons in a harmonic oscillator. The brute force Metropolis and Metropolis-Hastings yields nearly identical results, while Gibbs sampling gives higher estimates of $E_0$, due to a different choice in trial wave function. 
+In this project, we have found that by using principles of machine learning in combination with variational Monte Carlo, we are able to find good upper bound estimates of the ground state energy in a system consisting of two electrons in a harmonic oscillator. The brute force Metropolis and Metropolis-Hastings yields nearly identical results, while Gibbs sampling gives higher estimates of $E_0$, due to a different choice in trial wave function. 
 \par 
 \vspace{3mm}
 The choice of learning rate $\eta$ and number of hidden nodes $N$ used in the simulation affects the convergence rate and final results, where the convergence rate is higher for more hidden nodes and higher  $\eta$. The energy the method converges towards is closer for to the analytical energy for lower $N$ and higher $\eta$. The choice of $\sigma$ strongly affects the calculated results from the Gibbs sampling algorithm. 
@@ -785,7 +789,7 @@ We are solely able to reproduce the virial theorem for $\omega=1.0$, as the code
 
 \subsection{Local energy}
 
-The energy can be calculated by introducing a local energy, where the average local energy goes to the true energy with a sufficient amount of samples, as explained in section \ref{sec:Theory}. This local energy can be splitted up in a kinetic part, a part from the harmonic oscillator potential and a interacting part,
+The energy can be calculated by introducing a local energy, where the average local energy goes to the true energy with a sufficient amount of samples, as explained in section \ref{sec:Theory}. This local energy can be splitted up in a kinetic part, a part from the harmonic oscillator potential and an interacting part,
 \begin{equation}
 E_L=\sum_{k=1}^{M}(E_{\text{KIN},k} + E_{\text{EXT},k})+E_{\text{POT}}.
 \end{equation}
@@ -829,18 +833,16 @@ In equation \ref{eq:drift_force}, the equation for the quantum force is given, b
 \boldsymbol{F}(\boldsymbol{R}) = \frac{2 \nabla \psi_T(\boldsymbol{R})}{\psi_T(\boldsymbol{R})}
 \end{equation*}
 
- When implementing importance sampling, we need the expression for the quantum force for the NQS wave function. As shown above, 
+When implementing importance sampling, we need the expression for the quantum force for the NQS wave function. As shown above, 
  
 \begin{equation}
 \frac{1}{\Psi_T}\nabla_k\Psi_T=\nabla_k\ln\Psi_T.
 \end{equation}
-
 and
 
 \begin{equation}
 \frac{\partial}{\partial X_k}\ln\Psi_T=-\frac{X_k-a_k}{\sigma^2}+\sum_{j=1}^{N}\frac{W_{kj}}{\sigma^2}\text{Logistic}(v(j))
 \end{equation}
-
 The expression for the quantum force is thus
 
 \begin{equation}
@@ -917,18 +919,18 @@ F_{\text{RBM}}(\boldsymbol{X})&=\sum_{\{\boldsymbol{h}\}}e^{\sum_{i=1}^M \frac{(
 	\bibitem{Nordhagen}
 	 D. Gjestvang, E. M. Nordhagen \emph{Computational Physics II: Project 1} (2018)
 	 \bibitem{Project2}
-	 V. Flugsrud and M. Hjort-Jensen
+	 V. Flugsrud and M. Hjorth-Jensen
 	 Project 2, The restricted Boltzmannn machine applied to the quantum many body problem. Deadline June 1
 	 Department of Physics, University of Oslo,
 	 (2018).
 	\bibitem{Taut}
 	 M. Taut \emph{Two electrons in an external oscillator potential: Particular analytic solutions of a Coulomb correlation problem.} Phys. Rev. \textbf{A 48}, 3561 (1993).
 	 \bibitem{Carleo}
-	 G.Carleo and M. Troyer  \emph{Solving the quantum many-body problem with artificial neural networks} Science 355, Issue 6325, pp. 602-606 (2017)
+	 G. Carleo and M. Troyer  \emph{Solving the quantum many-body problem with artificial neural networks} Science 355, Issue 6325, pp. 602-606 (2017)
 	 \bibitem{Chilton}
 	 A. Chilton \emph{The Properties and Applications of Quantum Dots} (2014) \url{https://www.azoquantum.com/Article.aspx?ArticleID=31} downloaded May 6th 2018
 	 \bibitem{Hinton}
-	 G.E. Hinton \emph{A Practical Guide to Training Restricted Boltzmann Machines}, Lecture Notes in Computer Science, vol \textbf{7700}. Springer, Berlin, Heidelberg (2012)
+	 G. E. Hinton \emph{A Practical Guide to Training Restricted Boltzmann Machines}, Lecture Notes in Computer Science, vol \textbf{7700}. Springer, Berlin, Heidelberg (2012)
 	 \bibitem{Jonsson}
 	 M. Jonsson, \emph{Captain Hook}, Program for blocking, \url{https://github.com/computative/block} downloaded April 2018. 
 
