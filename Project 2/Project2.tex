@@ -126,7 +126,7 @@ This sound amazing, and maybe even impossible. Therefore the question now is: ho
  	\label{fig:neuron}
  \end{figure}
 
-The neurons are arranged in layers in the neural network, one visible layer that receives the input, and up to several hidden layers. The layers are arranged such that the output values from the visible nodes are the input values of the hidden nodes. The nodes can also have bias values, that shift the output value $h$ with a certain number, and the nodes in different layers can be connected in different ways.  \iffalse An example of a neural network with two layers is shown in figure \ref{fig:neural_network}.
+The neurons are arranged in layers in the neural network, one visible layer that receives the input, and up to several hidden layers. The layers are arranged such that the output values from the visible nodes are the input values of the hidden nodes. The nodes can also have bias values, that shift the output value $h$ with a certain number, and the nodes in different layers can be connected in different ways. An example of a neural network with multiple input and output nodes is shown in figure \ref{fig:neural_network}.
 
  \begin{figure} [H]
 	\centering
@@ -134,7 +134,7 @@ The neurons are arranged in layers in the neural network, one visible layer that
 	\caption{An example of a neural network with one visible and one output layer of nodes, and with bias $-1$ on the hidden nodes. Image reproduced from \cite{Marsland} }
 	\label{fig:neural_network}
 \end{figure}
-\fi
+
 
 The idea behind machine learning is that the weights $W_i$, that decide how much a node puts emphazis on a given input, can be changed, and thus change the system's response to the same input. We will explain with the example from earlier, with huskies and the wolves: first, the program is shown pictures of wolves and huskies, and it is told the correct answer. The weights $W_i$ are then updated such that when a husky is shown, the output "husky" is generated, and then "wolves" for pictures of wolves. After a sufficiently long training period, the program's weights are optimalized for recognizing wolves and huskies. When shown a picture, the program should then by itself be able to determine whether it is a wolf or a husky that it sees. 
 
