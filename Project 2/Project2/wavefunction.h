@@ -10,6 +10,7 @@ private:
     int m_M;
     int m_N;
     int m_sampling;
+    double m_sigma;
     double m_sigma_sqrd;
     double m_omega_sqrd;
 public:
@@ -21,4 +22,5 @@ public:
     void Gradient_a(const VectorXd &a, VectorXd &da);
     void Gradient_b(const VectorXd &b, VectorXd &db);
     void Gradient_W(const VectorXd &X, const VectorXd &v, MatrixXd &dW);
+    double Gradient_sigma(const MatrixXd &W, const VectorXd &Xa, const VectorXd &X, const VectorXd &v);
 };

@@ -26,6 +26,7 @@ int WaveFunction::setTrialWF(int N, int M, int sampling, double sigma_sqrd, doub
     m_N          = N;
     m_M          = M;
     m_sampling   = sampling;
+    m_sigma = sqrt(sigma_sqrd);
     m_sigma_sqrd = sigma_sqrd;
     m_omega_sqrd = omega*omega;
 }
@@ -145,5 +146,26 @@ void WaveFunction::Gradient_W(const VectorXd &X, const VectorXd &v, MatrixXd &dW
                 dW(j,i) = X(j)/(m_sigma_sqrd*(1 + exp(-v(i))));
             }
         }
+    }
+}
+
+
+double WaveFunction::Gradient_sigma(const MatrixXd &W, const VectorXd &Xa, const VectorXd &X, const VectorXd &v) {
+
+    double constant = 0;
+    double Xa_sqrd = (double)(Xa.transpose()*Xa);
+
+
+    if(m_sampling==2) {
+        for(int i=0; i<m_N; i++) {
+            constant += (double) (W.col(i).transpose()*X)/(1 + exp(v(i)));
+        }
+        return (0.5*Xa_sqrd + constant)/(m_sigma_sqrd*m_sigma);
+    }
+    else{
+        for(int i=0; i<m_N; i++) {
+            constant += (double) (2*W.col(i).transpose()*X)/(1 + exp(v(i)));
+        }
+        return (Xa_sqrd + constant)/(m_sigma_sqrd*m_sigma);
     }
 }

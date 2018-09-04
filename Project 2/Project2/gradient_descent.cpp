@@ -83,7 +83,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
     //Open file for writing
     ofstream myfile;
-    myfile.open("../data/energy_eta_0p01.txt");
+    myfile.open("../data/energy.txt");
 
     ofstream myfile1;
     myfile1.open("../data/local_energies.txt");
@@ -96,19 +96,31 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         double E_ext       = 0;          //sum of potential energy from HO
         double E_int       = 0;          //sum of potential energy from interaction
         double E_k_tot     = 0;
-        double E_ext_tot     = 0;
+        double E_ext_tot   = 0;
         double E_int_tot   = 0;
         double E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
 
+        double dsigma_tot         = 0;
+        double dsigmaE_tot        = 0;
+        double dsigmaE2_tot       = 0;
+
         VectorXd da_tot           = VectorXd::Zero(M);
         VectorXd daE_tot          = VectorXd::Zero(M);
+        VectorXd daE2_tot         = VectorXd::Zero(M);
         VectorXd db_tot           = VectorXd::Zero(N);
         VectorXd dbE_tot          = VectorXd::Zero(N);
+        VectorXd dbE2_tot         = VectorXd::Zero(N);
         MatrixXd dW_tot           = MatrixXd::Zero(M,N);
         MatrixXd dWE_tot          = MatrixXd::Zero(M,N);
+        MatrixXd dWE2_tot         = MatrixXd::Zero(M,N);
 
         double accept = 0;
         double tot_dist = 0;
+
+        if(iter > 250) {
+            eta = 0.01;
+            MC = pow(2,22);
+        }
 
         clock_t start_time = clock();
         for(int i=0; i<MC; i++) {
@@ -187,23 +199,31 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             VectorXd da = VectorXd::Zero(M);
             VectorXd db = VectorXd::Zero(N);
             MatrixXd dW = MatrixXd::Zero(M,N);
+
             Psi.Gradient_a(Xa, da);
             Psi.Gradient_b(v, db);
             Psi.Gradient_W(X, v, dW);
+            double dsigma = Psi.Gradient_sigma(W, Xa, X, v);
 
 
-            da_tot   += da;
-            daE_tot  += E*da;
-            db_tot   += db;
-            dbE_tot  += E*db;
-            dW_tot   += dW;
-            dWE_tot  += E*dW;
+            da_tot       += da;
+            daE_tot      += E*da;
+            daE2_tot     += E*E*da;
+            db_tot       += db;
+            dbE_tot      += E*db;
+            dbE2_tot     += E*E*db;
+            dW_tot       += dW;
+            dWE_tot      += E*dW;
+            dWE2_tot     += E*E*dW;
+            dsigma_tot   += dsigma;
+            dsigmaE_tot  += dsigma*E;
+            dsigmaE2_tot += dsigma*E*E;
 
-            EL_tot      += E;
-            EL_tot_sqrd += E*E;
-            E_k_tot     += E_k;
-            E_ext_tot     += E_ext;
-            E_int_tot   += E_int;
+            EL_tot       += E;
+            EL_tot_sqrd  += E*E;
+            E_k_tot      += E_k;
+            E_ext_tot    += E_ext;
+            E_int_tot    += E_int;
         }
         clock_t end_time = clock();
 
@@ -262,6 +282,14 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         a -= 2*eta*(daE_tot - EL_avg*da_tot)/MC;
         b -= 2*eta*(dbE_tot - EL_avg*db_tot)/MC;
         W -= 2*eta*(dWE_tot - EL_avg*dW_tot)/MC;
+        sigma -= 2*0.001*(dsigmaE_tot - EL_avg*dsigma_tot)/MC;
+        sigma_sqrd = sigma*sigma;
+
+        cout << sigma << endl;
+
+        //a -= 2*eta*((daE2_tot - EL_avg_sqrd*da_tot)-2*(daE_tot - EL_avg*da_tot)*EL_avg)/MC;
+        //b -= 2*eta*((dbE2_tot - EL_avg_sqrd*db_tot)-2*(dbE_tot - EL_avg*db_tot)*EL_avg)/MC;
+        //W -= 2*eta*((dWE2_tot - EL_avg_sqrd*dW_tot)-2*(dWE_tot - EL_avg*dW_tot)*EL_avg)/MC;
 
         //Write to file
         myfile << EL_avg << "\n";
@@ -269,5 +297,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     //Close myfile
     if(myfile.is_open())  myfile.close();
     if(myfile1.is_open()) myfile1.close();
+
+    cout << sigma << endl;
 
 }
