@@ -20,7 +20,7 @@ public:
     double Psi_value_sqrd_hastings(VectorXd Xa, VectorXd v);
     double EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, int D, int interaction, double &E_kin, double &E_ext, double &E_int);
     void Gradient_a(const VectorXd &a, VectorXd &da);
-    void Gradient_b(const VectorXd &b, VectorXd &db);
-    void Gradient_W(const VectorXd &X, const VectorXd &v, MatrixXd &dW);
-    double Gradient_sigma(const MatrixXd &W, const VectorXd &Xa, const VectorXd &X, const VectorXd &v);
+    void Gradient_b(const VectorXd &e, VectorXd &db);
+    void Gradient_W(const VectorXd &X, const VectorXd &e, MatrixXd &dW);
+    double Gradient_sigma(const MatrixXd &W, const VectorXd &Xa, const VectorXd &X, const VectorXd &e);
 };

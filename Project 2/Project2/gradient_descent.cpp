@@ -22,9 +22,11 @@ double random_position(){
     return dis(gen);
 }
 
+
 int factorial(int n) {
   return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
 }
+
 
 void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, int sampling, double sigma, \
                      double omega, double steplength, double timestep, double eta, bool interaction, bool one_body) {
@@ -50,6 +52,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     VectorXd X       = VectorXd::Random(M)    * factor_x;
     VectorXd X_new   = VectorXd::Zero(M);
     VectorXd h       = VectorXd::Zero(N);
+    VectorXd e       = VectorXd::Zero(N);
     VectorXd energies_old = VectorXd::Zero(5);
 
 
@@ -57,9 +60,11 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
     VectorXd v       = b + (W.transpose() * X)/(sigma_sqrd);
     VectorXd X_newa  = VectorXd::Zero(M);
     VectorXd v_new   = VectorXd::Zero(N);
+    VectorXd e_new   = VectorXd::Zero(N);
 
     for(int i=0; i<N; i++) {
         h(i) = hrand(gen);
+        e(i) = 1/(1+exp(-v(i)));
     }
 
     WaveFunction Psi;
@@ -117,6 +122,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         double accept = 0;
         double tot_dist = 0;
 
+        // Dynamic eta and MC
         if(iter > 250) {
             eta = 0.01;
             MC = pow(2,22);
@@ -133,6 +139,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                     X_new(M_rand) = X(M_rand) + (2*random_position() - 1.0)*steplength;
                     X_newa = X_new - a;
                     v_new = b + (W.transpose() * X_new)/sigma_sqrd;
+                    for (int i=0; i<N; i++) e_new(i) = 1/(1+exp(-v_new(i)));
                     psi_ratio = Psi.Psi_value_sqrd(X_newa, v_new)/Psi.Psi_value_sqrd(Xa, v);
                 }
 
@@ -141,6 +148,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                     X_new(M_rand) = X(M_rand) + Diff*QForce(Xa, v, W, sigma_sqrd, M_rand)*timestep + eps_gauss(gen)*sqrt(timestep);
                     X_newa = X_new - a;
                     v_new = b + (W.transpose() * X_new)/sigma_sqrd;
+                    for (int i=0; i<N; i++) e_new(i) = 1/(1+exp(-v_new(i)));
                     psi_ratio = GreenFuncSum(X, X_new, X_newa, Xa, v, W, sigma_sqrd, timestep, D, Diff) * \
                                 (Psi.Psi_value_sqrd(X_newa, v_new)/Psi.Psi_value_sqrd(Xa, v));
                 }
@@ -151,6 +159,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                     X  = X_new;
                     Xa = X_newa;
                     v  = v_new;
+                    e  = e_new;
                     E  = Psi.EL_calc(X, Xa, v, W, D, interaction, E_kin, E_ext, E_int);
                 }
             }
@@ -162,6 +171,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                 h(N_rand) = h_sampling(v, N_rand);
                 Xa = X - a;
                 v = b + (W.transpose() * X)/sigma_sqrd;
+                for (int i=0; i<N; i++) e(i) = 1/(1+exp(-v(i)));
                 E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_kin, E_ext, E_int);
             }
 
@@ -201,9 +211,9 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             MatrixXd dW = MatrixXd::Zero(M,N);
 
             Psi.Gradient_a(Xa, da);
-            Psi.Gradient_b(v, db);
-            Psi.Gradient_W(X, v, dW);
-            double dsigma = Psi.Gradient_sigma(W, Xa, X, v);
+            Psi.Gradient_b(e, db);
+            Psi.Gradient_W(X, e, dW);
+            double dsigma = Psi.Gradient_sigma(W, Xa, X, e);
 
 
             da_tot       += da;
@@ -257,6 +267,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
             test_energy_convergence(EL_avg, omega, M, interaction);
         }
 
+        /*
         //Stop criterion
         for(int j=0; j<4; j++) {
             energies_old(j) = energies_old(j+1);
@@ -264,7 +275,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         energies_old(4) = EL_avg;
         double epsilon = 0.002;
 
-        /*
+
         if(fabs(EL_avg - energies_old(0))/energies_old(0) < epsilon && \
            fabs(EL_avg - energies_old(1))/energies_old(1) < epsilon && \
            fabs(EL_avg - energies_old(2))/energies_old(2) < epsilon && \

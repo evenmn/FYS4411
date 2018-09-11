@@ -52,9 +52,9 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
     E_ext = 0;
     E_int = 0;
 
-    double E_knew = 0;
-    double E_pnew = 0;
-    double E_intnew = 0;
+    double E_k = 0;
+    double E_e = 0;
+    double E_i = 0;
 
     VectorXd e_n = VectorXd::Zero(m_N);
     VectorXd e_p = VectorXd::Zero(m_N);
@@ -66,41 +66,41 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
     // Kinetic energy
     if(m_sampling==2) {
         for(int i=0; i<m_N; i++) {
-            E_knew += 0.5*(double) ((W.col(i)).transpose() * W.col(i)) * e_p(i) * e_n(i);
+            E_k += 0.5*(double) ((W.col(i)).transpose() * W.col(i)) * e_p(i) * e_n(i);
         }
 
-        E_knew -= (0.5/m_sigma_sqrd)*(Xa.transpose()*W)*e_n;
-        E_knew += 0.25*((W.transpose()*W).cwiseProduct(e_n*e_n.transpose())).sum();
+        E_k -= (0.5/m_sigma_sqrd)*(Xa.transpose()*W)*e_n;
+        E_k += 0.25*((W.transpose()*W).cwiseProduct(e_n*e_n.transpose())).sum();
 
-        E_knew -= 0.5*m_M * m_sigma_sqrd;
-        E_knew += 0.25*Xa.transpose() * Xa;
-        E_knew = -E_knew/(2 * m_sigma_sqrd * m_sigma_sqrd);
+        E_k -= 0.5*m_M * m_sigma_sqrd;
+        E_k += 0.25*Xa.transpose() * Xa;
+        E_k = -E_k/(2 * m_sigma_sqrd * m_sigma_sqrd);
     }
 
     else {
         for(int i=0; i<m_N; i++) {
-            E_knew += (double) ((W.col(i)).transpose() * W.col(i)) * e_p(i)*e_n(i);
+            E_k += (double) ((W.col(i)).transpose() * W.col(i)) * e_p(i)*e_n(i);
         }
 
-        E_knew -= (2/m_sigma_sqrd)*(Xa.transpose()*W)*e_n;
-        E_knew += ((W.transpose()*W).cwiseProduct(e_n*e_n.transpose())).sum();
+        E_k -= (2/m_sigma_sqrd)*(Xa.transpose()*W)*e_n;
+        E_k += ((W.transpose()*W).cwiseProduct(e_n*e_n.transpose())).sum();
 
-        E_knew -= m_M * m_sigma_sqrd;
-        E_knew += Xa.transpose() * Xa;
-        E_knew = -E_knew/(2 * m_sigma_sqrd * m_sigma_sqrd);
+        E_k -= m_M * m_sigma_sqrd;
+        E_k += Xa.transpose() * Xa;
+        E_k = -E_k/(2 * m_sigma_sqrd * m_sigma_sqrd);
 
     }
 
     // Interaction energy
-    if(interaction) E_intnew += rij(X, D);
+    if(interaction) E_i += rij(X, D);
 
     // Harmonic oscillator potential
-    E_pnew += (double) (X.transpose() * X) * m_omega_sqrd/ 2;
+    E_e += (double) (X.transpose() * X) * m_omega_sqrd/ 2;
 
-    E = E_knew + E_pnew + E_intnew;
-    E_kin = E_knew;
-    E_ext = E_pnew;
-    E_int = E_intnew;
+    E = E_k + E_e + E_i;
+    E_kin = E_k;
+    E_ext = E_e;
+    E_int = E_i;
     return E;
 }
 
@@ -115,53 +115,36 @@ void WaveFunction::Gradient_a(const VectorXd &Xa, VectorXd &da) {
 
 }
 
-void WaveFunction::Gradient_b(const VectorXd &v, VectorXd &db) {
+void WaveFunction::Gradient_b(const VectorXd &e, VectorXd &db) {
 
     if(m_sampling==2) {
-        for(int i=0; i<m_N; i++)
-            db(i) = 0.5/(1 + exp(-v(i)));
+        db = 0.5*e;
     }
     else{
-        for(int i=0; i<m_N; i++)
-            db(i) = 1/(1 + exp(-v(i)));
+        db = e;
     }
 }
 
-void WaveFunction::Gradient_W(const VectorXd &X, const VectorXd &v, MatrixXd &dW) {
+void WaveFunction::Gradient_W(const VectorXd &X, const VectorXd &e, MatrixXd &dW) {
 
     if(m_sampling==2) {
-        for(int i=0; i<m_N; i++) {
-            for(int j=0; j<m_M; j++) {
-                dW(j,i) = 0.5*X(j)/(m_sigma_sqrd*(1 + exp(-v(i))));
-            }
-        }
+        dW = 0.5*X*e.transpose()/m_sigma_sqrd;
     }
     else{
-        for(int i=0; i<m_N; i++) {
-            for(int j=0; j<m_M; j++) {
-                dW(j,i) = X(j)/(m_sigma_sqrd*(1 + exp(-v(i))));
-            }
-        }
+        dW = X*e.transpose()/m_sigma_sqrd;
     }
 }
 
 
-double WaveFunction::Gradient_sigma(const MatrixXd &W, const VectorXd &Xa, const VectorXd &X, const VectorXd &v) {
+double WaveFunction::Gradient_sigma(const MatrixXd &W, const VectorXd &Xa, const VectorXd &X, const VectorXd &e) {
 
-    double constant = 0;
-    double Xa_sqrd = (double)(Xa.transpose()*Xa);
-
+    double constant = ((W.transpose()*X).transpose()*e);
+    double Xa_sqrd  = (double)(Xa.transpose()*Xa);
 
     if(m_sampling==2) {
-        for(int i=0; i<m_N; i++) {
-            constant += (double) (W.col(i).transpose()*X)/(1 + exp(v(i)));
-        }
         return (0.5*Xa_sqrd + constant)/(m_sigma_sqrd*m_sigma);
     }
     else{
-        for(int i=0; i<m_N; i++) {
-            constant += (double) (2*W.col(i).transpose()*X)/(1 + exp(v(i)));
-        }
-        return (Xa_sqrd + constant)/(m_sigma_sqrd*m_sigma);
+        return (Xa_sqrd + 2*constant)/(m_sigma_sqrd*m_sigma);
     }
 }
