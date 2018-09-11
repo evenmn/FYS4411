@@ -1,12 +1,9 @@
 #include <iostream>
-#include <random>
 #include <cmath>
-#include "eigen3/Eigen/Dense"
 #include "gradient_descent.h"
 #include "test.h"
 
 using namespace std;
-using namespace Eigen;
 
 
 int main()
@@ -16,7 +13,7 @@ int main()
     int     N           = 2;              //Number of hidden nodes
     int     MC          = pow(2,16);        //Number of Monte Carlo cycles
     int     iterations  = 300;             //Number of gradient decent cycles
-    int     sampling    = 0;               //Brute force- (0), Hastings- (1) or Gibbs' sampling (2)
+    int     sampling    = 1;               //Brute force- (0), Hastings- (1) or Gibbs' sampling (2)
     bool    interaction = 1;               //Interaction on if true
     bool    one_body    = 1;               //Calculating onebody density if true
     double  sigma       = 1.0;             //Width of Gaussian distribution

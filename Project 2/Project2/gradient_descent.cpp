@@ -145,11 +145,11 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
                 else if(sampling == 1) {
                     //Metropolis-Hastings
-                    X_new(M_rand) = X(M_rand) + Diff*QForce(Xa, v, W, sigma_sqrd, M_rand)*timestep + eps_gauss(gen)*sqrt(timestep);
+                    X_new(M_rand) = X(M_rand) + Diff*QForce(Xa, e, W, sigma_sqrd, M_rand)*timestep + eps_gauss(gen)*sqrt(timestep);
                     X_newa = X_new - a;
                     v_new = b + (W.transpose() * X_new)/sigma_sqrd;
                     for (int i=0; i<N; i++) e_new(i) = 1/(1+exp(-v_new(i)));
-                    psi_ratio = GreenFuncSum(X, X_new, X_newa, Xa, v, W, sigma_sqrd, timestep, D, Diff) * \
+                    psi_ratio = GreenFuncSum(X, X_new, X_newa, Xa, e, W, sigma_sqrd, timestep, D, Diff) * \
                                 (Psi.Psi_value_sqrd(X_newa, v_new)/Psi.Psi_value_sqrd(Xa, v));
                 }
 

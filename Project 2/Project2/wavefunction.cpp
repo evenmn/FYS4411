@@ -7,13 +7,19 @@ using namespace std;
 using namespace Eigen;
 
 double rij(VectorXd X, int D) {
+
     double Ep = 0;              // Sum 1/rij
     int P = X.size()/D;
+
+    VectorXd X2 = X.cwiseAbs2();
+
     for(int i=0; i<P; i++) {
         for(int j=0; j<i; j++) {
             double dist = 0;
             for(int d=0; d<D; d++) {
-                dist += (X(D*i+d)-X(D*j+d))*(X(D*i+d)-X(D*j+d));
+                int pi = D*i+d;
+                int pj = D*j+d;
+                dist += X2(pi)+X2(pj)-2*X(pi)*X(pj);
             }
             Ep += 1/sqrt(dist);
         }
@@ -26,7 +32,7 @@ int WaveFunction::setTrialWF(int N, int M, int sampling, double sigma_sqrd, doub
     m_N          = N;
     m_M          = M;
     m_sampling   = sampling;
-    m_sigma = sqrt(sigma_sqrd);
+    m_sigma      = sqrt(sigma_sqrd);
     m_sigma_sqrd = sigma_sqrd;
     m_omega_sqrd = omega*omega;
 }
@@ -47,17 +53,18 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
                              double &E_kin, double &E_ext, double &E_int) {
     // Local energy calculations
 
-    double E = 0;
     E_kin = 0;
     E_ext = 0;
     E_int = 0;
 
+    double E = 0;
     double E_k = 0;
     double E_e = 0;
     double E_i = 0;
 
     VectorXd e_n = VectorXd::Zero(m_N);
     VectorXd e_p = VectorXd::Zero(m_N);
+
     for(int i=0; i<m_N; i++) {
         e_p(i) = 1/(1 + exp(v(i)));
         e_n(i) = 1/(1 + exp(-v(i)));
