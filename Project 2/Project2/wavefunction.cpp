@@ -50,56 +50,51 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
     E_k = 0;
     E_ext = 0;
     E_int = 0;
+
     double E_knew = 0;
     double E_pnew = 0;
     double E_intnew = 0;
 
     VectorXd e = VectorXd::Zero(m_N);
-    VectorXd eNominator = VectorXd::Zero(m_N);
+    VectorXd e_p = VectorXd::Zero(m_N);
     for(int i=0; i<m_N; i++) {
-        double expi = exp(-v(i));
-        eNominator(i) = expi;
-        e(i) = 1/(1 + expi);
+        e_p(i) = 1/(1 + exp(v(i)));
+        e(i) = 1/(1 + exp(-v(i)));
     }
 
     // Kinetic energy
     if(m_sampling==2) {
         for(int i=0; i<m_N; i++) {
-            E_knew -= 0.5*(double) (Xa.transpose() * W.col(i)) * e(i);
-            E_knew += 0.5*(double) ((W.col(i)).transpose() * W.col(i)) * eNominator(i) * e(i) * e(i);
-            for(int j=0; j<m_N; j++) {
-                E_knew += 0.25*(double) ((W.col(i)).transpose() * W.col(j)) * e(i) * e(j);
-            }
+            E_knew += 0.5*(double) ((W.col(i)).transpose() * W.col(i)) * e_p(i) * e(i);
         }
+
+        E_knew -= (0.5/m_sigma_sqrd)*(Xa.transpose()*W)*e;
+        E_knew += 0.25*((W.transpose()*W).cwiseProduct(e*e.transpose())).sum();
 
         E_knew -= 0.5*m_M * m_sigma_sqrd;
         E_knew += 0.25*Xa.transpose() * Xa;
         E_knew = -E_knew/(2 * m_sigma_sqrd * m_sigma_sqrd);
-        E_k += E_knew;
     }
 
     else {
         for(int i=0; i<m_N; i++) {
-            E_knew -= 2*(double) (Xa.transpose() * W.col(i)) * e(i);
-            E_knew += (double) ((W.col(i)).transpose() * W.col(i)) * eNominator(i) * e(i)*e(i);
-            for(int j=0; j<m_N; j++) {
-                E_knew += (double) ((W.col(i)).transpose() * W.col(j)) * e(i) * e(j);
-            }
+            E_knew += (double) ((W.col(i)).transpose() * W.col(i)) * e_p(i)*e(i);
         }
+
+        E_knew -= (2/m_sigma_sqrd)*(Xa.transpose()*W)*e;
+        E_knew += ((W.transpose()*W).cwiseProduct(e*e.transpose())).sum();
 
         E_knew -= m_M * m_sigma_sqrd;
         E_knew += Xa.transpose() * Xa;
         E_knew = -E_knew/(2 * m_sigma_sqrd * m_sigma_sqrd);
-        E_k += E_knew;
+
     }
 
     // Interaction energy
     if(interaction) E_intnew += rij(X, D);
-    E_int += E_intnew;
 
     // Harmonic oscillator potential
     E_pnew += (double) (X.transpose() * X) * m_omega_sqrd/ 2;
-    E_ext += E_pnew;
 
     E = E_knew + E_pnew + E_intnew;
     E_k = E_knew;
