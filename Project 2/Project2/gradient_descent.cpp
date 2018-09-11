@@ -92,13 +92,13 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
         //averages and energies
         double EL_tot      = 0;          //sum of energies of all states
         double EL_tot_sqrd = 0;          //sum of energies of all states squared
-        double E_k         = 0;          //sum of kinetic energies
+        double E_kin       = 0;          //sum of kinetic energies
         double E_ext       = 0;          //sum of potential energy from HO
         double E_int       = 0;          //sum of potential energy from interaction
-        double E_k_tot     = 0;
+        double E_kin_tot   = 0;
         double E_ext_tot   = 0;
         double E_int_tot   = 0;
-        double E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
+        double E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_kin, E_ext, E_int);
 
         double dsigma_tot         = 0;
         double dsigmaE_tot        = 0;
@@ -151,7 +151,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                     X  = X_new;
                     Xa = X_newa;
                     v  = v_new;
-                    E  = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
+                    E  = Psi.EL_calc(X, Xa, v, W, D, interaction, E_kin, E_ext, E_int);
                 }
             }
 
@@ -162,7 +162,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                 h(N_rand) = h_sampling(v, N_rand);
                 Xa = X - a;
                 v = b + (W.transpose() * X)/sigma_sqrd;
-                E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_k, E_ext, E_int);
+                E = Psi.EL_calc(X, Xa, v, W, D, interaction, E_kin, E_ext, E_int);
             }
 
             if(one_body && iter == iterations-1) {
@@ -221,7 +221,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
 
             EL_tot       += E;
             EL_tot_sqrd  += E*E;
-            E_k_tot      += E_k;
+            E_kin_tot    += E_kin;
             E_ext_tot    += E_ext;
             E_int_tot    += E_int;
         }
@@ -249,7 +249,7 @@ void GradientDescent(int P, double Diff, int D, int N, int MC, int iterations, i
                 //Close myfile
                 ob_file.close();
             }
-            cout << "<E_k>: " << E_k_tot/MC << endl;
+            cout << "<E_kin>: " << E_kin_tot/MC << endl;
             cout << "<E_ext>: " << E_ext_tot/MC << endl;
             cout << "<E_int>: " << E_int_tot/MC << endl;
             cout << "Mean distance: " << tot_dist/(MC*factorial(P-1)) << endl;

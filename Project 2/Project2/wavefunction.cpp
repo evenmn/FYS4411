@@ -43,11 +43,12 @@ double WaveFunction::Psi_value_sqrd(const VectorXd &Xa, const VectorXd &v)
 }
 
 
-double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, int D, int interaction, double &E_k, double &E_ext, double &E_int) {
+double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, int D, int interaction, \
+                             double &E_kin, double &E_ext, double &E_int) {
     // Local energy calculations
 
     double E = 0;
-    E_k = 0;
+    E_kin = 0;
     E_ext = 0;
     E_int = 0;
 
@@ -55,21 +56,21 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
     double E_pnew = 0;
     double E_intnew = 0;
 
-    VectorXd e = VectorXd::Zero(m_N);
+    VectorXd e_n = VectorXd::Zero(m_N);
     VectorXd e_p = VectorXd::Zero(m_N);
     for(int i=0; i<m_N; i++) {
         e_p(i) = 1/(1 + exp(v(i)));
-        e(i) = 1/(1 + exp(-v(i)));
+        e_n(i) = 1/(1 + exp(-v(i)));
     }
 
     // Kinetic energy
     if(m_sampling==2) {
         for(int i=0; i<m_N; i++) {
-            E_knew += 0.5*(double) ((W.col(i)).transpose() * W.col(i)) * e_p(i) * e(i);
+            E_knew += 0.5*(double) ((W.col(i)).transpose() * W.col(i)) * e_p(i) * e_n(i);
         }
 
-        E_knew -= (0.5/m_sigma_sqrd)*(Xa.transpose()*W)*e;
-        E_knew += 0.25*((W.transpose()*W).cwiseProduct(e*e.transpose())).sum();
+        E_knew -= (0.5/m_sigma_sqrd)*(Xa.transpose()*W)*e_n;
+        E_knew += 0.25*((W.transpose()*W).cwiseProduct(e_n*e_n.transpose())).sum();
 
         E_knew -= 0.5*m_M * m_sigma_sqrd;
         E_knew += 0.25*Xa.transpose() * Xa;
@@ -78,11 +79,11 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
 
     else {
         for(int i=0; i<m_N; i++) {
-            E_knew += (double) ((W.col(i)).transpose() * W.col(i)) * e_p(i)*e(i);
+            E_knew += (double) ((W.col(i)).transpose() * W.col(i)) * e_p(i)*e_n(i);
         }
 
-        E_knew -= (2/m_sigma_sqrd)*(Xa.transpose()*W)*e;
-        E_knew += ((W.transpose()*W).cwiseProduct(e*e.transpose())).sum();
+        E_knew -= (2/m_sigma_sqrd)*(Xa.transpose()*W)*e_n;
+        E_knew += ((W.transpose()*W).cwiseProduct(e_n*e_n.transpose())).sum();
 
         E_knew -= m_M * m_sigma_sqrd;
         E_knew += Xa.transpose() * Xa;
@@ -97,7 +98,7 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
     E_pnew += (double) (X.transpose() * X) * m_omega_sqrd/ 2;
 
     E = E_knew + E_pnew + E_intnew;
-    E_k = E_knew;
+    E_kin = E_knew;
     E_ext = E_pnew;
     E_int = E_intnew;
     return E;
