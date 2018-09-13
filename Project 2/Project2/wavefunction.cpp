@@ -72,10 +72,7 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
 
     // Kinetic energy
     if(m_sampling==2) {
-        for(int i=0; i<m_N; i++) {
-            E_k += 0.5*(double) ((W.col(i)).transpose() * W.col(i)) * e_p(i) * e_n(i);
-        }
-
+        E_k += 0.5*(W.cwiseAbs2()*e_p.cwiseProduct(e_n)).sum();
         E_k -= (0.5/m_sigma_sqrd)*(Xa.transpose()*W)*e_n;
         E_k += 0.25*((W.transpose()*W).cwiseProduct(e_n*e_n.transpose())).sum();
 
@@ -85,10 +82,7 @@ double WaveFunction::EL_calc(VectorXd X, VectorXd Xa, VectorXd v, MatrixXd W, in
     }
 
     else {
-        for(int i=0; i<m_N; i++) {
-            E_k += (double) ((W.col(i)).transpose() * W.col(i)) * e_p(i)*e_n(i);
-        }
-
+        E_k += (W.cwiseAbs2()*e_p.cwiseProduct(e_n)).sum();
         E_k -= (2/m_sigma_sqrd)*(Xa.transpose()*W)*e_n;
         E_k += ((W.transpose()*W).cwiseProduct(e_n*e_n.transpose())).sum();
 
